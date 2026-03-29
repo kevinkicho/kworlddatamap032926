@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Population Map</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+  <script src="/node_modules/datamaps/dist/datamaps.world.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+
+    header { text-align: center; margin-bottom: 20px; }
+    header h1 { font-size: 1.8rem; font-weight: 600; color: #58a6ff; }
+    header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .btn:hover  { background: #30363d; border-color: #58a6ff; }
+    .btn.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+    .btn.wiki-btn.active { background: #6e40c9; border-color: #6e40c9; }
+
+    /* ── Map wrapper + loading overlay ── */
+    #map-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    #map-container {
+      position: relative;
+      width: 100%;
+      height: 550px;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #map-container svg { width: 100%; height: 100%; }
+
+    /* Loading overlay sits on top of the map */
+    #loading-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 17, 23, 0.82);
+      border-radius: 10px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 10;
+    }
+    #loading-overlay.visible { display: flex; }
+
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid #30363d;
+      border-top-color: #a371f7;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #loading-text { font-size: 0.9rem; color: #8b949e; }
+    #loading-error { font-size: 0.85rem; color: #f85149; display: none; }
+
+    /* ── Tooltip ── */
+    .hoverinfo {
+      background: #1f2937 !important;
+      border: 1px solid #374151 !important;
+      border-radius: 6px !important;
+      color: #f9fafb !important;
+      font-size: 0.85rem !important;
+      padding: 10px 14px !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+      pointer-events: none !important;
+      max-width: 260px;
+    }
+
+    /* ── Density legend ── */
+    .legend-container {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-gradient { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #8b949e; }
+    .gradient-bar {
+      width: 300px; height: 18px; border-radius: 4px;
+      background: linear-gradient(to right, #ffffcc, #c7e9b4, #7fcdbb, #41b6c4, #2c7fb8, #253494);
+      border: 1px solid #30363d;
+    }
+    .legend-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 300px;
+      font-size: 0.75rem;
+      color: #6e7681;
+    }
+
+    /* ── Wikipedia cities legend ── */
+    #wiki-legend {
+      display: none;
+      margin-top: 16px;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    #wiki-legend.visible { display: flex; }
+    .wiki-legend-title { font-size: 0.78rem; color: #8b949e; }
+    .wiki-tiers {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .wiki-tier {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      color: #8b949e;
+    }
+    .tier-dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Stats bar ── */
+    .stats {
+      margin-top: 12px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.85rem;
+      color: #8b949e;
+    }
+    .stat-item { display: flex; align-items: center; gap: 6px; }
+    .stat-value { color: #58a6ff; font-weight: 600; }
+    #wiki-source-badge {
+      font-size: 0.72rem;
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 4px;
+      padding: 2px 7px;
+      color: #8b949e;
+      display: none;
+    }
+
+    .data-source { margin-top: 16px; font-size: 0.75rem; color: #6e7681; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌍 World Population Map</h1>
+    <p>Density, cities, and live Wikipedia data</p>
+  </header>
+
+  <div class="controls">
+    <button class="btn active"    onclick="setView('density', this)">Population Density</button>
+    <button class="btn"           onclick="setView('cities',  this)">Major Cities</button>
+    <button class="btn"           onclick="setView('both',    this)">Both Layers</button>
+    <button class="btn wiki-btn"  onclick="setView('wiki',    this)">Wikipedia Cities (Live)</button>
+  </div>
+
+  <div id="map-wrapper">
+    <div id="map-container"></div>
+
+    <div id="loading-overlay">
+      <div class="spinner"></div>
+      <div id="loading-text">Querying Wikidata… this may take ~15 seconds</div>
+      <div id="loading-error"></div>
+    </div>
+  </div>
+
+  <!-- Density legend (shown for density / both views) -->
+  <div class="legend-container" id="density-legend">
+    <div class="legend-gradient">
+      <span>Low</span>
+      <div class="gradient-bar"></div>
+      <span>High</span>
+    </div>
+    <div class="legend-labels">
+      <span>0</span><span>100</span><span>300</span><span>500</span><span>1000+</span>
+    </div>
+  </div>
+
+  <!-- Wikipedia cities legend (shown for wiki view) -->
+  <div id="wiki-legend">
+    <div class="wiki-legend-title">City population (Wikipedia / Wikidata)</div>
+    <div class="wiki-tiers">
+      <span class="wiki-tier"><span class="tier-dot" style="background:#bd0026"></span>20M+</span>
+      <span class="wiki-tier"><span class="tier-dot" style="background:#f03b20"></span>10–20M</span>
+      <span class="wiki-tier"><span class="tier-dot" style="background:#fd8d3c"></span>5–10M</span>
+      <span class="wiki-tier"><span class="tier-dot" style="background:#fecc5c"></span>2–5M</span>
+      <span class="wiki-tier"><span class="tier-dot" style="background:#ffffb2"></span>1–2M</span>
+      <span class="wiki-tier"><span class="tier-dot" style="background:#74c476"></span>500k–1M</span>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item">Countries: <span class="stat-value" id="country-count">—</span></div>
+    <div class="stat-item">Highest density: <span class="stat-value" id="highest-density">—</span></div>
+    <div class="stat-item">Global avg: <span class="stat-value" id="global-avg">—</span></div>
+    <span id="wiki-source-badge"></span>
+  </div>
+
+  <div class="data-source" id="data-source-line">
+    Density data: World Bank (2020) | Visualization: Datamaps + D3.js
+  </div>
+
+  <script>
+    // ── Population density data (World Bank 2020) ─────────────────────────────
+    const densityData = {
+      "AFG": 59.9, "ALB": 92.3, "DZA": 18.5, "ASM": 248.8, "AND": 164.6,
+      "AGO": 26.8, "ATG": 208.7, "ARG": 16.5, "ARM": 105.0, "ABW": 588.0,
+      "AUS": 3.3, "AUT": 109.0, "AZE": 120.0, "BHS": 39.5, "BHR": 1935.0,
+      "BGD": 1265.0, "BRB": 668.0, "BLR": 46.8, "BEL": 383.0, "BLZ": 17.4,
+      "BEN": 107.0, "BMU": 1308.0, "BTN": 20.0, "BOL": 10.8, "BIH": 64.0,
+      "BWA": 4.1, "BRA": 25.4, "VGB": 212.0, "BRN": 83.0, "BGR": 63.0,
+      "BFA": 76.0, "BDI": 460.0, "CPV": 138.0, "KHM": 95.0, "CMR": 56.0,
+      "CAN": 4.2, "CYM": 273.0, "CAF": 8.0, "TCD": 13.0, "CHL": 25.0,
+      "CHN": 148.0, "COL": 45.0, "COM": 467.0, "COG": 16.0, "CRI": 100.0,
+      "CIV": 83.0, "HRV": 72.0, "CUB": 106.0, "CUW": 370.0, "CYP": 131.0,
+      "CZE": 138.0, "DNK": 146.0, "DJI": 42.0, "DMA": 96.0, "DOM": 225.0,
+      "ECU": 71.0, "EGY": 102.0, "SLV": 313.0, "GNQ": 50.0, "ERI": 35.0,
+      "EST": 30.0, "SWZ": 79.0, "ETH": 115.0, "FRO": 35.0, "FJI": 49.0,
+      "FIN": 18.0, "FRA": 119.0, "PYF": 83.0, "GAB": 8.0, "GMB": 239.0,
+      "GEO": 57.0, "DEU": 240.0, "GHA": 137.0, "GIB": 3287.0, "GRC": 81.0,
+      "GRL": 0.1, "GRD": 371.0, "GUM": 306.0, "GTM": 167.0, "GIN": 53.0,
+      "GNB": 70.0, "GUY": 4.0, "HTI": 414.0, "HND": 89.0, "HKG": 6777.0,
+      "HUN": 104.0, "ISL": 3.0, "IND": 464.0, "IDN": 145.0, "IRN": 52.0,
+      "IRQ": 93.0, "IRL": 72.0, "IMN": 165.0, "ISR": 400.0, "ITA": 197.0,
+      "JAM": 273.0, "JPN": 334.0, "JOR": 115.0, "KAZ": 7.0, "KEN": 95.0,
+      "KIR": 152.0, "PRK": 214.0, "KOR": 527.0, "KWT": 232.0, "KGZ": 34.0,
+      "LAO": 32.0, "LVA": 30.0, "LBN": 667.0, "LSO": 77.0, "LBR": 53.0,
+      "LBY": 4.0, "LIE": 238.0, "LTU": 43.0, "LUX": 242.0, "MAC": 20778.0,
+      "MDG": 48.0, "MWI": 203.0, "MYS": 99.0, "MDV": 1802.0, "MLI": 17.0,
+      "MLT": 1676.0, "MHL": 329.0, "MRT": 5.0, "MUS": 626.0, "MEX": 66.0,
+      "FSM": 164.0, "MDA": 123.0, "MCO": 19347.0, "MNG": 2.0, "MNE": 47.0,
+      "MAR": 83.0, "MOZ": 40.0, "MMR": 83.0, "NAM": 3.0, "NRU": 541.0,
+      "NPL": 203.0, "NLD": 508.0, "NCL": 16.0, "NZL": 19.0, "NIC": 55.0,
+      "NER": 19.0, "NGA": 226.0, "MKD": 82.0, "MNP": 125.0, "NOR": 15.0,
+      "OMN": 16.0, "PAK": 287.0, "PLW": 39.0, "PAN": 58.0, "PNG": 20.0,
+      "PRY": 18.0, "PER": 26.0, "PHL": 368.0, "POL": 124.0, "PRT": 111.0,
+      "PRI": 361.0, "QAT": 248.0, "ROU": 84.0, "RUS": 9.0, "RWA": 525.0,
+      "WSM": 70.0, "SMR": 559.0, "STP": 228.0, "SAU": 17.0, "SEN": 87.0,
+      "SRB": 100.0, "SYC": 214.0, "SLE": 111.0, "SGP": 7953.0, "SXM": 1177.0,
+      "SVK": 114.0, "SVN": 104.0, "SLB": 25.0, "SOM": 25.0, "ZAF": 49.0,
+      "SSD": 18.0, "ESP": 94.0, "LKA": 354.0, "KNA": 211.0, "LCA": 301.0,
+      "MAF": 730.0, "VCT": 284.0, "SDN": 25.0, "SUR": 4.0, "SWE": 25.0,
+      "CHE": 219.0, "SYR": 95.0, "TWN": 673.0, "TJK": 68.0, "TZA": 68.0,
+      "THA": 137.0, "TLS": 88.0, "TGO": 152.0, "TON": 147.0, "TTO": 273.0,
+      "TUN": 76.0, "TUR": 110.0, "TKM": 13.0, "TCA": 40.0, "TUV": 393.0,
+      "UGA": 229.0, "UKR": 75.0, "ARE": 118.0, "GBR": 281.0, "USA": 36.0,
+      "URY": 20.0, "UZB": 79.0, "VUT": 25.0, "VEN": 32.0, "VNM": 314.0,
+      "VIR": 298.0, "PSE": 847.0, "YEM": 56.0, "ZMB": 25.0, "ZWE": 43.0
+    };
+
+    // ── Hardcoded major cities (used by "Major Cities" and "Both" views) ───────
+    const hardcodedCities = [
+      { name: "Tokyo",        lat: 35.6762,  lng: 139.6503, pop: 37400000, region: "Asia" },
+      { name: "Delhi",        lat: 28.7041,  lng: 77.1025,  pop: 32900000, region: "Asia" },
+      { name: "Shanghai",     lat: 31.2304,  lng: 121.4737, pop: 28500000, region: "Asia" },
+      { name: "São Paulo",    lat: -23.5505, lng: -46.6333, pop: 22400000, region: "Americas" },
+      { name: "Mexico City",  lat: 19.4326,  lng: -99.1332, pop: 22200000, region: "Americas" },
+      { name: "Dhaka",        lat: 23.8103,  lng: 90.4125,  pop: 22300000, region: "Asia" },
+      { name: "Cairo",        lat: 30.0444,  lng: 31.2357,  pop: 21300000, region: "Africa" },
+      { name: "Beijing",      lat: 39.9042,  lng: 116.4074, pop: 21700000, region: "Asia" },
+      { name: "Mumbai",       lat: 19.0760,  lng: 72.8777,  pop: 21200000, region: "Asia" },
+      { name: "Osaka",        lat: 34.6937,  lng: 135.5023, pop: 19000000, region: "Asia" },
+      { name: "Chongqing",    lat: 29.5630,  lng: 106.5516, pop: 17300000, region: "Asia" },
+      { name: "Karachi",      lat: 24.8607,  lng: 67.0011,  pop: 17200000, region: "Asia" },
+      { name: "Kinshasa",     lat: -4.4419,  lng: 15.2663,  pop: 16300000, region: "Africa" },
+      { name: "Lagos",        lat: 6.5244,   lng: 3.3792,   pop: 15900000, region: "Africa" },
+      { name: "Istanbul",     lat: 41.0082,  lng: 28.9784,  pop: 15600000, region: "Asia" },
+      { name: "Buenos Aires", lat: -34.6037, lng: -58.3816, pop: 15400000, region: "Americas" },
+      { name: "Kolkata",      lat: 22.5726,  lng: 88.3639,  pop: 15100000, region: "Asia" },
+      { name: "Manila",       lat: 14.5995,  lng: 120.9842, pop: 14600000, region: "Asia" },
+      { name: "Tianjin",      lat: 39.0842,  lng: 117.2009, pop: 14200000, region: "Asia" },
+      { name: "Guangzhou",    lat: 23.1291,  lng: 113.2644, pop: 14000000, region: "Asia" },
+    ];
+
+    // ── State ─────────────────────────────────────────────────────────────────
+    let currentView = 'density';
+    let datamap;
+
+    // ── Density color scale ───────────────────────────────────────────────────
+    function getDensityColor(density) {
+      if (density == null) return '#21262d';
+      if (density < 10)  return '#ffffcc';
+      if (density < 50)  return '#c7e9b4';
+      if (density < 100) return '#7fcdbb';
+      if (density < 300) return '#41b6c4';
+      if (density < 500) return '#2c7fb8';
+      return '#253494';
+    }
+
+    // ── Wikipedia city tier (color key) ──────────────────────────────────────
+    // Six tiers mapped to a yellow-orange-red heat scale.
+    function getWikiTier(pop) {
+      if (pop >= 20000000) return 'tier1';
+      if (pop >= 10000000) return 'tier2';
+      if (pop >= 5000000)  return 'tier3';
+      if (pop >= 2000000)  return 'tier4';
+      if (pop >= 1000000)  return 'tier5';
+      return 'tier6';
+    }
+
+    // ── Stats (density views) ─────────────────────────────────────────────────
+    function calculateStats() {
+      const densities = Object.values(densityData);
+      const max = Math.max(...densities);
+      const avg = densities.reduce((a, b) => a + b, 0) / densities.length;
+      document.getElementById('country-count').textContent    = densities.length;
+      document.getElementById('highest-density').textContent  = max.toLocaleString() + '/km²';
+      document.getElementById('global-avg').textContent       = Math.round(avg) + '/km²';
+      document.getElementById('data-source-line').textContent =
+        'Density data: World Bank (2020) | Visualization: Datamaps + D3.js';
+    }
+
+    // ── Stats (wiki view) ─────────────────────────────────────────────────────
+    function showWikiStats(cities, source) {
+      const total = cities.reduce((s, c) => s + c.pop, 0);
+      document.getElementById('country-count').textContent   = cities.length + ' cities';
+      document.getElementById('highest-density').textContent = cities[0]
+        ? cities[0].name + ' (' + (cities[0].pop / 1e6).toFixed(1) + 'M)'
+        : '—';
+      document.getElementById('global-avg').textContent =
+        (total / 1e9).toFixed(2) + 'B total';
+      const badge = document.getElementById('wiki-source-badge');
+      badge.textContent = source === 'wikidata' ? 'Live from Wikidata' : 'Cached';
+      badge.style.display = 'inline';
+      document.getElementById('data-source-line').textContent =
+        'City data: Wikidata (Wikipedia) | Visualization: Datamaps + D3.js';
+    }
+
+    // ── Loading overlay helpers ───────────────────────────────────────────────
+    function showLoading(visible) {
+      document.getElementById('loading-overlay').classList.toggle('visible', visible);
+      document.getElementById('loading-error').style.display = 'none';
+    }
+
+    function showLoadingError(msg) {
+      const el = document.getElementById('loading-error');
+      el.textContent = 'Error: ' + msg;
+      el.style.display = 'block';
+      document.getElementById('loading-text').style.display = 'none';
+    }
+
+    // ── Legend toggle ─────────────────────────────────────────────────────────
+    function updateLegend(view) {
+      const densityLegend = document.getElementById('density-legend');
+      const wikiLegend    = document.getElementById('wiki-legend');
+      const wikiBadge     = document.getElementById('wiki-source-badge');
+      if (view === 'wiki') {
+        densityLegend.style.display = 'none';
+        wikiLegend.classList.add('visible');
+      } else {
+        densityLegend.style.display = view === 'cities' ? 'none' : '';
+        wikiLegend.classList.remove('visible');
+        wikiBadge.style.display = 'none';
+      }
+    }
+
+    // ── Init map ──────────────────────────────────────────────────────────────
+    function initMap() {
+      datamap = new Datamap({
+        element: document.getElementById('map-container'),
+        projection: 'mercator',
+        fills: {
+          defaultFill: '#21262d',
+          // Wikipedia city tiers (yellow-orange-red heat scale)
+          tier1: '#bd0026',
+          tier2: '#f03b20',
+          tier3: '#fd8d3c',
+          tier4: '#fecc5c',
+          tier5: '#ffffb2',
+          tier6: '#74c476',
+        },
+        geographyConfig: {
+          borderColor: '#30363d',
+          highlightBorderColor: '#58a6ff',
+          highlightFillColor: function(geo) {
+            if (currentView === 'cities' || currentView === 'wiki') return '#2d333b';
+            return getDensityColor(densityData[geo.id]);
+          },
+          popupTemplate: function(geo) {
+            const density = densityData[geo.id];
+            const text = density ? density.toLocaleString() + ' people/km²' : 'No data';
+            return `<div class="hoverinfo"><strong>${geo.properties.name}</strong><br/>Density: ${text}</div>`;
+          },
+        },
+        done: function(dm) {
+          datamap = dm;
+          if (currentView === 'density' || currentView === 'both') colorCountries(dm);
+          if (currentView === 'cities'  || currentView === 'both') addCityBubbles(dm);
+          if (currentView === 'wiki')                              fetchAndRenderWikiCities(dm);
+          if (currentView !== 'wiki')                              calculateStats();
+        },
+      });
+    }
+
+    // ── Color countries by density ────────────────────────────────────────────
+    function colorCountries(dm) {
+      dm.svg.selectAll('.datamaps-subunit')
+        .style('fill', function(d) { return getDensityColor(densityData[d.id]); });
+    }
+
+    // ── Hardcoded city bubbles ────────────────────────────────────────────────
+    function addCityBubbles(dm) {
+      const bubbles = hardcodedCities.map(city => ({
+        name:      city.name,
+        latitude:  city.lat,
+        longitude: city.lng,
+        radius:    Math.sqrt(city.pop / 1000000) * 0.8,
+        fillKey:   city.pop > 15000000 ? 'tier2' : city.pop > 10000000 ? 'tier3' : 'tier4',
+        population: city.pop,
+      }));
+      dm.bubbles(bubbles, {
+        borderColor:  '#000',
+        borderWidth:  0.5,
+        fillOpacity:  0.8,
+        popupTemplate: function(geo, data) {
+          return `<div class="hoverinfo"><strong>${data.name}</strong><br/>Population: ${(data.population / 1e6).toFixed(1)}M</div>`;
+        },
+      });
+    }
+
+    // ── Wikipedia / Wikidata live city bubbles ────────────────────────────────
+    async function fetchAndRenderWikiCities(dm) {
+      showLoading(true);
+      document.getElementById('loading-text').style.display = 'block';
+      try {
+        const res = await fetch('/api/cities');
+        if (!res.ok) throw new Error('Server returned ' + res.status);
+        const { cities, source } = await res.json();
+        if (!cities || cities.length === 0) throw new Error('No city data returned');
+        renderWikiCities(dm, cities);
+        showWikiStats(cities, source);
+      } catch (err) {
+        showLoadingError(err.message);
+        return;
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function renderWikiCities(dm, cities) {
+      const bubbles = cities.map(city => ({
+        name:      city.name,
+        latitude:  city.lat,
+        longitude: city.lng,
+        // Square-root radius so bubble area is proportional to population.
+        // Clamp between 2 and 14 px.
+        radius:    Math.min(14, Math.max(2, Math.sqrt(city.pop / 500000) * 2)),
+        fillKey:   getWikiTier(city.pop),
+        population: city.pop,
+      }));
+
+      dm.bubbles(bubbles, {
+        borderColor:  'rgba(0,0,0,0.4)',
+        borderWidth:  0.4,
+        fillOpacity:  0.72,
+        popupTemplate: function(geo, data) {
+          return `<div class="hoverinfo">
+            <strong>${data.name}</strong><br/>
+            Population: ${data.population.toLocaleString()}
+          </div>`;
+        },
+      });
+    }
+
+    // ── Switch view ───────────────────────────────────────────────────────────
+    function setView(view, btn) {
+      currentView = view;
+      document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateLegend(view);
+      document.getElementById('map-container').innerHTML = '';
+      initMap();
+    }
+
+    // ── Boot ──────────────────────────────────────────────────────────────────
+    updateLegend('density');
+    initMap();
+  </script>
+</body>
+</html>
