@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start":        "node server.js",
+    "fetch-cities": "node scripts/fetch-cities.js",
+    "test":         "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",

@@ -8,10 +8,14 @@ A plain-language description of every file, section, function, and notable detai
 
 | File | What it does |
 |------|-------------|
-| `server.js` | Starts a local web server on port 3000 that serves the app to your browser. |
-| `public/index.html` | The entire front-end of the app — layout, styles, population density data, city data, and map logic all live here. |
-| `package.json` | Lists the project's name, the `npm start` command, and all installed dependencies. |
-| `node_modules/datamaps/dist/datamaps.world.min.js` | The datamaps library bundled with world map geography data, served directly to the browser. |
+| `README.md` | Contains project documentation, running instructions, and features. |
+| `server.js` | Starts a standard Node Express web server to serve the frontend and static data assets. |
+| `public/index.html` | The front-end of the app — layout, styles, density data, static dataset fetch, and map logic all live here. |
+| `public/cities.json` | A static JSON array of ~600 populated cities. |
+| `public/cities-full.json` | An enriched static dataset of thousands of global cities built by the fetch script. |
+| `scripts/fetch-cities.js` | A robust Node script used to scrape Wikidata safely. Explained in detail inside `FETCH_CITIES.md`. |
+| `package.json` | Lists the project's name, scripts, and all installed dependencies. |
+| `node_modules/datamaps/...` | The datamaps library bundled with world map geography data. |
 
 ---
 
@@ -33,10 +37,12 @@ A plain-language description of every file, section, function, and notable detai
 
 | Element | What it does |
 |---|---|
-| `<header>` | Displays the app title "World Population Density" and its subtitle "People per square kilometer (2020 data)". |
-| `<div class="controls">` | Holds three buttons — **Population Density**, **Major Cities**, and **Both Layers** — that switch map views. |
+| `<header>` | Displays the app title "World Population Map" and its subtitle "Density, cities, and live Wikipedia data". |
+| `<div class="controls">` | Holds four buttons — **Population Density**, **Major Cities**, **Both Layers**, and **Wikipedia Cities** — that switch map views. |
 | `<div id="map-container">` | The empty box that datamaps fills with the SVG world map at runtime; cleared and redrawn on each view switch. |
-| `<div class="legend-container">` | Wraps the color gradient bar and its numeric labels (0 → 1000+) below the map. |
+| `<div id="loading-overlay">` | A dark translucent screen with a loading spinner that covers the map while the Wikidata fetch resolves. |
+| `<div class="legend-container" id="density-legend">` | Wraps the color gradient bar and its numeric labels (0 → 1000+) below the map (hidden in Wiki view). |
+| `<div id="wiki-legend">` | Displays a 3-tier HTML legend explaining the canvas glow clusters, only visible in the "Wikipedia Cities" view. |
 | `<div class="legend-gradient">` | Holds the "Low" label, the gradient bar, and the "High" label in a horizontal row. |
 | `<div class="gradient-bar">` | A 300 px wide CSS gradient strip that visually represents the density color scale from light yellow to dark blue. |
 | `<div class="legend-labels">` | Displays the five numeric tick marks (0, 100, 300, 500, 1000+) spread evenly below the gradient bar. |
@@ -75,10 +81,11 @@ A plain-language description of every file, section, function, and notable detai
 
 | Variable | What it does |
 |---|---|
-| `const densityData` | An object mapping ~180 ISO 3-letter country codes (e.g. `"BGD"`) to their 2020 population density in people/km²; values range from 0.1 (Greenland) to 20,778 (Macao). |
-| `const cities` | An array of 20 megacity objects, each with `name`, `lat`, `lng`, `pop` (in raw numbers, e.g. 37,400,000), and `region`. |
+| `const densityData` | An object mapping ~180 ISO 3-letter country codes (e.g. `"BGD"`) to their 2020 population density in people/km². |
+| `const hardcodedCities` | An array of 20 megacity objects serving as fallback data for the "Major Cities" / "Both Layers" views. |
 | `let currentView` | A string (`'density'`, `'cities'`, or `'both'`) that tracks which layer is active; read by `done()` and `initMap()`. |
 | `let datamap` | Holds the live `Datamap` instance so `colorCountries()` and `addCityBubbles()` can access it after creation. |
+| `let wikiActive` | A boolean guard preventing stale canvas renders if the user switches views mid-load. |
 
 ---
 
@@ -130,9 +137,10 @@ Creates a fresh `Datamap` instance and wires up all configuration; called on pag
 
 | Conditional | What it does |
 |---|---|
-| `if (currentView !== 'cities')` | Calls `colorCountries()` — skipped when only city bubbles are requested. |
-| `if (currentView !== 'density')` | Calls `addCityBubbles()` — skipped when only the density layer is requested. |
-| `calculateStats()` | Always runs last to populate the stats bar regardless of view. |
+| `if (currentView === 'density' \|\| 'both')` | Calls `colorCountries()` — skipped when only city bubbles or wiki modes are requested. |
+| `if (currentView === 'cities' \|\| 'both')` | Calls `addCityBubbles()` — skipped when only the density layer or wiki modes are requested. |
+| `if (currentView === 'wiki')` | Calls `fetchAndRenderWikiCities(dm)` to draw the custom canvas heatmap. |
+| `if (currentView !== 'wiki')` | Calls `calculateStats()` normally for standard map views. |
 
 ---
 
@@ -159,8 +167,20 @@ Transforms the `cities` array into datamaps bubble objects and renders them on t
 
 ---
 
-#### `setView(view)`
-Handles a button click to switch between the three map modes.
+#### `fetchAndRenderWikiCities(dm)` / `renderHeatmap(dm, cities)`
+Handles rendering the decoupled static Wikipedia dataset onto a custom HTML5 canvas layer.
+
+| Step | What it does |
+|---|---|
+| `wikiActive = true` | Sets the load guard flag to prevent async race conditions. |
+| `await fetch('/cities.json')` | Downloads the bundled static city dataset via HTTP GET. |
+| `renderHeatmap(dm, cities)` | Overlays a screen-blended `<canvas>` scaled to the map projection, drawing procedurally generated logarithmically sized radial gradients ("glows") per city. Overlapping glows mathematically stack to simulate high-density urban clusters. |
+| `showWikiStats(cities, 'static')` | Updates the UI stats bar directly, skipping `calculateStats()` for density metrics. |
+
+---
+
+#### `setView(view, btn)`
+Handles button clicks to switch between the four map modes.
 
 | Step | What it does |
 |---|---|

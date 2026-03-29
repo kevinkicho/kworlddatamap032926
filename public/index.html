@@ -186,14 +186,14 @@
 
   <header>
     <h1>🌍 World Population Map</h1>
-    <p>Density, cities, and live Wikipedia data</p>
+    <p>Density, cities, and static Wikipedia data</p>
   </header>
 
   <div class="controls">
     <button class="btn active"    onclick="setView('density', this)">Population Density</button>
     <button class="btn"           onclick="setView('cities',  this)">Major Cities</button>
     <button class="btn"           onclick="setView('both',    this)">Both Layers</button>
-    <button class="btn wiki-btn"  onclick="setView('wiki',    this)">Wikipedia Cities (Live)</button>
+    <button class="btn wiki-btn"  onclick="setView('wiki',    this)">Wikipedia Cities</button>
   </div>
 
   <div id="map-wrapper">
@@ -201,7 +201,7 @@
 
     <div id="loading-overlay">
       <div class="spinner"></div>
-      <div id="loading-text">Querying Wikidata… this may take ~15 seconds</div>
+      <div id="loading-text">Loading static dataset...</div>
       <div id="loading-error"></div>
     </div>
   </div>
@@ -218,16 +218,13 @@
     </div>
   </div>
 
-  <!-- Wikipedia cities legend (shown for wiki view) -->
+  <!-- Wikipedia heatmap legend (shown for wiki view) -->
   <div id="wiki-legend">
-    <div class="wiki-legend-title">City population (Wikipedia / Wikidata)</div>
+    <div class="wiki-legend-title">600 cities · each glow = one city · glows stack brighter where cities cluster</div>
     <div class="wiki-tiers">
-      <span class="wiki-tier"><span class="tier-dot" style="background:#bd0026"></span>20M+</span>
-      <span class="wiki-tier"><span class="tier-dot" style="background:#f03b20"></span>10–20M</span>
-      <span class="wiki-tier"><span class="tier-dot" style="background:#fd8d3c"></span>5–10M</span>
-      <span class="wiki-tier"><span class="tier-dot" style="background:#fecc5c"></span>2–5M</span>
-      <span class="wiki-tier"><span class="tier-dot" style="background:#ffffb2"></span>1–2M</span>
-      <span class="wiki-tier"><span class="tier-dot" style="background:#74c476"></span>500k–1M</span>
+      <span class="wiki-tier"><span class="tier-dot" style="background:#fff8dc; box-shadow:0 0 5px #ffd700;"></span>Dense urban cluster</span>
+      <span class="wiki-tier"><span class="tier-dot" style="background:#ff8c00;"></span>Large isolated city</span>
+      <span class="wiki-tier"><span class="tier-dot" style="background:#5c1a00;"></span>Small city (~500k)</span>
     </div>
   </div>
 
@@ -317,6 +314,7 @@
     // ── State ─────────────────────────────────────────────────────────────────
     let currentView = 'density';
     let datamap;
+    let wikiActive = false;   // guard: prevents stale renders if user switches mid-load
 
     // ── Density color scale ───────────────────────────────────────────────────
     function getDensityColor(density) {
@@ -362,7 +360,7 @@
       document.getElementById('global-avg').textContent =
         (total / 1e9).toFixed(2) + 'B total';
       const badge = document.getElementById('wiki-source-badge');
-      badge.textContent = source === 'wikidata' ? 'Live from Wikidata' : 'Cached';
+      badge.textContent = 'Static Dataset';
       badge.style.display = 'inline';
       document.getElementById('data-source-line').textContent =
         'City data: Wikidata (Wikipedia) | Visualization: Datamaps + D3.js';
@@ -402,18 +400,14 @@
         element: document.getElementById('map-container'),
         projection: 'mercator',
         fills: {
-          defaultFill: '#21262d',
-          // Wikipedia city tiers (yellow-orange-red heat scale)
-          tier1: '#bd0026',
-          tier2: '#f03b20',
-          tier3: '#fd8d3c',
-          tier4: '#fecc5c',
-          tier5: '#ffffb2',
-          tier6: '#74c476',
+          // Near-black base for wiki view so canvas glows pop against darkness
+          defaultFill: currentView === 'wiki' ? '#070b0f' : '#21262d',
+          tier1: '#bd0026', tier2: '#f03b20', tier3: '#fd8d3c',
+          tier4: '#fecc5c', tier5: '#ffffb2', tier6: '#74c476',
         },
         geographyConfig: {
-          borderColor: '#30363d',
-          highlightBorderColor: '#58a6ff',
+          borderColor:          currentView === 'wiki' ? '#111820' : '#30363d',
+          highlightBorderColor: currentView === 'wiki' ? '#1e2d3d' : '#58a6ff',
           highlightFillColor: function(geo) {
             if (currentView === 'cities' || currentView === 'wiki') return '#2d333b';
             return getDensityColor(densityData[geo.id]);
@@ -460,56 +454,80 @@
       });
     }
 
-    // ── Wikipedia / Wikidata live city bubbles ────────────────────────────────
+    // ── Wikipedia cities — canvas heatmap ────────────────────────────────────
     async function fetchAndRenderWikiCities(dm) {
+      wikiActive = true;
       showLoading(true);
       document.getElementById('loading-text').style.display = 'block';
       try {
-        const res = await fetch('/api/cities');
+        const res = await fetch('/cities.json');
         if (!res.ok) throw new Error('Server returned ' + res.status);
-        const { cities, source } = await res.json();
+        const cities = await res.json();
+        if (!wikiActive) return;             // user switched away while file loaded
         if (!cities || cities.length === 0) throw new Error('No city data returned');
-        renderWikiCities(dm, cities);
-        showWikiStats(cities, source);
+        renderHeatmap(dm, cities);
+        showWikiStats(cities, 'static');
       } catch (err) {
-        showLoadingError(err.message);
+        if (wikiActive) showLoadingError(err.message);
         return;
       } finally {
-        showLoading(false);
+        if (wikiActive) showLoading(false);
       }
     }
 
-    function renderWikiCities(dm, cities) {
-      const bubbles = cities.map(city => ({
-        name:      city.name,
-        latitude:  city.lat,
-        longitude: city.lng,
-        // Square-root radius so bubble area is proportional to population.
-        // Clamp between 2 and 14 px.
-        radius:    Math.min(14, Math.max(2, Math.sqrt(city.pop / 500000) * 2)),
-        fillKey:   getWikiTier(city.pop),
-        population: city.pop,
-      }));
+    // Renders 600 city glows onto a <canvas> using screen-blend accumulation.
+    // Where many cities cluster the glows stack toward bright white — the
+    // same visual principle as luminocity3d.org.
+    function renderHeatmap(dm, cities) {
+      const container = document.getElementById('map-container');
 
-      dm.bubbles(bubbles, {
-        borderColor:  'rgba(0,0,0,0.4)',
-        borderWidth:  0.4,
-        fillOpacity:  0.72,
-        popupTemplate: function(geo, data) {
-          return `<div class="hoverinfo">
-            <strong>${data.name}</strong><br/>
-            Population: ${data.population.toLocaleString()}
-          </div>`;
-        },
-      });
+      // Canvas intrinsic size = SVG intrinsic size (datamaps uses offsetWidth/Height)
+      const canvas = document.createElement('canvas');
+      canvas.id = 'heatmap-canvas';
+      canvas.width  = container.offsetWidth;
+      canvas.height = container.offsetHeight;
+      // CSS 100%/100% makes it scale identically to the SVG underneath
+      canvas.style.cssText =
+        'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
+      container.appendChild(canvas);
+
+      const ctx = canvas.getContext('2d');
+      // screen blend: out = 1 − (1−a)(1−b)
+      // Overlapping glows accumulate toward white, just like light mixing.
+      ctx.globalCompositeOperation = 'screen';
+
+      for (const city of cities) {
+        const xy = dm.latLngToXY(city.lat, city.lng);
+        if (!xy) continue;
+        const [x, y] = xy;
+
+        // Radius: sqrt-scale — larger cities cast a wider glow
+        const r = Math.max(6, Math.sqrt(city.pop / 100000) * 2.2);
+
+        // Intensity: log-scale gives good visual spread across 500k → 25M
+        const intensity = Math.min(0.90, Math.log10(city.pop / 500000 + 1) * 0.72);
+
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        grad.addColorStop(0,    `rgba(255, 250, 200, ${intensity})`);        // warm white core
+        grad.addColorStop(0.25, `rgba(255, 160,  30, ${intensity * 0.70})`); // amber
+        grad.addColorStop(0.65, `rgba(180,  45,   5, ${intensity * 0.25})`); // deep orange haze
+        grad.addColorStop(1,    'rgba(0, 0, 0, 0)');                          // transparent edge
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
 
     // ── Switch view ───────────────────────────────────────────────────────────
     function setView(view, btn) {
+      wikiActive = false;   // stop any in-flight heatmap render from the previous view
       currentView = view;
       document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       updateLegend(view);
+      // Clearing innerHTML removes both the SVG and any heatmap canvas child
       document.getElementById('map-container').innerHTML = '';
       initMap();
     }
