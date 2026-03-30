@@ -1596,8 +1596,8 @@
         },
       }).addTo(map);
 
-      // Bring city markers on top of choropleth
-      if (wikiLayer) wikiLayer.bringToFront();
+      // Bring city markers on top of choropleth by re-adding the layer
+      if (wikiLayer) { map.removeLayer(wikiLayer); wikiLayer.addTo(map); }
 
       // Update legend
       updateChoroLegend(ind, range, covered);
