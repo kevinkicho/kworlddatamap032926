@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
   <title>World Cities Map</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -10,6 +11,7 @@
   <script src="https://unpkg.com/@joergdietrich/leaflet.terminator@1.0.0/L.Terminator.js"></script>
 
   <style>
+    :root { color-scheme: dark; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -1446,6 +1448,10 @@
         zoomControl: true, attributionControl: true,
       });
 
+      // Choropleth sits below city markers so city dot clicks always win
+      map.createPane('choroplethPane');
+      map.getPane('choroplethPane').style.zIndex = 350;  // below overlayPane (400)
+
       L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
@@ -1571,6 +1577,7 @@
       let covered = 0;
 
       choroplethLayer = L.geoJSON(worldGeo, {
+        pane: 'choroplethPane',
         style: function(feature) {
           const iso2 = feature.properties && feature.properties.iso2;
           const hasData = iso2 && countryData[iso2] && countryData[iso2][ind.key] != null;

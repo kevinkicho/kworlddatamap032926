@@ -31,7 +31,7 @@ try {
 }
 
 const OUT_FILE = path.join(__dirname, '..', 'public', 'world-countries.json');
-const TOPO_URL = 'https://unpkg.com/world-atlas@2/countries-110m.json';
+const TOPO_URL = 'https://unpkg.com/world-atlas@2/countries-50m.json';
 
 // ── ISO 3166-1 numeric → alpha-2 mapping ──────────────────────────────────────
 // world-atlas feature IDs are ISO 3166-1 numeric codes.
