@@ -375,6 +375,26 @@
     #choro-ramp { width: 120px; height: 8px; border-radius: 4px; display: block; }
     #choro-coverage { font-size: 0.72rem; color: #484f58; }
 
+    /* ── Companies section in wiki sidebar ── */
+    .co-section { padding: 14px 16px; border-top: 1px solid #30363d; }
+    .co-section-head { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #6e7681; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: space-between; }
+    .co-count-badge { background: #21262d; color: #8b949e; border-radius: 10px;
+      padding: 1px 8px; font-size: 0.7rem; font-weight: 400; letter-spacing: 0; }
+    .co-list { display: flex; flex-direction: column; gap: 8px; }
+    .co-card { background: #0d1117; border: 1px solid #21262d; border-radius: 7px;
+      padding: 9px 12px; font-size: 0.8rem; }
+    .co-name { color: #e6edf3; font-weight: 600; margin-bottom: 3px; }
+    .co-name a { color: #58a6ff; text-decoration: none; }
+    .co-name a:hover { text-decoration: underline; }
+    .co-meta { color: #8b949e; font-size: 0.75rem; line-height: 1.6; }
+    .co-meta span { color: #c9d1d9; }
+    .co-show-more { background: none; border: 1px solid #30363d; color: #6e7681;
+      border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; cursor: pointer;
+      font-family: inherit; margin-top: 6px; width: 100%; }
+    .co-show-more:hover { border-color: #58a6ff; color: #58a6ff; }
+
     /* ── Country popup (choropleth click) ── */
     .choro-popup-name { font-size: 1rem; font-weight: 700; color: #e6edf3; margin-bottom: 2px; }
     .choro-popup-region { font-size: 0.75rem; color: #8b949e; margin-bottom: 10px; }
@@ -591,6 +611,9 @@
     let sortCol          = 'pop';
     let sortDir          = 'desc';
     let editingKey       = null;    // _key of the city currently open in the modal
+
+    // Companies data keyed by city QID
+    let companiesData    = {};
 
     // Choropleth state
     let choroplethLayer  = null;
@@ -1267,6 +1290,10 @@
           <button class="wiki-expand-btn" id="wiki-expand-btn" onclick="toggleExtract()">Show more</button>
         </div>` : '';
 
+      // ── Companies headquartered here ──
+      const cityCompanies = city.qid ? (companiesData[city.qid] || []) : [];
+      const companiesHtml = buildCompaniesHtml(cityCompanies);
+
       body.innerHTML = `
         ${carouselHtml}
         <div class="wiki-city-header">
@@ -1282,6 +1309,7 @@
           ${wbSec}
         </table>
         ${extractHtml}
+        ${companiesHtml}
       `;
 
       if (images && images.length > 0) carStart(images);
@@ -1319,8 +1347,9 @@
       const footer  = document.getElementById('wiki-sidebar-footer');
       const titleEl = document.getElementById('wiki-sidebar-title');
 
-      titleEl.textContent = cityName;
-      footer.innerHTML    = '';
+      titleEl.textContent  = cityName;
+      footer.innerHTML     = '';
+      sidebar.dataset.qid  = qid;   // store QID so expandCompanies() can find it
       sidebar.classList.add('open');
 
       // Find full city object
@@ -1513,10 +1542,11 @@
       // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
       showLoading(true, 'Loading city dataset…');
       try {
-        const [citiesRes, countryRes, geoRes] = await Promise.all([
+        const [citiesRes, countryRes, geoRes, companiesRes] = await Promise.all([
           fetch('/cities-full.json'),
-          fetch('/country-data.json').catch(() => null),      // graceful — file may not exist yet
-          fetch('/world-countries.json').catch(() => null),   // graceful — run npm run fetch-world-geo
+          fetch('/country-data.json').catch(() => null),
+          fetch('/world-countries.json').catch(() => null),
+          fetch('/companies.json').catch(() => null),   // graceful — run npm run fetch-companies
         ]);
 
         if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -1541,7 +1571,20 @@
           console.info('[init] country-data.json not found — run "npm run fetch-country" to enable World Bank indicators');
         }
 
-        // ── Phase 5b: load world country borders GeoJSON (optional, for choropleth) ──
+        // ── Phase 5b: load companies data (optional) ──
+        if (companiesRes && companiesRes.ok) {
+          try {
+            companiesData = await companiesRes.json();
+            const n = Object.keys(companiesData).length;
+            console.log(`[init] Companies data loaded (${n} cities with HQ data)`);
+          } catch {
+            console.warn('[init] companies.json is malformed');
+          }
+        } else {
+          console.info('[init] companies.json not found — run "npm run fetch-companies"');
+        }
+
+        // ── Phase 5c: load world country borders GeoJSON (optional, for choropleth) ──
         if (geoRes && geoRes.ok) {
           try {
             worldGeo = await geoRes.json();
@@ -1754,6 +1797,64 @@
         buildChoropleth();
       });
       document.getElementById('choropleth-bar').style.display = '';
+    }
+
+    // ── Companies section builder ────────────────────────────────────────────────
+    const CO_PAGE = 10;   // companies shown before "Show more"
+
+    function fmtEmployees(n) {
+      if (!n) return null;
+      if (n >= 1e6)  return (n/1e6).toFixed(1)+'M employees';
+      if (n >= 1000) return Math.round(n/1000)+'k employees';
+      return n.toLocaleString()+' employees';
+    }
+
+    function buildCompaniesHtml(companies, showAll = false) {
+      if (!companies || companies.length === 0) return '';
+      const visible = showAll ? companies : companies.slice(0, CO_PAGE);
+      const cards   = visible.map(co => {
+        const wdUrl   = `https://www.wikidata.org/wiki/${escHtml(co.qid)}`;
+        const nameHtml = co.website
+          ? `<a href="${escHtml(co.website)}" target="_blank" rel="noopener">${escHtml(co.name)}</a>`
+          : escHtml(co.name);
+        const metaParts = [
+          co.industry  ? `<span>${escHtml(co.industry)}</span>` : null,
+          co.founded   ? `est. <span>${co.founded}</span>` : null,
+          fmtEmployees(co.employees) ? `<span>${fmtEmployees(co.employees)}</span>` : null,
+        ].filter(Boolean);
+        return `<div class="co-card">
+          <div class="co-name">${nameHtml}
+            <a href="${wdUrl}" target="_blank" rel="noopener"
+               style="margin-left:5px;font-size:0.7rem;color:#484f58;font-weight:400">Wikidata ↗</a>
+          </div>
+          ${metaParts.length ? `<div class="co-meta">${metaParts.join(' · ')}</div>` : ''}
+        </div>`;
+      }).join('');
+
+      const showMoreBtn = (!showAll && companies.length > CO_PAGE)
+        ? `<button class="co-show-more" onclick="expandCompanies(this)" data-qid="${companies[0]?.qid ? '' : ''}">
+             Show all ${companies.length} companies
+           </button>`
+        : '';
+
+      return `<div class="co-section">
+        <div class="co-section-head">
+          Headquartered here
+          <span class="co-count-badge">${companies.length}</span>
+        </div>
+        <div class="co-list">${cards}</div>
+        ${showMoreBtn}
+      </div>`;
+    }
+
+    function expandCompanies(btn) {
+      // Re-render with all companies for the currently open city
+      const body    = document.getElementById('wiki-sidebar-body');
+      const coSec   = btn.closest('.co-section');
+      const cityQid = document.getElementById('wiki-sidebar').dataset.qid;
+      if (!cityQid) return;
+      const companies = companiesData[cityQid] || [];
+      coSec.outerHTML = buildCompaniesHtml(companies, true);
     }
 
     function showLoading(visible, msg) {
