@@ -101,6 +101,23 @@ async function main() {
   console.log('Converting TopoJSON → GeoJSON…');
   const geojson = topo.feature(topology, topology.objects.countries);
 
+  // Fix antimeridian crossings (Russia, USA/Alaska, etc.)
+  // Polygons whose longitude range exceeds 180° are shifted so negative
+  // longitudes become positive, giving Leaflet a consistent coordinate set.
+  function fixRing(ring) {
+    const lngs = ring.map(c => c[0]);
+    if (Math.max(...lngs) - Math.min(...lngs) > 180) {
+      return ring.map(c => c[0] < 0 ? [c[0] + 360, c[1]] : c);
+    }
+    return ring;
+  }
+  for (const f of geojson.features) {
+    const g = f.geometry;
+    if (!g) continue;
+    if (g.type === 'Polygon')      g.coordinates = g.coordinates.map(fixRing);
+    if (g.type === 'MultiPolygon') g.coordinates = g.coordinates.map(p => p.map(fixRing));
+  }
+
   // Enrich with ISO-2 codes
   let matched = 0;
   for (const f of geojson.features) {
