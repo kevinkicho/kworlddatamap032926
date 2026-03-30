@@ -345,6 +345,43 @@
     .btn-cancel:hover { background: #30363d; }
     .btn-save   { background: #1f6feb; border: 1px solid #1f6feb; color: #fff; border-radius: 6px; padding: 7px 18px; font-size: 0.82rem; cursor: pointer; font-family: inherit; font-weight: 600; }
     .btn-save:hover { background: #388bfd; }
+
+    /* ── Choropleth control bar ── */
+    #choropleth-bar {
+      width: 100%; max-width: 1000px; margin-bottom: 12px;
+      background: #161b22; border: 1px solid #30363d; border-radius: 10px;
+      padding: 11px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    #choropleth-bar label { font-size: 0.82rem; color: #8b949e; white-space: nowrap; }
+    #choro-select {
+      background: #0d1117; border: 1px solid #30363d; color: #c9d1d9;
+      border-radius: 6px; padding: 5px 10px; font-size: 0.82rem; font-family: inherit;
+      outline: none; cursor: pointer;
+    }
+    #choro-select:focus { border-color: #58a6ff; }
+    #choro-toggle-btn {
+      background: none; border: 1px solid #30363d; color: #6e7681;
+      border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; cursor: pointer;
+      font-family: inherit; white-space: nowrap;
+    }
+    #choro-toggle-btn:hover { border-color: #58a6ff; color: #58a6ff; }
+    #choro-toggle-btn.on { border-color: #3fb950; color: #3fb950; background: rgba(63,185,80,0.08); }
+    #choro-legend {
+      display: flex; align-items: center; gap: 8px; margin-left: auto;
+    }
+    .choro-leg-label { font-size: 0.72rem; color: #6e7681; }
+    #choro-ramp { width: 120px; height: 8px; border-radius: 4px; display: block; }
+    #choro-coverage { font-size: 0.72rem; color: #484f58; }
+
+    /* ── Country popup (choropleth click) ── */
+    .choro-popup-name { font-size: 1rem; font-weight: 700; color: #e6edf3; margin-bottom: 2px; }
+    .choro-popup-region { font-size: 0.75rem; color: #8b949e; margin-bottom: 10px; }
+    .choro-popup-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .choro-popup-table tr { border-top: 1px solid #21262d; }
+    .choro-popup-table tr:first-child { border-top: none; }
+    .choro-popup-table td:first-child { color: #8b949e; padding: 4px 10px 4px 0; white-space: nowrap; }
+    .choro-popup-table td:last-child  { color: #c9d1d9; padding: 4px 0; font-variant-numeric: tabular-nums; }
+    .choro-popup-highlight { color: #58a6ff !important; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -353,6 +390,19 @@
     <h1>🌍 World Cities Map</h1>
     <p>Cities from Wikidata · zoom, explore, and filter</p>
   </header>
+
+  <!-- ── Choropleth control bar ── -->
+  <div id="choropleth-bar" style="display:none">
+    <label for="choro-select">Color countries by:</label>
+    <select id="choro-select"></select>
+    <button id="choro-toggle-btn" class="on" onclick="toggleChoropleth()">On</button>
+    <div id="choro-legend">
+      <span class="choro-leg-label" id="choro-lo-label"></span>
+      <canvas id="choro-ramp" width="120" height="8"></canvas>
+      <span class="choro-leg-label" id="choro-hi-label"></span>
+    </div>
+    <span id="choro-coverage"></span>
+  </div>
 
   <div id="map-wrapper">
     <div id="map-container"></div>
@@ -529,16 +579,42 @@
   <script>
     // ── Module state ──────────────────────────────────────────────────────────────
     let map;
-    let wikiLayer    = null;
-    let rawCities    = [];      // validated data from server, never mutated
-    let allCities    = [];      // rawCities with overrides applied
-    let countryData  = {};      // World Bank data keyed by ISO-2 code
-    let filtered     = [];
-    let visibleCount = 100;
-    const PAGE_SIZE  = 100;
-    let sortCol = 'pop';
-    let sortDir = 'desc';
-    let editingKey   = null;    // _key of the city currently open in the modal
+    let wikiLayer        = null;
+    let rawCities        = [];      // validated data from server, never mutated
+    let allCities        = [];      // rawCities with overrides applied
+    let countryData      = {};      // World Bank data keyed by ISO-2 code
+    let filtered         = [];
+    let visibleCount     = 100;
+    const PAGE_SIZE      = 100;
+    let sortCol          = 'pop';
+    let sortDir          = 'desc';
+    let editingKey       = null;    // _key of the city currently open in the modal
+
+    // Choropleth state
+    let choroplethLayer  = null;
+    let worldGeo         = null;    // GeoJSON FeatureCollection for country borders
+    let choroOn          = true;    // whether choropleth is currently visible
+    let activeChoroKey   = 'gdp_per_capita';
+
+    // ── Choropleth indicator definitions ────────────────────────────────────────
+    const CHORO_INDICATORS = [
+      { key:'gdp_per_capita',  label:'GDP per capita (USD)',       fmt: v => '$' + Math.round(v).toLocaleString(),
+        c0:[40,30,100],  c1:[60,210,100] },
+      { key:'life_expectancy', label:'Life expectancy (years)',    fmt: v => v.toFixed(1) + ' yrs',
+        c0:[210,50,50],  c1:[50,185,110] },
+      { key:'internet_pct',    label:'Internet users (%)',         fmt: v => v.toFixed(1) + '%',
+        c0:[35,35,80],   c1:[20,200,240] },
+      { key:'urban_pct',       label:'Urban population (%)',       fmt: v => v.toFixed(1) + '%',
+        c0:[150,130,70], c1:[30,120,210] },
+      { key:'literacy_rate',   label:'Literacy rate (%)',          fmt: v => v.toFixed(1) + '%',
+        c0:[200,80,40],  c1:[50,100,220] },
+      { key:'electricity_pct', label:'Electricity access (%)',     fmt: v => v.toFixed(1) + '%',
+        c0:[60,40,20],   c1:[240,200,50] },
+      { key:'gini',            label:'Income inequality (Gini)',   fmt: v => v.toFixed(1) + ' / 100',
+        c0:[50,180,100], c1:[220,50,50]  },   // low Gini = more equal = good (green)
+      { key:'child_mortality', label:'Child mortality (/ 1k births)', fmt: v => v.toFixed(1) + ' / 1k',
+        c0:[50,180,100], c1:[220,50,50]  },   // low mortality = good (green)
+    ];
 
     // ── localStorage persistence ──────────────────────────────────────────────────
     const LS_EDITS   = 'wcm_edits';
@@ -1383,12 +1459,13 @@
       }).addTo(map);
       setInterval(() => terminator.setTime(new Date()), 60_000);
 
-      // ── Phase 2: load city data (required) + country data (optional) in parallel ──
+      // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
       showLoading(true, 'Loading city dataset…');
       try {
-        const [citiesRes, countryRes] = await Promise.all([
+        const [citiesRes, countryRes, geoRes] = await Promise.all([
           fetch('/cities-full.json'),
-          fetch('/country-data.json').catch(() => null),   // graceful — file may not exist yet
+          fetch('/country-data.json').catch(() => null),      // graceful — file may not exist yet
+          fetch('/world-countries.json').catch(() => null),   // graceful — run npm run fetch-world-geo
         ]);
 
         if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -1413,9 +1490,25 @@
           console.info('[init] country-data.json not found — run "npm run fetch-country" to enable World Bank indicators');
         }
 
+        // ── Phase 5b: load world country borders GeoJSON (optional, for choropleth) ──
+        if (geoRes && geoRes.ok) {
+          try {
+            worldGeo = await geoRes.json();
+            console.log(`[init] World GeoJSON loaded (${worldGeo.features.length} features)`);
+          } catch {
+            console.warn('[init] world-countries.json is malformed — choropleth unavailable');
+          }
+        } else {
+          console.info('[init] world-countries.json not found — run "npm run fetch-world-geo" to enable choropleth');
+        }
+
         // ── Phase 6: apply overrides + build UI ──
         applyOverrides();
         rebuildMapLayer();
+        if (worldGeo && Object.keys(countryData).length) {
+          buildChoropleth();
+          initChoroControls();
+        }
         updateStats();
         showLoading(false);
 
@@ -1436,6 +1529,170 @@
       } catch (err) {
         showLoadingError(err.message);
       }
+    }
+
+    // ── Choropleth helpers ────────────────────────────────────────────────────────
+
+    function choroLerpRGB(c0, c1, t) {
+      return [
+        Math.round(c0[0] + (c1[0]-c0[0])*t),
+        Math.round(c0[1] + (c1[1]-c0[1])*t),
+        Math.round(c0[2] + (c1[2]-c0[2])*t),
+      ];
+    }
+
+    // Returns { min, max } across all countries that have the indicator value
+    function choroRange(indicatorKey) {
+      let min = Infinity, max = -Infinity;
+      for (const iso of Object.keys(countryData)) {
+        const v = countryData[iso][indicatorKey];
+        if (v != null && isFinite(v)) { if (v < min) min = v; if (v > max) max = v; }
+      }
+      return (min <= max) ? { min, max } : null;
+    }
+
+    // Returns CSS color string for a country ISO-2 code + indicator config
+    function choroColor(iso2, ind, range) {
+      const c = countryData[iso2];
+      if (!c) return '#1c2128';
+      const v = c[ind.key];
+      if (v == null || !isFinite(v)) return '#1c2128';
+      const t = range ? Math.max(0, Math.min(1, (v - range.min) / (range.max - range.min))) : 0.5;
+      const [r, g, b] = choroLerpRGB(ind.c0, ind.c1, t);
+      return `rgb(${r},${g},${b})`;
+    }
+
+    function buildChoropleth() {
+      if (!worldGeo || !choroOn) return;
+      if (choroplethLayer) { map.removeLayer(choroplethLayer); choroplethLayer = null; }
+
+      const ind   = CHORO_INDICATORS.find(i => i.key === activeChoroKey) || CHORO_INDICATORS[0];
+      const range = choroRange(ind.key);
+      let covered = 0;
+
+      choroplethLayer = L.geoJSON(worldGeo, {
+        style: function(feature) {
+          const iso2 = feature.properties && feature.properties.iso2;
+          const hasData = iso2 && countryData[iso2] && countryData[iso2][ind.key] != null;
+          if (hasData) covered++;
+          return {
+            fillColor:   choroColor(iso2, ind, range),
+            fillOpacity: hasData ? 0.70 : 0.12,
+            color:       '#30363d',
+            weight:      0.6,
+            opacity:     0.8,
+          };
+        },
+        onEachFeature: function(feature, layer) {
+          const iso2 = feature.properties && feature.properties.iso2;
+          layer.on({
+            mouseover: function(e) {
+              e.target.setStyle({ weight: 1.5, color: '#58a6ff', fillOpacity: e.target.options.fillOpacity + 0.15 });
+              e.target.bringToFront();
+            },
+            mouseout:  function(e) { choroplethLayer.resetStyle(e.target); },
+            click:     function(e) { showCountryPopup(iso2, e.latlng); },
+          });
+        },
+      }).addTo(map);
+
+      // Bring city markers on top of choropleth
+      if (wikiLayer) wikiLayer.bringToFront();
+
+      // Update legend
+      updateChoroLegend(ind, range, covered);
+    }
+
+    function updateChoroLegend(ind, range, covered) {
+      const lo = document.getElementById('choro-lo-label');
+      const hi = document.getElementById('choro-hi-label');
+      const cv = document.getElementById('choro-coverage');
+      const canvas = document.getElementById('choro-ramp');
+      const ctx = canvas.getContext('2d');
+
+      if (range) {
+        lo.textContent = ind.fmt(range.min);
+        hi.textContent = ind.fmt(range.max);
+      } else {
+        lo.textContent = '—'; hi.textContent = '—';
+      }
+      cv.textContent = covered ? `(${covered} countries)` : '';
+
+      // Draw gradient
+      const grad = ctx.createLinearGradient(0, 0, 120, 0);
+      for (let s = 0; s <= 10; s++) {
+        const t = s / 10;
+        const [r, g, b] = choroLerpRGB(ind.c0, ind.c1, t);
+        grad.addColorStop(t, `rgb(${r},${g},${b})`);
+      }
+      ctx.clearRect(0, 0, 120, 8);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 120, 8);
+    }
+
+    function showCountryPopup(iso2, latlng) {
+      if (!iso2) return;
+      const c = countryData[iso2];
+      if (!c) return;
+
+      const ind = CHORO_INDICATORS.find(i => i.key === activeChoroKey);
+      const rows = [
+        ['GDP per capita',     c.gdp_per_capita  != null ? '$'+Math.round(c.gdp_per_capita).toLocaleString() + (c.gdp_per_capita_year ? ` <small style="color:#484f58">${c.gdp_per_capita_year}</small>` : '') : null],
+        ['Life expectancy',    c.life_expectancy != null ? c.life_expectancy.toFixed(1)+' yrs' : null],
+        ['Internet users',     c.internet_pct    != null ? c.internet_pct.toFixed(1)+'%' : null],
+        ['Urban population',   c.urban_pct       != null ? c.urban_pct.toFixed(1)+'%' : null],
+        ['Literacy rate',      c.literacy_rate   != null ? c.literacy_rate.toFixed(1)+'%' : null],
+        ['Electricity access', c.electricity_pct != null ? c.electricity_pct.toFixed(1)+'%' : null],
+        ['Income inequality (Gini)', c.gini      != null ? c.gini.toFixed(1)+' / 100' : null],
+        ['Child mortality',    c.child_mortality != null ? c.child_mortality.toFixed(1)+' / 1k' : null],
+        ['Income level',       c.income_level || null],
+      ].filter(([, v]) => v != null);
+
+      const tableRows = rows.map(([label, val]) => {
+        const isActive = ind && CHORO_INDICATORS.find(i => i.key === activeChoroKey) &&
+                         label.toLowerCase().includes(activeChoroKey.replace(/_/g,' ').slice(0,6));
+        return `<tr><td>${escHtml(label)}</td><td class="${isActive ? 'choro-popup-highlight' : ''}">${val}</td></tr>`;
+      }).join('');
+
+      const html = `
+        <div class="choro-popup-name">${escHtml(c.name || iso2)}</div>
+        <div class="choro-popup-region">${escHtml(c.region || '')} · World Bank data</div>
+        <table class="choro-popup-table">${tableRows}</table>`;
+
+      L.popup({ maxWidth: 280, className: '' })
+       .setLatLng(latlng)
+       .setContent(html)
+       .openOn(map);
+    }
+
+    function toggleChoropleth() {
+      choroOn = !choroOn;
+      const btn = document.getElementById('choro-toggle-btn');
+      if (choroOn) {
+        btn.textContent = 'On';
+        btn.classList.add('on');
+        buildChoropleth();
+      } else {
+        btn.textContent = 'Off';
+        btn.classList.remove('on');
+        if (choroplethLayer) { map.removeLayer(choroplethLayer); choroplethLayer = null; }
+      }
+    }
+
+    function initChoroControls() {
+      const sel = document.getElementById('choro-select');
+      CHORO_INDICATORS.forEach(ind => {
+        const opt = document.createElement('option');
+        opt.value = ind.key;
+        opt.textContent = ind.label;
+        if (ind.key === activeChoroKey) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', function() {
+        activeChoroKey = this.value;
+        buildChoropleth();
+      });
+      document.getElementById('choropleth-bar').style.display = '';
     }
 
     function showLoading(visible, msg) {
