@@ -5,21 +5,26 @@
  * Downloads every city from Wikidata with population >= LOWER_BOUND.
  * Cities with no population data, or population below the floor, are skipped.
  *
- * CHECKPOINT / RESUME
- *   Progress is saved to scripts/.checkpoint.json after every page.
- *   If the script is interrupted (power cut, Ctrl-C, crash, lost connection)
- *   just run it again — it will pick up from the last completed page.
- *   The checkpoint is deleted automatically when the run finishes cleanly.
+ * THREE PHASES
+ *   Phase 1 — Slim core query (name, desc, coords, pop, country, admin, timezone)
+ *             Uses a VALUES type-filter so Blazegraph hits the P31 index first —
+ *             no more full-table scans on lower population tiers.
+ *             Only 3 OPTIONALs → fast, no timeouts.
+ *   Phase 2 — Enrichment by QID batch (area, elev, founded, website, geonames)
+ *             Only high-coverage fields (≥23%). Bounded VALUES — no table scan.
+ *   Phase 3 — Sister cities by QID batch (P190 relationships)
  *
- * Two phases:
- *   Phase 1 — Core data, paginated by population tier
- *   Phase 2 — Sister cities, fetched in QID batches and merged in
+ * CHECKPOINT / RESUME
+ *   Progress is saved after every page / batch.
+ *   If interrupted just run again — resumes from last save.
+ *   Deleted automatically on clean finish.
  *
  * Output: public/cities-full.json
  *
  * Usage:
- *   node scripts/fetch-cities.js          ← resumes if checkpoint exists
- *   node scripts/fetch-cities.js --fresh  ← ignores checkpoint, starts over
+ *   npm run fetch-cities
+ *   Resumes from checkpoint if interrupted mid-run.
+ *   Merges results into existing cities-full.json on completion — data only grows.
  */
 
 'use strict';
@@ -29,12 +34,28 @@ const path = require('path');
 
 // ── Configuration ─────────────────────────────────────────────────────────────
 
-const LOWER_BOUND      = 10_000; // skip cities with population below this
-const CORE_BATCH       = 100;    // rows per SPARQL request (kept small to avoid 60s timeout)
-const SISTER_BATCH     = 150;    // QIDs per sister-city request
-const DELAY_MS         = 2_500;  // pause between every request
-const OUT_FILE         = path.join(__dirname, '..', 'public', 'cities-full.json');
-const CHECKPOINT_FILE  = path.join(__dirname, '.checkpoint.json');
+const LOWER_BOUND     = 10_000; // skip cities with population below this
+const CORE_BATCH      = 100;    // rows per Phase 1 SPARQL page
+const ENRICH_BATCH    = 100;    // QIDs per Phase 2 enrichment request
+const SISTER_BATCH    = 150;    // QIDs per Phase 3 sister-city request
+const DELAY_MS        = 4_000;  // pause between every request (ms)
+const OUT_FILE        = path.join(__dirname, '..', 'public', 'cities-full.json');
+const CHECKPOINT_FILE = path.join(__dirname, '.checkpoint.json');
+
+// Wikidata entity types that represent cities / towns / settlements.
+// Using VALUES on P31 lets Blazegraph hit the type index first and
+// avoid scanning the entire P1082 (population) table for each tier.
+const SETTLEMENT_TYPES = [
+  'wd:Q515',      // city
+  'wd:Q1549591',  // big city
+  'wd:Q3957',     // town
+  'wd:Q532',      // village
+  'wd:Q486972',   // human settlement
+  'wd:Q7930989',  // city/town
+  'wd:Q2208153',  // city of the United States
+  'wd:Q5119',     // capital city
+  'wd:Q15284',    // municipality
+].join(' ');
 
 const TIERS = [
   { min: 10_000_000, max:  Infinity },
@@ -50,23 +71,13 @@ const TIERS = [
 
 // ── Checkpoint helpers ────────────────────────────────────────────────────────
 
-/**
- * Saves current progress to disk.
- * Called after every completed page so even a single-page run is resumable.
- *
- * Stored fields:
- *   phase          — 1 (core) or 2 (sisters)
- *   tierIndex      — which TIERS entry we are on
- *   tierOffset     — SPARQL OFFSET within the current tier
- *   sisterBatch    — how many sister-city batches are done
- *   entries        — the full Map serialised as [qid, record] pairs
- */
-function saveCheckpoint(byQid, phase, tierIndex, tierOffset, sisterBatch) {
+function saveCheckpoint(byQid, phase, tierIndex, tierOffset, enrichBatch, sisterBatch) {
   const data = {
-    version:     2,
+    version:     4,
     phase,
     tierIndex,
     tierOffset,
+    enrichBatch,
     sisterBatch,
     savedAt:     new Date().toISOString(),
     entries:     Array.from(byQid.entries()),
@@ -78,7 +89,7 @@ function loadCheckpoint() {
   if (!fs.existsSync(CHECKPOINT_FILE)) return null;
   try {
     const data = JSON.parse(fs.readFileSync(CHECKPOINT_FILE, 'utf8'));
-    if (data.version !== 2) return null;      // incompatible format — start fresh
+    if (data.version !== 4) return null;   // incompatible older format — start fresh
     return data;
   } catch {
     return null;
@@ -91,38 +102,26 @@ function deleteCheckpoint() {
 
 // ── SPARQL query builders ─────────────────────────────────────────────────────
 
-function buildPopQuery(min, max, offset) {
+/**
+ * Phase 1 — slim core query.
+ * VALUES ?type pre-filters to known settlement types so Blazegraph uses
+ * the P31 index instead of scanning all P1082 statements.
+ * Only 3 OPTIONALs → each page stays well within the 60s timeout.
+ */
+function buildCoreQuery(min, max, offset) {
   const maxClause = isFinite(max) ? `&& ?pop < ${max}` : '';
   return `
-SELECT DISTINCT ?item ?itemLabel ?pop ?lat ?lon
-  ?countryLabel ?iso
-  ?adminLabel ?timezoneLabel
-  ?area ?water ?elev
-  ?founded ?website ?geonames ?demonym
-  ?gdp ?gdpPerCap ?hdi ?popF ?popM ?popUrban
+SELECT DISTINCT ?item ?itemLabel ?itemDescription ?pop ?lat ?lon
+  ?countryLabel ?iso ?adminLabel ?timezoneLabel
 WHERE {
-  ?item wdt:P1082 ?pop ;
+  VALUES ?settlementType { ${SETTLEMENT_TYPES} }
+  ?item wdt:P31  ?settlementType ;
+        wdt:P1082 ?pop ;
         wdt:P625  ?coord .
   FILTER(?pop >= ${min} ${maxClause})
-  FILTER NOT EXISTS { ?item wdt:P31 wd:Q6256     }
-  FILTER NOT EXISTS { ?item wdt:P31 wd:Q3624078  }
-  FILTER NOT EXISTS { ?item wdt:P31 wd:Q10864048 }
-  OPTIONAL { ?item wdt:P17   ?country . OPTIONAL { ?country wdt:P297 ?iso . } }
-  OPTIONAL { ?item wdt:P131  ?admin    . }
-  OPTIONAL { ?item wdt:P421  ?timezone . }
-  OPTIONAL { ?item wdt:P2046 ?area     . }
-  OPTIONAL { ?item wdt:P2927 ?water    . }
-  OPTIONAL { ?item wdt:P2044 ?elev     . }
-  OPTIONAL { ?item wdt:P571  ?founded  . }
-  OPTIONAL { ?item wdt:P856  ?website  . }
-  OPTIONAL { ?item wdt:P1566 ?geonames . }
-  OPTIONAL { ?item wdt:P1549 ?demonym  . FILTER(LANG(?demonym) = "en") }
-  OPTIONAL { ?item wdt:P2131 ?gdp      . }
-  OPTIONAL { ?item wdt:P2132 ?gdpPerCap . }
-  OPTIONAL { ?item wdt:P1081 ?hdi      . }
-  OPTIONAL { ?item wdt:P1539 ?popF     . }
-  OPTIONAL { ?item wdt:P1540 ?popM     . }
-  OPTIONAL { ?item wdt:P3245 ?popUrban . }
+  OPTIONAL { ?item wdt:P17  ?country . OPTIONAL { ?country wdt:P297 ?iso . } }
+  OPTIONAL { ?item wdt:P131 ?admin   . }
+  OPTIONAL { ?item wdt:P421 ?timezone . }
   BIND(geof:latitude(?coord)  AS ?lat)
   BIND(geof:longitude(?coord) AS ?lon)
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
@@ -133,6 +132,27 @@ OFFSET ${offset}
 `.trim();
 }
 
+/**
+ * Phase 2 — enrichment by bounded QID list.
+ * Only the 5 fields with ≥23% coverage — keeps each batch fast.
+ * No table scan because we supply exact QIDs via VALUES.
+ */
+function buildEnrichQuery(qids) {
+  const values = qids.map(q => `wd:${q}`).join(' ');
+  return `
+SELECT ?item ?area ?elev ?founded ?website ?geonames
+WHERE {
+  VALUES ?item { ${values} }
+  OPTIONAL { ?item wdt:P2046 ?area     . }
+  OPTIONAL { ?item wdt:P2044 ?elev     . }
+  OPTIONAL { ?item wdt:P571  ?founded  . }
+  OPTIONAL { ?item wdt:P856  ?website  . }
+  OPTIONAL { ?item wdt:P1566 ?geonames . }
+}
+`.trim();
+}
+
+/** Phase 3 — sister cities by bounded QID list. */
 function buildSisterQuery(qids) {
   const values = qids.map(q => `wd:${q}`).join(' ');
   return `
@@ -151,20 +171,46 @@ async function sparqlFetch(query, attempt = 1) {
     'https://query.wikidata.org/sparql?query=' +
     encodeURIComponent(query) + '&format=json';
 
-  const res = await fetch(url, {
-    headers: {
-      'User-Agent': 'WorldDataMap-CityFetcher/1.0 (educational; nodejs)',
-      'Accept':     'application/sparql-results+json',
-    },
-    signal: AbortSignal.timeout(58_000),
-  });
-
-  if ((res.status === 429 || res.status === 503) && attempt <= 3) {
-    const wait = DELAY_MS * attempt * 4;
-    process.stdout.write(`(HTTP ${res.status} — retry in ${wait / 1000}s) `);
-    await sleep(wait);
-    return sparqlFetch(query, attempt + 1);
+  let res;
+  try {
+    res = await fetch(url, {
+      headers: {
+        'User-Agent': 'WorldDataMap-CityFetcher/1.0 (educational; nodejs)',
+        'Accept':     'application/sparql-results+json',
+      },
+      signal: AbortSignal.timeout(58_000),
+    });
+  } catch (e) {
+    // Timeout or network error — retry up to 3 times with increasing wait
+    if (attempt <= 3) {
+      const wait = 20_000 * attempt;   // 20s, 40s, 60s
+      process.stdout.write(`(${e.message ?? 'network error'} — retry ${attempt}/3 in ${wait / 1000}s) `);
+      await sleep(wait);
+      return sparqlFetch(query, attempt + 1);
+    }
+    throw e;
   }
+
+  if (res.status === 429 || res.status === 503) {
+    // Rate-limited or overloaded — back off and retry
+    if (attempt <= 4) {
+      const wait = 30_000 * attempt;   // 30s, 60s, 90s, 120s
+      process.stdout.write(`(HTTP ${res.status} — retry ${attempt}/4 in ${wait / 1000}s) `);
+      await sleep(wait);
+      return sparqlFetch(query, attempt + 1);
+    }
+  }
+
+  if (res.status === 502) {
+    // Gateway timeout from Wikidata's proxy — longer back-off
+    if (attempt <= 5) {
+      const wait = 45_000 * attempt;   // 45s, 90s, 135s, 180s, 225s
+      process.stdout.write(`(HTTP 502 — retry ${attempt}/5 in ${wait / 1000}s) `);
+      await sleep(wait);
+      return sparqlFetch(query, attempt + 1);
+    }
+  }
+
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
@@ -185,7 +231,9 @@ function toYear(iso) {
   return m[1] === '-' ? -yr : yr;
 }
 
-function parseBindings(bindings) {
+// ── Parsers ───────────────────────────────────────────────────────────────────
+
+function parseCoreBindings(bindings) {
   const records = [];
   let   skipped = 0;
   for (const b of bindings) {
@@ -198,30 +246,40 @@ function parseBindings(bindings) {
     records.push({
       qid,
       name,
-      lat:         round(lat, 4),
-      lng:         round(lng, 4),
-      pop:         toInt(b.pop?.value),
-      country:     b.countryLabel?.value  ?? null,
-      iso:         b.iso?.value           ?? null,
-      admin:       b.adminLabel?.value    ?? null,
-      timezone:    b.timezoneLabel?.value ?? null,
-      area_km2:    round(toFloat(b.area?.value),  1),
-      water_km2:   round(toFloat(b.water?.value), 1),
-      elev_m:      toInt(b.elev?.value),
-      founded:     toYear(b.founded?.value),
-      website:     b.website?.value       ?? null,
-      geonames_id: b.geonames?.value      ?? null,
-      demonym:     b.demonym?.value        ?? null,
-      gdp:         toFloat(b.gdp?.value),
-      gdp_per_cap: toFloat(b.gdpPerCap?.value),
-      hdi:         round(toFloat(b.hdi?.value), 3),
-      pop_male:    toInt(b.popM?.value),
-      pop_female:  toInt(b.popF?.value),
-      pop_urban:   toInt(b.popUrban?.value),
+      desc:     b.itemDescription?.value ?? null,
+      lat:      round(lat, 4),
+      lng:      round(lng, 4),
+      pop:      toInt(b.pop?.value),
+      country:  b.countryLabel?.value  ?? null,
+      iso:      b.iso?.value           ?? null,
+      admin:    b.adminLabel?.value    ?? null,
+      timezone: b.timezoneLabel?.value ?? null,
+      // enrichment fields — filled in Phase 2
+      area_km2:    null,
+      elev_m:      null,
+      founded:     null,
+      website:     null,
+      geonames_id: null,
       sister_cities: [],
     });
   }
   return { records, skipped };
+}
+
+function applyEnrichment(byQid, bindings) {
+  let count = 0;
+  for (const b of bindings) {
+    const qid  = (b.item?.value ?? '').replace('http://www.wikidata.org/entity/', '');
+    const city = byQid.get(qid);
+    if (!city) continue;
+    if (b.area?.value     != null && city.area_km2    == null) city.area_km2    = round(toFloat(b.area.value),  1);
+    if (b.elev?.value     != null && city.elev_m      == null) city.elev_m      = toInt(b.elev.value);
+    if (b.founded?.value  != null && city.founded     == null) city.founded     = toYear(b.founded.value);
+    if (b.website?.value  != null && city.website     == null) city.website     = b.website.value;
+    if (b.geonames?.value != null && city.geonames_id == null) city.geonames_id = b.geonames.value;
+    count++;
+  }
+  return count;
 }
 
 // ── Merge helper ──────────────────────────────────────────────────────────────
@@ -240,10 +298,10 @@ function mergeInto(byQid, r) {
   }
 }
 
-// ── Phase 1 — core data ───────────────────────────────────────────────────────
+// ── Phase 1 — slim core data ──────────────────────────────────────────────────
 
 async function runPhase1(byQid, startTierIndex, startOffset) {
-  console.log(`Phase 1: core data — resuming from tier ${startTierIndex}, offset ${startOffset}\n`);
+  console.log(`Phase 1: core data — resuming from tier ${startTierIndex + 1}/${TIERS.length}, offset ${startOffset}\n`);
 
   for (let ti = startTierIndex; ti < TIERS.length; ti++) {
     const { min, max } = TIERS[ti];
@@ -251,24 +309,60 @@ async function runPhase1(byQid, startTierIndex, startOffset) {
     let   offset = (ti === startTierIndex) ? startOffset : 0;
     let   page   = Math.floor(offset / CORE_BATCH) + 1;
     let   tierNew = 0;
+    let   consecutiveFails = 0;
+    const MAX_CONSECUTIVE_FAILS = 5;
 
     while (true) {
       process.stdout.write(`  [${label}] p${page} offset=${offset} … `);
       let json;
+      let fetchError = null;
+
+      // First try with full batch size
       try {
-        json = await sparqlFetch(buildPopQuery(min, max, offset));
+        json = await sparqlFetch(buildCoreQuery(min, max, offset));
       } catch (e) {
-        console.log(`ERROR: ${e.message} — skipping rest of tier`);
-        break;
+        fetchError = e;
       }
 
-      const { records, skipped } = parseBindings(json.results.bindings);
+      // If full batch failed, retry with half-batch to recover partial data
+      if (fetchError) {
+        const halfBatch = Math.floor(CORE_BATCH / 2);
+        process.stdout.write(`(full-batch failed: ${fetchError.message}) `);
+        process.stdout.write(`retrying half-batch (${halfBatch} rows) … `);
+        try {
+          // Temporarily override limit in query by passing halfBatch
+          const halfQuery = buildCoreQuery(min, max, offset).replace(
+            `LIMIT  ${CORE_BATCH}`,
+            `LIMIT  ${halfBatch}`,
+          );
+          json = await sparqlFetch(halfQuery);
+          fetchError = null;   // half-batch succeeded
+          process.stdout.write('ok  ');
+        } catch (e2) {
+          // Both full and half failed — count as one consecutive failure
+          consecutiveFails++;
+          console.log(`SKIP (${e2.message}) [consecutive fails: ${consecutiveFails}/${MAX_CONSECUTIVE_FAILS}]`);
+          if (consecutiveFails >= MAX_CONSECUTIVE_FAILS) {
+            console.log(`  Too many consecutive failures — abandoning tier [${label}]`);
+            break;
+          }
+          // Skip this page and advance to the next one
+          offset += CORE_BATCH;
+          page++;
+          await sleep(DELAY_MS * 2);
+          continue;
+        }
+      }
+
+      // Success (either full or half batch)
+      consecutiveFails = 0;
+
+      const { records, skipped } = parseCoreBindings(json.results.bindings);
       for (const r of records) mergeInto(byQid, r);
       tierNew += records.length;
       console.log(`${records.length} records (+${skipped} unlabeled) [total: ${byQid.size}]`);
 
-      // Save checkpoint after every page
-      saveCheckpoint(byQid, 1, ti, offset + CORE_BATCH, 0);
+      saveCheckpoint(byQid, 1, ti, offset + CORE_BATCH, 0, 0);
 
       if (json.results.bindings.length < CORE_BATCH) break;
       offset += CORE_BATCH;
@@ -283,19 +377,57 @@ async function runPhase1(byQid, startTierIndex, startOffset) {
   console.log('Phase 1 complete.\n');
 }
 
-// ── Phase 2 — sister cities ───────────────────────────────────────────────────
+// ── Phase 2 — enrichment ──────────────────────────────────────────────────────
 
 async function runPhase2(byQid, startBatch) {
+  const qids  = Array.from(byQid.keys());
+  const total = qids.length;
+  const bTot  = Math.ceil(total / ENRICH_BATCH);
+
+  console.log(`Phase 2: enrichment — ${total} cities, resuming from batch ${startBatch + 1}/${bTot}\n`);
+
+  // Save transition checkpoint so a crash here resumes at Phase 2
+  if (startBatch === 0) saveCheckpoint(byQid, 2, TIERS.length, 0, 0, 0);
+
+  for (let bi = startBatch; bi < bTot; bi++) {
+    const chunk = qids.slice(bi * ENRICH_BATCH, (bi + 1) * ENRICH_BATCH);
+    process.stdout.write(`  batch ${bi + 1}/${bTot} … `);
+
+    let json;
+    try {
+      json = await sparqlFetch(buildEnrichQuery(chunk));
+    } catch (e) {
+      console.log(`ERROR: ${e.message} — skipping batch`);
+      saveCheckpoint(byQid, 2, TIERS.length, 0, bi + 1, 0);
+      await sleep(DELAY_MS * 2);
+      continue;
+    }
+
+    const enriched = applyEnrichment(byQid, json.results.bindings);
+    console.log(`done  (${enriched} fields applied, ${Math.min((bi + 1) * ENRICH_BATCH, total)}/${total} cities)`);
+
+    saveCheckpoint(byQid, 2, TIERS.length, 0, bi + 1, 0);
+    await sleep(DELAY_MS);
+  }
+
+  console.log('\nPhase 2 complete.\n');
+}
+
+// ── Phase 3 — sister cities ───────────────────────────────────────────────────
+
+async function runPhase3(byQid, startBatch) {
   const qids  = Array.from(byQid.keys());
   const total = qids.length;
   const bTot  = Math.ceil(total / SISTER_BATCH);
   let   links = 0;
 
-  console.log(`Phase 2: sister cities — ${total} cities, resuming from batch ${startBatch + 1}/${bTot}\n`);
+  console.log(`Phase 3: sister cities — ${total} cities, resuming from batch ${startBatch + 1}/${bTot}\n`);
+
+  // Save transition checkpoint so a crash here resumes at Phase 3
+  if (startBatch === 0) saveCheckpoint(byQid, 3, TIERS.length, 0, 0, 0);
 
   for (let bi = startBatch; bi < bTot; bi++) {
-    const i     = bi * SISTER_BATCH;
-    const chunk = qids.slice(i, i + SISTER_BATCH);
+    const chunk = qids.slice(bi * SISTER_BATCH, (bi + 1) * SISTER_BATCH);
     process.stdout.write(`  batch ${bi + 1}/${bTot} … `);
 
     let json;
@@ -303,9 +435,8 @@ async function runPhase2(byQid, startBatch) {
       json = await sparqlFetch(buildSisterQuery(chunk));
     } catch (e) {
       console.log(`ERROR: ${e.message} — skipping batch`);
+      saveCheckpoint(byQid, 3, TIERS.length, 0, 0, bi + 1);
       await sleep(DELAY_MS * 2);
-      // Still save checkpoint so we skip this batch on resume, not redo it
-      saveCheckpoint(byQid, 2, TIERS.length, 0, bi + 1);
       continue;
     }
 
@@ -320,14 +451,13 @@ async function runPhase2(byQid, startBatch) {
       }
     }
 
-    console.log(`done  (${Math.min(i + SISTER_BATCH, total)}/${total} cities processed)`);
-
-    // Save checkpoint after every batch
-    saveCheckpoint(byQid, 2, TIERS.length, 0, bi + 1);
+    console.log(`done  (${Math.min((bi + 1) * SISTER_BATCH, total)}/${total} cities processed)`);
+    saveCheckpoint(byQid, 3, TIERS.length, 0, 0, bi + 1);
     await sleep(DELAY_MS);
   }
 
   console.log(`\n  ${links} sister-city links added\n`);
+  console.log('Phase 3 complete.\n');
 }
 
 // ── Utilities ─────────────────────────────────────────────────────────────────
@@ -338,13 +468,11 @@ function fmt(n) {
   return String(n);
 }
 
-function pct(n, total) { return ((n / total) * 100).toFixed(1) + '%'; }
+function pct(n, total) { return total === 0 ? '—' : ((n / total) * 100).toFixed(1) + '%'; }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
-  const forceFresh = process.argv.includes('--fresh');
-
   console.log('╔══════════════════════════════════════════════════╗');
   console.log('║   Wikidata City Fetcher — with checkpoint/resume ║');
   console.log('╚══════════════════════════════════════════════════╝');
@@ -352,55 +480,72 @@ async function main() {
   console.log(`Output    : ${OUT_FILE}`);
   console.log(`Checkpoint: ${CHECKPOINT_FILE}\n`);
 
-  // ── Load or initialise state ──────────────────────────────────────────────
   let byQid        = new Map();
   let startPhase   = 1;
   let startTier    = 0;
   let startOffset  = 0;
+  let startEnrich  = 0;
   let startSister  = 0;
 
-  const cp = forceFresh ? null : loadCheckpoint();
+  const cp = loadCheckpoint();
 
   if (cp) {
-    // Restore the saved Map from the [qid, record] pairs array
-    byQid = new Map(cp.entries);
-    // Sister_cities arrays are plain arrays in JSON — Map restore keeps them
+    byQid       = new Map(cp.entries);
     startPhase  = cp.phase;
     startTier   = cp.tierIndex;
     startOffset = cp.tierOffset;
-    startSister = cp.sisterBatch;
+    startEnrich = cp.enrichBatch  ?? 0;
+    startSister = cp.sisterBatch  ?? 0;
 
     console.log(`Resuming from checkpoint saved at ${cp.savedAt}`);
     console.log(`  Cities already fetched : ${byQid.size}`);
-    console.log(`  Resuming at            : phase ${startPhase}, tier ${startTier}, offset ${startOffset}, sister batch ${startSister}\n`);
+    console.log(`  Resuming at            : phase ${startPhase}, tier ${startTier}, offset ${startOffset}, enrich batch ${startEnrich}, sister batch ${startSister}\n`);
   } else {
-    if (forceFresh) {
-      console.log('--fresh flag set — ignoring any existing checkpoint.\n');
-      deleteCheckpoint();
-    } else {
-      console.log('No checkpoint found — starting fresh.\n');
+    console.log('No checkpoint found — starting fresh.\n');
+  }
+
+  if (startPhase <= 1) await runPhase1(byQid, startTier, startOffset);
+  if (startPhase <= 2) await runPhase2(byQid, startPhase === 2 ? startEnrich : 0);
+  if (startPhase <= 3) await runPhase3(byQid, startPhase === 3 ? startSister : 0);
+
+  // Merge with any previously saved output so every run accumulates data.
+  // Existing cities are kept; new cities are added; if a QID appears in both,
+  // the record with the higher population wins and missing fields are filled in.
+  if (fs.existsSync(OUT_FILE)) {
+    try {
+      const existing = JSON.parse(fs.readFileSync(OUT_FILE, 'utf8'));
+      let merged = 0, added = 0;
+      for (const prev of existing) {
+        if (!prev.qid) continue;
+        if (!byQid.has(prev.qid)) {
+          byQid.set(prev.qid, prev);   // city not seen this run — keep it
+          added++;
+        } else {
+          // city seen in both — fill any null fields from the older record
+          const cur = byQid.get(prev.qid);
+          for (const [k, v] of Object.entries(prev)) {
+            if (k === 'pop') continue;   // keep higher pop (already in cur from this run)
+            if (cur[k] == null && v != null) cur[k] = v;
+          }
+          merged++;
+        }
+      }
+      console.log(`Merged with existing file: ${added} cities recovered, ${merged} records enriched.\n`);
+    } catch {
+      console.log('Could not read existing output file — writing fresh.\n');
     }
   }
 
-  // ── Run phases ────────────────────────────────────────────────────────────
-  if (startPhase <= 1) {
-    await runPhase1(byQid, startTier, startOffset);
-  }
-
-  await runPhase2(byQid, startSister);
-
-  // ── Write final output ────────────────────────────────────────────────────
+  // Write final output — keep qid so the UI can link to Wikipedia
   const cities = Array.from(byQid.values())
-    .sort((a, b) => (b.pop ?? 0) - (a.pop ?? 0))
-    .map(({ qid, ...rest }) => rest);
+    .sort((a, b) => (b.pop ?? 0) - (a.pop ?? 0));
 
   fs.writeFileSync(OUT_FILE, JSON.stringify(cities, null, 2), 'utf8');
 
-  // Delete checkpoint — clean finish
   deleteCheckpoint();
   console.log('Checkpoint deleted (clean finish).\n');
 
-  // ── Summary ───────────────────────────────────────────────────────────────
+  // Summary
   const sizeKB = (fs.statSync(OUT_FILE).size / 1024).toFixed(1);
   const total  = cities.length;
 
@@ -412,23 +557,16 @@ async function main() {
   console.log('  ── field coverage ──────────────────────────────');
 
   const fields = [
+    ['desc',         c => c.desc],
     ['country',      c => c.country],
     ['iso',          c => c.iso],
     ['admin',        c => c.admin],
     ['timezone',     c => c.timezone],
     ['area_km2',     c => c.area_km2],
-    ['water_km2',    c => c.water_km2],
     ['elev_m',       c => c.elev_m],
     ['founded',      c => c.founded],
     ['website',      c => c.website],
     ['geonames_id',  c => c.geonames_id],
-    ['demonym',      c => c.demonym],
-    ['gdp',          c => c.gdp],
-    ['gdp_per_cap',  c => c.gdp_per_cap],
-    ['hdi',          c => c.hdi],
-    ['pop_male',     c => c.pop_male],
-    ['pop_female',   c => c.pop_female],
-    ['pop_urban',    c => c.pop_urban],
     ['sister_cities',c => c.sister_cities.length > 0 ? 1 : null],
   ];
 

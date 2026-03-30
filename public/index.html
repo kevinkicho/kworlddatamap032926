@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>World Population Map</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
-  <script src="/node_modules/datamaps/dist/datamaps.world.min.js"></script>
+  <title>World Cities Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/@joergdietrich/leaflet.terminator@1.0.0/L.Terminator.js"></script>
+
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -18,523 +20,1440 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 16px;
+      padding: 24px 16px 48px;
     }
 
-    header { text-align: center; margin-bottom: 20px; }
+    header { text-align: center; margin-bottom: 16px; }
     header h1 { font-size: 1.8rem; font-weight: 600; color: #58a6ff; }
     header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
 
-    /* ── Controls ── */
-    .controls {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
+    .panel { width: 100%; max-width: 1000px; }
+
+    /* ── Map ── */
+    #map-wrapper { position: relative; width: 100%; max-width: 1000px; }
+    #map-container { width: 100%; height: 580px; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
+
+    /* ── Leaflet dark theme ── */
+    .leaflet-container { background: #0d1117 !important; font-family: 'Segoe UI', system-ui, sans-serif; }
+    .leaflet-control-zoom a { background: #21262d !important; color: #c9d1d9 !important; border-color: #30363d !important; }
+    .leaflet-control-zoom a:hover { background: #30363d !important; color: #58a6ff !important; }
+    .leaflet-bar { border-color: #30363d !important; box-shadow: 0 2px 8px rgba(0,0,0,0.5) !important; }
+    .leaflet-control-attribution { background: rgba(13,17,23,0.8) !important; color: #6e7681 !important; font-size: 0.68rem !important; }
+    .leaflet-control-attribution a { color: #58a6ff !important; }
+    .leaflet-tooltip {
+      background: #1f2937 !important; border: 1px solid #374151 !important;
+      border-radius: 6px !important; color: #f9fafb !important;
+      font-size: 0.85rem !important; padding: 8px 12px !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+      pointer-events: auto; max-width: 260px;
+    }
+    .leaflet-tooltip::before { display: none; }
+
+    /* ── City popup (click-to-open, stays open) ── */
+    .leaflet-popup-content-wrapper {
+      background: #1f2937 !important; border: 1px solid #374151 !important;
+      border-radius: 8px !important; color: #f9fafb !important;
+      font-size: 0.85rem !important; box-shadow: 0 6px 20px rgba(0,0,0,0.6) !important;
+      padding: 0 !important;
+    }
+    .leaflet-popup-content {
+      margin: 10px 14px !important; line-height: 1.5;
+    }
+    .leaflet-popup-tip-container { display: none; }
+    .leaflet-popup-close-button {
+      color: #8b949e !important; font-size: 1.1rem !important;
+      top: 6px !important; right: 8px !important;
+    }
+    .leaflet-popup-close-button:hover { color: #f9fafb !important; }
+
+    /* ── Wikipedia sidebar ── */
+    #wiki-sidebar {
+      position: fixed; top: 0; right: -440px; width: 420px; height: 100vh;
+      background: #161b22; border-left: 1px solid #30363d;
+      z-index: 10000; display: flex; flex-direction: column;
+      transition: right 0.3s cubic-bezier(.4,0,.2,1);
+      box-shadow: -8px 0 32px rgba(0,0,0,0.6); overflow: hidden;
+    }
+    #wiki-sidebar.open { right: 0; }
+
+    #wiki-sidebar-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-bottom: 1px solid #30363d;
+      background: #0d1117; flex-shrink: 0;
+    }
+    #wiki-sidebar-title {
+      flex: 1; font-size: 0.9rem; font-weight: 600; color: #8b949e;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      letter-spacing: 0.03em; text-transform: uppercase; font-size: 0.75rem;
+    }
+    #wiki-sidebar-close {
+      background: none; border: none; color: #8b949e; font-size: 1.4rem;
+      cursor: pointer; padding: 0 2px; line-height: 1; flex-shrink: 0;
+    }
+    #wiki-sidebar-close:hover { color: #e6edf3; }
+
+    #wiki-sidebar-body { flex: 1; overflow-y: auto; }
+
+    /* Loading state */
+    .wiki-loading {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px; padding: 48px 16px;
+      color: #8b949e; font-size: 0.85rem;
+    }
+    /* Error state */
+    .wiki-error {
+      padding: 32px 20px; color: #8b949e; font-size: 0.85rem; line-height: 1.6;
+    }
+    .wiki-error a { color: #58a6ff; }
+
+    /* Infobox image */
+    .wiki-img {
+      width: 100%; max-height: 240px; object-fit: cover;
+      display: block;
+    }
+    /* City title block */
+    .wiki-city-header { padding: 16px 16px 0; }
+    .wiki-city-name { font-size: 1.4rem; font-weight: 700; color: #e6edf3; line-height: 1.2; }
+    .wiki-city-desc { font-size: 0.82rem; color: #8b949e; margin-top: 4px; font-style: italic; }
+
+    /* Data table */
+    .wiki-info-table {
+      width: 100%; border-collapse: collapse; margin: 14px 0 0;
+      font-size: 0.82rem;
+    }
+    .wiki-info-table tr { border-top: 1px solid #21262d; }
+    .wiki-info-table tr:first-child { border-top: none; }
+    .wiki-info-label {
+      color: #8b949e; padding: 7px 14px 7px 16px;
+      width: 38%; vertical-align: top; white-space: nowrap;
+      font-weight: 500;
+    }
+    .wiki-info-val {
+      color: #c9d1d9; padding: 7px 16px 7px 0; vertical-align: top;
+    }
+    .wiki-info-val a { color: #58a6ff; text-decoration: none; word-break: break-all; }
+    .wiki-info-val a:hover { text-decoration: underline; }
+    .wiki-info-section-head {
+      background: #0d1117; color: #6e7681; font-size: 0.72rem;
+      font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 8px 16px; border-top: 1px solid #30363d;
     }
 
-    .btn {
-      background: #21262d;
-      border: 1px solid #30363d;
-      color: #c9d1d9;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: all 0.2s;
+    /* Image carousel */
+    .wiki-carousel { position: relative; background: #000; overflow: hidden; flex-shrink: 0; }
+    .wiki-carousel-img {
+      width: 100%; height: 230px; object-fit: cover; display: block;
+      cursor: zoom-in; transition: opacity 0.35s ease;
     }
-    .btn:hover  { background: #30363d; border-color: #58a6ff; }
-    .btn.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
-    .btn.wiki-btn.active { background: #6e40c9; border-color: #6e40c9; }
-
-    /* ── Map wrapper + loading overlay ── */
-    #map-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 1000px;
+    .wiki-carousel-img.fade { opacity: 0; }
+    .wiki-car-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 10px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.65));
+    }
+    .wiki-car-btn {
+      background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.15);
+      color: #fff; font-size: 1.2rem; cursor: pointer; border-radius: 50%;
+      width: 30px; height: 30px; display: flex; align-items: center;
+      justify-content: center; line-height: 1; flex-shrink: 0;
+      transition: background 0.15s;
+    }
+    .wiki-car-btn:hover { background: rgba(0,0,0,0.75); }
+    .wiki-car-dots { display: flex; gap: 5px; align-items: center; }
+    .wiki-car-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.35); border: none; cursor: pointer; padding: 0;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .wiki-car-dot.active { background: #fff; transform: scale(1.3); }
+    .wiki-car-counter {
+      position: absolute; top: 8px; right: 10px;
+      background: rgba(0,0,0,0.5); color: rgba(255,255,255,0.8);
+      font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; pointer-events: none;
     }
 
-    #map-container {
-      position: relative;
-      width: 100%;
-      height: 550px;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 10px;
-      overflow: hidden;
+    /* Lightbox */
+    #wiki-lightbox {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+      z-index: 20000; align-items: center; justify-content: center;
+      flex-direction: column; gap: 12px;
     }
-    #map-container svg { width: 100%; height: 100%; }
+    #wiki-lightbox.open { display: flex; }
+    #wiki-lightbox img {
+      max-width: 92vw; max-height: 85vh; object-fit: contain;
+      border-radius: 4px; box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+    }
+    .lightbox-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.1); border: none; color: #fff;
+      font-size: 1.8rem; cursor: pointer; padding: 8px 16px;
+      border-radius: 4px; line-height: 1;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+    #lightbox-prev { left: 12px; }
+    #lightbox-next { right: 12px; }
+    #lightbox-close {
+      position: absolute; top: 14px; right: 18px;
+      background: none; border: none; color: #fff; font-size: 2rem;
+      cursor: pointer; line-height: 1; opacity: 0.7;
+    }
+    #lightbox-close:hover { opacity: 1; }
+    #lightbox-counter { color: #8b949e; font-size: 0.82rem; }
 
-    /* Loading overlay sits on top of the map */
+    /* Extract */
+    .wiki-extract-wrap { padding: 14px 16px; border-top: 1px solid #30363d; }
+    .wiki-extract-head { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6e7681; margin-bottom: 8px; }
+    .wiki-extract { font-size: 0.83rem; line-height: 1.7; color: #c9d1d9; }
+    .wiki-extract.collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+    .wiki-expand-btn { background: none; border: none; color: #58a6ff; font-size: 0.8rem; cursor: pointer; padding: 6px 0 0; display: block; font-family: inherit; }
+    .wiki-expand-btn:hover { text-decoration: underline; }
+
+    /* Footer links */
+    #wiki-sidebar-footer {
+      padding: 12px 16px; border-top: 1px solid #30363d;
+      background: #0d1117; flex-shrink: 0;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .wiki-footer-link {
+      display: flex; align-items: center; gap: 7px;
+      color: #58a6ff; font-size: 0.82rem; text-decoration: none;
+    }
+    .wiki-footer-link:hover { text-decoration: underline; }
+    .wiki-cache-note { font-size: 0.7rem; color: #484f58; }
+
+    /* ── Loading overlay ── */
     #loading-overlay {
-      display: none;
-      position: absolute;
-      inset: 0;
-      background: rgba(13, 17, 23, 0.82);
-      border-radius: 10px;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      z-index: 10;
+      display: none; position: absolute; inset: 0;
+      background: rgba(13,17,23,0.85); border-radius: 10px;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px; z-index: 1000;
     }
     #loading-overlay.visible { display: flex; }
-
-    .spinner {
-      width: 44px; height: 44px;
-      border: 3px solid #30363d;
-      border-top-color: #a371f7;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    .spinner { width: 44px; height: 44px; border: 3px solid #30363d; border-top-color: #a371f7; border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    #loading-text { font-size: 0.9rem; color: #8b949e; }
+    #loading-text  { font-size: 0.9rem; color: #8b949e; }
     #loading-error { font-size: 0.85rem; color: #f85149; display: none; }
 
-    /* ── Tooltip ── */
-    .hoverinfo {
-      background: #1f2937 !important;
-      border: 1px solid #374151 !important;
-      border-radius: 6px !important;
-      color: #f9fafb !important;
-      font-size: 0.85rem !important;
-      padding: 10px 14px !important;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
-      pointer-events: none !important;
-      max-width: 260px;
-    }
-
-    /* ── Density legend ── */
-    .legend-container {
-      margin-top: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-    }
-    .legend-gradient { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #8b949e; }
-    .gradient-bar {
-      width: 300px; height: 18px; border-radius: 4px;
-      background: linear-gradient(to right, #ffffcc, #c7e9b4, #7fcdbb, #41b6c4, #2c7fb8, #253494);
-      border: 1px solid #30363d;
-    }
-    .legend-labels {
-      display: flex;
-      justify-content: space-between;
-      width: 300px;
-      font-size: 0.75rem;
-      color: #6e7681;
-    }
-
-    /* ── Wikipedia cities legend ── */
-    #wiki-legend {
-      display: none;
-      margin-top: 16px;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-    }
-    #wiki-legend.visible { display: flex; }
+    /* ── Legend ── */
+    #wiki-legend { margin-top: 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
     .wiki-legend-title { font-size: 0.78rem; color: #8b949e; }
-    .wiki-tiers {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
+    .legend-gradient-row { display: flex; align-items: center; gap: 8px; }
+    .legend-end-label { font-size: 0.72rem; color: #6e7681; }
+    .legend-ramp {
+      width: 300px; height: 10px; border-radius: 5px;
+      background: linear-gradient(to right,
+        rgb(80,50,200), rgb(40,120,255), rgb(20,200,210),
+        rgb(80,220,80), rgb(250,210,30), rgb(250,120,20), rgb(240,30,30));
     }
-    .wiki-tier {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.75rem;
-      color: #8b949e;
-    }
-    .tier-dot {
-      width: 11px; height: 11px;
-      border-radius: 50%;
-      flex-shrink: 0;
+    .legend-tick-row {
+      width: 300px; display: flex; justify-content: space-between;
+      font-size: 0.68rem; color: #6e7681; padding: 0 2px;
     }
 
-    /* ── Stats bar ── */
-    .stats {
-      margin-top: 12px;
-      display: flex;
-      gap: 24px;
-      flex-wrap: wrap;
-      justify-content: center;
-      font-size: 0.85rem;
-      color: #8b949e;
-    }
-    .stat-item { display: flex; align-items: center; gap: 6px; }
+    /* ── Stats ── */
+    .stats { margin-top: 12px; display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; font-size: 0.85rem; color: #8b949e; }
+    .stat-item  { display: flex; align-items: center; gap: 6px; }
     .stat-value { color: #58a6ff; font-weight: 600; }
-    #wiki-source-badge {
-      font-size: 0.72rem;
-      background: #1f2937;
-      border: 1px solid #374151;
-      border-radius: 4px;
-      padding: 2px 7px;
-      color: #8b949e;
-      display: none;
-    }
+    .data-source { margin-top: 12px; font-size: 0.75rem; color: #6e7681; }
 
-    .data-source { margin-top: 16px; font-size: 0.75rem; color: #6e7681; }
+    /* ── List panel ── */
+    #list-panel { margin-top: 32px; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
+    #list-header { background: #161b22; padding: 16px 20px; border-bottom: 1px solid #30363d; }
+    #list-header h2 { font-size: 1rem; font-weight: 600; color: #c9d1d9; margin-bottom: 12px; }
+
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .filters input, .filters select {
+      background: #0d1117; border: 1px solid #30363d; color: #c9d1d9;
+      border-radius: 6px; padding: 6px 10px; font-size: 0.82rem; font-family: inherit; outline: none;
+    }
+    .filters input:focus, .filters select:focus { border-color: #58a6ff; }
+    .filters input[type="text"] { flex: 1; min-width: 160px; }
+    .filters select { min-width: 130px; }
+
+    #list-meta { padding: 8px 20px; font-size: 0.78rem; color: #6e7681; background: #0d1117; border-bottom: 1px solid #21262d; display: flex; justify-content: space-between; align-items: center; }
+    #reset-all-btn { font-size: 0.75rem; color: #f85149; background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; display: none; }
+    #reset-all-btn:hover { text-decoration: underline; }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; max-height: 480px; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    thead th {
+      position: sticky; top: 0; background: #161b22; color: #8b949e;
+      font-weight: 600; text-align: left; padding: 10px 14px;
+      border-bottom: 1px solid #30363d; white-space: nowrap; cursor: pointer; user-select: none;
+    }
+    thead th:hover { color: #c9d1d9; }
+    thead th.no-sort { cursor: default; }
+    thead th.no-sort:hover { color: #8b949e; }
+    thead th.sort-asc::after  { content: ' ↑'; color: #58a6ff; }
+    thead th.sort-desc::after { content: ' ↓'; color: #58a6ff; }
+
+    tbody tr { border-bottom: 1px solid #21262d; cursor: pointer; transition: background 0.1s; }
+    tbody tr:hover { background: #1c2128; }
+    tbody tr.edited-row { border-left: 2px solid #f97316; }
+
+    tbody td { padding: 9px 14px; color: #c9d1d9; white-space: nowrap; }
+    tbody td.city-name { color: #e6edf3; font-weight: 500; }
+    tbody td.city-pop  { color: #58a6ff; font-variant-numeric: tabular-nums; }
+    tbody td.city-dot  { width: 12px; padding-right: 0; }
+    tbody td.city-edit { padding: 2px 4px; width: 30px; }
+
+    .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; }
+
+    .edit-btn {
+      background: none; border: 1px solid #30363d; color: #6e7681;
+      border-radius: 4px; padding: 2px 6px; font-size: 0.8rem; cursor: pointer;
+      font-family: inherit; line-height: 1.4;
+    }
+    .edit-btn:hover { border-color: #58a6ff; color: #58a6ff; background: #1c2128; }
+
+    #load-more-row td { text-align: center; padding: 14px; color: #6e7681; cursor: default; }
+    #load-more-btn { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; padding: 6px 20px; font-size: 0.82rem; cursor: pointer; font-family: inherit; }
+    #load-more-btn:hover { background: #30363d; border-color: #58a6ff; }
+
+    /* ── Edit modal ── */
+    #edit-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7); z-index: 9999;
+      align-items: center; justify-content: center;
+    }
+    #edit-modal.open { display: flex; }
+
+    #edit-box {
+      background: #161b22; border: 1px solid #30363d; border-radius: 12px;
+      padding: 28px; width: 100%; max-width: 480px; max-height: 90vh;
+      overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+    }
+    #edit-box h3 { font-size: 1rem; color: #e6edf3; margin-bottom: 20px; }
+
+    .field-group { margin-bottom: 14px; }
+    .field-group label { display: block; font-size: 0.75rem; color: #8b949e; margin-bottom: 4px; }
+    .field-group input, .field-group textarea {
+      width: 100%; background: #0d1117; border: 1px solid #30363d;
+      color: #c9d1d9; border-radius: 6px; padding: 7px 10px;
+      font-size: 0.85rem; font-family: inherit; outline: none;
+    }
+    .field-group input:focus, .field-group textarea:focus { border-color: #58a6ff; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .modal-actions { display: flex; gap: 8px; margin-top: 22px; align-items: center; }
+    .modal-actions .spacer { flex: 1; }
+    .btn-delete { background: none; border: 1px solid #f85149; color: #f85149; border-radius: 6px; padding: 7px 14px; font-size: 0.82rem; cursor: pointer; font-family: inherit; }
+    .btn-delete:hover { background: rgba(248,81,73,0.1); }
+    .btn-cancel { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; padding: 7px 14px; font-size: 0.82rem; cursor: pointer; font-family: inherit; }
+    .btn-cancel:hover { background: #30363d; }
+    .btn-save   { background: #1f6feb; border: 1px solid #1f6feb; color: #fff; border-radius: 6px; padding: 7px 18px; font-size: 0.82rem; cursor: pointer; font-family: inherit; font-weight: 600; }
+    .btn-save:hover { background: #388bfd; }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🌍 World Population Map</h1>
-    <p>Density, cities, and static Wikipedia data</p>
+    <h1>🌍 World Cities Map</h1>
+    <p>Cities from Wikidata · zoom, explore, and filter</p>
   </header>
-
-  <div class="controls">
-    <button class="btn active"    onclick="setView('density', this)">Population Density</button>
-    <button class="btn"           onclick="setView('cities',  this)">Major Cities</button>
-    <button class="btn"           onclick="setView('both',    this)">Both Layers</button>
-    <button class="btn wiki-btn"  onclick="setView('wiki',    this)">Wikipedia Cities</button>
-  </div>
 
   <div id="map-wrapper">
     <div id="map-container"></div>
-
     <div id="loading-overlay">
       <div class="spinner"></div>
-      <div id="loading-text">Loading static dataset...</div>
+      <div id="loading-text">Loading city dataset…</div>
       <div id="loading-error"></div>
     </div>
   </div>
 
-  <!-- Density legend (shown for density / both views) -->
-  <div class="legend-container" id="density-legend">
-    <div class="legend-gradient">
-      <span>Low</span>
-      <div class="gradient-bar"></div>
-      <span>High</span>
-    </div>
-    <div class="legend-labels">
-      <span>0</span><span>100</span><span>300</span><span>500</span><span>1000+</span>
-    </div>
-  </div>
-
-  <!-- Wikipedia heatmap legend (shown for wiki view) -->
   <div id="wiki-legend">
-    <div class="wiki-legend-title">600 cities · each glow = one city · glows stack brighter where cities cluster</div>
-    <div class="wiki-tiers">
-      <span class="wiki-tier"><span class="tier-dot" style="background:#fff8dc; box-shadow:0 0 5px #ffd700;"></span>Dense urban cluster</span>
-      <span class="wiki-tier"><span class="tier-dot" style="background:#ff8c00;"></span>Large isolated city</span>
-      <span class="wiki-tier"><span class="tier-dot" style="background:#5c1a00;"></span>Small city (~500k)</span>
+    <div class="wiki-legend-title" id="wiki-legend-title">Loading…</div>
+    <div class="legend-gradient-row">
+      <span class="legend-end-label">10k</span>
+      <div class="legend-ramp"></div>
+      <span class="legend-end-label">40M+</span>
+    </div>
+    <div class="legend-tick-row">
+      <span>100k</span><span>500k</span><span>1M</span><span>5M</span><span>20M</span>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat-item">Countries: <span class="stat-value" id="country-count">—</span></div>
-    <div class="stat-item">Highest density: <span class="stat-value" id="highest-density">—</span></div>
-    <div class="stat-item">Global avg: <span class="stat-value" id="global-avg">—</span></div>
-    <span id="wiki-source-badge"></span>
+    <div class="stat-item">Cities: <span class="stat-value" id="stat-count">—</span></div>
+    <div class="stat-item">Largest: <span class="stat-value" id="stat-largest">—</span></div>
+    <div class="stat-item">Total pop: <span class="stat-value" id="stat-total">—</span></div>
   </div>
 
-  <div class="data-source" id="data-source-line">
-    Density data: World Bank (2020) | Visualization: Datamaps + D3.js
+  <div class="data-source">
+    City data: Wikidata · Map: Leaflet.js + CartoDB Dark Matter tiles
+  </div>
+
+  <!-- ── List panel ── -->
+  <div id="list-panel" class="panel" style="display:none">
+    <div id="list-header">
+      <h2>Explore Cities</h2>
+      <div class="filters">
+        <input  type="text"   id="f-search"  placeholder="Search city name…" />
+        <select id="f-country"><option value="">All countries</option></select>
+        <select id="f-minpop">
+          <option value="0">Any population</option>
+          <option value="10000000">≥ 10M</option>
+          <option value="5000000">≥ 5M</option>
+          <option value="2000000">≥ 2M</option>
+          <option value="1000000">≥ 1M</option>
+          <option value="500000">≥ 500k</option>
+          <option value="200000">≥ 200k</option>
+          <option value="100000">≥ 100k</option>
+          <option value="50000">≥ 50k</option>
+        </select>
+        <select id="f-sort">
+          <option value="pop-desc">Population ↓</option>
+          <option value="pop-asc">Population ↑</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="country-asc">Country A–Z</option>
+          <option value="founded-asc">Founded (oldest)</option>
+          <option value="founded-desc">Founded (newest)</option>
+        </select>
+      </div>
+    </div>
+    <div id="list-meta">
+      <span id="list-meta-text">Loading…</span>
+      <button id="reset-all-btn" onclick="resetAll()">Reset all edits</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="city-dot no-sort"></th>
+            <th class="no-sort"></th>
+            <th data-col="name">City</th>
+            <th data-col="country">Country</th>
+            <th data-col="admin">Region</th>
+            <th data-col="pop">Population</th>
+            <th data-col="area_km2">Area km²</th>
+            <th data-col="founded">Founded</th>
+            <th data-col="timezone">Timezone</th>
+            <th class="no-sort">Wikipedia</th>
+          </tr>
+        </thead>
+        <tbody id="list-body"></tbody>
+        <tfoot>
+          <tr id="load-more-row" style="display:none">
+            <td colspan="10">
+              <button id="load-more-btn">Show more</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Lightbox ── -->
+  <div id="wiki-lightbox">
+    <button id="lightbox-close" onclick="closeLightbox()">×</button>
+    <button class="lightbox-nav" id="lightbox-prev" onclick="lightboxNav(-1)">‹</button>
+    <img id="lightbox-img" src="" alt="" />
+    <button class="lightbox-nav" id="lightbox-next" onclick="lightboxNav(1)">›</button>
+    <span id="lightbox-counter"></span>
+  </div>
+
+  <!-- ── Wikipedia sidebar ── -->
+  <div id="wiki-sidebar">
+    <div id="wiki-sidebar-header">
+      <span id="wiki-sidebar-title">Wikipedia</span>
+      <button id="wiki-sidebar-close" onclick="closeWikiSidebar()" title="Close">×</button>
+    </div>
+    <div id="wiki-sidebar-body"></div>
+    <div id="wiki-sidebar-footer"></div>
+  </div>
+
+  <!-- ── Edit modal ── -->
+  <div id="edit-modal">
+    <div id="edit-box">
+      <h3 id="modal-title">Edit City</h3>
+      <div class="field-row">
+        <div class="field-group">
+          <label>City name</label>
+          <input id="e-name" type="text" />
+        </div>
+        <div class="field-group">
+          <label>Population</label>
+          <input id="e-pop" type="number" min="0" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Country</label>
+          <input id="e-country" type="text" />
+        </div>
+        <div class="field-group">
+          <label>Region / Admin</label>
+          <input id="e-admin" type="text" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Description</label>
+        <input id="e-desc" type="text" />
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Area (km²)</label>
+          <input id="e-area" type="number" min="0" />
+        </div>
+        <div class="field-group">
+          <label>Founded (year)</label>
+          <input id="e-founded" type="number" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Latitude</label>
+          <input id="e-lat" type="number" step="0.0001" />
+        </div>
+        <div class="field-group">
+          <label>Longitude</label>
+          <input id="e-lng" type="number" step="0.0001" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Timezone</label>
+        <input id="e-timezone" type="text" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-delete" onclick="deleteCity()">🗑 Delete city</button>
+        <div class="spacer"></div>
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save"   onclick="saveEdit()">Save</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    // ── Population density data (World Bank 2020) ─────────────────────────────
-    const densityData = {
-      "AFG": 59.9, "ALB": 92.3, "DZA": 18.5, "ASM": 248.8, "AND": 164.6,
-      "AGO": 26.8, "ATG": 208.7, "ARG": 16.5, "ARM": 105.0, "ABW": 588.0,
-      "AUS": 3.3, "AUT": 109.0, "AZE": 120.0, "BHS": 39.5, "BHR": 1935.0,
-      "BGD": 1265.0, "BRB": 668.0, "BLR": 46.8, "BEL": 383.0, "BLZ": 17.4,
-      "BEN": 107.0, "BMU": 1308.0, "BTN": 20.0, "BOL": 10.8, "BIH": 64.0,
-      "BWA": 4.1, "BRA": 25.4, "VGB": 212.0, "BRN": 83.0, "BGR": 63.0,
-      "BFA": 76.0, "BDI": 460.0, "CPV": 138.0, "KHM": 95.0, "CMR": 56.0,
-      "CAN": 4.2, "CYM": 273.0, "CAF": 8.0, "TCD": 13.0, "CHL": 25.0,
-      "CHN": 148.0, "COL": 45.0, "COM": 467.0, "COG": 16.0, "CRI": 100.0,
-      "CIV": 83.0, "HRV": 72.0, "CUB": 106.0, "CUW": 370.0, "CYP": 131.0,
-      "CZE": 138.0, "DNK": 146.0, "DJI": 42.0, "DMA": 96.0, "DOM": 225.0,
-      "ECU": 71.0, "EGY": 102.0, "SLV": 313.0, "GNQ": 50.0, "ERI": 35.0,
-      "EST": 30.0, "SWZ": 79.0, "ETH": 115.0, "FRO": 35.0, "FJI": 49.0,
-      "FIN": 18.0, "FRA": 119.0, "PYF": 83.0, "GAB": 8.0, "GMB": 239.0,
-      "GEO": 57.0, "DEU": 240.0, "GHA": 137.0, "GIB": 3287.0, "GRC": 81.0,
-      "GRL": 0.1, "GRD": 371.0, "GUM": 306.0, "GTM": 167.0, "GIN": 53.0,
-      "GNB": 70.0, "GUY": 4.0, "HTI": 414.0, "HND": 89.0, "HKG": 6777.0,
-      "HUN": 104.0, "ISL": 3.0, "IND": 464.0, "IDN": 145.0, "IRN": 52.0,
-      "IRQ": 93.0, "IRL": 72.0, "IMN": 165.0, "ISR": 400.0, "ITA": 197.0,
-      "JAM": 273.0, "JPN": 334.0, "JOR": 115.0, "KAZ": 7.0, "KEN": 95.0,
-      "KIR": 152.0, "PRK": 214.0, "KOR": 527.0, "KWT": 232.0, "KGZ": 34.0,
-      "LAO": 32.0, "LVA": 30.0, "LBN": 667.0, "LSO": 77.0, "LBR": 53.0,
-      "LBY": 4.0, "LIE": 238.0, "LTU": 43.0, "LUX": 242.0, "MAC": 20778.0,
-      "MDG": 48.0, "MWI": 203.0, "MYS": 99.0, "MDV": 1802.0, "MLI": 17.0,
-      "MLT": 1676.0, "MHL": 329.0, "MRT": 5.0, "MUS": 626.0, "MEX": 66.0,
-      "FSM": 164.0, "MDA": 123.0, "MCO": 19347.0, "MNG": 2.0, "MNE": 47.0,
-      "MAR": 83.0, "MOZ": 40.0, "MMR": 83.0, "NAM": 3.0, "NRU": 541.0,
-      "NPL": 203.0, "NLD": 508.0, "NCL": 16.0, "NZL": 19.0, "NIC": 55.0,
-      "NER": 19.0, "NGA": 226.0, "MKD": 82.0, "MNP": 125.0, "NOR": 15.0,
-      "OMN": 16.0, "PAK": 287.0, "PLW": 39.0, "PAN": 58.0, "PNG": 20.0,
-      "PRY": 18.0, "PER": 26.0, "PHL": 368.0, "POL": 124.0, "PRT": 111.0,
-      "PRI": 361.0, "QAT": 248.0, "ROU": 84.0, "RUS": 9.0, "RWA": 525.0,
-      "WSM": 70.0, "SMR": 559.0, "STP": 228.0, "SAU": 17.0, "SEN": 87.0,
-      "SRB": 100.0, "SYC": 214.0, "SLE": 111.0, "SGP": 7953.0, "SXM": 1177.0,
-      "SVK": 114.0, "SVN": 104.0, "SLB": 25.0, "SOM": 25.0, "ZAF": 49.0,
-      "SSD": 18.0, "ESP": 94.0, "LKA": 354.0, "KNA": 211.0, "LCA": 301.0,
-      "MAF": 730.0, "VCT": 284.0, "SDN": 25.0, "SUR": 4.0, "SWE": 25.0,
-      "CHE": 219.0, "SYR": 95.0, "TWN": 673.0, "TJK": 68.0, "TZA": 68.0,
-      "THA": 137.0, "TLS": 88.0, "TGO": 152.0, "TON": 147.0, "TTO": 273.0,
-      "TUN": 76.0, "TUR": 110.0, "TKM": 13.0, "TCA": 40.0, "TUV": 393.0,
-      "UGA": 229.0, "UKR": 75.0, "ARE": 118.0, "GBR": 281.0, "USA": 36.0,
-      "URY": 20.0, "UZB": 79.0, "VUT": 25.0, "VEN": 32.0, "VNM": 314.0,
-      "VIR": 298.0, "PSE": 847.0, "YEM": 56.0, "ZMB": 25.0, "ZWE": 43.0
-    };
+    // ── Module state ──────────────────────────────────────────────────────────────
+    let map;
+    let wikiLayer    = null;
+    let rawCities    = [];      // validated data from server, never mutated
+    let allCities    = [];      // rawCities with overrides applied
+    let countryData  = {};      // World Bank data keyed by ISO-2 code
+    let filtered     = [];
+    let visibleCount = 100;
+    const PAGE_SIZE  = 100;
+    let sortCol = 'pop';
+    let sortDir = 'desc';
+    let editingKey   = null;    // _key of the city currently open in the modal
 
-    // ── Hardcoded major cities (used by "Major Cities" and "Both" views) ───────
-    const hardcodedCities = [
-      { name: "Tokyo",        lat: 35.6762,  lng: 139.6503, pop: 37400000, region: "Asia" },
-      { name: "Delhi",        lat: 28.7041,  lng: 77.1025,  pop: 32900000, region: "Asia" },
-      { name: "Shanghai",     lat: 31.2304,  lng: 121.4737, pop: 28500000, region: "Asia" },
-      { name: "São Paulo",    lat: -23.5505, lng: -46.6333, pop: 22400000, region: "Americas" },
-      { name: "Mexico City",  lat: 19.4326,  lng: -99.1332, pop: 22200000, region: "Americas" },
-      { name: "Dhaka",        lat: 23.8103,  lng: 90.4125,  pop: 22300000, region: "Asia" },
-      { name: "Cairo",        lat: 30.0444,  lng: 31.2357,  pop: 21300000, region: "Africa" },
-      { name: "Beijing",      lat: 39.9042,  lng: 116.4074, pop: 21700000, region: "Asia" },
-      { name: "Mumbai",       lat: 19.0760,  lng: 72.8777,  pop: 21200000, region: "Asia" },
-      { name: "Osaka",        lat: 34.6937,  lng: 135.5023, pop: 19000000, region: "Asia" },
-      { name: "Chongqing",    lat: 29.5630,  lng: 106.5516, pop: 17300000, region: "Asia" },
-      { name: "Karachi",      lat: 24.8607,  lng: 67.0011,  pop: 17200000, region: "Asia" },
-      { name: "Kinshasa",     lat: -4.4419,  lng: 15.2663,  pop: 16300000, region: "Africa" },
-      { name: "Lagos",        lat: 6.5244,   lng: 3.3792,   pop: 15900000, region: "Africa" },
-      { name: "Istanbul",     lat: 41.0082,  lng: 28.9784,  pop: 15600000, region: "Asia" },
-      { name: "Buenos Aires", lat: -34.6037, lng: -58.3816, pop: 15400000, region: "Americas" },
-      { name: "Kolkata",      lat: 22.5726,  lng: 88.3639,  pop: 15100000, region: "Asia" },
-      { name: "Manila",       lat: 14.5995,  lng: 120.9842, pop: 14600000, region: "Asia" },
-      { name: "Tianjin",      lat: 39.0842,  lng: 117.2009, pop: 14200000, region: "Asia" },
-      { name: "Guangzhou",    lat: 23.1291,  lng: 113.2644, pop: 14000000, region: "Asia" },
+    // ── localStorage persistence ──────────────────────────────────────────────────
+    const LS_EDITS   = 'wcm_edits';
+    const LS_DELETED = 'wcm_deleted';
+
+    function loadEdits()   { try { return JSON.parse(localStorage.getItem(LS_EDITS)   || '{}'); } catch { return {}; } }
+    function loadDeleted() { try { return new Set(JSON.parse(localStorage.getItem(LS_DELETED) || '[]')); } catch { return new Set(); } }
+
+    function saveEditsStore(edits)   { localStorage.setItem(LS_EDITS,   JSON.stringify(edits)); }
+    function saveDeletedStore(del)   { localStorage.setItem(LS_DELETED,  JSON.stringify([...del])); }
+
+    // ── Schema validation ─────────────────────────────────────────────────────────
+    // Ensures cities-full.json is well-formed before touching the DOM.
+    // Logs warnings for bad records but never crashes — just skips them.
+    function validateCities(data) {
+      if (!Array.isArray(data)) throw new Error('cities-full.json is not an array — file may be corrupt');
+      const valid = [], bad = [];
+      for (const c of data) {
+        if (typeof c.name === 'string' && c.name &&
+            typeof c.lat  === 'number' && typeof c.lng === 'number') {
+          valid.push(c);
+        } else {
+          bad.push(c);
+        }
+      }
+      if (bad.length) console.warn(`[init] Skipped ${bad.length} malformed city records (missing name/lat/lng)`);
+      if (valid.length === 0) throw new Error('cities-full.json contains no valid city records');
+      return valid;
+    }
+
+    // ── Stable city key: QID preferred, lat,lng fallback ─────────────────────────
+    // QID is stable across fetch runs even if coordinates get corrected in Wikidata.
+    // lat,lng fallback ensures cities without QID (manual additions) still work.
+    function cityKey(c) {
+      return c.qid || (c.lat + ',' + c.lng);
+    }
+
+    // ── One-time migration: lat,lng edit keys → QID keys ─────────────────────────
+    // Runs silently on first startup after this update. Safe to run repeatedly
+    // (subsequent runs are no-ops since keys are already QIDs).
+    function migrateEditKeys(cities) {
+      const coordToQid = new Map();
+      for (const c of cities) {
+        if (c.qid) coordToQid.set(c.lat + ',' + c.lng, c.qid);
+      }
+
+      // Edits
+      const edits    = loadEdits();
+      const editKeys = Object.keys(edits);
+      const oldEditKeys = editKeys.filter(k => /^-?\d/.test(k) && k.includes(','));
+      if (oldEditKeys.length > 0) {
+        const migrated = {};
+        let count = 0;
+        for (const [k, v] of Object.entries(edits)) {
+          const newKey = /^-?\d/.test(k) && k.includes(',') ? (coordToQid.get(k) ?? null) : k;
+          if (newKey) { migrated[newKey] = v; count++; }
+        }
+        saveEditsStore(migrated);
+        console.log(`[init] Migrated ${count} city edits to QID keys`);
+      }
+
+      // Deletions
+      const deleted    = loadDeleted();
+      const oldDelKeys = [...deleted].filter(k => /^-?\d/.test(k) && k.includes(','));
+      if (oldDelKeys.length > 0) {
+        const migrated = new Set();
+        for (const k of deleted) {
+          const newKey = /^-?\d/.test(k) && k.includes(',') ? (coordToQid.get(k) ?? null) : k;
+          if (newKey) migrated.add(newKey);
+        }
+        saveDeletedStore(migrated);
+        console.log(`[init] Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
+      }
+    }
+
+    // ── Apply stored edits/deletions on top of rawCities ─────────────────────────
+    function applyOverrides() {
+      const edits   = loadEdits();
+      const deleted = loadDeleted();
+      allCities = rawCities
+        .filter(c => !deleted.has(c._key))
+        .map(c => {
+          const ov = edits[c._key];
+          return ov ? { ...c, ...ov } : c;
+        });
+      // show "Reset all" link only if there are any local changes
+      const hasChanges = Object.keys(edits).length > 0 || deleted.size > 0;
+      document.getElementById('reset-all-btn').style.display = hasChanges ? '' : 'none';
+    }
+
+    // ── Color scale: log-population → continuous color + opacity ────────────────
+    // Population is mapped logarithmically to a 0–1 intensity value,
+    // then interpolated through a 6-stop color ramp (cool dim → hot bright).
+    const COLOR_STOPS = [
+      [0.00, [80,  50, 200]],   // dim indigo   — ~10k
+      [0.28, [40, 120, 255]],   // blue          — ~100k
+      [0.50, [20, 200, 210]],   // cyan/teal     — ~600k
+      [0.68, [80, 220,  80]],   // green         — ~2M
+      [0.82, [250, 210, 30]],   // amber         — ~7M
+      [0.92, [250, 120, 20]],   // orange        — ~18M
+      [1.00, [240,  30, 30]],   // red           — 40M+
     ];
 
-    // ── State ─────────────────────────────────────────────────────────────────
-    let currentView = 'density';
-    let datamap;
-    let wikiActive = false;   // guard: prevents stale renders if user switches mid-load
-
-    // ── Density color scale ───────────────────────────────────────────────────
-    function getDensityColor(density) {
-      if (density == null) return '#21262d';
-      if (density < 10)  return '#ffffcc';
-      if (density < 50)  return '#c7e9b4';
-      if (density < 100) return '#7fcdbb';
-      if (density < 300) return '#41b6c4';
-      if (density < 500) return '#2c7fb8';
-      return '#253494';
+    function popToT(pop) {
+      if (!pop || pop <= 0) return 0;
+      const lo = Math.log10(10_000);
+      const hi = Math.log10(40_000_000);
+      return Math.min(1, Math.max(0, (Math.log10(pop) - lo) / (hi - lo)));
     }
 
-    // ── Wikipedia city tier (color key) ──────────────────────────────────────
-    // Six tiers mapped to a yellow-orange-red heat scale.
-    function getWikiTier(pop) {
-      if (pop >= 20000000) return 'tier1';
-      if (pop >= 10000000) return 'tier2';
-      if (pop >= 5000000)  return 'tier3';
-      if (pop >= 2000000)  return 'tier4';
-      if (pop >= 1000000)  return 'tier5';
-      return 'tier6';
+    function lerpRGB(a, b, t) {
+      return [
+        Math.round(a[0] + (b[0] - a[0]) * t),
+        Math.round(a[1] + (b[1] - a[1]) * t),
+        Math.round(a[2] + (b[2] - a[2]) * t),
+      ];
     }
 
-    // ── Stats (density views) ─────────────────────────────────────────────────
-    function calculateStats() {
-      const densities = Object.values(densityData);
-      const max = Math.max(...densities);
-      const avg = densities.reduce((a, b) => a + b, 0) / densities.length;
-      document.getElementById('country-count').textContent    = densities.length;
-      document.getElementById('highest-density').textContent  = max.toLocaleString() + '/km²';
-      document.getElementById('global-avg').textContent       = Math.round(avg) + '/km²';
-      document.getElementById('data-source-line').textContent =
-        'Density data: World Bank (2020) | Visualization: Datamaps + D3.js';
+    function wikiCityColor(pop) {
+      const t = popToT(pop);
+      for (let i = 1; i < COLOR_STOPS.length; i++) {
+        const [t0, c0] = COLOR_STOPS[i - 1];
+        const [t1, c1] = COLOR_STOPS[i];
+        if (t <= t1) {
+          const [r, g, b] = lerpRGB(c0, c1, (t - t0) / (t1 - t0));
+          return `rgb(${r},${g},${b})`;
+        }
+      }
+      return 'rgb(240,30,30)';
     }
 
-    // ── Stats (wiki view) ─────────────────────────────────────────────────────
-    function showWikiStats(cities, source) {
-      const total = cities.reduce((s, c) => s + c.pop, 0);
-      document.getElementById('country-count').textContent   = cities.length + ' cities';
-      document.getElementById('highest-density').textContent = cities[0]
-        ? cities[0].name + ' (' + (cities[0].pop / 1e6).toFixed(1) + 'M)'
-        : '—';
-      document.getElementById('global-avg').textContent =
-        (total / 1e9).toFixed(2) + 'B total';
-      const badge = document.getElementById('wiki-source-badge');
-      badge.textContent = 'Static Dataset';
-      badge.style.display = 'inline';
-      document.getElementById('data-source-line').textContent =
-        'City data: Wikidata (Wikipedia) | Visualization: Datamaps + D3.js';
+    // Opacity also scales with intensity: dim for tiny cities, bright for large
+    function wikiCityOpacity(pop) { return 0.35 + popToT(pop) * 0.60; }
+
+    // Radius also scales with population (sqrt scale, 2–12px)
+    function wikiCityRadius(pop) { return Math.max(2, Math.min(12, Math.sqrt(pop / 1e6) * 3)); }
+
+    function fmtPop(pop) {
+      if (pop == null) return '—';
+      if (pop >= 1e6)  return (pop / 1e6).toFixed(1) + 'M';
+      if (pop >= 1e3)  return (pop / 1e3).toFixed(0) + 'k';
+      return String(pop);
+    }
+    function fmtNum(n) { return n == null ? '—' : n.toLocaleString(); }
+
+    // ── Build / rebuild map marker layer ─────────────────────────────────────────
+    function rebuildMapLayer() {
+      if (wikiLayer) map.removeLayer(wikiLayer);
+      wikiLayer = L.layerGroup();
+      allCities.forEach(function(city) {
+        const color  = wikiCityColor(city.pop);
+        const radius = wikiCityRadius(city.pop);
+        const location = [city.admin, city.country].filter(Boolean).join(', ');
+        let tip = `<strong>${escHtml(city.name)}</strong>`;
+        if (location) tip += `<br/><span style="color:#8b949e;font-size:0.8em">${escHtml(location)}</span>`;
+        if (city.desc) tip += `<br/><span style="color:#c9d1d9;font-size:0.8em;font-style:italic">${escHtml(city.desc)}</span>`;
+        tip += `<br/>Population: <strong>${fmtPop(city.pop)}</strong>`;
+        if (city.qid)
+          tip += `<br/><a href="#" onclick="event.preventDefault();openWikiSidebar('${city.qid}','${escAttr(city.name)}')" style="color:#58a6ff;font-size:0.8em">Wikipedia ↗</a>`;
+        const opacity = wikiCityOpacity(city.pop);
+        L.circleMarker([city.lat, city.lng], {
+          radius, fillColor: color, fillOpacity: opacity,
+          color, opacity: opacity, weight: 0.5,
+        }).bindPopup(tip, { maxWidth: 260, minWidth: 160 }).addTo(wikiLayer);
+      });
+      wikiLayer.addTo(map);
     }
 
-    // ── Loading overlay helpers ───────────────────────────────────────────────
-    function showLoading(visible) {
-      document.getElementById('loading-overlay').classList.toggle('visible', visible);
+    // ── Stats ─────────────────────────────────────────────────────────────────────
+    function updateStats() {
+      const cities = allCities;
+      const total  = cities.reduce((s, c) => s + (c.pop || 0), 0);
+      document.getElementById('stat-count').textContent   = cities.length.toLocaleString();
+      document.getElementById('stat-largest').textContent =
+        cities[0] ? cities[0].name + ' (' + (cities[0].pop / 1e6).toFixed(1) + 'M)' : '—';
+      document.getElementById('stat-total').textContent   = (total / 1e9).toFixed(2) + 'B';
+      document.getElementById('wiki-legend-title').textContent =
+        cities.length.toLocaleString() + ' cities · circle size and color = population';
+    }
+
+    // ── Filter + sort ─────────────────────────────────────────────────────────────
+    function applyFilters() {
+      const search  = document.getElementById('f-search').value.trim().toLowerCase();
+      const country = document.getElementById('f-country').value;
+      const minPop  = parseInt(document.getElementById('f-minpop').value) || 0;
+      const [col, dir] = document.getElementById('f-sort').value.split('-');
+      sortCol = col; sortDir = dir;
+      updateSortHeaders();
+
+      filtered = allCities.filter(c => {
+        if (search  && !(c.name    || '').toLowerCase().includes(search)) return false;
+        if (country && c.country !== country)                              return false;
+        if (minPop  && (c.pop || 0) < minPop)                             return false;
+        return true;
+      });
+      sortFiltered();
+      visibleCount = PAGE_SIZE;
+      renderRows();
+    }
+
+    function sortFiltered() {
+      const edits = loadEdits();
+      filtered.sort((a, b) => {
+        let av, bv;
+        if      (sortCol === 'pop')     { av = a.pop ?? -Infinity; bv = b.pop ?? -Infinity; }
+        else if (sortCol === 'name')    { av = a.name    ?? '';        bv = b.name    ?? ''; }
+        else if (sortCol === 'country') { av = a.country ?? '';        bv = b.country ?? ''; }
+        else if (sortCol === 'founded') { av = a.founded ?? (sortDir === 'asc' ? Infinity : -Infinity);
+                                          bv = b.founded ?? (sortDir === 'asc' ? Infinity : -Infinity); }
+        else return 0;
+        if (typeof av === 'string') return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+        return sortDir === 'asc' ? av - bv : bv - av;
+      });
+    }
+
+    function updateSortHeaders() {
+      document.querySelectorAll('thead th[data-col]').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        if (th.dataset.col === sortCol) th.classList.add('sort-' + sortDir);
+      });
+    }
+
+    // ── Render list rows ──────────────────────────────────────────────────────────
+    function renderRows() {
+      const edits   = loadEdits();
+      const tbody   = document.getElementById('list-body');
+      const slice   = filtered.slice(0, visibleCount);
+      const hasMore = filtered.length > visibleCount;
+
+      tbody.innerHTML = slice.map(city => {
+        const color   = wikiCityColor(city.pop);
+        const isEdited = !!edits[city._key];
+        const rowClass = isEdited ? 'edited-row' : '';
+        const key = escAttr(city._key);
+        return `<tr class="${rowClass}" onclick="flyTo(${city.lat},${city.lng})">
+          <td class="city-dot"><span class="dot" style="background:${color}"></span></td>
+          <td class="city-edit" onclick="event.stopPropagation()">
+            <button class="edit-btn" onclick="openModal('${key}')">✎</button>
+          </td>
+          <td class="city-name">${escHtml(city.name)}${isEdited ? ' <span style="color:#f97316;font-size:0.75em" title="Locally edited">✎</span>' : ''}</td>
+          <td>${escHtml(city.country || '—')}</td>
+          <td>${escHtml(city.admin   || '—')}</td>
+          <td class="city-pop">${fmtPop(city.pop)}</td>
+          <td>${fmtNum(city.area_km2)}</td>
+          <td>${city.founded != null ? city.founded : '—'}</td>
+          <td>${escHtml(city.timezone || '—')}</td>
+          <td>${city.qid ? `<a href="https://www.wikidata.org/wiki/Special:GoToLinkedPage/enwiki/${city.qid}" target="_blank" style="color:#58a6ff;font-size:0.8em;text-decoration:none" title="Open Wikipedia article">↗ Wiki</a>` : '—'}</td>
+        </tr>`;
+      }).join('');
+
+      document.getElementById('list-meta-text').textContent =
+        `Showing ${Math.min(visibleCount, filtered.length).toLocaleString()} of ${filtered.length.toLocaleString()} cities`;
+
+      const moreRow = document.getElementById('load-more-row');
+      moreRow.style.display = hasMore ? '' : 'none';
+      if (hasMore) {
+        document.getElementById('load-more-btn').textContent =
+          `Show more (${(filtered.length - visibleCount).toLocaleString()} remaining)`;
+      }
+    }
+
+    function escHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function escAttr(str) {
+      return String(str ?? '').replace(/'/g, '&#39;');
+    }
+
+    // ── Fly to city ───────────────────────────────────────────────────────────────
+    function flyTo(lat, lng) {
+      map.flyTo([lat, lng], 10, { duration: 1.2 });
+      document.getElementById('map-wrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ── Edit modal ────────────────────────────────────────────────────────────────
+    function openModal(key) {
+      const city = allCities.find(c => c._key === key);
+      if (!city) return;
+      editingKey = key;
+
+      document.getElementById('modal-title').textContent = `Edit — ${city.name}`;
+      document.getElementById('e-name').value    = city.name    ?? '';
+      document.getElementById('e-pop').value     = city.pop     ?? '';
+      document.getElementById('e-country').value = city.country ?? '';
+      document.getElementById('e-admin').value   = city.admin   ?? '';
+      document.getElementById('e-desc').value    = city.desc    ?? '';
+      document.getElementById('e-area').value    = city.area_km2 ?? '';
+      document.getElementById('e-founded').value = city.founded  ?? '';
+      document.getElementById('e-lat').value     = city.lat;
+      document.getElementById('e-lng').value     = city.lng;
+      document.getElementById('e-timezone').value = city.timezone ?? '';
+
+      document.getElementById('edit-modal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('edit-modal').classList.remove('open');
+      editingKey = null;
+    }
+
+    function saveEdit() {
+      if (!editingKey) return;
+      const edits = loadEdits();
+      const numOrNull = v => v === '' ? null : Number(v);
+
+      edits[editingKey] = {
+        name:     document.getElementById('e-name').value.trim()    || undefined,
+        pop:      numOrNull(document.getElementById('e-pop').value),
+        country:  document.getElementById('e-country').value.trim() || null,
+        admin:    document.getElementById('e-admin').value.trim()   || null,
+        desc:     document.getElementById('e-desc').value.trim()    || null,
+        area_km2: numOrNull(document.getElementById('e-area').value),
+        founded:  numOrNull(document.getElementById('e-founded').value),
+        lat:      Number(document.getElementById('e-lat').value),
+        lng:      Number(document.getElementById('e-lng').value),
+        timezone: document.getElementById('e-timezone').value.trim() || null,
+      };
+      // strip undefined keys
+      Object.keys(edits[editingKey]).forEach(k => {
+        if (edits[editingKey][k] === undefined) delete edits[editingKey][k];
+      });
+
+      saveEditsStore(edits);
+      closeModal();
+      refresh();
+    }
+
+    function deleteCity() {
+      if (!editingKey) return;
+      if (!confirm('Remove this city from the map and list? (You can reset all edits later.)')) return;
+      const deleted = loadDeleted();
+      deleted.add(editingKey);
+      saveDeletedStore(deleted);
+
+      // also remove any pending edit for it
+      const edits = loadEdits();
+      delete edits[editingKey];
+      saveEditsStore(edits);
+
+      closeModal();
+      refresh();
+    }
+
+    function resetAll() {
+      if (!confirm('Reset all your edits and deletions? The original dataset will be restored.')) return;
+      localStorage.removeItem(LS_EDITS);
+      localStorage.removeItem(LS_DELETED);
+      refresh();
+    }
+
+    // ── Full refresh after any edit ───────────────────────────────────────────────
+    function refresh() {
+      applyOverrides();
+      rebuildMapLayer();
+      updateStats();
+      populateCountryFilter();
+      applyFilters();
+    }
+
+    // ── Header-click sort ─────────────────────────────────────────────────────────
+    function initHeaderSort() {
+      document.querySelectorAll('thead th[data-col]').forEach(th => {
+        th.addEventListener('click', function() {
+          const col = this.dataset.col;
+          if (sortCol === col) { sortDir = sortDir === 'asc' ? 'desc' : 'asc'; }
+          else { sortCol = col; sortDir = (col === 'name' || col === 'country') ? 'asc' : 'desc'; }
+          const selectVal = `${sortCol}-${sortDir}`;
+          const sel = document.getElementById('f-sort');
+          for (const opt of sel.options) { if (opt.value === selectVal) { sel.value = selectVal; break; } }
+          updateSortHeaders();
+          sortFiltered();
+          visibleCount = PAGE_SIZE;
+          renderRows();
+        });
+      });
+    }
+
+    // ── Country dropdown ──────────────────────────────────────────────────────────
+    function populateCountryFilter() {
+      const sel      = document.getElementById('f-country');
+      const current  = sel.value;
+      const countries = [...new Set(allCities.map(c => c.country).filter(Boolean))].sort();
+      sel.innerHTML  = '<option value="">All countries</option>';
+      countries.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c; opt.textContent = c;
+        if (c === current) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    }
+
+    // ── Close modal on backdrop click ─────────────────────────────────────────────
+    document.getElementById('edit-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // ── Lightbox ──────────────────────────────────────────────────────────────────
+    let lightboxImages = [];
+    let lightboxIdx    = 0;
+
+    function openLightbox(images, idx) {
+      lightboxImages = images;
+      lightboxIdx    = idx;
+      document.getElementById('wiki-lightbox').classList.add('open');
+      renderLightboxFrame();
+    }
+    function closeLightbox() {
+      document.getElementById('wiki-lightbox').classList.remove('open');
+    }
+    function lightboxNav(dir) {
+      lightboxIdx = (lightboxIdx + dir + lightboxImages.length) % lightboxImages.length;
+      renderLightboxFrame();
+    }
+    function renderLightboxFrame() {
+      document.getElementById('lightbox-img').src = lightboxImages[lightboxIdx];
+      document.getElementById('lightbox-counter').textContent =
+        lightboxImages.length > 1 ? `${lightboxIdx + 1} / ${lightboxImages.length}` : '';
+      document.getElementById('lightbox-prev').style.display = lightboxImages.length > 1 ? '' : 'none';
+      document.getElementById('lightbox-next').style.display = lightboxImages.length > 1 ? '' : 'none';
+    }
+    document.getElementById('wiki-lightbox').addEventListener('click', function(e) {
+      if (e.target === this) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e) {
+      const lb = document.getElementById('wiki-lightbox');
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'ArrowLeft')  lightboxNav(-1);
+      if (e.key === 'ArrowRight') lightboxNav(1);
+      if (e.key === 'Escape')     closeLightbox();
+    });
+
+    // ── Wikipedia image fetching ──────────────────────────────────────────────────
+
+    // Filename patterns that indicate non-photo images (icons, flags, maps, etc.)
+    const IMG_EXCLUDE = /flag|coat|coa_|locator|location_map|location map|icon|emblem|seal|logo|banner|signature|blank|symbol|layout|streets|district|wikisource|wikidata|commons-logo|silhouette|\.svg$/i;
+
+    // ── Carousel state ────────────────────────────────────────────────────────────
+    let carImages = [];
+    let carIdx    = 0;
+    let carTimer  = null;
+
+    function carStart(images) {
+      carImages = images;
+      carIdx    = 0;
+      clearInterval(carTimer);
+      if (images.length > 1) carTimer = setInterval(() => carGo(1), 4500);
+    }
+    function carStop()  { clearInterval(carTimer); carTimer = null; }
+    function carGo(dir) {
+      carIdx = (carIdx + dir + carImages.length) % carImages.length;
+      carRender();
+    }
+    function carJump(i) {
+      carIdx = i; carRender();
+      carStop();
+      if (carImages.length > 1) carTimer = setInterval(() => carGo(1), 4500);
+    }
+    function carRender() {
+      const img     = document.getElementById('wiki-car-img');
+      const counter = document.getElementById('wiki-car-counter');
+      if (!img) return;
+      img.classList.add('fade');
+      setTimeout(() => {
+        img.src = carImages[carIdx];
+        img.classList.remove('fade');
+      }, 180);
+      if (counter) counter.textContent = `${carIdx + 1} / ${carImages.length}`;
+      document.querySelectorAll('.wiki-car-dot').forEach((d, i) =>
+        d.classList.toggle('active', i === carIdx));
+    }
+
+    // ── Wikipedia sidebar ─────────────────────────────────────────────────────────
+
+    function closeWikiSidebar() {
+      carStop();
+      document.getElementById('wiki-sidebar').classList.remove('open');
+    }
+
+    // Render the infobox using city Wikidata fields + optional Wikipedia API data
+    function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
+      const body   = document.getElementById('wiki-sidebar-body');
+      const footer = document.getElementById('wiki-sidebar-footer');
+
+      // ── Carousel ──
+      let carouselHtml = '';
+      if (images && images.length > 0) {
+        window._lbImgs = images;
+        const dots = images.map((_, i) =>
+          `<button class="wiki-car-dot${i === 0 ? ' active' : ''}" onclick="carJump(${i})"></button>`
+        ).join('');
+        carouselHtml = `
+          <div class="wiki-carousel"
+               onmouseenter="carStop()"
+               onmouseleave="if(carImages.length>1) carTimer=setInterval(()=>carGo(1),4500)">
+            <img id="wiki-car-img" class="wiki-carousel-img"
+                 src="${escHtml(images[0])}"
+                 onclick="openLightbox(window._lbImgs, carIdx)" alt="" />
+            ${images.length > 1 ? `
+              <div class="wiki-car-overlay">
+                <button class="wiki-car-btn" onclick="carGo(-1)">&#8249;</button>
+                <div class="wiki-car-dots">${dots}</div>
+                <button class="wiki-car-btn" onclick="carGo(1)">&#8250;</button>
+              </div>
+              <div class="wiki-car-counter" id="wiki-car-counter">1 / ${images.length}</div>
+            ` : ''}
+          </div>`;
+      }
+
+      // ── Data row helper ──
+      function row(label, val, isHtml) {
+        if (val == null || val === '') return '';
+        const cellVal = isHtml ? val : escHtml(String(val));
+        return `<tr>
+          <td class="wiki-info-label">${escHtml(label)}</td>
+          <td class="wiki-info-val">${cellVal}</td>
+        </tr>`;
+      }
+
+      // ── Computed fields ──
+      const density = (city.pop && city.area_km2)
+        ? Math.round(city.pop / city.area_km2).toLocaleString() + ' /km\u00b2'
+        : null;
+      const foundedFmt = city.founded != null
+        ? (city.founded < 0 ? Math.abs(city.founded) + ' BC' : city.founded.toString())
+        : null;
+      const websiteHtml = city.website
+        ? `<a href="${escHtml(city.website)}" target="_blank" rel="noopener">${escHtml(city.website.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</a>`
+        : null;
+      const sistersHtml = city.sister_cities && city.sister_cities.length
+        ? escHtml(city.sister_cities.slice(0, 8).join(', '))
+          + (city.sister_cities.length > 8 ? ` <span style="color:#6e7681">+${city.sister_cities.length - 8} more</span>` : '')
+        : null;
+      const coordsFmt = city.lat != null
+        ? `${Math.abs(city.lat).toFixed(4)}\u00b0${city.lat >= 0 ? 'N' : 'S'}, ${Math.abs(city.lng).toFixed(4)}\u00b0${city.lng >= 0 ? 'E' : 'W'}`
+        : null;
+      const gdpHtml  = wpExtra && wpExtra.gdp
+        ? `${wpExtra.gdp} <span style="color:#6e7681;font-size:0.75em">(local currency)</span>`
+        : null;
+      const hdi      = wpExtra && wpExtra.hdi ? wpExtra.hdi.toFixed(3) : null;
+      const nickname = wpExtra && wpExtra.nickname ? wpExtra.nickname : null;
+
+      // ── Section builder ──
+      function section(title, rowArr) {
+        const content = rowArr.join('');
+        if (!content.trim()) return '';
+        return `<tr><td colspan="2" class="wiki-info-section-head">${escHtml(title)}</td></tr>${content}`;
+      }
+
+      const geonamesHtml = city.geonames_id
+        ? `<a href="https://www.geonames.org/${escHtml(String(city.geonames_id))}" target="_blank" rel="noopener">${escHtml(String(city.geonames_id))}</a>`
+        : null;
+
+      const locationSec = section('Location', [
+        row('Country',     city.country  || ''),
+        row('Region',      city.admin    || ''),
+        row('ISO code',    city.iso      || ''),
+        row('Timezone',    city.timezone || ''),
+        row('Coordinates', coordsFmt),
+        row('Elevation',   city.elev_m != null ? fmtNum(city.elev_m) + ' m' : null),
+      ]);
+      const demoSec = section('Demographics', [
+        row('Population',  city.pop      != null ? fmtNum(city.pop)       : null),
+        row('Density',     density),
+        row('Area',        city.area_km2 != null ? fmtNum(city.area_km2) + ' km\u00b2' : null),
+      ]);
+      const historySec = section('History', [
+        row('Founded',   foundedFmt),
+        row('Known as',  nickname),
+      ]);
+      const economySec = section('Economy', [
+        row('GDP',       gdpHtml,  !!gdpHtml),
+        row('HDI',       hdi),
+      ]);
+      const linksSec = section('Links', [
+        row('Website',      websiteHtml,  !!websiteHtml),
+        row('Sister cities', sistersHtml, !!sistersHtml),
+        row('GeoNames',     geonamesHtml, !!geonamesHtml),
+      ]);
+
+      // ── World Bank country context (bound via city.iso) ──
+      const wb = city.iso ? countryData[city.iso] : null;
+      function wbRow(label, key, fmt) {
+        if (!wb || wb[key] == null) return '';
+        const year = wb[key + '_year'] ? ` <span style="color:#484f58;font-size:0.72em">${wb[key + '_year']}</span>` : '';
+        return row(label, escHtml(fmt(wb[key])) + year, true);
+      }
+      const wbSec = wb ? section('Country context · ' + escHtml(wb.name || city.country || city.iso) + ' <span style="color:#484f58;font-size:0.75em">(World Bank)</span>', [
+        wbRow('GDP / capita',    'gdp_per_capita',  v => '$' + Math.round(v).toLocaleString()),
+        wbRow('Life expectancy', 'life_expectancy', v => v.toFixed(1) + ' yrs'),
+        wbRow('Urban pop.',      'urban_pct',       v => v.toFixed(1) + '%'),
+        wbRow('Internet users',  'internet_pct',    v => v.toFixed(1) + '%'),
+        wbRow('Gini index',      'gini',            v => v.toFixed(1) + ' / 100'),
+        wbRow('Literacy rate',   'literacy_rate',   v => v.toFixed(1) + '%'),
+        wbRow('Child mortality', 'child_mortality', v => v.toFixed(1) + ' / 1k'),
+        wbRow('Electricity access', 'electricity_pct', v => v.toFixed(1) + '%'),
+        wbRow('Income level',    'income_level',    v => v),
+      ]) : '';
+
+      // ── Extract (Wikipedia article intro) ──
+      const wpExtract = wpExtra && wpExtra.extract ? wpExtra.extract : null;
+      const extractHtml = wpExtract ? `
+        <div class="wiki-extract-wrap">
+          <div class="wiki-extract-head">Overview</div>
+          <div class="wiki-extract collapsed" id="wiki-extract-text">${escHtml(wpExtract)}</div>
+          <button class="wiki-expand-btn" id="wiki-expand-btn" onclick="toggleExtract()">Show more</button>
+        </div>` : '';
+
+      body.innerHTML = `
+        ${carouselHtml}
+        <div class="wiki-city-header">
+          <div class="wiki-city-name">${escHtml(city.name)}</div>
+          ${city.desc ? `<div class="wiki-city-desc">${escHtml(city.desc)}</div>` : ''}
+        </div>
+        <table class="wiki-info-table">
+          ${locationSec}
+          ${demoSec}
+          ${historySec}
+          ${economySec}
+          ${linksSec}
+          ${wbSec}
+        </table>
+        ${extractHtml}
+      `;
+
+      if (images && images.length > 0) carStart(images);
+
+      // ── Footer links ──
+      const wikiLink = wpUrl
+        ? `<a class="wiki-footer-link" href="${escHtml(wpUrl)}" target="_blank" rel="noopener">
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+             Read full article on Wikipedia
+           </a>`
+        : '';
+      const siteLink = city.website
+        ? `<a class="wiki-footer-link" href="${escHtml(city.website)}" target="_blank" rel="noopener">
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1-4-10z"/></svg>
+             Official website
+           </a>`
+        : '';
+
+      footer.innerHTML = (wikiLink || siteLink)
+        ? wikiLink + siteLink + `<span class="wiki-cache-note">${fromCache ? 'Cached \u00b7 ' : ''}Data from Wikipedia &amp; Wikidata</span>`
+        : '';
+    }
+
+    function toggleExtract() {
+      const el  = document.getElementById('wiki-extract-text');
+      const btn = document.getElementById('wiki-expand-btn');
+      if (!el) return;
+      const collapsed = el.classList.toggle('collapsed');
+      btn.textContent = collapsed ? 'Show more' : 'Show less';
+    }
+
+    async function openWikiSidebar(qid, cityName) {
+      const sidebar = document.getElementById('wiki-sidebar');
+      const body    = document.getElementById('wiki-sidebar-body');
+      const footer  = document.getElementById('wiki-sidebar-footer');
+      const titleEl = document.getElementById('wiki-sidebar-title');
+
+      titleEl.textContent = cityName;
+      footer.innerHTML    = '';
+      sidebar.classList.add('open');
+
+      // Find full city object
+      const city = allCities.find(c => c.qid === qid);
+
+      // If we already stored Wikipedia data in the city object (from a previous click),
+      // render immediately — no API call needed
+      if (city?.wiki_images?.length || city?.wiki_thumb || city?.wiki_extract) {
+        const wpUrl = city.qid
+          ? `https://en.wikipedia.org/wiki/Special:GoToLinkedPage/enwiki/${city.qid}`
+          : null;
+        const cachedImages = city.wiki_images?.length
+          ? city.wiki_images
+          : (city.wiki_thumb ? [city.wiki_thumb] : []);
+        renderInfobox(city, cachedImages, { extract: city.wiki_extract ?? null }, wpUrl, true);
+        return;
+      }
+
+      // Show loading state with Wikidata fields while fetching Wikipedia
+      if (city) {
+        body.innerHTML = `<div class="wiki-loading"><div class="spinner"></div><span>Loading Wikipedia article…</span></div>`;
+        // Render Wikidata fields immediately below spinner
+      } else {
+        body.innerHTML = `<div class="wiki-loading"><div class="spinner"></div><span>Loading…</span></div>`;
+      }
+
+      try {
+        // Step 1: resolve QID → Wikipedia article title
+        const wdRes = await fetch(
+          `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${encodeURIComponent(qid)}&props=sitelinks&sitefilter=enwiki&format=json&origin=*`
+        );
+        if (!wdRes.ok) throw new Error(`Wikidata API returned ${wdRes.status}`);
+        const wdJson   = await wdRes.json();
+        const sitelink = wdJson.entities?.[qid]?.sitelinks?.enwiki?.title;
+        if (!sitelink) throw new Error('No English Wikipedia article found for this city.');
+
+        // Step 2: fetch summary + image list + Wikidata claims in parallel
+        const [wpRes, imgListRes, wdClaimsRes] = await Promise.all([
+          fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(sitelink)}`),
+          fetch('https://en.wikipedia.org/w/api.php?' + new URLSearchParams({
+            action: 'query', prop: 'images', titles: sitelink,
+            imlimit: '30', format: 'json', origin: '*',
+          })),
+          fetch(`https://www.wikidata.org/w/api.php?` + new URLSearchParams({
+            action: 'wbgetentities', ids: qid, props: 'claims',
+            format: 'json', origin: '*',
+          })),
+        ]);
+        if (!wpRes.ok) throw new Error(`Wikipedia summary API returned ${wpRes.status}`);
+        const wpJson = await wpRes.json();
+
+        const fallbackThumb = wpJson.originalimage?.source ?? wpJson.thumbnail?.source ?? null;
+        const wpExtract     = wpJson.extract ?? null;
+        const wpUrl         = wpJson.content_urls?.desktop?.page
+          ?? `https://en.wikipedia.org/wiki/${encodeURIComponent(sitelink)}`;
+
+        // Parse extra Wikidata claims
+        let wpExtra = { extract: wpExtract };
+        try {
+          const wdClaims = await wdClaimsRes.json();
+          const claims   = wdClaims.entities?.[qid]?.claims ?? {};
+          // GDP (P2131)
+          const gdpVal = claims.P2131?.[0]?.mainsnak?.datavalue?.value?.amount;
+          if (gdpVal) {
+            const n = Math.abs(parseFloat(gdpVal));
+            wpExtra.gdp = n >= 1e12 ? (n / 1e12).toFixed(2) + ' trillion'
+                        : n >= 1e9  ? (n / 1e9).toFixed(1)  + ' billion'
+                        : n >= 1e6  ? (n / 1e6).toFixed(1)  + ' million'
+                        : fmtNum(Math.round(n));
+          }
+          // HDI (P1081)
+          const hdiVal = claims.P1081?.[0]?.mainsnak?.datavalue?.value?.amount;
+          if (hdiVal) wpExtra.hdi = parseFloat(hdiVal);
+          // Nickname (P1449) - English only
+          const nickClaims = claims.P1449 ?? [];
+          const nickEn = nickClaims.find(c => c.mainsnak?.datavalue?.value?.language === 'en');
+          if (nickEn) wpExtra.nickname = nickEn.mainsnak.datavalue.value.text;
+        } catch { /* claims fetch is non-critical */ }
+
+        // Step 3: resolve image URLs (filter icons/flags/maps, keep real photos)
+        let images = [];
+        try {
+          const imgListJson = await imgListRes.json();
+          const pageKey     = Object.keys(imgListJson.query?.pages ?? {})[0];
+          const rawImgs     = imgListJson.query?.pages?.[pageKey]?.images ?? [];
+
+          const candidates = rawImgs
+            .filter(img => /\.(jpe?g|png|webp)$/i.test(img.title))
+            .filter(img => !IMG_EXCLUDE.test(img.title))
+            .slice(0, 12);
+
+          if (candidates.length > 0) {
+            const infoRes = await fetch(
+              'https://en.wikipedia.org/w/api.php?' + new URLSearchParams({
+                action: 'query', prop: 'imageinfo',
+                iiprop: 'url|size', titles: candidates.map(t => t.title).join('|'),
+                iiurlwidth: '900', format: 'json', origin: '*',
+              })
+            );
+            const infoJson = await infoRes.json();
+            images = Object.values(infoJson.query?.pages ?? {})
+              .filter(p => { const i = p.imageinfo?.[0]; return i && i.width >= 300 && i.height >= 200; })
+              .map(p => p.imageinfo[0].thumburl ?? p.imageinfo[0].url)
+              .filter(Boolean)
+              .slice(0, 8);
+          }
+        } catch { /* image fetching is non-critical */ }
+
+        // Ensure the main Wikipedia thumbnail leads the gallery
+        if (fallbackThumb && !images.includes(fallbackThumb)) images.unshift(fallbackThumb);
+
+        // Render the full infobox
+        if (city) {
+          renderInfobox(city, images, wpExtra, wpUrl, false);
+        } else {
+          body.innerHTML = `
+            <div>
+              ${images[0] ? `<img class="wiki-img" src="${escHtml(images[0])}" alt="" style="width:100%;max-height:220px;object-fit:cover;display:block" />` : ''}
+              <div style="padding:16px;font-size:0.85rem;line-height:1.65;color:#c9d1d9">${escHtml(wpExtra?.extract ?? '')}</div>
+            </div>`;
+          footer.innerHTML = `<a class="wiki-footer-link" href="${escHtml(wpUrl)}" target="_blank" rel="noopener">Read full article on Wikipedia ↗</a>`;
+        }
+
+        // Step 4: persist to server (fire-and-forget) — future opens load instantly
+        if (images.length || wpExtract) {
+          fetch('/api/enrich', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ qid, wiki_thumb: images[0] ?? null, wiki_extract: wpExtract, wiki_images: images }),
+          }).then(r => r.json()).then(json => {
+            if (json.changed && city) {
+              if (images.length) city.wiki_images = images;
+              if (images[0])     city.wiki_thumb  = images[0];
+              if (wpExtract)     city.wiki_extract = wpExtract;
+            }
+          }).catch(() => { /* non-critical */ });
+        }
+
+      } catch (err) {
+        // Fallback: always show Wikidata-only card — never a blank sidebar
+        if (city) {
+          renderInfobox(city, [], {}, null, false);
+          const errNote = document.createElement('div');
+          errNote.className = 'wiki-error';
+          errNote.innerHTML = `<em>Could not load Wikipedia article: ${escHtml(err.message)}</em><br/>
+            <a href="https://www.wikidata.org/wiki/Special:GoToLinkedPage/enwiki/${qid}" target="_blank" rel="noopener">Try opening Wikipedia directly ↗</a>`;
+          document.getElementById('wiki-sidebar-body').appendChild(errNote);
+        } else {
+          body.innerHTML = `<div class="wiki-error">${escHtml(err.message)}<br/>
+            <a href="https://www.wikidata.org/wiki/Special:GoToLinkedPage/enwiki/${qid}" target="_blank" rel="noopener">Try opening Wikipedia directly ↗</a></div>`;
+        }
+      }
+    }
+
+    // Close sidebar on Escape (not lightbox — lightbox has its own handler)
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !document.getElementById('wiki-lightbox').classList.contains('open'))
+        closeWikiSidebar();
+    });
+
+    // ── Boot ──────────────────────────────────────────────────────────────────────
+    async function init() {
+      showLoading(true, 'Loading world map…');
+
+      map = L.map('map-container', {
+        center: [20, 0], zoom: 2, minZoom: 2, maxZoom: 18,
+        zoomControl: true, attributionControl: true,
+      });
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
+          'contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd', maxZoom: 20,
+      }).addTo(map);
+
+      const terminator = L.terminator({
+        fillColor: '#0a0f1a', fillOpacity: 0.45,
+        color: '#334155', weight: 1, opacity: 0.6, interactive: false,
+      }).addTo(map);
+      setInterval(() => terminator.setTime(new Date()), 60_000);
+
+      // ── Phase 2: load city data (required) + country data (optional) in parallel ──
+      showLoading(true, 'Loading city dataset…');
+      try {
+        const [citiesRes, countryRes] = await Promise.all([
+          fetch('/cities-full.json'),
+          fetch('/country-data.json').catch(() => null),   // graceful — file may not exist yet
+        ]);
+
+        if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
+        const raw = await citiesRes.json();
+
+        // ── Phase 3: validate + assign stable keys ──
+        rawCities = validateCities(raw);
+        rawCities.forEach(c => { c._key = cityKey(c); });
+
+        // ── Phase 4: migrate any legacy lat,lng edit keys → QID ──
+        migrateEditKeys(rawCities);
+
+        // ── Phase 5: load World Bank country data (optional) ──
+        if (countryRes && countryRes.ok) {
+          try {
+            countryData = await countryRes.json();
+            console.log(`[init] Country data loaded (${Object.keys(countryData).length} countries)`);
+          } catch {
+            console.warn('[init] country-data.json is malformed — World Bank data will be unavailable');
+          }
+        } else {
+          console.info('[init] country-data.json not found — run "npm run fetch-country" to enable World Bank indicators');
+        }
+
+        // ── Phase 6: apply overrides + build UI ──
+        applyOverrides();
+        rebuildMapLayer();
+        updateStats();
+        showLoading(false);
+
+        populateCountryFilter();
+        document.getElementById('f-search') .addEventListener('input',  applyFilters);
+        document.getElementById('f-country').addEventListener('change', applyFilters);
+        document.getElementById('f-minpop') .addEventListener('change', applyFilters);
+        document.getElementById('f-sort')   .addEventListener('change', applyFilters);
+        document.getElementById('load-more-btn').addEventListener('click', function() {
+          visibleCount += PAGE_SIZE;
+          renderRows();
+        });
+        initHeaderSort();
+
+        filtered = [...allCities];
+        renderRows();
+        document.getElementById('list-panel').style.display = '';
+      } catch (err) {
+        showLoadingError(err.message);
+      }
+    }
+
+    function showLoading(visible, msg) {
+      const overlay = document.getElementById('loading-overlay');
+      const text    = document.getElementById('loading-text');
+      overlay.classList.toggle('visible', visible);
+      if (visible && msg) text.textContent = msg;
       document.getElementById('loading-error').style.display = 'none';
+      text.style.display = 'block';
     }
 
     function showLoadingError(msg) {
-      const el = document.getElementById('loading-error');
-      el.textContent = 'Error: ' + msg;
-      el.style.display = 'block';
-      document.getElementById('loading-text').style.display = 'none';
+      document.getElementById('loading-error').textContent   = 'Error: ' + msg;
+      document.getElementById('loading-error').style.display = 'block';
+      document.getElementById('loading-text').style.display  = 'none';
     }
 
-    // ── Legend toggle ─────────────────────────────────────────────────────────
-    function updateLegend(view) {
-      const densityLegend = document.getElementById('density-legend');
-      const wikiLegend    = document.getElementById('wiki-legend');
-      const wikiBadge     = document.getElementById('wiki-source-badge');
-      if (view === 'wiki') {
-        densityLegend.style.display = 'none';
-        wikiLegend.classList.add('visible');
-      } else {
-        densityLegend.style.display = view === 'cities' ? 'none' : '';
-        wikiLegend.classList.remove('visible');
-        wikiBadge.style.display = 'none';
-      }
-    }
-
-    // ── Init map ──────────────────────────────────────────────────────────────
-    function initMap() {
-      datamap = new Datamap({
-        element: document.getElementById('map-container'),
-        projection: 'mercator',
-        fills: {
-          // Near-black base for wiki view so canvas glows pop against darkness
-          defaultFill: currentView === 'wiki' ? '#070b0f' : '#21262d',
-          tier1: '#bd0026', tier2: '#f03b20', tier3: '#fd8d3c',
-          tier4: '#fecc5c', tier5: '#ffffb2', tier6: '#74c476',
-        },
-        geographyConfig: {
-          borderColor:          currentView === 'wiki' ? '#111820' : '#30363d',
-          highlightBorderColor: currentView === 'wiki' ? '#1e2d3d' : '#58a6ff',
-          highlightFillColor: function(geo) {
-            if (currentView === 'cities' || currentView === 'wiki') return '#2d333b';
-            return getDensityColor(densityData[geo.id]);
-          },
-          popupTemplate: function(geo) {
-            const density = densityData[geo.id];
-            const text = density ? density.toLocaleString() + ' people/km²' : 'No data';
-            return `<div class="hoverinfo"><strong>${geo.properties.name}</strong><br/>Density: ${text}</div>`;
-          },
-        },
-        done: function(dm) {
-          datamap = dm;
-          if (currentView === 'density' || currentView === 'both') colorCountries(dm);
-          if (currentView === 'cities'  || currentView === 'both') addCityBubbles(dm);
-          if (currentView === 'wiki')                              fetchAndRenderWikiCities(dm);
-          if (currentView !== 'wiki')                              calculateStats();
-        },
-      });
-    }
-
-    // ── Color countries by density ────────────────────────────────────────────
-    function colorCountries(dm) {
-      dm.svg.selectAll('.datamaps-subunit')
-        .style('fill', function(d) { return getDensityColor(densityData[d.id]); });
-    }
-
-    // ── Hardcoded city bubbles ────────────────────────────────────────────────
-    function addCityBubbles(dm) {
-      const bubbles = hardcodedCities.map(city => ({
-        name:      city.name,
-        latitude:  city.lat,
-        longitude: city.lng,
-        radius:    Math.sqrt(city.pop / 1000000) * 0.8,
-        fillKey:   city.pop > 15000000 ? 'tier2' : city.pop > 10000000 ? 'tier3' : 'tier4',
-        population: city.pop,
-      }));
-      dm.bubbles(bubbles, {
-        borderColor:  '#000',
-        borderWidth:  0.5,
-        fillOpacity:  0.8,
-        popupTemplate: function(geo, data) {
-          return `<div class="hoverinfo"><strong>${data.name}</strong><br/>Population: ${(data.population / 1e6).toFixed(1)}M</div>`;
-        },
-      });
-    }
-
-    // ── Wikipedia cities — canvas heatmap ────────────────────────────────────
-    async function fetchAndRenderWikiCities(dm) {
-      wikiActive = true;
-      showLoading(true);
-      document.getElementById('loading-text').style.display = 'block';
-      try {
-        const res = await fetch('/cities.json');
-        if (!res.ok) throw new Error('Server returned ' + res.status);
-        const cities = await res.json();
-        if (!wikiActive) return;             // user switched away while file loaded
-        if (!cities || cities.length === 0) throw new Error('No city data returned');
-        renderHeatmap(dm, cities);
-        showWikiStats(cities, 'static');
-      } catch (err) {
-        if (wikiActive) showLoadingError(err.message);
-        return;
-      } finally {
-        if (wikiActive) showLoading(false);
-      }
-    }
-
-    // Renders 600 city glows onto a <canvas> using screen-blend accumulation.
-    // Where many cities cluster the glows stack toward bright white — the
-    // same visual principle as luminocity3d.org.
-    function renderHeatmap(dm, cities) {
-      const container = document.getElementById('map-container');
-
-      // Canvas intrinsic size = SVG intrinsic size (datamaps uses offsetWidth/Height)
-      const canvas = document.createElement('canvas');
-      canvas.id = 'heatmap-canvas';
-      canvas.width  = container.offsetWidth;
-      canvas.height = container.offsetHeight;
-      // CSS 100%/100% makes it scale identically to the SVG underneath
-      canvas.style.cssText =
-        'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
-      container.appendChild(canvas);
-
-      const ctx = canvas.getContext('2d');
-      // screen blend: out = 1 − (1−a)(1−b)
-      // Overlapping glows accumulate toward white, just like light mixing.
-      ctx.globalCompositeOperation = 'screen';
-
-      for (const city of cities) {
-        const xy = dm.latLngToXY(city.lat, city.lng);
-        if (!xy) continue;
-        const [x, y] = xy;
-
-        // Radius: sqrt-scale — larger cities cast a wider glow
-        const r = Math.max(6, Math.sqrt(city.pop / 100000) * 2.2);
-
-        // Intensity: log-scale gives good visual spread across 500k → 25M
-        const intensity = Math.min(0.90, Math.log10(city.pop / 500000 + 1) * 0.72);
-
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-        grad.addColorStop(0,    `rgba(255, 250, 200, ${intensity})`);        // warm white core
-        grad.addColorStop(0.25, `rgba(255, 160,  30, ${intensity * 0.70})`); // amber
-        grad.addColorStop(0.65, `rgba(180,  45,   5, ${intensity * 0.25})`); // deep orange haze
-        grad.addColorStop(1,    'rgba(0, 0, 0, 0)');                          // transparent edge
-
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // ── Switch view ───────────────────────────────────────────────────────────
-    function setView(view, btn) {
-      wikiActive = false;   // stop any in-flight heatmap render from the previous view
-      currentView = view;
-      document.querySelectorAll('.btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      updateLegend(view);
-      // Clearing innerHTML removes both the SVG and any heatmap canvas child
-      document.getElementById('map-container').innerHTML = '';
-      initMap();
-    }
-
-    // ── Boot ──────────────────────────────────────────────────────────────────
-    updateLegend('density');
-    initMap();
+    init();
   </script>
 </body>
 </html>
