@@ -338,6 +338,19 @@
       "Shimonoseki",
       "Johor Bahru",
       "Jeddah"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/c/cb/Historical_peninsula_and_modern_skyline_of_Istanbul.jpg",
+    "wiki_extract": "Istanbul is the largest city in Turkey, constituting the country's economic, cultural, and historical center. With a population of over 15 million, it is home to 18% of the population of Turkey. Istanbul is among the largest cities in Europe and in the world by population. It is a city on two continents; about two-thirds of its population live in Europe and the rest in Asia. Istanbul straddles the Bosphorus – one of the world's busiest waterways – in northwestern Turkey, between the Sea of Marmara and the Black Sea. Its area of 5,461 square kilometers (2,109 mi2) is coterminous with Istanbul Province.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/c/cb/Historical_peninsula_and_modern_skyline_of_Istanbul.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/20220606-L1000240.jpg/960px-20220606-L1000240.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Atat%C3%BCrk_Olimpiyat.jpg/960px-Atat%C3%BCrk_Olimpiyat.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Bahnhofsfront-Istanbul-Sirkeci_retouched_2.jpg/960px-Bahnhofsfront-Istanbul-Sirkeci_retouched_2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/d/d3/Bankalar_Caddesi_in_the_1920%27s.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Basilica_Cistern_after_restoration_2022_%2811%29.jpg/960px-Basilica_Cistern_after_restoration_2022_%2811%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Beyaz%C4%B1tMeydan%C4%B12.jpg/960px-Beyaz%C4%B1tMeydan%C4%B12.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Beyo%C4%9Flu_City_Hall%2C_June_2021.jpg/960px-Beyo%C4%9Flu_City_Hall%2C_June_2021.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Birdwatching_Tower_2.jpg/960px-Birdwatching_Tower_2.jpg"
     ]
   },
   {
@@ -452,6 +465,19 @@
       "Qom",
       "Zonguldak",
       "Jeddah"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Dolmen_Towers_Karachi.jpg",
+    "wiki_extract": "Karachi is the capital city of the province of Sindh, Pakistan. It is the largest city in Pakistan and 12th largest in the world, with a population of over 20 million. It is situated at the southern tip of the country along the Arabian Sea coast and formerly served as the country's capital from 1947 to 1959. Ranked as a beta-global city, it is Pakistan's premier industrial and financial centre, with an estimated GDP of over $200 billion (PPP) as of 2021. Karachi is a major metropolitan area and is considered Pakistan's most cosmopolitan city, and among the country's most linguistically, ethnically, and religiously diverse regions, as well as one of the country's most progressive and socially liberal cities.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/d/d2/Dolmen_Towers_Karachi.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/A_street_in_Old_Town%2C_Karachi%2C_India._Photograph%2C_1897._Wellcome_V0029261.jpg/960px-A_street_in_Old_Town%2C_Karachi%2C_India._Photograph%2C_1897._Wellcome_V0029261.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Aga_Khan_University_.jpg/960px-Aga_Khan_University_.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Another_beautiful_View_of_%22Mohatta_Palace%22.jpg/960px-Another_beautiful_View_of_%22Mohatta_Palace%22.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Bahadurabad_Area_Karachi_City.jpg/960px-Bahadurabad_Area_Karachi_City.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Bahria_Town_Karachi_Grand_Mosque_2.jpg/960px-Bahria_Town_Karachi_Grand_Mosque_2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/6/65/Bvs_608.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/4/42/CSKA_Moscow_and_Pakistan_national_football_team_at_the_KMC_Stadium%2C_Karachi_in_1969.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b5/DJCollegeKarachi.jpg"
     ]
   },
   {
@@ -1356,7 +1382,12 @@
     "founded": 1868,
     "website": "https://www.gotokyo.org",
     "geonames_id": null,
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg",
+    "wiki_extract": "Tokyo, officially the Tokyo Metropolis, is the capital and most populous city of Japan. With a population of over 14 million in the city proper in 2023, it is one of the most populous urban areas in the world. The Greater Tokyo Area, which includes Tokyo and parts of six neighboring prefectures, is the most populous metropolitan area in the world, with 41 million residents as of 2024.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/b/b2/Skyscrapers_of_Shinjuku_2009_January.jpg"
+    ]
   },
   {
     "qid": "Q42635",
@@ -1605,6 +1636,19 @@
       "Ranchi",
       "Dolores Hidalgo Municipality",
       "Cusco"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Sobrevuelos_CDMX_HJ2A4913_%2825514321687%29_%28cropped%29.jpg",
+    "wiki_extract": "Mexico City \nis the capital and largest city of Mexico, as well as the most populous city in North America. It is one of the most important cultural and financial centers in the world, and is classified as an Alpha world city according to the Globalization and World Cities Research Network (GaWC) 2024 ranking. Mexico City is located in the Valley of Mexico within the high Mexican central plateau, at an altitude of 2,240 meters. The city has 16 boroughs or demarcaciones territoriales, which are in turn divided into neighborhoods or colonias.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/4/4f/Sobrevuelos_CDMX_HJ2A4913_%2825514321687%29_%28cropped%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/15-07-12-Mexico-D-F-RalfR-N3S_9031.jpg/960px-15-07-12-Mexico-D-F-RalfR-N3S_9031.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/15-07-17-Mexico-D-F-RalfR-WMA_1274.jpg/960px-15-07-17-Mexico-D-F-RalfR-WMA_1274.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/ACMX16.JPG/960px-ACMX16.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/4/40/AICM_AIR_T2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/AerialViewPhotochemicalSmogMexicoCity_2.jpg/960px-AerialViewPhotochemicalSmogMexicoCity_2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Al_benemerito_Benito_Juarez%2C_Ciudad_de_M%C3%A9xico_MEX.jpg/960px-Al_benemerito_Benito_Juarez%2C_Ciudad_de_M%C3%A9xico_MEX.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Angel-de-la-Independencia--Mexico-D.F.jpg/960px-Angel-de-la-Independencia--Mexico-D.F.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/be/Atlas_Van_der_Hagen-KW1049B13_078-Panorama_van-_NOVA_MEXICO.jpeg/960px-Atlas_Van_der_Hagen-KW1049B13_078-Panorama_van-_NOVA_MEXICO.jpeg"
     ]
   },
   {
@@ -2148,6 +2192,19 @@
       "Ramallah",
       "Santa Fe",
       "Cartagena"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/2/20/Bogota%2C_Colombia_%2836668708290%29.jpg",
+    "wiki_extract": "Bogotá, officially Bogotá, Distrito Capital, abbreviated Bogotá, D.C., and formerly known as Santa Fe de Bogotá during the Spanish Imperial period and between 1991 and 2000, is the capital and largest city of Colombia. The city is administered as the Capital District, as well as the capital of, though not politically part of, the surrounding department of Cundinamarca. Bogotá is a territorial entity of the first order, with the same administrative status as the departments of Colombia. It is the main political, economic, administrative, industrial, cultural, aeronautical, technological, scientific, medical, educational and airport center of the country and northern South America.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/2/20/Bogota%2C_Colombia_%2836668708290%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/2018_Bogot%C3%A1%2C_Cund_-_Colombia.jpg/960px-2018_Bogot%C3%A1%2C_Cund_-_Colombia.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/2019_Bogot%C3%A1_-_Iglesia_de_Monserrate.jpg/960px-2019_Bogot%C3%A1_-_Iglesia_de_Monserrate.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/56_-_Bogota_-_D%C3%A9cembre_2008.jpg/960px-56_-_Bogota_-_D%C3%A9cembre_2008.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Aeropuerto_Bogot%C3%A1.JPG/960px-Aeropuerto_Bogot%C3%A1.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/d/d7/Ajiaco.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Andino%2C_entrada_por_la_carrera_12.JPG/960px-Andino%2C_entrada_por_la_carrera_12.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Articulado_de_Transmilenio_en_el_Eje_Ambiental.JPG/960px-Articulado_de_Transmilenio_en_el_Eje_Ambiental.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Avenida_Caracas_calle_40_A_Casa_de_ladrillo.JPG/960px-Avenida_Caracas_calle_40_A_Casa_de_ladrillo.JPG"
     ]
   },
   {
@@ -5238,6 +5295,19 @@
       "Cheb",
       "Kish Island",
       "Jeddah"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/en/c/c7/Burj_Khalifa_2021.jpg",
+    "wiki_extract": "Dubai is the most populous city in the United Arab Emirates and the capital of the Emirate of Dubai. It is on a creek on the southeastern coast of the Persian Gulf. As of 2025, its population stands at 4 million, 92% of whom are expatriates. The wider urban area includes Sharjah and has a population of 5 million people as of 2023, while the Dubai–Sharjah–Ajman metropolitan area has a population of 6 million people.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/en/c/c7/Burj_Khalifa_2021.jpg",
+      "https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/Burj_Al_Arab_%40_Madinat_Jumeirah_%40_Dubai_%2815851725086%29.jpg/960px-Burj_Al_Arab_%40_Madinat_Jumeirah_%40_Dubai_%2815851725086%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/A_Round_Watchtower_%28Name_Unknown%29.jpg/960px-A_Round_Watchtower_%28Name_Unknown%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/9/99/Adi_with_the_three_rulers_of_Dubai.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Ain_Dubai%2C_light_show_of_the_ferris_wheel_located_in_Dubai%2C_United_Arab_Emirates.jpg/960px-Ain_Dubai%2C_light_show_of_the_ferris_wheel_located_in_Dubai%2C_United_Arab_Emirates.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/8/8d/AlRas_Deira_Mid1960s.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/a/a9/Al_Fahidi-Fort.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Al_Salam_Mosque_at_night.jpg/960px-Al_Salam_Mosque_at_night.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Al_Tayer_Motors_Sponsors_High-class_Dubai_World_Cup_Carnival_%288490930005%29.jpg/960px-Al_Tayer_Motors_Sponsors_High-class_Dubai_World_Cup_Carnival_%288490930005%29.jpg"
     ]
   },
   {
@@ -5901,7 +5971,15 @@
     "founded": null,
     "website": "http://www.tongren.gov.cn/",
     "geonames_id": "1792591",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Administrative_Division_Tongren.png/960px-Administrative_Division_Tongren.png",
+    "wiki_extract": "Tongren is a prefecture-level city in eastern Guizhou province, People's Republic of China, located within a tobacco planting and crop agricultural area. Tongren was known as Tongren Prefecture (铜仁地区) until November 2011, when it was converted into a prefecture-level city. By the end of 2024 and the beginning of 2025, Tongren City will have a permanent population of 3.1615 million and a registered population of 4.494 million.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Administrative_Division_Tongren.png/960px-Administrative_Division_Tongren.png",
+      "https://upload.wikimedia.org/wikipedia/commons/1/12/Ethnic_townships_in_South_Tongren.png",
+      "https://upload.wikimedia.org/wikipedia/commons/2/29/Location_of_Tongren_Prefecture_within_Guizhou_%28China%29.png",
+      "https://upload.wikimedia.org/wikipedia/commons/f/fe/%E7%A2%A7%E6%B1%9F%E5%8C%BA%E5%A4%9C%E6%99%AF.jpg"
+    ]
   },
   {
     "qid": "Q360069",
@@ -7704,6 +7782,19 @@
       "Sintra",
       "Sullana",
       "Cusco"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/1/12/DJI_0197_crp_wiki.jpg",
+    "wiki_extract": "Havana is the capital and largest city of Cuba. The heart of La Habana Province, Havana is the country's main port and commercial center. It is the most populous city, the largest by area, and the second-largest metropolitan area in the Caribbean region. The population in 2021 was 2,142,939 inhabitants, and its area is 728.26 km2 (281.18 sq mi) for the capital city and 8,475.57 km2 for the metropolitan zone. Its official population was 1,749,964 inhabitants in 2024.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/1/12/DJI_0197_crp_wiki.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/b/ba/1920_Centro_Asturiano1.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Alumnos%2C_La_Habana%2C_Cuba_%289419813189%29.jpg/960px-Alumnos%2C_La_Habana%2C_Cuba_%289419813189%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/3/36/Ballet_Nacional_de_Cuba.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/British_ships_in_the_Seven_Years_War_before_Havana.jpg/960px-British_ships_in_the_Seven_Years_War_before_Havana.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/4/48/CU_La_Habana_9709_028_%2817229424611%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Castillo_de_la_Real_Fuerza_%28Jan_2014%29.jpg/960px-Castillo_de_la_Real_Fuerza_%28Jan_2014%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Comit%C3%A9_Central_PCC.jpg/960px-Comit%C3%A9_Central_PCC.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Comit%C3%A9_Central_del_Partido_Comunista_-_Palacio_de_la_Revolucion_%2818086011665%29.jpg/960px-Comit%C3%A9_Central_del_Partido_Comunista_-_Palacio_de_la_Revolucion_%2818086011665%29.jpg"
     ]
   },
   {
@@ -8467,6 +8558,19 @@
       "Moyobamba",
       "Tarapoto",
       "Belém"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Manaus_amazonas.jpg",
+    "wiki_extract": "Manaus is the capital and largest city of the Brazilian state of Amazonas. It is the seventh-largest city in Brazil, with an estimated 2024 population of 2,279,686 distributed over a land area of about 11,401 km2 (4,402 sq mi). Located at the east centre of the state, the city is the centre of the Manaus metropolitan area and the largest metropolitan area in the North Region of Brazil by urban landmass. It is situated near the confluence of the Negro and Amazon rivers. It is one of the two cities in the Amazon rainforest with a population of over 1 million people, alongside Belém.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/f/f8/Manaus_amazonas.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Aeroporto-de-Manaus.jpg/960px-Aeroporto-de-Manaus.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Amazon_CIAT_%285%29.jpg/960px-Amazon_CIAT_%285%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Amazon_Theatre_%28Manaus%2C_Brazil%29_%28edited%29.jpg/960px-Amazon_Theatre_%28Manaus%2C_Brazil%29_%28edited%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Amazonas_Philharmonic.JPG/960px-Amazonas_Philharmonic.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Arena_Amaz%C3%B4nia_Manaus.jpg/960px-Arena_Amaz%C3%B4nia_Manaus.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Av_Eduardo_Ribeiro_-_Manaus.jpg/960px-Av_Eduardo_Ribeiro_-_Manaus.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Avenida_Mario_Ypiranga_-_Manaus_-_Brasil.jpg/960px-Avenida_Mario_Ypiranga_-_Manaus_-_Brasil.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/CBA_-_Centro_de_Biotecnologia_da_Amaz%C3%B4noa_-_panoramio.jpg/960px-CBA_-_Centro_de_Biotecnologia_da_Amaz%C3%B4noa_-_panoramio.jpg"
     ]
   },
   {
@@ -12999,6 +13103,19 @@
       "Khujand",
       "Jeddah",
       "Baiyin"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/4/41/Tulip-Fountain-Shymkent-Kazakhstan.jpg",
+    "wiki_extract": "Shymkent is a city in southern Kazakhstan, located near the border with Uzbekistan. It holds the status of a city of republican significance, one of only three cities in Kazakhstan with this distinction, alongside Almaty and Astana. As of June 2018, Shymkent had an estimated population of 1,002,291, making it the third-most populous city in the country, after Almaty and Astana.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/4/41/Tulip-Fountain-Shymkent-Kazakhstan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Aksu-Canyon-Shymkent-Kazakhstan.jpg/960px-Aksu-Canyon-Shymkent-Kazakhstan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Citadel-Shymkent-Kazakhstan.jpg/960px-Citadel-Shymkent-Kazakhstan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Dendropark_Shymkent.jpg/960px-Dendropark_Shymkent.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Independence-Park-Shymkent-Kazakhstan.jpg/960px-Independence-Park-Shymkent-Kazakhstan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Light-montage-Arbat-Shymkent-Kazakhstan.jpg/960px-Light-montage-Arbat-Shymkent-Kazakhstan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Mosque_in_Shymkent.jpg/960px-Mosque_in_Shymkent.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Ordabassy-Square-Shymkent-Kazakhstan.jpg/960px-Ordabassy-Square-Shymkent-Kazakhstan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Ordabasy_Plaza_%28Shymkent%29.jpg/960px-Ordabasy_Plaza_%28Shymkent%29.jpg"
     ]
   },
   {
@@ -14291,6 +14408,19 @@
       "Guadalajara",
       "New Orleans",
       "Gainesville"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/d/d3/Teatro_Manuel_Bonilla_Tegucigalpa.jpg",
+    "wiki_extract": "Tegucigalpa —formally Tegucigalpa, Municipality of the Central District, and colloquially referred to as Tegus or Teguz—is the capital and largest city of Honduras along with its sister city, Comayagüela.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/d/d3/Teatro_Manuel_Bonilla_Tegucigalpa.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/757landing-toncontin.jpg/960px-757landing-toncontin.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Aerial_view_of_Tegucigalpa_2008-12-14_02.jpg/960px-Aerial_view_of_Tegucigalpa_2008-12-14_02.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/AnilloPerifericoOverpass.jpg/960px-AnilloPerifericoOverpass.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/AnilloPerifericoTegucigalpa.jpg/960px-AnilloPerifericoTegucigalpa.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Barrio_La_Hoya%2C_Tegucigalpa%2C_Honduras_-_panoramio.jpg/960px-Barrio_La_Hoya%2C_Tegucigalpa%2C_Honduras_-_panoramio.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/f/f4/Basilica_Virgen_de_Suyapa.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Boulevard_Fuerzas_Armadas_Tegus.jpg/960px-Boulevard_Fuerzas_Armadas_Tegus.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Casa_Casco_Tegucigalpa.jpg/960px-Casa_Casco_Tegucigalpa.jpg"
     ]
   },
   {
@@ -16636,6 +16766,19 @@
     "sister_cities": [
       "Elista",
       "Beit Shemesh"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Lhasa-Potala-Ausblick-06-2014-gje.jpg",
+    "wiki_extract": "Lhasa is a prefecture-level city, one of the main administrative divisions of the Tibet Autonomous Region of China. It covers an area of 29,274 square kilometres (11,303 sq mi) of rugged and sparsely populated terrain. Its urban center is Lhasa, with around 300,000 residents, which mostly corresponds with the administrative Chengguan District, while its suburbs extend into Doilungdêqên District and Dagzê District. The consolidated prefecture-level city contains an additional five, mostly rural, counties.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/1/1a/Lhasa-Potala-Ausblick-06-2014-gje.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/049_Lhasa_%282%29.JPG/960px-049_Lhasa_%282%29.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/20060731122736_-_%E5%BD%93%E9%9B%84%E7%AB%99.jpg/960px-20060731122736_-_%E5%BD%93%E9%9B%84%E7%AB%99.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Administrative_Division_Lhasa.png/960px-Administrative_Division_Lhasa.png",
+      "https://upload.wikimedia.org/wikipedia/commons/3/30/Bharal%2C_Himalayan_blue_sheep.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/1/1c/Black_Necked_Cranes.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/3/3e/Bundesarchiv_Bild_135-S-15-07-22%2C_Tibetexpedition%2C_Ufer%2C_Wartende.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Butter_Market%2C_Lhasa.jpg/960px-Butter_Market%2C_Lhasa.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/f/fa/Doilungd%C3%AAq%C3%AAn_County1.jpg"
     ]
   },
   {
@@ -18661,6 +18804,19 @@
     "sister_cities": [
       "Skopje",
       "Djibouti"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/7/78/EG-suez-20-bg-suez.jpg",
+    "wiki_extract": "Suez is a seaport city in north-eastern Egypt, located on the north coast of the Gulf of Suez on the Red Sea, near the southern terminus of the Suez Canal. The city is the capital and largest city of the Suez Governorate. The modern city of Suez is a successor of the ancient Egyptian city of Clysma, a major Red Sea port and a center of monasticism.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/7/78/EG-suez-20-bg-suez.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/1/10/Aerial_view_of_city_of_Suez_and_Suez_Canal.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/CITY_OF_SUEZ%2C_EGYPT.jpg/960px-CITY_OF_SUEZ%2C_EGYPT.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Container_Ship_%27Ever_Given%27_stuck_in_the_Suez_Canal%2C_Egypt_-_March_24th%2C_2021_cropped.jpg/960px-Container_Ship_%27Ever_Given%27_stuck_in_the_Suez_Canal%2C_Egypt_-_March_24th%2C_2021_cropped.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Dom_Jo%C3%A3o_de_Castro_-_Roteiro_do_Mar_Roxo_-_Suez.jpg/960px-Dom_Jo%C3%A3o_de_Castro_-_Roteiro_do_Mar_Roxo_-_Suez.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/EG-suez-06-bg-bruecke.jpg/960px-EG-suez-06-bg-bruecke.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/EG-suez-19-bg-suez.jpg/960px-EG-suez-19-bg-suez.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/EG-suez-20-bg-suez.jpg/960px-EG-suez-20-bg-suez.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Golf_von_Suez_01.jpg/960px-Golf_von_Suez_01.jpg"
     ]
   },
   {
@@ -19570,6 +19726,19 @@
       "Teocaltiche",
       "Puerto Quetzal",
       "Larnaca Municipality"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/e/eb/Skyscrapers_in_Acapulco_Diamante.jpg",
+    "wiki_extract": "Acapulco de Juárez, commonly called Acapulco, is a city and major seaport in the state of Guerrero on the Pacific Coast of Mexico, 380 kilometres (240 mi) south of Mexico City. Located on a deep, semicircular bay, Acapulco has been a port since the early colonial period of Mexico's history. It is a port of call for shipping and cruise lines running between Panama and San Francisco, California. The city of Acapulco is the largest in the state, far larger than the state capital Chilpancingo. Acapulco is also Mexico's largest beach and balneario resort city. Acapulco de Juárez, Guerrero is the municipal seat of the municipality of Acapulco, Guerrero.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/e/eb/Skyscrapers_in_Acapulco_Diamante.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/16th_century_Portuguese_Spanish_trade_routes.png/960px-16th_century_Portuguese_Spanish_trade_routes.png",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Acapulco3.jpg/960px-Acapulco3.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Acapulco4.jpg/960px-Acapulco4.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Acapulco_-_Palmasola-Punto-mas-alto.JPG/960px-Acapulco_-_Palmasola-Punto-mas-alto.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Acapulco_zona_hotelera_02.jpg/960px-Acapulco_zona_hotelera_02.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Aeropuerto_Acapulco_03.jpg/960px-Aeropuerto_Acapulco_03.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Avenida_Costera_Miguel_Alem%C3%A1n_de_Acapulco%2C_M%C3%A9xico.jpg/960px-Avenida_Costera_Miguel_Alem%C3%A1n_de_Acapulco%2C_M%C3%A9xico.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Caleta_Beach_in_Acapulco%2C_Mexico_2009.jpg/960px-Caleta_Beach_in_Acapulco%2C_Mexico_2009.jpg"
     ]
   },
   {
@@ -23930,7 +24099,19 @@
     "founded": null,
     "website": "https://bandarabbas.ir",
     "geonames_id": "141681",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/AMH-7105-KB_View_of_the_city_of_Gamron.jpg/960px-AMH-7105-KB_View_of_the_city_of_Gamron.jpg",
+    "wiki_extract": "Bandar Abbas is a port city in the Central District of Bandar Abbas County, Hormozgan Province, Iran serving as capital of the province, the county, and the district. Bandar Abbas is a port on the southern coast of the country, on the Persian Gulf.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/AMH-7105-KB_View_of_the_city_of_Gamron.jpg/960px-AMH-7105-KB_View_of_the_city_of_Gamron.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/BandarAbbas_%D8%A8%D9%86%D8%AF%D8%B1%D8%B9%D8%A8%D8%A7%D8%B3_-_panoramio_%28cropped%29.jpg/960px-BandarAbbas_%D8%A8%D9%86%D8%AF%D8%B1%D8%B9%D8%A8%D8%A7%D8%B3_-_panoramio_%28cropped%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/f/fb/Bandar_Abbas_1862.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bandar_Abbas_2.jpg/960px-Bandar_Abbas_2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Bandar_Abbas_International_Airport_3.jpg/960px-Bandar_Abbas_International_Airport_3.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Bandar_Abbas_night.jpg/960px-Bandar_Abbas_night.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/4/43/Bandarabbas-sahel-2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/8/87/Gombroon%C2%B7Persia%C2%B71704.jpg"
+    ]
   },
   {
     "qid": "Q2090",
@@ -28530,6 +28711,15 @@
       "Durham",
       "Qinhuangdao",
       "Mogi das Cruzes"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Toyama_montage_0.png",
+    "wiki_extract": "Toyama  is the capital city of Toyama Prefecture, Japan, located on the coast of the Sea of Japan in the Chūbu region on central Honshū, about 200 km (120 mi) north of the city of Nagoya and 300 km (190 mi) northwest of Tokyo. As of 1 June 2019, the city had an estimated population of 415,844 in 176,643 households, and a population density of 335 persons per km2. Its total area was 1,241.77 square kilometres (479.45 sq mi). The city has been designated an environmental model city by the national government for its efforts to reduce the emission of greenhouse gases.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/b/b8/Toyama_montage_0.png",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Firebombing_of_Toyama.jpg/960px-Firebombing_of_Toyama.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Gohyaku_rakan.jpg/960px-Gohyaku_rakan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Higasiaimon-cho_Street_in_Toyama_City_in_late_Meiji_era.jpg/960px-Higasiaimon-cho_Street_in_Toyama_City_in_late_Meiji_era.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Iwasesuwamachi%2C_Toyama%2C_Toyama_Prefecture_931-8377%2C_Japan_-_panoramio_-_Nagono.jpg/960px-Iwasesuwamachi%2C_Toyama%2C_Toyama_Prefecture_931-8377%2C_Japan_-_panoramio_-_Nagono.jpg"
     ]
   },
   {
@@ -30717,6 +30907,19 @@
       "Wolfsburg",
       "Toledo",
       "Nantong"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/b/b8/Toyohashi_Montage.jpg",
+    "wiki_extract": "Toyohashi  is a city in Aichi Prefecture, Japan. As of 1 December 2019, the city had an estimated population of 377,453 in 160,516 households and a population density of 1,400 persons per km2. The total area of the city was 261.86 square kilometres (101.10 sq mi). By area, Toyohashi was Aichi Prefecture's second-largest city until March 31, 2005, when it was surpassed by the city of Toyota, which had merged with six peripheral municipalities.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/b/b8/Toyohashi_Montage.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/160321_Toyohashi_Station_Toyohashi_Aichi_pref_Japan05n.jpg/960px-160321_Toyohashi_Station_Toyohashi_Aichi_pref_Japan05n.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/160321_Toyohashi_Station_Toyohashi_Aichi_pref_Japan13n.jpg/960px-160321_Toyohashi_Station_Toyohashi_Aichi_pref_Japan13n.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Aquarena_Toyohashi_2.jpg/960px-Aquarena_Toyohashi_2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Cabbage_field_in_Oshimizu-cho%2C_Toyohashi_city_ac_%281%29.jpg/960px-Cabbage_field_in_Oshimizu-cho%2C_Toyohashi_city_ac_%281%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Cocola_Avenue.JPG/960px-Cocola_Avenue.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Golden_Volkswagen_Golf_TSI_Highline_%28DBA-AUCPT%29.jpg/960px-Golden_Volkswagen_Golf_TSI_Highline_%28DBA-AUCPT%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Hotel_Seapalace_Resort%2C_In_Toyohashi.jpg/960px-Hotel_Seapalace_Resort%2C_In_Toyohashi.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Kamoshoubuen2.jpg/960px-Kamoshoubuen2.jpg"
     ]
   },
   {
@@ -31925,6 +32128,19 @@
     "geonames_id": "1282898",
     "sister_cities": [
       "Kunming"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Pokhara_Valley.jpg",
+    "wiki_extract": "Pokhara is a metropolitan city located in central Nepal, which serves as the capital of Gandaki Province. Named the country's \"capital of tourism\" it is the second largest city after Kathmandu, with 600,051 inhabitants living in 120,594 households as of 2021 census.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/9/9a/Pokhara_Valley.jpg",
+      "https://upload.wikimedia.org/wikipedia/en/8/87/Mountain_Museum_Pokhara_Front.jpg",
+      "https://upload.wikimedia.org/wikipedia/en/2/26/Pokhara-Lekhnath_Metropolitan_Map.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Annapurna_Cable_Car1.jpg/960px-Annapurna_Cable_Car1.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/8/83/BegnasLake.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Bindabasini_temple_pokhara.JPG/960px-Bindabasini_temple_pokhara.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Buddha_statue_shanti_stupa.jpg/960px-Buddha_statue_shanti_stupa.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/8/8b/Fewa_lake%2CPokhara.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/d/d5/Hot-Air-Ballon-Nepal.jpg"
     ]
   },
   {
@@ -32149,6 +32365,19 @@
       "Fengxian District",
       "Uwajima",
       "Luganville"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/e/e8/2022_Views_from_Diamond_Head_02.jpg",
+    "wiki_extract": "Honolulu is the capital and most populous city of the U.S. state of Hawaii, located in the Pacific Ocean. It is the county seat of the consolidated City and County of Honolulu, situated along the southeast coast of the island of Oʻahu. The population of Honolulu was 350,964 at the 2020 census, dropping to an estimated 344,967 by 2024. The Urban Honolulu metropolitan area had an estimated population of just under 1 million residents in 2024 and is the 56th-largest metropolitan area in the nation.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/e/e8/2022_Views_from_Diamond_Head_02.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/2022_Views_from_Diamond_Head_02.jpg/960px-2022_Views_from_Diamond_Head_02.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Alewa_Heights_during_a_cloudy_day._%2816975876705%29.jpg/960px-Alewa_Heights_during_a_cloudy_day._%2816975876705%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Ali%CA%BBi%C5%8Dlani_Hale_at_midday.jpg/960px-Ali%CA%BBi%C5%8Dlani_Hale_at_midday.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Attack_on_Pearl_Harbor_Japanese_planes_view.jpg/960px-Attack_on_Pearl_Harbor_Japanese_planes_view.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Bishop_Museum_2016_C.jpg/960px-Bishop_Museum_2016_C.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Chinatown%2C_Honolulu_%288118835796%29.jpg/960px-Chinatown%2C_Honolulu_%288118835796%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Diamond_Head_%28cropped%29.jpg/960px-Diamond_Head_%28cropped%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Diamond_Head_Hawaii_-_panoramio.jpg/960px-Diamond_Head_Hawaii_-_panoramio.jpg"
     ]
   },
   {
@@ -34669,7 +34898,19 @@
     "founded": 1860,
     "website": "http://nukus.by.ru/",
     "geonames_id": "601294",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/3/33/0_110688_5c5cde5_orig.jpg",
+    "wiki_extract": "Nukus is the sixth-largest city in Uzbekistan and the capital of the autonomous Republic of Karakalpakstan. The population of Nukus as of 1 January 2022 was 329,100. The Amu Darya river passes west of the city. Administratively, Nukus is a district-level city, that includes the urban-type settlement Karatau.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/3/33/0_110688_5c5cde5_orig.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/1/11/0_110692_3e886efc_orig.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/1960_CPA_2434.jpg/960px-1960_CPA_2434.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Hotel_Rahnamo_01.JPG/960px-Hotel_Rahnamo_01.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Karakalpakstan_Parliament_Buiding_in_Nukus.jpg/960px-Karakalpakstan_Parliament_Buiding_in_Nukus.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Relief_Map_of_Uzbekistan.png/960px-Relief_Map_of_Uzbekistan.png",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/SavickiMuseum.jpg/960px-SavickiMuseum.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Stamps_of_Uzbekistan%2C_2002-42.jpg/960px-Stamps_of_Uzbekistan%2C_2002-42.jpg"
+    ]
   },
   {
     "qid": "Q716127",
@@ -46026,7 +46267,15 @@
     "founded": 401,
     "website": "https://www.gov.kz/memleket/entities/turkestan-kalasy",
     "geonames_id": "1517945",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/c/c2/%D0%9C%D0%B0%D1%83%D0%B7%D0%BE%D0%BB%D0%B5%D1%98_%D0%A5%D0%BE%D0%B4%D0%B6%D0%B5_%D0%90%D1%85%D0%BC%D0%B5%D0%B4%D0%B0_%D0%88%D0%B0%D1%81%D0%B0%D0%B2%D0%B8%D1%98%D0%B0_%28%D0%B3%D1%80%D0%B0%D0%B4_%D0%A2%D1%83%D1%80%D0%BA%D0%B5%D1%81%D1%82%D0%B0%D0%BD%2C_%D0%9A%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD%29.jpg",
+    "wiki_extract": "Turkistan is a historic city and the administrative center of the Turkistan Region in southern Kazakhstan, located near the Syr Darya River. Positioned 160 km northwest of Shymkent, it lies along the Trans-Aral Railway, which connects Kyzylorda to the north and Tashkent to the south.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/c/c2/%D0%9C%D0%B0%D1%83%D0%B7%D0%BE%D0%BB%D0%B5%D1%98_%D0%A5%D0%BE%D0%B4%D0%B6%D0%B5_%D0%90%D1%85%D0%BC%D0%B5%D0%B4%D0%B0_%D0%88%D0%B0%D1%81%D0%B0%D0%B2%D0%B8%D1%98%D0%B0_%28%D0%B3%D1%80%D0%B0%D0%B4_%D0%A2%D1%83%D1%80%D0%BA%D0%B5%D1%81%D1%82%D0%B0%D0%BD%2C_%D0%9A%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Landsat_turkestan.jpg/960px-Landsat_turkestan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/%D0%9C%D0%B0%D1%83%D0%B7%D0%BE%D0%BB%D0%B5%D1%98_%D0%A5%D0%BE%D0%B4%D0%B6%D0%B5_%D0%90%D1%85%D0%BC%D0%B5%D0%B4%D0%B0_%D0%88%D0%B0%D1%81%D0%B0%D0%B2%D0%B8%D1%98%D0%B0_%28%D0%B3%D1%80%D0%B0%D0%B4_%D0%A2%D1%83%D1%80%D0%BA%D0%B5%D1%81%D1%82%D0%B0%D0%BD%2C_%D0%9A%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD%29.jpg/960px-%D0%9C%D0%B0%D1%83%D0%B7%D0%BE%D0%BB%D0%B5%D1%98_%D0%A5%D0%BE%D0%B4%D0%B6%D0%B5_%D0%90%D1%85%D0%BC%D0%B5%D0%B4%D0%B0_%D0%88%D0%B0%D1%81%D0%B0%D0%B2%D0%B8%D1%98%D0%B0_%28%D0%B3%D1%80%D0%B0%D0%B4_%D0%A2%D1%83%D1%80%D0%BA%D0%B5%D1%81%D1%82%D0%B0%D0%BD%2C_%D0%9A%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/%D0%9C%D0%B0%D1%83%D0%B7%D0%BE%D0%BB%D0%B5%D1%98_%D0%A5%D0%BE%D0%B4%D0%B6%D0%B5_%D0%90%D1%85%D0%BC%D0%B5%D0%B4%D0%B0_%D0%88%D0%B0%D1%81%D0%B0%D0%B2%D0%B8%D1%98%D0%B0_%28%D0%B3%D1%80%D0%B0%D0%B4_%D0%A2%D1%83%D1%80%D0%BA%D0%B5%D1%81%D1%82%D0%B0%D0%BD%2C_%D0%9A%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD%29.jpg/960px-%D0%9C%D0%B0%D1%83%D0%B7%D0%BE%D0%BB%D0%B5%D1%98_%D0%A5%D0%BE%D0%B4%D0%B6%D0%B5_%D0%90%D1%85%D0%BC%D0%B5%D0%B4%D0%B0_%D0%88%D0%B0%D1%81%D0%B0%D0%B2%D0%B8%D1%98%D0%B0_%28%D0%B3%D1%80%D0%B0%D0%B4_%D0%A2%D1%83%D1%80%D0%BA%D0%B5%D1%81%D1%82%D0%B0%D0%BD%2C_%D0%9A%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD%29.jpg"
+    ]
   },
   {
     "qid": "Q163888",
@@ -60255,7 +60504,14 @@
     "founded": 1877,
     "website": "http://www.acuna.gob.mx",
     "geonames_id": "4013728",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Asta_bandera_-_panoramio.jpg",
+    "wiki_extract": "Ciudad Acuña, commonly referred to simply as Acuña, is a city in the Mexican state of Coahuila. It is located along the Rio Grande, which forms part of the United States–Mexico border, across from Del Rio, Texas, United States.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/5/5d/Asta_bandera_-_panoramio.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/7/76/Acu%C3%B1a%2C_Coahuila.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Asta_bandera_-_panoramio.jpg/960px-Asta_bandera_-_panoramio.jpg"
+    ]
   },
   {
     "qid": "Q1385982",
@@ -72486,7 +72742,16 @@
     "founded": null,
     "website": "http://www.bamcity.ir/index_en.aspx",
     "geonames_id": "141736",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/0/03/010213-Kerman-IMG_0371-2.jpg",
+    "wiki_extract": "Bam is a city in the Central District of Bam County, Kerman province, Iran, serving as capital of both the county and the district. The modern city surrounds the ancient citadel which has a history dating back to around 2,000 years ago. The citadel is a popular tourist attraction and a world heritage site. Before the 2003 earthquake, the official population count of the city was roughly 43,000.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/0/03/010213-Kerman-IMG_0371-2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Perspolis.jpg/960px-Perspolis.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/010213-Kerman-IMG_0371-2.jpg/960px-010213-Kerman-IMG_0371-2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Arge_Bam_Arad_edit.jpg/960px-Arge_Bam_Arad_edit.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Fortaleza_de_Bam%2C_Ir%C3%A1n%2C_2016-09-23%2C_DD_02.jpg/960px-Fortaleza_de_Bam%2C_Ir%C3%A1n%2C_2016-09-23%2C_DD_02.jpg"
+    ]
   },
   {
     "qid": "Q92212",
@@ -78821,6 +79086,19 @@
     "geonames_id": "4672989",
     "sister_cities": [
       "Beppu"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/b/b3/Ground_Soldiers_take_to_the_Sea%3B_provides_Expeditionary_Sustainment_150415-A-NS540-005.jpg",
+    "wiki_extract": "Beaumont is a city in the U.S. state of Texas. It is the county seat of Jefferson County, within the Beaumont–Port Arthur metropolitan area, located in Southeast Texas on the Neches River about 85 miles (137 km) east of Houston. With a population of 115,282 at the 2020 census, Its metropolitan area was the 10th largest in Texas in 2020, and 130th in the United States.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/b/b3/Ground_Soldiers_take_to_the_Sea%3B_provides_Expeditionary_Sustainment_150415-A-NS540-005.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/6/66/2014-10-11_Beaumont%2C_Tx.%2C_French_Trading%2C_Historic_homes_014.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Art_Museum_of_Southeast_Texas.jpg/960px-Art_Museum_of_Southeast_Texas.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Beaumont_skyline.png/960px-Beaumont_skyline.png",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Centurytower.JPG/960px-Centurytower.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Crkstenh.jpg/960px-Crkstenh.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Cthsptfacbmt.jpg/960px-Cthsptfacbmt.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Dauphin_Complex_from_the_stadium_side..jpg/960px-Dauphin_Complex_from_the_stadium_side..jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Edisonplaza.jpg/960px-Edisonplaza.jpg"
     ]
   },
   {
@@ -87110,7 +87388,20 @@
     "founded": -2799,
     "website": null,
     "geonames_id": "1147242",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/6/61/Black_Hawk_flying_over_a_valley_in_Bamyan.jpg",
+    "wiki_extract": "Bamyan, also spelled as Bamiyan or Bamian, is a city in central Afghanistan, serving as the capital of Bamyan Province. It is within the jurisdiction of Bamyan District and has an estimated population of 103,909 people. This makes Bamyan the largest municipality in Hazarajat. The Bamyan Airport is located in the middle of the city. It is surrounded by houses, businesses, schools and public parks. The Bamyan University is also near there. Band-e-Amir National Park is located around 2-hour drive to the west from the city's center. The driving distance between Bamyan and Kabul is approximately 180 km (110 mi). There is another road from Bamyan that leads east to Bagram in Parwan Province.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/6/61/Black_Hawk_flying_over_a_valley_in_Bamyan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/090331-N-2903M-009.jpg/960px-090331-N-2903M-009.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Afghan_farmer_in_Bamyan.jpg/960px-Afghan_farmer_in_Bamyan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Afghanistan%2C_testa%2C_da_bamiyan%2C_grotta_G%2C_VI-VII_sec..JPG/960px-Afghanistan%2C_testa%2C_da_bamiyan%2C_grotta_G%2C_VI-VII_sec..JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Bamiyan_Buddhas_Burnes.jpg/960px-Bamiyan_Buddhas_Burnes.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Bamiyan_Valley.jpg/960px-Bamiyan_Valley.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Bamyan_1.jpg/960px-Bamyan_1.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Band-e-Amir_National_Park-9.jpg/960px-Band-e-Amir_National_Park-9.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Black_Hawk_flying_over_a_valley_in_Bamyan.jpg/960px-Black_Hawk_flying_over_a_valley_in_Bamyan.jpg"
+    ]
   },
   {
     "qid": "Q3339489",
@@ -96900,7 +97191,20 @@
     "founded": null,
     "website": null,
     "geonames_id": "3509208",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/7/79/Cotui_Dominican_Republic_church.jpg",
+    "wiki_extract": "Cotuí is a city in the central region of the Dominican Republic and is one of the oldest cities of the New World. It is the capital of Sánchez Ramírez Province in the Cibao.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/7/79/Cotui_Dominican_Republic_church.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Cotui_Dominican_Republic.jpg/960px-Cotui_Dominican_Republic.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Cotui_Dominican_Republic_2.jpg/960px-Cotui_Dominican_Republic_2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/b/b9/Cotui_Dominican_Republic_baseball_field.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Cotui_Dominican_Republic_church.jpg/960px-Cotui_Dominican_Republic_church.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Cotui_Dominican_Republic_mine_obelisk.jpg/960px-Cotui_Dominican_Republic_mine_obelisk.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/6/61/Cotui_Dominican_Republic_neighborhood.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/6/69/Escudo_del_Municipio_Cotu%C3%AD.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/6/6c/Juan_S%C3%A1nchez_Ram%C3%ADrez.jpg"
+    ]
   },
   {
     "qid": "Q106115",
@@ -97991,6 +98295,12 @@
     "geonames_id": "479411",
     "sister_cities": [
       "Naryan-Mar"
+    ],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/0/06/Outline_Map_of_Komi_Republic.png",
+    "wiki_extract": "Ukhta is an important industrial town in the Komi Republic of Russia. Population: 97,899 (2021 census); 99,591 (2010 census); 103,340 (2002 census); 110,548 (1989 Soviet census).",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/0/06/Outline_Map_of_Komi_Republic.png",
+      "https://upload.wikimedia.org/wikipedia/commons/1/15/ViewFromVetlosyan.jpg"
     ]
   },
   {
@@ -98357,7 +98667,17 @@
     "founded": null,
     "website": null,
     "geonames_id": "245785",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/f/fc/Abeche_leather_shop.jpg",
+    "wiki_extract": "Abéché is a city in central-eastern Chad and the capital of the Ouaddaï Region. By road it is 749 kilometres (465 mi) northeast of the national capital of N'Djamena and 164 kilometres (102 mi) northwest of Adre, on the border with Sudan. Surrounded by savanna, it is one of the largest cities in the country. It has a rich Islamic heritage, situated along the trans-Saharan trade route and is an important cattle raising centre, with the principal market in the country for camel exports and rugs. As of 2012 it had a population of 76,492 people.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/f/fc/Abeche_leather_shop.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/2/2e/Abech%C3%A9.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/7/7f/Abech%C3%A91.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/9/97/Aeroport_abech%C3%A91.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Chad_Clothes_sewer_Ab%C3%A9ch%C3%A9_DSC1594-2.jpg/960px-Chad_Clothes_sewer_Ab%C3%A9ch%C3%A9_DSC1594-2.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/2/20/La_grande_place_d%27Ab%C3%A9ch%C3%A9.jpg"
+    ]
   },
   {
     "qid": "Q679056",
@@ -108194,7 +108514,16 @@
     "founded": null,
     "website": "https://bannu.kp.gov.pk/",
     "geonames_id": "1183460",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Akra_%28A%29_Mound%2C_Bannu.jpg/960px-Akra_%28A%29_Mound%2C_Bannu.jpg",
+    "wiki_extract": "Bannu, also called Bani Gul or Bani is a city located on the Kurram River in southern Khyber Pakhtunkhwa, Pakistan. It is the capital of Bannu Division. Bannu's residents are primarily members of the Banuchi tribe and speak Banuchi (Baniswola), a dialect of Pashto which is similar to the distinct Waziristani dialect. The residents regardless of their tribes are commonly called Banusi, Banuchi or Banisi.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Akra_%28A%29_Mound%2C_Bannu.jpg/960px-Akra_%28A%29_Mound%2C_Bannu.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/b/bb/Bannu%2C_Pakistan.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/2/25/Darius_I_statue_Sattagydia.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/2/22/Hindus_and_Sikhs_Migration_to_India.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/c/cf/Xerxes_detail_Sattagydian.jpg"
+    ]
   },
   {
     "qid": "Q23986070",
@@ -110570,7 +110899,20 @@
     "founded": null,
     "website": "https://www.imc.arunachal.gov.in/",
     "geonames_id": "1269655",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/7/71/Donyi_Polo_Airport%2C_Itanagar.jpg",
+    "wiki_extract": "Itanagar is the capital and largest town of the Indian state of Arunachal Pradesh. The seat of Arunachal Pradesh Legislative Assembly, the seat of government of Arunachal Pradesh, and the seat of Gauhati High Court permanent bench at Naharlagun are all in Itanagar. Being the hub of all the major economic bases, Itanagar, along with the adjacent town of Naharlagun, comprises the administrative region of the Itanagar Capital Complex Region. This stretches from the Itanagar Municipal limit at Chandranagar Town, until Nirjuli Town, and is a major hub of cultural, economic, fashion, education and recreational activities.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/7/71/Donyi_Polo_Airport%2C_Itanagar.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Centre_for_Buddhist_Culture_%28Gompa_Temple%29.jpg/960px-Centre_for_Buddhist_Culture_%28Gompa_Temple%29.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Donyi_Polo_Airport%2C_Itanagar.jpg/960px-Donyi_Polo_Airport%2C_Itanagar.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Guwahati_-_Naharlagun_SHATABDI_EXPRESS_with_imported_EMD_WDP4.jpg/960px-Guwahati_-_Naharlagun_SHATABDI_EXPRESS_with_imported_EMD_WDP4.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Gyakar_Sinyi_or_Ganga_Lake.jpg/960px-Gyakar_Sinyi_or_Ganga_Lake.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Hrusso_%28Aka%29_diorama.JPG/960px-Hrusso_%28Aka%29_diorama.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Ita_Fort_01.JPG/960px-Ita_Fort_01.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Itanagar_%2C_india_-_panoramio.jpg/960px-Itanagar_%2C_india_-_panoramio.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Jawaharlal_Nehru_Museum.JPG/960px-Jawaharlal_Nehru_Museum.JPG"
+    ]
   },
   {
     "qid": "Q1400173",
@@ -112563,7 +112905,14 @@
     "founded": 1301,
     "website": "http://www.gorodaleksandrov.ru/",
     "geonames_id": "583350",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/b/bf/Aleksandrov_COA_%28Vladimir_Governorate%29_%281781%29.png",
+    "wiki_extract": "Alexandrov is a town and the administrative center of Alexandrovsky District in Vladimir Oblast, Russia. It is located 120 kilometers (75 mi) northeast of Moscow and has a population of 57,053 (2021 census); 61,551 (2010 census); 64,824 (2002 census); 68,220 (1989 Soviet census). It was previously known as Alexandrovskaya Sloboda. It operates on the EEST time zone, with the same time zone as Vladimir.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/b/bf/Aleksandrov_COA_%28Vladimir_Governorate%29_%281781%29.png",
+      "https://upload.wikimedia.org/wikipedia/commons/9/91/Alexandrov_Kremlin_01.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/5/5d/Alexandrovskaya_Sloboda.jpg"
+    ]
   },
   {
     "qid": "Q448370",
@@ -119917,7 +120266,19 @@
     "founded": null,
     "website": null,
     "geonames_id": "281141",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/A_Palestinian_woman_mourn_her_relatives_martyred_in_the_Israeli_airstrike_of_Deir_el-Balah%2C_Gaza_Strip.jpg/960px-A_Palestinian_woman_mourn_her_relatives_martyred_in_the_Israeli_airstrike_of_Deir_el-Balah%2C_Gaza_Strip.jpg",
+    "wiki_extract": "Deir al-Balah is a city in the center of the Gaza Strip, Palestine, and the administrative capital of the Deir al-Balah Governorate. It is located over 14 kilometers (8.7 mi) south of Gaza City. The city had a population of 75,132 in 2017. The city is known for its date palms, after which it is named.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/A_Palestinian_woman_mourn_her_relatives_martyred_in_the_Israeli_airstrike_of_Deir_el-Balah%2C_Gaza_Strip.jpg/960px-A_Palestinian_woman_mourn_her_relatives_martyred_in_the_Israeli_airstrike_of_Deir_el-Balah%2C_Gaza_Strip.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/An_elderly_Palestinian_woman_sits_on_the_rubble_of_his_destroyed_home_by_the_Israeli_bombing_that_continue_on_Deir_el-Balah%2C_Gaza_Strip.jpg/960px-An_elderly_Palestinian_woman_sits_on_the_rubble_of_his_destroyed_home_by_the_Israeli_bombing_that_continue_on_Deir_el-Balah%2C_Gaza_Strip.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/d/d8/Deir_al-Balah.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Deir_el_Balah_1930.jpg/960px-Deir_el_Balah_1930.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/4/40/Deir_el_Balah_1945.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Displaced_Palestinians_gather_to_receive_food_from_a_charity_in_Deir_el-Balah%2C_Gaza_Strip.jpg/960px-Displaced_Palestinians_gather_to_receive_food_from_a_charity_in_Deir_el-Balah%2C_Gaza_Strip.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/GAZA003.jpg/960px-GAZA003.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Gazastrip_Map_Middle_Area_Deir_al-Balah.png/960px-Gazastrip_Map_Middle_Area_Deir_al-Balah.png"
+    ]
   },
   {
     "qid": "Q141263",
@@ -122629,7 +122990,20 @@
     "founded": 1960,
     "website": "https://www.norilsk-city.ru",
     "geonames_id": "1490256",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Talnahpanorama.jpg",
+    "wiki_extract": "Talnakh is a district (raion) of Norilsk, located about 25 kilometers (16 mi) north of the Central District at the foot of the Putorana Mountains in Taymyr Peninsula, Krasnoyarsk Krai, Russia. Formerly a town, it was merged into Norilsk as a satellite city in 2005. Population: 47,216 (2021 census);",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/c/cc/Talnahpanorama.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Russia%2C_Krasnojarsk%2C_Talnakh%2C_%D0%91%D0%B0%D1%83%D0%BC%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F_%D1%83%D0%BB.%2C_15_-_%D0%93%D0%B8%D0%BC%D0%BD%D0%B0%D0%B7%D0%B8%D1%8F_%E2%84%96_48_WMID2285013.jpg/960px-Russia%2C_Krasnojarsk%2C_Talnakh%2C_%D0%91%D0%B0%D1%83%D0%BC%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F_%D1%83%D0%BB.%2C_15_-_%D0%93%D0%B8%D0%BC%D0%BD%D0%B0%D0%B7%D0%B8%D1%8F_%E2%84%96_48_WMID2285013.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Russia%2C_Krasnojarsk%2C_Talnakh%2C_%D0%91%D0%B0%D1%83%D0%BC%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F_%D1%83%D0%BB.%2C_9_-_%D0%A3%D0%BD%D0%B8%D0%B2%D0%B5%D1%80%D0%BC%D0%B0%D0%B3_%C2%AB%D0%A2%D0%B0%D0%BB%D0%BD%D0%B0%D1%85%C2%BB_WMID2285009.jpg/960px-Russia%2C_Krasnojarsk%2C_Talnakh%2C_%D0%91%D0%B0%D1%83%D0%BC%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F_%D1%83%D0%BB.%2C_9_-_%D0%A3%D0%BD%D0%B8%D0%B2%D0%B5%D1%80%D0%BC%D0%B0%D0%B3_%C2%AB%D0%A2%D0%B0%D0%BB%D0%BD%D0%B0%D1%85%C2%BB_WMID2285009.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Russia%2C_Krasnojarsk%2C_Talnakh%2C_%D0%A2%D0%B0%D0%B9%D0%BC%D1%8B%D1%80%D1%81%D0%BA%D0%B0%D1%8F_%D1%83%D0%BB.%2C_15_-_%D0%9A%D1%83%D0%BB%D1%8C%D1%82%D1%83%D1%80%D0%BD%D0%BE%E2%80%93%D0%BE%D0%B7%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9_%D1%86%D0%B5%D0%BD%D1%82%D1%80_%D1%81%D0%BF%D0%BE%D1%80%D1%82%D0%BA%D0%BE%D0%BC%D0%BF%D0%BB%D0%B5%D0%BA%D1%81%D0%B0_%C2%AB%D0%A2%D0%B0%D0%BB%D0%BD%D0%B0%D1%85%C2%BB_WMID2285074.jpg/960px-thumbnail.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Russia%2C_Krasnojarsk%2C_Talnakh%2C_%D1%83%D0%BB._%D0%94%D0%B8%D0%BA%D1%81%D0%BE%D0%BD%D0%B0%2C_6_WMID2496939.jpg/960px-Russia%2C_Krasnojarsk%2C_Talnakh%2C_%D1%83%D0%BB._%D0%94%D0%B8%D0%BA%D1%81%D0%BE%D0%BD%D0%B0%2C_6_WMID2496939.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/a/ad/Russia%2C_Krasnojarsk%2C_Talnakh%2C_%D1%83%D0%BB._%D0%A4%D0%B5%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D1%81%D0%BA%D0%BE%D0%B3%D0%BE%2C_14_WMID2623908.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Russia%2C_Krasnojarsk%2C_Talnakh_-_Kyllakh-Kyuyel_Lake_WMID4950482.jpg/960px-Russia%2C_Krasnojarsk%2C_Talnakh_-_Kyllakh-Kyuyel_Lake_WMID4950482.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/f/fe/Russia%2C_Krasnojarsk%2C_Talnakh_-_Oganer_WMID1768010413803.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Russia%2C_Krasnojarsk%2C_Talnakh_-_Oganer_WMID2289890.jpg/960px-Russia%2C_Krasnojarsk%2C_Talnakh_-_Oganer_WMID2289890.jpg"
+    ]
   },
   {
     "qid": "Q895029",
@@ -122968,7 +123342,15 @@
     "founded": 1858,
     "website": "http://www.cuscatlansur.gob.sv",
     "geonames_id": "3586977",
-    "sister_cities": []
+    "sister_cities": [],
+    "wiki_thumb": "https://upload.wikimedia.org/wikipedia/commons/7/79/Cojutepeque_de_noche.JPG",
+    "wiki_extract": "Cojutepeque is the capital city of El Salvador's Cuscatlán department. It also served as the capital of El Salvador for several years. It also serves as the administrative centre for the surrounding municipality of Cojutepeque. Its population is estimated at 70,000 people with about 85% living in the urban areas of the municipality.",
+    "wiki_images": [
+      "https://upload.wikimedia.org/wikipedia/commons/7/79/Cojutepeque_de_noche.JPG",
+      "https://upload.wikimedia.org/wikipedia/commons/c/cb/Bandera_del_Departamento_de_Cuscatl%C3%A1n.PNG",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Chorizo_de_Cojutepeque.jpg/960px-Chorizo_de_Cojutepeque.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Cojutepeque_de_noche.JPG/960px-Cojutepeque_de_noche.JPG"
+    ]
   },
   {
     "qid": "Q7019",
