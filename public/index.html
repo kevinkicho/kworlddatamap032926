@@ -397,7 +397,7 @@
   <div id="choropleth-bar" style="display:none">
     <label for="choro-select">Color countries by:</label>
     <select id="choro-select"></select>
-    <button id="choro-toggle-btn" class="on" onclick="toggleChoropleth()">On</button>
+    <button id="choro-toggle-btn" onclick="toggleChoropleth()">Off</button>
     <div id="choro-legend">
       <span class="choro-leg-label" id="choro-lo-label"></span>
       <canvas id="choro-ramp" width="120" height="8"></canvas>
@@ -595,7 +595,7 @@
     // Choropleth state
     let choroplethLayer  = null;
     let worldGeo         = null;    // GeoJSON FeatureCollection for country borders
-    let choroOn          = true;    // whether choropleth is currently visible
+    let choroOn          = false;   // choropleth is off by default
     let activeChoroKey   = 'gdp_per_capita';
 
     // ── Choropleth indicator definitions ────────────────────────────────────────
@@ -794,7 +794,7 @@
         cities[0] ? cities[0].name + ' (' + (cities[0].pop / 1e6).toFixed(1) + 'M)' : '—';
       document.getElementById('stat-total').textContent   = (total / 1e9).toFixed(2) + 'B';
       document.getElementById('wiki-legend-title').textContent =
-        cities.length.toLocaleString() + ' cities · circle size and color = population';
+        cities.length.toLocaleString() + ' cities on map · circle size and color = population';
     }
 
     // ── Filter + sort ─────────────────────────────────────────────────────────────
@@ -1446,8 +1446,8 @@
       map = L.map('map-container', {
         center: [20, 0], zoom: 2, minZoom: 2, maxZoom: 18,
         zoomControl: true, attributionControl: true,
-        maxBounds: [[-85, -210], [85, 210]],   // prevent infinite horizontal scroll
-        maxBoundsViscosity: 0.85,               // soft stop at the edge
+        maxBounds: [[-88, -185], [88, 185]],   // hard stop just past antimeridian
+        maxBoundsViscosity: 1.0,               // no elasticity — tiles always fill the view
         worldCopyJump: false,
       });
 
@@ -1459,7 +1459,7 @@
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> ' +
           'contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd', maxZoom: 20, noWrap: true,
+        subdomains: 'abcd', maxZoom: 20,
       }).addTo(map);
 
       const terminator = L.terminator({
@@ -1664,10 +1664,19 @@
         return `<tr><td>${escHtml(label)}</td><td class="${isActive ? 'choro-popup-highlight' : ''}">${val}</td></tr>`;
       }).join('');
 
+      const wbUrl = `https://data.worldbank.org/country/${encodeURIComponent(iso2.toLowerCase())}`;
       const html = `
         <div class="choro-popup-name">${escHtml(c.name || iso2)}</div>
         <div class="choro-popup-region">${escHtml(c.region || '')} · World Bank data</div>
-        <table class="choro-popup-table">${tableRows}</table>`;
+        <table class="choro-popup-table">${tableRows}</table>
+        <a href="${wbUrl}" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;color:#58a6ff;font-size:0.78rem;text-decoration:none;">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          View on World Bank
+        </a>`;
 
       L.popup({ maxWidth: 280, className: '' })
        .setLatLng(latlng)
