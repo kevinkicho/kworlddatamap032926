@@ -72,7 +72,7 @@
     #wiki-sidebar {
       position: fixed; top: 0; right: -440px; width: 420px; height: 100vh;
       background: #161b22; border-left: 1px solid #30363d;
-      z-index: 10000; display: flex; flex-direction: column;
+      z-index: 1000; display: flex; flex-direction: column;
       transition: right 0.3s cubic-bezier(.4,0,.2,1);
       box-shadow: -8px 0 32px rgba(0,0,0,0.6); overflow: hidden;
     }
@@ -375,25 +375,72 @@
     #choro-ramp { width: 120px; height: 8px; border-radius: 4px; display: block; }
     #choro-coverage { font-size: 0.72rem; color: #484f58; }
 
-    /* ── Companies section in wiki sidebar ── */
-    .co-section { padding: 14px 16px; border-top: 1px solid #30363d; }
-    .co-section-head { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em;
-      text-transform: uppercase; color: #6e7681; margin-bottom: 10px;
-      display: flex; align-items: center; justify-content: space-between; }
-    .co-count-badge { background: #21262d; color: #8b949e; border-radius: 10px;
-      padding: 1px 8px; font-size: 0.7rem; font-weight: 400; letter-spacing: 0; }
-    .co-list { display: flex; flex-direction: column; gap: 8px; }
-    .co-card { background: #0d1117; border: 1px solid #21262d; border-radius: 7px;
-      padding: 9px 12px; font-size: 0.8rem; }
-    .co-name { color: #e6edf3; font-weight: 600; margin-bottom: 3px; }
-    .co-name a { color: #58a6ff; text-decoration: none; }
-    .co-name a:hover { text-decoration: underline; }
-    .co-meta { color: #8b949e; font-size: 0.75rem; line-height: 1.6; }
-    .co-meta span { color: #c9d1d9; }
-    .co-show-more { background: none; border: 1px solid #30363d; color: #6e7681;
-      border-radius: 6px; padding: 5px 12px; font-size: 0.78rem; cursor: pointer;
-      font-family: inherit; margin-top: 6px; width: 100%; }
-    .co-show-more:hover { border-color: #58a6ff; color: #58a6ff; }
+    /* ── Corporations panel ── */
+    #corp-panel {
+      position: fixed; top: 0; right: -480px; width: 460px; height: 100vh;
+      background: #161b22; border-left: 1px solid #30363d;
+      z-index: 999; display: flex; flex-direction: column;
+      transition: right 0.3s cubic-bezier(.4,0,.2,1);
+      box-shadow: -8px 0 32px rgba(0,0,0,0.6); overflow: hidden;
+    }
+    #corp-panel.open { right: 0; }
+    /* Shift wiki-sidebar left when both wiki and corp panels are open */
+    #wiki-sidebar.open.corp-open { right: 460px; }
+
+    #corp-panel-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-bottom: 1px solid #30363d;
+      background: #0d1117; flex-shrink: 0;
+    }
+    #corp-panel-title {
+      flex: 1; font-size: 0.75rem; font-weight: 600; color: #8b949e;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      letter-spacing: 0.03em; text-transform: uppercase;
+    }
+    #corp-panel-close {
+      background: none; border: none; color: #8b949e; font-size: 1.4rem;
+      cursor: pointer; padding: 0 2px; line-height: 1; flex-shrink: 0;
+    }
+    #corp-panel-close:hover { color: #e6edf3; }
+
+    #corp-panel-controls {
+      padding: 10px 14px; border-bottom: 1px solid #30363d;
+      background: #0d1117; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
+    }
+    #corp-search {
+      width: 100%; background: #161b22; border: 1px solid #30363d; color: #c9d1d9;
+      border-radius: 6px; padding: 7px 10px; font-size: 0.82rem; font-family: inherit; outline: none;
+    }
+    #corp-search:focus { border-color: #58a6ff; }
+    #corp-sort-row { display: flex; gap: 8px; align-items: center; }
+    #corp-sort-row label { font-size: 0.75rem; color: #6e7681; white-space: nowrap; }
+    #corp-sort {
+      flex: 1; background: #161b22; border: 1px solid #30363d; color: #c9d1d9;
+      border-radius: 6px; padding: 5px 8px; font-size: 0.8rem; font-family: inherit; outline: none;
+    }
+    #corp-sort:focus { border-color: #58a6ff; }
+    #corp-count { font-size: 0.72rem; color: #484f58; }
+
+    #corp-list { flex: 1; overflow-y: auto; }
+
+    /* Corporations table — reuses global thead/tbody styles, small overrides */
+    #corp-table { width: 100%; border-collapse: collapse; font-size: 0.79rem; }
+    #corp-table thead th {
+      position: sticky; top: 0; background: #161b22; color: #8b949e;
+      font-weight: 600; text-align: left; padding: 8px 10px;
+      border-bottom: 1px solid #30363d; white-space: nowrap;
+      font-size: 0.73rem; letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    #corp-table tbody tr { border-bottom: 1px solid #21262d; cursor: pointer; transition: background 0.1s; }
+    #corp-table tbody tr:hover { background: #1c2128; }
+    #corp-table tbody td { padding: 7px 10px; color: #c9d1d9; white-space: nowrap; }
+    #corp-table td.co-name-cell { color: #e6edf3; max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+    #corp-table td.co-industry-cell { color: #8b949e; font-size: 0.74rem; max-width: 100px; overflow: hidden; text-overflow: ellipsis; }
+    #corp-table td.co-num { font-variant-numeric: tabular-nums; color: #3fb950; text-align: right; }
+    #corp-table td.co-neutral { font-variant-numeric: tabular-nums; text-align: right; }
+    #corp-table td.co-link { padding: 7px 6px; }
+    #corp-table td.co-link a { color: #484f58; font-size: 0.72rem; text-decoration: none; }
+    #corp-table td.co-link a:hover { color: #58a6ff; }
 
     /* ── Country popup (choropleth click) ── */
     .choro-popup-name { font-size: 1rem; font-weight: 700; color: #e6edf3; margin-bottom: 2px; }
@@ -537,6 +584,42 @@
     <div id="wiki-sidebar-footer"></div>
   </div>
 
+  <!-- ── Corporations panel ── -->
+  <div id="corp-panel">
+    <div id="corp-panel-header">
+      <span id="corp-panel-title">Corporations</span>
+      <button id="corp-panel-close" onclick="closeCorpPanel()" title="Close">×</button>
+    </div>
+    <div id="corp-panel-controls">
+      <input id="corp-search" type="text" placeholder="Search corporations…" oninput="renderCorpList()" />
+      <div id="corp-sort-row">
+        <label for="corp-sort">Sort by</label>
+        <select id="corp-sort" onchange="renderCorpList()">
+          <option value="revenue">Revenue</option>
+          <option value="net_income">Net Income</option>
+          <option value="founded">Founded</option>
+          <option value="name">Name A–Z</option>
+        </select>
+        <span id="corp-count"></span>
+      </div>
+    </div>
+    <div id="corp-list">
+      <table id="corp-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Industry</th>
+            <th title="Revenue in reported currency, not USD-normalized">Revenue ⓘ</th>
+            <th title="Net income in reported currency, not USD-normalized">Net Inc. ⓘ</th>
+            <th>Founded</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="corp-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- ── Edit modal ── -->
   <div id="edit-modal">
     <div id="edit-box">
@@ -614,6 +697,23 @@
 
     // Companies data keyed by city QID
     let companiesData    = {};
+
+    // Map ISO-2 country code → Wikipedia language subdomain
+    // Used to prefer the local-language Wikipedia article over English
+    const ISO_TO_WIKI_LANG = {
+      JP:'ja', CN:'zh', KR:'ko', TW:'zh', HK:'zh',
+      DE:'de', AT:'de', CH:'de',
+      FR:'fr', BE:'fr',
+      ES:'es', MX:'es', AR:'es', CO:'es', CL:'es', PE:'es', VE:'es',
+      PT:'pt', BR:'pt',
+      IT:'it',
+      RU:'ru', BY:'be', UA:'uk',
+      NL:'nl',
+      PL:'pl', CZ:'cs', SK:'sk', HU:'hu', RO:'ro', BG:'bg', HR:'hr',
+      SE:'sv', NO:'no', DK:'da', FI:'fi',
+      TR:'tr', GR:'el', IL:'he', SA:'ar', AE:'ar', EG:'ar',
+      IN:'hi', ID:'id', TH:'th', VN:'vi', MY:'ms',
+    };
 
     // Choropleth state
     let choroplethLayer  = null;
@@ -839,8 +939,14 @@
         if (location) tip += `<br/><span style="color:#8b949e;font-size:0.8em">${escHtml(location)}</span>`;
         if (city.desc) tip += `<br/><span style="color:#c9d1d9;font-size:0.8em;font-style:italic">${escHtml(city.desc)}</span>`;
         tip += `<br/>Population: <strong>${fmtPop(city.pop)}</strong>`;
-        if (city.qid)
-          tip += `<br/><a href="#" onclick="event.preventDefault();openWikiSidebar('${city.qid}','${escAttr(city.name)}')" style="color:#58a6ff;font-size:0.8em">Wikipedia ↗</a>`;
+        if (city.qid) {
+          const coCount = companiesData[city.qid]?.length || 0;
+          tip += `<br/><span style="display:flex;gap:10px;margin-top:3px">`;
+          tip += `<a href="#" onclick="event.preventDefault();openWikiSidebar('${city.qid}','${escAttr(city.name)}')" style="color:#58a6ff;font-size:0.8em">Wikipedia ↗</a>`;
+          if (coCount > 0)
+            tip += `<a href="#" onclick="event.preventDefault();openCorpPanel('${city.qid}','${escAttr(city.name)}')" style="color:#a371f7;font-size:0.8em">Corporations (${coCount}) ↗</a>`;
+          tip += `</span>`;
+        }
         const opacity = wikiCityOpacity(city.pop);
         L.circleMarker([city.lat, city.lng], {
           radius, fillColor: color, fillOpacity: opacity,
@@ -1290,10 +1396,6 @@
           <button class="wiki-expand-btn" id="wiki-expand-btn" onclick="toggleExtract()">Show more</button>
         </div>` : '';
 
-      // ── Companies headquartered here ──
-      const cityCompanies = city.qid ? (companiesData[city.qid] || []) : [];
-      const companiesHtml = buildCompaniesHtml(cityCompanies);
-
       body.innerHTML = `
         ${carouselHtml}
         <div class="wiki-city-header">
@@ -1309,7 +1411,6 @@
           ${wbSec}
         </table>
         ${extractHtml}
-        ${companiesHtml}
       `;
 
       if (images && images.length > 0) carStart(images);
@@ -1349,7 +1450,7 @@
 
       titleEl.textContent  = cityName;
       footer.innerHTML     = '';
-      sidebar.dataset.qid  = qid;   // store QID so expandCompanies() can find it
+      sidebar.dataset.qid  = qid;
       sidebar.classList.add('open');
 
       // Find full city object
@@ -1799,62 +1900,243 @@
       document.getElementById('choropleth-bar').style.display = '';
     }
 
-    // ── Companies section builder ────────────────────────────────────────────────
-    const CO_PAGE = 10;   // companies shown before "Show more"
+    // ── Corporations panel ───────────────────────────────────────────────────────
+    let corpCityQid  = null;
+    let corpCityName = null;
 
     function fmtEmployees(n) {
       if (!n) return null;
-      if (n >= 1e6)  return (n/1e6).toFixed(1)+'M employees';
-      if (n >= 1000) return Math.round(n/1000)+'k employees';
-      return n.toLocaleString()+' employees';
+      if (n >= 1e6)  return (n/1e6).toFixed(1)+'M';
+      if (n >= 1000) return Math.round(n/1000)+'k';
+      return n.toLocaleString();
+    }
+    // Revenue values from Wikidata are in the company's reported currency (not USD-normalized).
+    // We show magnitudes only (no $ sign) to avoid implying USD.
+    function fmtRevenue(n) {
+      if (!n) return null;
+      if (Math.abs(n) >= 1e12) return (n/1e12).toFixed(1)+'T';
+      if (Math.abs(n) >= 1e9)  return (n/1e9).toFixed(1)+'B';
+      if (Math.abs(n) >= 1e6)  return (n/1e6).toFixed(0)+'M';
+      return n.toLocaleString();
     }
 
-    function buildCompaniesHtml(companies, showAll = false) {
-      if (!companies || companies.length === 0) return '';
-      const visible = showAll ? companies : companies.slice(0, CO_PAGE);
-      const cards   = visible.map(co => {
-        const wdUrl   = `https://www.wikidata.org/wiki/${escHtml(co.qid)}`;
-        const nameHtml = co.website
-          ? `<a href="${escHtml(co.website)}" target="_blank" rel="noopener">${escHtml(co.name)}</a>`
-          : escHtml(co.name);
-        const metaParts = [
-          co.industry  ? `<span>${escHtml(co.industry)}</span>` : null,
-          co.founded   ? `est. <span>${co.founded}</span>` : null,
-          fmtEmployees(co.employees) ? `<span>${fmtEmployees(co.employees)}</span>` : null,
-        ].filter(Boolean);
-        return `<div class="co-card">
-          <div class="co-name">${nameHtml}
-            <a href="${wdUrl}" target="_blank" rel="noopener"
-               style="margin-left:5px;font-size:0.7rem;color:#484f58;font-weight:400">Wikidata ↗</a>
-          </div>
-          ${metaParts.length ? `<div class="co-meta">${metaParts.join(' · ')}</div>` : ''}
-        </div>`;
+    function openCorpPanel(qid, cityName) {
+      corpCityQid  = qid;
+      corpCityName = cityName;
+      document.getElementById('corp-panel-title').textContent = cityName + ' · Corporations';
+      document.getElementById('corp-search').value = '';
+      document.getElementById('corp-sort').value   = 'revenue';
+      renderCorpList();
+      document.getElementById('corp-panel').classList.add('open');
+      document.getElementById('wiki-sidebar').classList.add('corp-open');
+    }
+
+    function closeCorpPanel() {
+      document.getElementById('corp-panel').classList.remove('open');
+      document.getElementById('wiki-sidebar').classList.remove('corp-open');
+    }
+
+    function renderCorpList() {
+      const tbody   = document.getElementById('corp-tbody');
+      const countEl = document.getElementById('corp-count');
+      if (!corpCityQid || !tbody) return;
+
+      const query  = document.getElementById('corp-search').value.toLowerCase().trim();
+      const sortBy = document.getElementById('corp-sort').value;
+      let companies = (companiesData[corpCityQid] || []).slice();
+
+      if (query) {
+        companies = companies.filter(co =>
+          co.name.toLowerCase().includes(query) ||
+          (co.industry || '').toLowerCase().includes(query)
+        );
+      }
+
+      companies.sort((a, b) => {
+        if (sortBy === 'revenue')    return (b.revenue    || 0) - (a.revenue    || 0);
+        if (sortBy === 'net_income') return (b.net_income || 0) - (a.net_income || 0);
+        if (sortBy === 'founded')    return (a.founded    || 9999) - (b.founded || 9999);
+        return a.name.localeCompare(b.name);
+      });
+
+      countEl.textContent = companies.length + ' result' + (companies.length !== 1 ? 's' : '');
+
+      if (companies.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="color:#6e7681;padding:20px 10px;font-size:0.8rem">No corporations match your search.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = companies.map(co => {
+        const wikiAttr = co.wikipedia
+          ? ` data-wiki="${escAttr(co.wikipedia)}" data-name="${escAttr(co.name)}"`
+          : '';
+        const finJson  = escHtml(JSON.stringify({
+          industry: co.industry || null, exchange: co.exchange || null,
+          ticker: co.ticker || null, founded: co.founded || null,
+          website: co.website || null, employees: co.employees || null,
+          revenue: co.revenue || null, revenue_year: co.revenue_year || null,
+          revenue_history: co.revenue_history || [],
+          net_income: co.net_income || null,
+          operating_income: co.operating_income || null,
+          total_assets: co.total_assets || null, total_equity: co.total_equity || null,
+        }));
+        const wdUrl  = `https://www.wikidata.org/wiki/${escHtml(co.qid)}`;
+        const linkHtml = co.wikipedia
+          ? `<a href="${escAttr(co.wikipedia)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Wikipedia">W↗</a>`
+          : `<a href="${escHtml(wdUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Wikidata">D↗</a>`;
+        const histLen = (co.revenue_history || []).length;
+        const revYearHtml = co.revenue_year
+          ? ` <span style="color:#484f58;font-size:0.7rem">${co.revenue_year}${histLen > 1 ? ` <span title="${histLen} years of data">·${histLen}yr</span>` : ''}</span>` : '';
+
+        return `<tr${wikiAttr} data-fin="${finJson}" onclick="corpRowClick(this)" title="${escAttr(co.name)}">
+          <td class="co-name-cell">${escHtml(co.name)}</td>
+          <td class="co-industry-cell">${co.industry ? escHtml(co.industry) : '—'}</td>
+          <td class="co-num">${fmtRevenue(co.revenue) ? fmtRevenue(co.revenue) + revYearHtml : '—'}</td>
+          <td class="co-num">${fmtRevenue(co.net_income) || '—'}</td>
+          <td class="co-neutral">${co.founded || '—'}</td>
+          <td class="co-link">${linkHtml}</td>
+        </tr>`;
       }).join('');
-
-      const showMoreBtn = (!showAll && companies.length > CO_PAGE)
-        ? `<button class="co-show-more" onclick="expandCompanies(this)" data-qid="${companies[0]?.qid ? '' : ''}">
-             Show all ${companies.length} companies
-           </button>`
-        : '';
-
-      return `<div class="co-section">
-        <div class="co-section-head">
-          Headquartered here
-          <span class="co-count-badge">${companies.length}</span>
-        </div>
-        <div class="co-list">${cards}</div>
-        ${showMoreBtn}
-      </div>`;
     }
 
-    function expandCompanies(btn) {
-      // Re-render with all companies for the currently open city
-      const body    = document.getElementById('wiki-sidebar-body');
-      const coSec   = btn.closest('.co-section');
-      const cityQid = document.getElementById('wiki-sidebar').dataset.qid;
-      if (!cityQid) return;
-      const companies = companiesData[cityQid] || [];
-      coSec.outerHTML = buildCompaniesHtml(companies, true);
+    function corpRowClick(row) {
+      const wikiUrl = row.dataset.wiki;
+      const name    = row.dataset.name;
+      if (!wikiUrl) return;
+      const finData = row.dataset.fin ? JSON.parse(row.dataset.fin) : {};
+      const titleMatch = wikiUrl.match(/\/wiki\/([^#?]+)/);
+      if (!titleMatch) return;
+      openCompanyWikiPanel(decodeURIComponent(titleMatch[1]), name, wikiUrl, finData);
+    }
+
+    async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
+      const sidebar  = document.getElementById('wiki-sidebar');
+      const body     = document.getElementById('wiki-sidebar-body');
+      const footer   = document.getElementById('wiki-sidebar-footer');
+      const titleEl  = document.getElementById('wiki-sidebar-title');
+
+      titleEl.textContent = name;
+      footer.innerHTML    = '';
+      body.innerHTML      = '<div class="wiki-loading"><div class="spinner"></div><span>Loading…</span></div>';
+      sidebar.classList.add('open');
+
+      // Determine local language from the city whose corp panel is open
+      const corpCity   = allCities.find(c => c.qid === corpCityQid);
+      const localLang  = corpCity ? (ISO_TO_WIKI_LANG[corpCity.iso] || null) : null;
+      const tryLocal   = localLang && localLang !== 'en';
+
+      try {
+        // Always fetch English first (guaranteed to exist, gives us wikibase_item)
+        const enApiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(articleTitle)}`;
+        const enRaw    = await fetch(enApiUrl);
+        if (!enRaw.ok) throw new Error('HTTP ' + enRaw.status);
+        const enData   = await enRaw.json();
+
+        // Try local-language article via Wikidata sitelink lookup
+        let displayData  = enData;
+        let displayLang  = 'en';
+        let localWikiUrl = null;
+
+        if (tryLocal && enData.wikibase_item) {
+          try {
+            const wdUrl  = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${encodeURIComponent(enData.wikibase_item)}&props=sitelinks&sitefilter=${localLang}wiki&format=json&origin=*`;
+            const wdRaw  = await fetch(wdUrl);
+            const wdJson = await wdRaw.json();
+            const localTitle = wdJson.entities?.[enData.wikibase_item]?.sitelinks?.[`${localLang}wiki`]?.title;
+
+            if (localTitle) {
+              const localApiUrl  = `https://${localLang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(localTitle)}`;
+              localWikiUrl       = `https://${localLang}.wikipedia.org/wiki/${encodeURIComponent(localTitle)}`;
+              const localRaw     = await fetch(localApiUrl);
+              if (localRaw.ok) {
+                const localJson  = await localRaw.json();
+                if (localJson.extract) { displayData = localJson; displayLang = localLang; }
+              }
+            }
+          } catch(_) { /* local fetch failed — stay with English */ }
+        }
+
+        const imgHtml = displayData.thumbnail?.source
+          ? `<img class="wiki-img" src="${escAttr(displayData.thumbnail.source)}" alt="${escAttr(name)}" />`
+          : '';
+        const extract = displayData.extract || '';
+
+        // Build company data section from companies.json fields
+        const _td = (label, val, isGreen) =>
+          `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem">${label}</td>` +
+          `<td style="${isGreen ? 'color:#3fb950;' : 'color:#c9d1d9;'}font-variant-numeric:tabular-nums;text-align:right;font-size:0.8rem">${val}</td></tr>`;
+
+        const profileRows = [
+          finData.industry ? _td('Industry', escHtml(finData.industry), false) : '',
+          finData.exchange ? _td('Exchange', escHtml(finData.exchange) + (finData.ticker ? ` <span style="color:#58a6ff;font-size:0.78em">${escHtml(finData.ticker)}</span>` : ''), false) : '',
+          finData.founded  ? _td('Founded',  finData.founded,            false) : '',
+          finData.website  ? `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem">Website</td>` +
+            `<td style="text-align:right;font-size:0.8rem"><a href="${escAttr(finData.website)}" target="_blank" rel="noopener" style="color:#58a6ff;text-decoration:none" onclick="event.stopPropagation()">${escHtml(finData.website.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))}</a></td></tr>` : '',
+          finData.employees ? _td('Employees', fmtEmployees(finData.employees), false) : '',
+        ].filter(r => r).join('');
+
+        const yr = finData.revenue_year ? ` <span style="color:#484f58;font-size:0.78em">${finData.revenue_year}</span>` : '';
+
+        // Revenue history pills — all years in ascending order, most recent in green
+        const hist = (finData.revenue_history || []).filter(h => h.year && h.value);
+        const histHtml = hist.length > 1
+          ? `<tr><td colspan="2" style="padding:2px 0 6px">` +
+            `<div style="display:flex;gap:4px;flex-wrap:wrap">` +
+            hist.map(h =>
+              `<span style="font-size:0.7rem;background:#21262d;border-radius:3px;padding:1px 5px;` +
+              `color:${h.year === finData.revenue_year ? '#3fb950' : '#8b949e'}">${h.year}: ${fmtRevenue(h.value)}</span>`
+            ).join('') + `</div></td></tr>`
+          : '';
+
+        const financialRows = [
+          finData.revenue          ? _td('Revenue',        fmtRevenue(finData.revenue) + yr,     true) : '',
+          histHtml,
+          finData.operating_income ? _td('Operating Inc.', fmtRevenue(finData.operating_income), true) : '',
+          finData.net_income       ? _td('Net Income',     fmtRevenue(finData.net_income),        true) : '',
+          finData.total_assets     ? _td('Total Assets',   fmtRevenue(finData.total_assets),      true) : '',
+          finData.total_equity     ? _td('Total Equity',   fmtRevenue(finData.total_equity),      true) : '',
+        ].filter(r => r).join('');
+
+        const _section = (heading, rows) => rows
+          ? `<div style="padding:10px 16px 4px;border-bottom:1px solid #21262d">` +
+            `<div style="font-size:0.7rem;font-weight:600;color:#6e7681;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px">${heading}</div>` +
+            `<table style="width:100%;border-collapse:collapse">${rows}</table></div>`
+          : '';
+        const finHtml = _section('Profile', profileRows) + _section('Financials', financialRows);
+
+        // Language badge shown when displaying non-English content
+        const langBadge = displayLang !== 'en'
+          ? `<span style="font-size:0.68rem;background:#21262d;color:#8b949e;border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:middle">${displayLang}</span>`
+          : '';
+
+        body.innerHTML = `
+          ${imgHtml}
+          <div class="wiki-city-header">
+            <div class="wiki-city-name">${escHtml(displayData.title || name)}${langBadge}</div>
+            ${displayData.description ? `<div class="wiki-city-desc">${escHtml(displayData.description)}</div>` : ''}
+          </div>
+          ${finHtml}
+          ${extract ? `
+            <div class="wiki-extract-wrap">
+              <div class="wiki-extract-head">Overview</div>
+              <div class="wiki-extract collapsed" id="wiki-extract-text">${escHtml(extract)}</div>
+              <button class="wiki-expand-btn" id="wiki-expand-btn" onclick="toggleExtract()">Show more</button>
+            </div>` : ''}
+        `;
+
+        // Footer: show local link first if used, then English
+        const svgIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+        const enLink  = `<a class="wiki-footer-link" href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">${svgIcon} Wikipedia (EN)</a>`;
+        const locLink = localWikiUrl && displayLang !== 'en'
+          ? `<a class="wiki-footer-link" href="${escAttr(localWikiUrl)}" target="_blank" rel="noopener" style="margin-right:12px">${svgIcon} Wikipedia (${displayLang.toUpperCase()})</a>`
+          : '';
+        footer.innerHTML = locLink
+          ? `<div style="display:flex;gap:4px;flex-wrap:wrap">${locLink}${enLink}</div>`
+          : enLink;
+
+      } catch(e) {
+        body.innerHTML = `<div class="wiki-error">Could not load Wikipedia article.<br/><a href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">Open Wikipedia directly ↗</a></div>`;
+      }
     }
 
     function showLoading(visible, msg) {

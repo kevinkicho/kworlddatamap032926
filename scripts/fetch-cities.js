@@ -46,6 +46,7 @@ const CHECKPOINT_FILE = path.join(__dirname, '.checkpoint.json');
 // Using VALUES on P31 lets Blazegraph hit the type index first and
 // avoid scanning the entire P1082 (population) table for each tier.
 const SETTLEMENT_TYPES = [
+  // ── Core types (original) ───────────────────────────────────────────────
   'wd:Q515',      // city
   'wd:Q1549591',  // big city
   'wd:Q3957',     // town
@@ -55,6 +56,60 @@ const SETTLEMENT_TYPES = [
   'wd:Q2208153',  // city of the United States
   'wd:Q5119',     // capital city
   'wd:Q15284',    // municipality
+
+  // ── Russia / post-Soviet / Central Asia ────────────────────────────────
+  // Many CIS cities use these types directly (not Q486972) in Wikidata
+  'wd:Q1757204',  // urban-type settlement (посёлок городского типа) ~1,100 entries
+  'wd:Q1899818',  // urban settlement (post-Soviet general)
+  'wd:Q1523821',  // urban-type settlement in Ukraine (селище міського типу)
+
+  // ── Japan ───────────────────────────────────────────────────────────────
+  // Japanese cities (市) are typed with this Japan-specific class, not Q515
+  'wd:Q494721',   // city in Japan (市) ~800 entries
+  'wd:Q5765760',  // town in Japan (町)
+
+  // ── China ───────────────────────────────────────────────────────────────
+  // County-level cities often carry Q200547 instead of Q515
+  'wd:Q200547',   // county-level city (县级市) ~388 entries
+
+  // ── India / South Asia ──────────────────────────────────────────────────
+  // India's census towns are typed separately from Q515/Q486972
+  'wd:Q15221921', // census town (India) ~4k entries, many 10k–50k pop
+  'wd:Q1184518',  // municipal corporation (India)
+  'wd:Q1477849',  // nagar panchayat (India, smallest urban local body)
+
+  // ── Americas ────────────────────────────────────────────────────────────
+  'wd:Q1093829',  // city in the United States (used alongside Q515)
+  'wd:Q3184121',  // municipality of Brazil
+  'wd:Q2198484',  // municipality of Mexico (municipio)
+
+  // ── General urban categories ─────────────────────────────────────────────
+  'wd:Q1637706',  // million city (explicit tag, ensures major metros aren't missed)
+  'wd:Q1338818',  // urban agglomeration
+
+  // ── Megacities / global cities ────────────────────────────────────────────
+  // Paris, Delhi, Lagos, Jakarta, Buenos Aires use ONLY these P31 types —
+  // they don't carry Q515 or Q486972. Without these, those cities are invisible.
+  'wd:Q174844',   // megacity (Paris, Delhi, Lagos, Jakarta, Buenos Aires...)
+  'wd:Q200250',   // metropolis (additional large cities not covered by megacity)
+  'wd:Q208511',   // global city (London, NYC, Tokyo classification)
+
+  // ── Germany ───────────────────────────────────────────────────────────────
+  // German cities predominantly use this type, not Q515 or Q486972
+  'wd:Q42744322', // urban municipality in Germany (Stadtgemeinde) ~1,200 cities
+  'wd:Q707813',   // Hanseatic city (Bremen, Hamburg, Lübeck, Rostock…)
+
+  // ── United Kingdom ────────────────────────────────────────────────────────
+  'wd:Q1115575',  // civil parish (England/Wales) ~1,500 entries, 10k filter keeps real towns
+  'wd:Q18511725', // market town (UK/Ireland) ~450 towns
+  'wd:Q2755753',  // area of London (boroughs, districts) ~265
+  'wd:Q1006876',  // borough in the United Kingdom ~142
+  'wd:Q1357964',  // county town (UK regional capitals) ~66
+
+  // ── United States (additional) ────────────────────────────────────────────
+  // Q1093829 (city in the US) already in list — covers 2,433 cities
+  'wd:Q62049',    // county seat ~724 (most major US cities qualify)
+  'wd:Q15127012', // town in the United States ~419
 ].join(' ');
 
 const TIERS = [
@@ -73,7 +128,7 @@ const TIERS = [
 
 function saveCheckpoint(byQid, phase, tierIndex, tierOffset, enrichBatch, sisterBatch) {
   const data = {
-    version:     4,
+    version:     5,
     phase,
     tierIndex,
     tierOffset,
@@ -89,7 +144,7 @@ function loadCheckpoint() {
   if (!fs.existsSync(CHECKPOINT_FILE)) return null;
   try {
     const data = JSON.parse(fs.readFileSync(CHECKPOINT_FILE, 'utf8'));
-    if (data.version !== 4) return null;   // incompatible older format — start fresh
+    if (data.version !== 5) return null;   // incompatible older format — start fresh
     return data;
   } catch {
     return null;
@@ -460,6 +515,46 @@ async function runPhase3(byQid, startBatch) {
   console.log('Phase 3 complete.\n');
 }
 
+// ── Proximity deduplication ───────────────────────────────────────────────────
+// Wikidata often has both a municipality entity (Q515/Q15284) AND a "main
+// settlement of X" entity (Q486972) for the same place, at nearly identical
+// coordinates but with different QIDs and different population figures.
+// This step drops the lower-population duplicate when two cities share the
+// same name, same country, and are within 2 km of each other.
+
+function deduplicateByProximity(cities) {
+  const toRad = d => d * Math.PI / 180;
+  function distKm(a, b) {
+    const R = 6371;
+    const dLat = toRad(b.lat - a.lat);
+    const dLon = toRad(b.lng - a.lng);
+    const h = Math.sin(dLat / 2) ** 2 +
+              Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+  }
+
+  const drop = new Set();
+  for (let i = 0; i < cities.length; i++) {
+    if (drop.has(cities[i].qid)) continue;
+    for (let j = i + 1; j < cities.length; j++) {
+      if (drop.has(cities[j].qid)) continue;
+      const a = cities[i], b = cities[j];
+      if (a.name !== b.name || a.country !== b.country) continue;
+      if (a.lat == null || b.lat == null) continue;
+      // 2 km for small cities; 10 km for large ones (pop > 500k) where
+    // administrative sub-entities (special wards, former city areas) can
+    // be several km from the metropolitan centroid
+    const threshold = ((a.pop ?? 0) > 500_000 || (b.pop ?? 0) > 500_000) ? 10 : 2;
+    if (distKm(a, b) < threshold) {
+        drop.add((a.pop ?? 0) >= (b.pop ?? 0) ? b.qid : a.qid);
+      }
+    }
+  }
+
+  if (drop.size) console.log(`  Proximity dedup: removed ${drop.size} near-duplicate settlement entries\n`);
+  return cities.filter(c => !drop.has(c.qid));
+}
+
 // ── Utilities ─────────────────────────────────────────────────────────────────
 
 function fmt(n) {
@@ -537,8 +632,10 @@ async function main() {
   }
 
   // Write final output — keep qid so the UI can link to Wikipedia
-  const cities = Array.from(byQid.values())
+  let cities = Array.from(byQid.values())
     .sort((a, b) => (b.pop ?? 0) - (a.pop ?? 0));
+
+  cities = deduplicateByProximity(cities);
 
   fs.writeFileSync(OUT_FILE, JSON.stringify(cities, null, 2), 'utf8');
 

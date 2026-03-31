@@ -1,255 +1,263 @@
 # World Data Map — Code Explainer
 
-A plain-language description of every file, section, function, and notable detail in this project.
+A detailed walkthrough of every file, design decision, and notable technique in this project.
 
 ---
 
-## Project Files
+## Big Picture
 
-| File | What it does |
-|------|-------------|
-| `README.md` | Contains project documentation, running instructions, and features. |
-| `server.js` | Starts a standard Node Express web server to serve the frontend and static data assets. |
-| `public/index.html` | The front-end of the app — layout, styles, density data, static dataset fetch, and map logic all live here. |
-| `public/cities.json` | A static JSON array of ~600 populated cities. |
-| `public/cities-full.json` | An enriched static dataset of thousands of global cities built by the fetch script. |
-| `scripts/fetch-cities.js` | A robust Node script used to scrape Wikidata safely. Explained in detail inside `FETCH_CITIES.md`. |
-| `package.json` | Lists the project's name, scripts, and all installed dependencies. |
-| `node_modules/datamaps/...` | The datamaps library bundled with world map geography data. |
+The app has two layers:
 
----
-
-## `server.js` — Line by Line
-
-| Line / Block | What it does |
-|---|---|
-| `require('express')` | Loads the Express framework so we can create an HTTP server. |
-| `require('path')` | Loads Node's built-in path helper for building file-system paths safely. |
-| `app.use(express.static('public'))` | Tells Express to serve every file inside the `public/` folder at the root URL (`/`). |
-| `app.use('/node_modules', ...)` | Exposes the `node_modules` folder over HTTP so the browser can load `datamaps.world.min.js` directly. |
-| `app.listen(3000, ...)` | Starts the server and prints the URL to the terminal once it is ready. |
-
----
-
-## `public/index.html` — Sections
-
-### HTML Structure
-
-| Element | What it does |
-|---|---|
-| `<header>` | Displays the app title "World Population Map" and its subtitle "Density, cities, and live Wikipedia data". |
-| `<div class="controls">` | Holds four buttons — **Population Density**, **Major Cities**, **Both Layers**, and **Wikipedia Cities** — that switch map views. |
-| `<div id="map-container">` | The empty box that datamaps fills with the SVG world map at runtime; cleared and redrawn on each view switch. |
-| `<div id="loading-overlay">` | A dark translucent screen with a loading spinner that covers the map while the Wikidata fetch resolves. |
-| `<div class="legend-container" id="density-legend">` | Wraps the color gradient bar and its numeric labels (0 → 1000+) below the map (hidden in Wiki view). |
-| `<div id="wiki-legend">` | Displays a 3-tier HTML legend explaining the canvas glow clusters, only visible in the "Wikipedia Cities" view. |
-| `<div class="legend-gradient">` | Holds the "Low" label, the gradient bar, and the "High" label in a horizontal row. |
-| `<div class="gradient-bar">` | A 300 px wide CSS gradient strip that visually represents the density color scale from light yellow to dark blue. |
-| `<div class="legend-labels">` | Displays the five numeric tick marks (0, 100, 300, 500, 1000+) spread evenly below the gradient bar. |
-| `<div class="stats">` | Shows three live data facts — country count, highest density, and global average — filled in by JavaScript. |
-| `<div class="stat-item">` | One label + value pair inside `.stats`; there are three of them (Countries, Highest, Global Avg). |
-| `<span class="stat-value" id="...">` | The blue-colored number inside each stat item, updated by `calculateStats()` after the map loads. |
-| `<div class="data-source">` | A footer line crediting World Bank (2020) as the data source and naming the libraries used. |
-
----
-
-### CSS Styles
-
-| Selector | What it does |
-|---|---|
-| `*` | Resets margin, padding, and box-sizing on every element for a consistent baseline. |
-| `body` | Sets the dark background (`#0d1117`), light text color, and centers content in a vertical column. |
-| `header h1` | Styles the page title in blue (`#58a6ff`) at 1.8 rem — readable but not harsh on sensitive eyes. |
-| `.controls` | Lays the three view-toggle buttons out in a centered, wrapping horizontal row with a gap between them. |
-| `.btn` | Styles each button with a dark background, subtle border, and a smooth 0.2s hover transition. |
-| `.btn:hover` | Brightens the button background and turns the border blue when the mouse is over it. |
-| `.btn.active` | Fills the currently selected button solid blue (`#1f6feb`) to show which view is active. |
-| `#map-container` | Gives the map a fixed 550 px height, rounded corners, and hides any SVG that overflows the box. |
-| `.hoverinfo` | Styles the floating tooltip (dark background, rounded corners, drop shadow) shown on country/city hover. |
-| `.legend-container` | Stacks the gradient row and label row vertically, centered, with a small gap. |
-| `.legend-gradient` | Aligns the "Low" text, gradient bar, and "High" text in a single horizontal line. |
-| `.gradient-bar` | Defines the 6-stop CSS linear gradient (light yellow → dark blue) that mirrors the `getDensityColor` scale. |
-| `.legend-labels` | Spreads the five numeric labels evenly across the same 300 px width as the gradient bar. |
-| `.stats` | Lays the three stat items out horizontally with spacing between them. |
-| `.stat-item` | Aligns the label and value of each stat side by side with a small gap. |
-| `.stat-value` | Colors the dynamic numbers blue (`#58a6ff`) and bolds them to stand out from the label text. |
-| `.data-source` | Renders the attribution line in a small, muted grey at the bottom of the page. |
-
----
-
-### JavaScript — Data
-
-| Variable | What it does |
-|---|---|
-| `const densityData` | An object mapping ~180 ISO 3-letter country codes (e.g. `"BGD"`) to their 2020 population density in people/km². |
-| `const hardcodedCities` | An array of 20 megacity objects serving as fallback data for the "Major Cities" / "Both Layers" views. |
-| `let currentView` | A string (`'density'`, `'cities'`, or `'both'`) that tracks which layer is active; read by `done()` and `initMap()`. |
-| `let datamap` | Holds the live `Datamap` instance so `colorCountries()` and `addCityBubbles()` can access it after creation. |
-| `let wikiActive` | A boolean guard preventing stale canvas renders if the user switches views mid-load. |
-
----
-
-### JavaScript — Functions
-
-#### `getDensityColor(density)`
-Returns one of six hex colors based on six population density thresholds:
-
-| Density (people/km²) | Color returned | Meaning |
-|---|---|---|
-| `null` or `undefined` | `#21262d` (dark grey) | No data available for that country |
-| < 10 | `#ffffcc` (pale yellow) | Very sparse (e.g. Greenland, Mongolia) |
-| 10 – 49 | `#c7e9b4` (light green) | Low density (e.g. Russia, Canada) |
-| 50 – 99 | `#7fcdbb` (teal) | Moderate density (e.g. Iraq, Kenya) |
-| 100 – 299 | `#41b6c4` (cyan-blue) | Medium-high density (e.g. China, France) |
-| 300 – 499 | `#2c7fb8` (medium blue) | High density (e.g. Philippines, Vietnam) |
-| ≥ 500 | `#253494` (dark blue) | Extreme density (e.g. Bangladesh, Singapore) |
-
----
-
-#### `calculateStats()`
-Reads all values from `densityData`, computes three numbers, and writes them into the page:
-
-| Step | What it does |
-|---|---|
-| `Object.values(densityData).filter(...)` | Extracts all density numbers, removing any null entries. |
-| `Math.max(...densities)` | Finds the highest density value across all countries. |
-| `densities.reduce(...) / length` | Calculates the mean (average) density across all countries. |
-| Loop over `Object.entries` | Finds the 3-letter code of whichever country holds the maximum (used internally; not displayed in UI). |
-| DOM updates | Writes country count, highest density (with `/km²`), and rounded average into the three `.stat-value` spans. |
-
----
-
-#### `initMap()`
-Creates a fresh `Datamap` instance and wires up all configuration; called on page load and on every view switch.
-
-| Config key | What it does |
-|---|---|
-| `element` | Points datamaps at `#map-container` as the SVG target. |
-| `projection: 'mercator'` | Uses the standard flat Mercator world projection. |
-| `fills.defaultFill` | Sets uncolored countries to dark grey (`#21262d`) before `colorCountries()` runs. |
-| `geographyConfig.borderColor` | Draws country borders in a muted dark tone (`#30363d`). |
-| `geographyConfig.highlightBorderColor` | Turns the border bright blue (`#58a6ff`) when you hover over a country. |
-| `geographyConfig.highlightFillColor(geo)` | A **function** (not a static color) — returns grey if in cities-only view, otherwise returns the density color for that country so hover color stays consistent. |
-| `geographyConfig.popupTemplate(geo, data)` | Builds the country tooltip HTML: country name + its density value (or "No data") using a template literal. |
-| `done(datamap)` | A callback that fires once the base map SVG is fully drawn (see below). |
-
-**Inside `done(datamap)`:**
-
-| Conditional | What it does |
-|---|---|
-| `if (currentView === 'density' \|\| 'both')` | Calls `colorCountries()` — skipped when only city bubbles or wiki modes are requested. |
-| `if (currentView === 'cities' \|\| 'both')` | Calls `addCityBubbles()` — skipped when only the density layer or wiki modes are requested. |
-| `if (currentView === 'wiki')` | Calls `fetchAndRenderWikiCities(dm)` to draw the custom canvas heatmap. |
-| `if (currentView !== 'wiki')` | Calls `calculateStats()` normally for standard map views. |
-
----
-
-#### `colorCountries()`
-Iterates over every country SVG path already drawn by datamaps and applies the correct density color.
-
-| Step | What it does |
-|---|---|
-| `datamap.svg.selectAll('.datamaps-subunit')` | Uses D3 to select all country shapes inside the map SVG. |
-| `.style('fill', function(d) {...})` | Calls `getDensityColor()` with each country's density value to set its fill color. |
-
----
-
-#### `addCityBubbles()`
-Transforms the `cities` array into datamaps bubble objects and renders them on the map.
-
-| Step | What it does |
-|---|---|
-| `cities.map(city => ({...}))` | Converts each city object into the format datamaps' bubble plugin expects. |
-| `radius: Math.sqrt(city.pop / 1000000) * 0.8` | Uses a square-root scale so bubble **area** grows proportionally to population (prevents the largest cities from visually dominating). |
-| `fillKey: pop > 15M ? 'high' : pop > 10M ? 'medium' : 'low'` | Classifies each city into one of three tiers, stored as a key for potential color mapping. |
-| `datamap.bubbles(bubbles, {...})` | Calls the datamaps bubble plugin to render all 20 circles. |
-| `popupTemplate(geo, data)` | Builds the city tooltip: city name + population formatted as `X.XM` (e.g. "37.4M"). |
-
----
-
-#### `fetchAndRenderWikiCities(dm)` / `renderHeatmap(dm, cities)`
-Handles rendering the decoupled static Wikipedia dataset onto a custom HTML5 canvas layer.
-
-| Step | What it does |
-|---|---|
-| `wikiActive = true` | Sets the load guard flag to prevent async race conditions. |
-| `await fetch('/cities.json')` | Downloads the bundled static city dataset via HTTP GET. |
-| `renderHeatmap(dm, cities)` | Overlays a screen-blended `<canvas>` scaled to the map projection, drawing procedurally generated logarithmically sized radial gradients ("glows") per city. Overlapping glows mathematically stack to simulate high-density urban clusters. |
-| `showWikiStats(cities, 'static')` | Updates the UI stats bar directly, skipping `calculateStats()` for density metrics. |
-
----
-
-#### `setView(view, btn)`
-Handles button clicks to switch between the four map modes.
-
-| Step | What it does |
-|---|---|
-| `currentView = view` | Updates the global tracker so `done()` knows what to render next. |
-| `querySelectorAll('.btn').forEach(...)` | Removes the `.active` class from all buttons before re-applying it. |
-| `event.target.classList.add('active')` | Marks the clicked button as active (uses the implicit browser `event` global). |
-| `document.getElementById('map-container').innerHTML = ''` | Wipes the existing SVG completely so datamaps can draw a clean map. |
-| `initMap()` | Re-creates the entire map with the new view settings. |
-
----
-
-#### `initMap()` — bootstrap call (bottom of script)
-The bare `initMap();` line at the very end of the `<script>` block triggers the first map draw when the page first loads, defaulting to the density view.
-
----
-
-### JavaScript — External Libraries
-
-| Library | Why this version | What it does |
-|---|---|---|
-| `d3 v3` (CDN) | datamaps was built against D3 v3 and is incompatible with v4+ | Provides the SVG drawing, data-binding, and selection engine that datamaps runs on top of. |
-| `topojson v1` (CDN) | datamaps uses the v1 API | Decodes the compressed geographic boundary data that defines country outlines. |
-| `datamaps.world.min.js` (npm) | Loaded from local `node_modules` via Express | The main library that ties D3, topojson, and world geography together into one `new Datamap({...})` call. |
-
-> **Note:** The `<script>` tags for these three libraries are placed in `<head>` (before the page body), so they are fully available by the time the inline script at the bottom of `<body>` runs.
-
----
-
-## How It All Fits Together
+1. **Static data files** (`public/*.json`) — pre-built by the fetch scripts, committed to git. The browser just loads these; no server queries happen at runtime.
+2. **A single-page frontend** (`public/index.html`) — Leaflet.js map + sidebar panels. Zero build step, runs straight in the browser.
 
 ```
-npm start
-   │
-   └─► server.js starts Express on port 3000
-            │
-            ├─► serves public/index.html to the browser
-            └─► serves /node_modules/...  to the browser
-                        │
-                        ▼
-              Browser loads index.html
-                        │
-                        ├─► loads D3 v3      (CDN)
-                        ├─► loads topojson v1 (CDN)
-                        ├─► loads datamaps    (npm → node_modules)
-                        │
-                        └─► initMap() called automatically
-                                  │
-                                  └─► new Datamap({ ... })
-                                            │
-                                            └─► done() callback fires
-                                                      │
-                                                      ├─► colorCountries()   ← if density or both
-                                                      ├─► addCityBubbles()   ← if cities or both
-                                                      └─► calculateStats()   ← always
+Browser
+  └─ public/index.html          ← all UI logic (Leaflet, sidebar, corp panel)
+       ├─ cities-full.json       ← 6k+ city markers with population/coords
+       ├─ companies.json         ← companies keyed by city QID
+       ├─ country-data.json      ← World Bank indicators keyed by ISO-2
+       └─ world-countries.json   ← GeoJSON borders (Natural Earth)
 
-User clicks a button
-   └─► setView('cities' | 'density' | 'both')
-            ├─► clears #map-container
-            └─► initMap() → done() → same flow above
+Build time (run once, slow)
+  ├─ scripts/fetch-cities.js     → cities-full.json
+  ├─ scripts/fetch-companies.js  → companies.json
+  └─ scripts/fetch-country-data.js → country-data.json
+```
+
+The "join key" between datasets is the city QID (Wikidata entity ID like `Q8684`) and the ISO-2 country code. Every dataset that touches a city references its QID; everything that touches a country references its ISO-2.
+
+---
+
+## `scripts/fetch-cities.js`
+
+Queries Wikidata's SPARQL endpoint to build `cities-full.json`.
+
+### Settlement types (P31)
+
+Wikidata doesn't have a single `is a city` type. Different countries encode cities differently:
+
+| Wikidata type | What it covers |
+|---|---|
+| Q515 | city (generic) |
+| Q1549591 | big city |
+| Q486972 | human settlement |
+| Q174844 | megacity — **required** for Paris, Delhi, Jakarta, Lagos |
+| Q494721 | city in Japan (市) |
+| Q42744322 | urban municipality in Germany |
+| Q1093829 | city in the United States |
+| Q1115575 | civil parish (UK) |
+| Q1757204 | urban-type settlement (Russia/CIS) |
+| Q15221921 | census town (India) |
+| … | 34 types total |
+
+The script queries all 34 types with a `VALUES ?type { … }` block and deduplicates on QID, so a city that carries multiple types (e.g. both Q515 and Q174844) only appears once.
+
+### Population floor
+
+`LOWER_BOUND = 10000`. Cities below 10k population are excluded — they add noise without adding economic signal at the scale this app is designed for.
+
+### Checkpoint/resume
+
+The script saves a checkpoint JSON after every SPARQL batch. If the process is killed or crashes, re-running `npm run fetch-cities` picks up from the last saved batch — no data is lost and no completed batches are re-fetched. Use `--fresh` to ignore the checkpoint and start over.
+
+### Resilience
+
+- **429 (rate limit):** exponential backoff — 30s, 60s, 90s, 120s, 150s waits
+- **504 (query timeout):** batch is too heavy — splits into individual city queries
+- **Silent timeout:** Wikidata sometimes returns HTTP 200 with 0 rows when Blazegraph internally times out at ~60s. Detected by `elapsed > 30s && rows === 0` → retries with a lite query (fewer OPTIONALs)
+
+---
+
+## `scripts/fetch-companies.js`
+
+Queries Wikidata to build `companies.json`. This is the most technically complex script.
+
+### Significance filter
+
+Two paths qualify a company for inclusion:
+
+1. **Stock-exchange listed** (`wdt:P414 []`) — covers NYSE, NASDAQ, LSE, TSE, SSE, SZSE, HKEX, and hundreds more. Revenue isn't required; listing itself signals significance.
+2. **Large private company** — has revenue ≥ 1B in any currency (`wdt:P2139`), and is not a non-profit/foundation/government body.
+
+This combination captures listed firms (including early-stage with negative revenue) and significant unlisted firms like Huawei or IKEA-scale companies.
+
+### HQ matching with P131 hop
+
+Some companies record their HQ at a district level rather than city level. Samsung's registered address is in Gangnam-gu (a Seoul district), not Seoul itself. The query resolves this with:
+
+```sparql
+{ ?co wdt:P159 ?hq . }
+UNION
+{ ?co wdt:P159 ?loc . ?loc wdt:P131 ?hq . }
+```
+
+One `P131` (administrative territory) hop up from the recorded location catches these cases.
+
+### GROUP BY + GROUP_CONCAT — the row explosion problem
+
+Naively fetching all historical financial data produces a cross-product of rows. A company with 5 revenue years × 4 net_income years × 3 employee records × 2 asset records = **120 rows per company**. At 20 companies per batch, that's 2,400 rows, hitting the 2,000-row LIMIT and truncating data.
+
+The solution: `GROUP BY ?co ?coLabel ?hq` collapses all rows per company into one. Financial history is collected via `GROUP_CONCAT(DISTINCT …)`:
+
+```sparql
+GROUP_CONCAT(DISTINCT CONCAT(STR(?rev), "|", IF(BOUND(?revYr), STR(?revYr), "")); separator="§")
+AS ?revenueHist
+```
+
+`DISTINCT` removes the cross-product duplicates (e.g. `"1000000|2023"` appearing 24 times). The result is a `"§"`-separated string like `"1000000|2020§1200000|2021§1500000|2022"`.
+
+`LIMIT 2000` now applies to **companies** (result rows after GROUP BY), not raw SPARQL rows — so the cap no longer silently truncates large city hubs like Tokyo or Seoul.
+
+### parseHistory()
+
+Parses a GROUP_CONCAT string into a sorted `[{year, value}]` array:
+
+```javascript
+"1000000|2020§1200000|2021§1500000|2022"
+  →  [{ year: 2020, value: 1000000 }, { year: 2021, value: 1200000 }, { year: 2022, value: 1500000 }]
+```
+
+The most recent entry is derived as the scalar `revenue` / `revenue_year` for backwards-compatible display and sorting.
+
+### Fields stored per company
+
+| Field | Type | Notes |
+|---|---|---|
+| `qid` | string | Wikidata entity ID |
+| `name` | string | Label in best available language |
+| `industry` | string | P452 (industry) label |
+| `exchange` | string | First exchange label (NYSE, TSE, etc.) |
+| `ticker` | string | P249 ticker symbol |
+| `employees` | number | Most recent headcount |
+| `employees_history` | `[{year, value}]` | Full time-series |
+| `revenue` | number | Most recent revenue (any currency) |
+| `revenue_year` | number | Year of most recent revenue figure |
+| `revenue_history` | `[{year, value}]` | Full time-series |
+| `net_income` | number | Most recent |
+| `net_income_history` | `[{year, value}]` | Full time-series |
+| `operating_income` | number | Most recent |
+| `operating_income_history` | `[{year, value}]` | Full time-series |
+| `total_assets` | number | Most recent |
+| `total_assets_history` | `[{year, value}]` | Full time-series |
+| `total_equity` | number | Most recent |
+| `total_equity_history` | `[{year, value}]` | Full time-series |
+| `founded` | number | Year founded (P571) |
+| `website` | string | Official website (P856) |
+| `wikipedia` | string | English Wikipedia URL |
+
+### Resilience (same pattern as fetch-cities, stricter)
+
+- **Batch 504:** splits into individual city queries, max 2 retries each (not 5 — a city that always times out on full query should fail fast)
+- **Individual city 504 exhausted:** falls back to `fetchLite()` — P414-only query with no financial OPTIONALs, completes in 2–5s where full query fails
+- **Silent timeout (0 rows, >30s):** retries with lite query
+- **Heavy batch (>60s total):** 20s cooldown before next batch to let Wikidata's rate-limit counters reset
+- **429:** full exponential backoff (transient rate limit, always recoverable with waiting)
+
+---
+
+## `public/index.html`
+
+The entire frontend in one file. No build tools, no framework — just HTML, CSS, and vanilla JS loaded in a browser.
+
+### Map layer (Leaflet)
+
+Leaflet renders city markers as `L.circleMarker` objects. Marker radius is scaled by population using a logarithmic scale so Tokyo's dot doesn't dwarf every other city. Markers are colored by continent.
+
+A GeoJSON choropleth layer colors country polygons by any of 8 World Bank indicators. The fill color is recalculated on each indicator change using a 5-quantile scale.
+
+### City sidebar
+
+Clicking a city marker:
+1. Opens the Wikipedia sidebar and shows a loading spinner
+2. Fetches the English Wikipedia summary via the REST API (`/api/rest_v1/page/summary/…`)
+3. If the city's country has a non-English Wikipedia language, fetches the local-language article via Wikidata's sitelink lookup
+4. Displays the extract, thumbnail, city stats table (population, area, elevation, country), and World Bank indicators for the country
+
+### Corporation panel
+
+Clicking the "Corporations (N) ↗" button in a city popup:
+1. Opens a right-side panel (slides in at 460px)
+2. Reads the company list from `companies.json` (already in memory)
+3. Renders a sortable, searchable table of companies for that city
+4. Clicking a company row opens its Wikipedia article in the wiki sidebar and shows a financial data table with history pills
+
+### History pills in the detail panel
+
+For any financial field with 2+ data points, a row of year-labeled pills appears below the main value:
+
+```
+Revenue    $1.5B  2022
+  [2020: $1.0B]  [2021: $1.2B]  [2022: $1.5B]  ← pills; most recent in green
+```
+
+This applies to: Revenue, Operating Income, Net Income, Total Assets, Total Equity, and Employees. The complete time-series is stored in `data-fin` (JSON in a `data-` attribute on each table row) and read when the row is clicked.
+
+### Data flow summary
+
+```
+Page load
+  └─ fetch cities-full.json      → allCities[] (Leaflet markers)
+  └─ fetch country-data.json     → countryData{} (choropleth, sidebar stats)
+  └─ fetch world-countries.json  → L.geoJSON choropleth layer
+  └─ fetch companies.json        → companiesData{} (keyed by city QID)
+
+User clicks city marker
+  └─ lookup companiesData[city.qid]  → corp count badge in popup
+  └─ open Wikipedia sidebar          → fetch Wikipedia API
+
+User opens corp panel
+  └─ render companiesData[city.qid]  → sortable table
+  └─ click company row               → fetch Wikipedia API (company article)
+                                     → render finData history pills
 ```
 
 ---
 
-## Data Notes
+## `scripts/fetch-country-data.js`
 
-| Item | Detail |
+Fetches 8 World Bank development indicators for every country via the World Bank REST API. Fast (~1 minute). Output is `country-data.json` keyed by ISO-2 code.
+
+Indicators fetched:
+
+| Indicator code | What it measures |
 |---|---|
-| Density source | World Bank Open Data, 2020 estimates |
-| Country coverage | ~180 countries and territories |
-| City population figures | UN World Urbanization Prospects estimates |
-| City count | 20 largest urban agglomerations |
-| Density unit | People per square kilometer (km²) |
+| NY.GDP.PCAP.CD | GDP per capita (USD) |
+| SP.POP.TOTL | Total population |
+| SP.DYN.LE00.IN | Life expectancy at birth |
+| SE.ADT.LITR.ZS | Adult literacy rate |
+| NE.TRD.GNFS.ZS | Trade as % of GDP |
+| SH.MED.BEDS.ZS | Hospital beds per 1,000 |
+| EG.ELC.ACCS.ZS | Access to electricity (%) |
+| IT.NET.USER.ZS | Internet users (%) |
+
+---
+
+## Design decisions worth noting
+
+**Revenue in local currency, not USD.** Wikidata financial figures are in each company's reporting currency. A Chinese company reporting in RMB will show a much larger number than a US company reporting in USD. This is intentional — exchange rates fluctuate and adding a conversion step would introduce its own staleness problem. The data is useful for trend analysis within a company's own history, not for cross-currency comparison.
+
+**10,000 population floor.** Cities below 10k are excluded. At this scale of analysis — corporate geography, national economic indicators — sub-10k settlements add noise. The floor can be changed in `LOWER_BOUND` in fetch-cities.js but is intentionally kept at 10k.
+
+**No backend at runtime.** All data is pre-built into JSON files. The app works as a GitHub Pages static site. The only "server" needed is during the data build phase.
+
+**Wikidata as the authoritative source.** Both city and company data come from Wikidata via SPARQL. This gives us consistent entity IDs (QIDs) that serve as reliable join keys across datasets, plus multilingual labels and rich structured data that Wikipedia prose alone doesn't have.
+
+**P131 hop for district HQs.** Some of the world's largest companies (Samsung, Sony subsidiaries, etc.) record their HQ in a district or ward rather than the parent city. One `wdt:P131` (located in administrative territory) hop up from the recorded location catches these without expanding the query to an arbitrary depth.
+
+---
+
+## Running the full data pipeline
+
+```bash
+# 1. Cities — 1–2 hours depending on Wikidata load
+npm run fetch-cities
+
+# 2. Companies — 6–8 hours; run after fetch-cities so new cities are included
+npm run fetch-companies -- --fresh
+
+# 3. Country indicators — ~1 minute
+npm run fetch-country-data
+```
+
+Steps 1 and 2 both support checkpoint/resume. If interrupted, re-run the same command without `--fresh` to resume. The checkpoint file is saved in `scripts/` and deleted on clean completion.
