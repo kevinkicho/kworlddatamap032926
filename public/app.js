@@ -1365,13 +1365,17 @@ async function openWikiSidebar(qid, cityName) {
     return;
   }
 
-  // Show loading state with Wikidata fields while fetching Wikipedia
-  if (city) {
-    body.innerHTML = `<div class="wiki-loading"><div class="spinner"></div><span>Loading Wikipedia article…</span></div>`;
-    // Render Wikidata fields immediately below spinner
-  } else {
-    body.innerHTML = `<div class="wiki-loading"><div class="spinner"></div><span>Loading…</span></div>`;
-  }
+  // Show loading spinner inside the Info tab (preserves tab div structure)
+  const _infoEl = document.getElementById('wiki-tab-info');
+  const _censusEl = document.getElementById('wiki-tab-census');
+  const _overviewEl = document.getElementById('wiki-tab-overview');
+  if (_infoEl) _infoEl.innerHTML = `<div class="wiki-loading"><div class="spinner"></div><span>Loading Wikipedia article…</span></div>`;
+  if (_censusEl) _censusEl.innerHTML = '';
+  if (_overviewEl) _overviewEl.innerHTML = '';
+  // Ensure Census tab is hidden while loading
+  const _censusBtnEl = document.getElementById('wiki-tab-census-btn');
+  if (_censusBtnEl) _censusBtnEl.style.display = 'none';
+  switchWikiTab(_sidebarTab === 'census' ? 'info' : _sidebarTab);
 
   try {
     // Step 1: resolve QID → Wikipedia article title
