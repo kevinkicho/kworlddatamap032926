@@ -1,0 +1,2834 @@
+{
+  "Q683705": {
+    "state": "34",
+    "place": "52470",
+    "type": "cousub",
+    "name": "North Bergen township"
+  },
+  "Q60": {
+    "state": "36",
+    "place": "51000",
+    "type": "place",
+    "name": "New York city"
+  },
+  "Q65": {
+    "state": "06",
+    "place": "44000",
+    "type": "place",
+    "name": "Los Angeles city"
+  },
+  "Q1297": {
+    "state": "17",
+    "place": "14000",
+    "type": "place",
+    "name": "Chicago city"
+  },
+  "Q16555": {
+    "state": "48",
+    "place": "35000",
+    "type": "place",
+    "name": "Houston city"
+  },
+  "Q16556": {
+    "state": "04",
+    "place": "55000",
+    "type": "place",
+    "name": "Phoenix city"
+  },
+  "Q1345": {
+    "state": "42",
+    "place": "60000",
+    "type": "place",
+    "name": "Philadelphia city"
+  },
+  "Q975": {
+    "state": "48",
+    "place": "65000",
+    "type": "place",
+    "name": "San Antonio city"
+  },
+  "Q16552": {
+    "state": "06",
+    "place": "66000",
+    "type": "place",
+    "name": "San Diego city"
+  },
+  "Q16557": {
+    "state": "48",
+    "place": "19000",
+    "type": "place",
+    "name": "Dallas city"
+  },
+  "Q16553": {
+    "state": "06",
+    "place": "68000",
+    "type": "place",
+    "name": "San Jose city"
+  },
+  "Q16559": {
+    "state": "48",
+    "place": "05000",
+    "type": "place",
+    "name": "Austin city"
+  },
+  "Q16568": {
+    "state": "12",
+    "place": "35000",
+    "type": "place",
+    "name": "Jacksonville city"
+  },
+  "Q16558": {
+    "state": "48",
+    "place": "27000",
+    "type": "place",
+    "name": "Fort Worth city"
+  },
+  "Q16567": {
+    "state": "39",
+    "place": "18000",
+    "type": "place",
+    "name": "Columbus city"
+  },
+  "Q6346": {
+    "state": "18",
+    "place": "36003",
+    "type": "place",
+    "name": "Indianapolis city (balance)"
+  },
+  "Q16565": {
+    "state": "37",
+    "place": "12000",
+    "type": "place",
+    "name": "Charlotte city"
+  },
+  "Q62": {
+    "state": "06",
+    "place": "67000",
+    "type": "place",
+    "name": "San Francisco city"
+  },
+  "Q1583289": {
+    "state": "36",
+    "place": "33139",
+    "type": "place",
+    "name": "Hempstead village"
+  },
+  "Q5083": {
+    "state": "53",
+    "place": "63000",
+    "type": "place",
+    "name": "Seattle city"
+  },
+  "Q16554": {
+    "state": "08",
+    "place": "20000",
+    "type": "place",
+    "name": "Denver city"
+  },
+  "Q61": {
+    "state": "11",
+    "place": "50000",
+    "type": "place",
+    "name": "Washington city"
+  },
+  "Q23197": {
+    "state": "47",
+    "place": "52006",
+    "type": "place",
+    "name": "Nashville-Davidson metropolitan government (balance)"
+  },
+  "Q34863": {
+    "state": "40",
+    "place": "55000",
+    "type": "place",
+    "name": "Oklahoma City city"
+  },
+  "Q16562": {
+    "state": "48",
+    "place": "24000",
+    "type": "place",
+    "name": "El Paso city"
+  },
+  "Q100": {
+    "state": "25",
+    "place": "07000",
+    "type": "place",
+    "name": "Boston city"
+  },
+  "Q6106": {
+    "state": "41",
+    "place": "59000",
+    "type": "place",
+    "name": "Portland city"
+  },
+  "Q23768": {
+    "state": "32",
+    "place": "40000",
+    "type": "place",
+    "name": "Las Vegas city"
+  },
+  "Q12439": {
+    "state": "26",
+    "place": "22000",
+    "type": "place",
+    "name": "Detroit city"
+  },
+  "Q16563": {
+    "state": "47",
+    "place": "48000",
+    "type": "place",
+    "name": "Memphis city"
+  },
+  "Q37836": {
+    "state": "55",
+    "place": "53000",
+    "type": "place",
+    "name": "Milwaukee city"
+  },
+  "Q34804": {
+    "state": "35",
+    "place": "02000",
+    "type": "place",
+    "name": "Albuquerque city"
+  },
+  "Q18575": {
+    "state": "04",
+    "place": "77000",
+    "type": "place",
+    "name": "Tucson city"
+  },
+  "Q43301": {
+    "state": "06",
+    "place": "27000",
+    "type": "place",
+    "name": "Fresno city"
+  },
+  "Q18013": {
+    "state": "06",
+    "place": "64000",
+    "type": "place",
+    "name": "Sacramento city"
+  },
+  "Q41819": {
+    "state": "29",
+    "place": "38000",
+    "type": "place",
+    "name": "Kansas City city"
+  },
+  "Q49261": {
+    "state": "04",
+    "place": "46000",
+    "type": "place",
+    "name": "Mesa city"
+  },
+  "Q23556": {
+    "state": "13",
+    "place": "04000",
+    "type": "place",
+    "name": "Atlanta city"
+  },
+  "Q43199": {
+    "state": "31",
+    "place": "37000",
+    "type": "place",
+    "name": "Omaha city"
+  },
+  "Q49258": {
+    "state": "08",
+    "place": "16000",
+    "type": "place",
+    "name": "Colorado Springs city"
+  },
+  "Q41087": {
+    "state": "37",
+    "place": "55000",
+    "type": "place",
+    "name": "Raleigh city"
+  },
+  "Q16739": {
+    "state": "06",
+    "place": "43000",
+    "type": "place",
+    "name": "Long Beach city"
+  },
+  "Q49259": {
+    "state": "51",
+    "place": "82000",
+    "type": "place",
+    "name": "Virginia Beach city"
+  },
+  "Q8652": {
+    "state": "12",
+    "place": "45000",
+    "type": "place",
+    "name": "Miami city"
+  },
+  "Q17042": {
+    "state": "06",
+    "place": "53000",
+    "type": "place",
+    "name": "Oakland city"
+  },
+  "Q36091": {
+    "state": "27",
+    "place": "43000",
+    "type": "place",
+    "name": "Minneapolis city"
+  },
+  "Q44989": {
+    "state": "40",
+    "place": "75000",
+    "type": "place",
+    "name": "Tulsa city"
+  },
+  "Q49256": {
+    "state": "06",
+    "place": "03526",
+    "type": "place",
+    "name": "Bakersfield city"
+  },
+  "Q49266": {
+    "state": "20",
+    "place": "79000",
+    "type": "place",
+    "name": "Wichita city"
+  },
+  "Q17943": {
+    "state": "48",
+    "place": "04000",
+    "type": "place",
+    "name": "Arlington city"
+  },
+  "Q49246": {
+    "state": "08",
+    "place": "04000",
+    "type": "place",
+    "name": "Aurora city"
+  },
+  "Q49255": {
+    "state": "12",
+    "place": "71000",
+    "type": "place",
+    "name": "Tampa city"
+  },
+  "Q34404": {
+    "state": "22",
+    "place": "55000",
+    "type": "place",
+    "name": "New Orleans city"
+  },
+  "Q37320": {
+    "state": "39",
+    "place": "16000",
+    "type": "place",
+    "name": "Cleveland city"
+  },
+  "Q18094": {
+    "state": "15",
+    "place": "90810",
+    "type": "cousub",
+    "name": "Honolulu CCD"
+  },
+  "Q49247": {
+    "state": "06",
+    "place": "02000",
+    "type": "place",
+    "name": "Anaheim city"
+  },
+  "Q41211": {
+    "state": "72",
+    "place": "76812",
+    "type": "cousub",
+    "name": "San Juan Antiguo barrio"
+  },
+  "Q1751219": {
+    "state": "36",
+    "place": "38000",
+    "type": "cousub",
+    "name": "Islip town"
+  },
+  "Q49233": {
+    "state": "12",
+    "place": "53000",
+    "type": "place",
+    "name": "Orlando city"
+  },
+  "Q49241": {
+    "state": "21",
+    "place": "46027",
+    "type": "place",
+    "name": "Lexington-Fayette urban county"
+  },
+  "Q49240": {
+    "state": "06",
+    "place": "75000",
+    "type": "place",
+    "name": "Stockton city"
+  },
+  "Q49242": {
+    "state": "48",
+    "place": "17000",
+    "type": "place",
+    "name": "Corpus Christi city"
+  },
+  "Q49267": {
+    "state": "32",
+    "place": "31900",
+    "type": "place",
+    "name": "Henderson city"
+  },
+  "Q49243": {
+    "state": "06",
+    "place": "62000",
+    "type": "place",
+    "name": "Riverside city"
+  },
+  "Q25395": {
+    "state": "34",
+    "place": "51000",
+    "type": "place",
+    "name": "Newark city"
+  },
+  "Q28848": {
+    "state": "27",
+    "place": "58000",
+    "type": "place",
+    "name": "St. Paul city"
+  },
+  "Q49244": {
+    "state": "06",
+    "place": "69000",
+    "type": "place",
+    "name": "Santa Ana city"
+  },
+  "Q43196": {
+    "state": "39",
+    "place": "15000",
+    "type": "place",
+    "name": "Cincinnati city"
+  },
+  "Q49219": {
+    "state": "06",
+    "place": "36770",
+    "type": "place",
+    "name": "Irvine city"
+  },
+  "Q1342": {
+    "state": "42",
+    "place": "61000",
+    "type": "place",
+    "name": "Pittsburgh city"
+  },
+  "Q38022": {
+    "state": "29",
+    "place": "65000",
+    "type": "place",
+    "name": "St. Louis city"
+  },
+  "Q129361": {
+    "state": "36",
+    "place": "56000",
+    "type": "cousub",
+    "name": "Oyster Bay town"
+  },
+  "Q49238": {
+    "state": "37",
+    "place": "28000",
+    "type": "place",
+    "name": "Greensboro city"
+  },
+  "Q26339": {
+    "state": "34",
+    "place": "36000",
+    "type": "place",
+    "name": "Jersey City city"
+  },
+  "Q39450": {
+    "state": "02",
+    "place": "03000",
+    "type": "place",
+    "name": "Anchorage municipality"
+  },
+  "Q28260": {
+    "state": "31",
+    "place": "28000",
+    "type": "place",
+    "name": "Lincoln city"
+  },
+  "Q51689": {
+    "state": "48",
+    "place": "58016",
+    "type": "place",
+    "name": "Plano city"
+  },
+  "Q49229": {
+    "state": "37",
+    "place": "19000",
+    "type": "place",
+    "name": "Durham city"
+  },
+  "Q40435": {
+    "state": "36",
+    "place": "11000",
+    "type": "place",
+    "name": "Buffalo city"
+  },
+  "Q49272": {
+    "state": "04",
+    "place": "12000",
+    "type": "place",
+    "name": "Chandler city"
+  },
+  "Q49270": {
+    "state": "06",
+    "place": "13392",
+    "type": "place",
+    "name": "Chula Vista city"
+  },
+  "Q49239": {
+    "state": "39",
+    "place": "77000",
+    "type": "place",
+    "name": "Toledo city"
+  },
+  "Q43788": {
+    "state": "55",
+    "place": "48000",
+    "type": "place",
+    "name": "Madison city"
+  },
+  "Q51684": {
+    "state": "04",
+    "place": "27400",
+    "type": "place",
+    "name": "Gilbert town"
+  },
+  "Q49225": {
+    "state": "32",
+    "place": "60600",
+    "type": "place",
+    "name": "Reno city"
+  },
+  "Q49268": {
+    "state": "18",
+    "place": "25000",
+    "type": "place",
+    "name": "Fort Wayne city"
+  },
+  "Q143782": {
+    "state": "32",
+    "place": "51800",
+    "type": "place",
+    "name": "North Las Vegas city"
+  },
+  "Q49236": {
+    "state": "12",
+    "place": "63000",
+    "type": "place",
+    "name": "St. Petersburg city"
+  },
+  "Q49273": {
+    "state": "48",
+    "place": "45000",
+    "type": "place",
+    "name": "Lubbock city"
+  },
+  "Q51690": {
+    "state": "48",
+    "place": "37000",
+    "type": "place",
+    "name": "Irving city"
+  },
+  "Q16868": {
+    "state": "48",
+    "place": "41464",
+    "type": "place",
+    "name": "Laredo city"
+  },
+  "Q49227": {
+    "state": "37",
+    "place": "75000",
+    "type": "place",
+    "name": "Winston-Salem city"
+  },
+  "Q49222": {
+    "state": "51",
+    "place": "16000",
+    "type": "place",
+    "name": "Chesapeake city"
+  },
+  "Q51682": {
+    "state": "04",
+    "place": "27820",
+    "type": "place",
+    "name": "Glendale city"
+  },
+  "Q43668": {
+    "state": "21",
+    "place": "48000",
+    "type": "place",
+    "name": "Louisville city"
+  },
+  "Q49274": {
+    "state": "48",
+    "place": "29000",
+    "type": "place",
+    "name": "Garland city"
+  },
+  "Q49221": {
+    "state": "04",
+    "place": "65000",
+    "type": "place",
+    "name": "Scottsdale city"
+  },
+  "Q49279759": {
+    "state": "51",
+    "place": "90072",
+    "type": "cousub",
+    "name": "Arlington"
+  },
+  "Q2723817": {
+    "state": "36",
+    "place": "79444",
+    "type": "place",
+    "name": "Westbury village"
+  },
+  "Q35775": {
+    "state": "16",
+    "place": "08830",
+    "type": "place",
+    "name": "Boise City city"
+  },
+  "Q49220": {
+    "state": "06",
+    "place": "26000",
+    "type": "place",
+    "name": "Fremont city"
+  },
+  "Q187805": {
+    "state": "53",
+    "place": "67000",
+    "type": "place",
+    "name": "Spokane city"
+  },
+  "Q491132": {
+    "state": "06",
+    "place": "69088",
+    "type": "place",
+    "name": "Santa Clarita city"
+  },
+  "Q28218": {
+    "state": "22",
+    "place": "05000",
+    "type": "place",
+    "name": "Baton Rouge city"
+  },
+  "Q43421": {
+    "state": "51",
+    "place": "67000",
+    "type": "place",
+    "name": "Richmond city"
+  },
+  "Q49276": {
+    "state": "12",
+    "place": "30000",
+    "type": "place",
+    "name": "Hialeah city"
+  },
+  "Q486168": {
+    "state": "06",
+    "place": "65000",
+    "type": "place",
+    "name": "San Bernardino city"
+  },
+  "Q199797": {
+    "state": "53",
+    "place": "70000",
+    "type": "place",
+    "name": "Tacoma city"
+  },
+  "Q204561": {
+    "state": "06",
+    "place": "48354",
+    "type": "place",
+    "name": "Modesto city"
+  },
+  "Q1750870": {
+    "state": "36",
+    "place": "03408",
+    "type": "place",
+    "name": "Babylon village"
+  },
+  "Q79860": {
+    "state": "01",
+    "place": "37000",
+    "type": "place",
+    "name": "Huntsville city"
+  },
+  "Q39709": {
+    "state": "19",
+    "place": "21000",
+    "type": "place",
+    "name": "Des Moines city"
+  },
+  "Q49218": {
+    "state": "36",
+    "place": "63000",
+    "type": "place",
+    "name": "Rochester city"
+  },
+  "Q494720": {
+    "state": "06",
+    "place": "49270",
+    "type": "place",
+    "name": "Moreno Valley city"
+  },
+  "Q331104": {
+    "state": "37",
+    "place": "22920",
+    "type": "place",
+    "name": "Fayetteville city"
+  },
+  "Q491128": {
+    "state": "06",
+    "place": "92770",
+    "type": "cousub",
+    "name": "San Bernardino CCD"
+  },
+  "Q239870": {
+    "state": "13",
+    "place": "19000",
+    "type": "place",
+    "name": "Columbus city"
+  },
+  "Q49179": {
+    "state": "25",
+    "place": "82000",
+    "type": "place",
+    "name": "Worcester city"
+  },
+  "Q667749": {
+    "state": "12",
+    "place": "58715",
+    "type": "place",
+    "name": "Port St. Lucie city"
+  },
+  "Q999123": {
+    "state": "36",
+    "place": "37000",
+    "type": "cousub",
+    "name": "Huntington town"
+  },
+  "Q33405": {
+    "state": "05",
+    "place": "41000",
+    "type": "place",
+    "name": "Little Rock city"
+  },
+  "Q209338": {
+    "state": "06",
+    "place": "54652",
+    "type": "place",
+    "name": "Oxnard city"
+  },
+  "Q79867": {
+    "state": "01",
+    "place": "07000",
+    "type": "place",
+    "name": "Birmingham city"
+  },
+  "Q29364": {
+    "state": "01",
+    "place": "51000",
+    "type": "place",
+    "name": "Montgomery city"
+  },
+  "Q128269": {
+    "state": "48",
+    "place": "27684",
+    "type": "place",
+    "name": "Frisco city"
+  },
+  "Q51691": {
+    "state": "48",
+    "place": "03000",
+    "type": "place",
+    "name": "Amarillo city"
+  },
+  "Q23337": {
+    "state": "49",
+    "place": "67000",
+    "type": "place",
+    "name": "Salt Lake City city"
+  },
+  "Q184587": {
+    "state": "26",
+    "place": "34000",
+    "type": "place",
+    "name": "Grand Rapids city"
+  },
+  "Q5917": {
+    "state": "06",
+    "place": "36000",
+    "type": "place",
+    "name": "Huntington Beach city"
+  },
+  "Q500481": {
+    "state": "20",
+    "place": "53775",
+    "type": "place",
+    "name": "Overland Park city"
+  },
+  "Q485716": {
+    "state": "06",
+    "place": "30000",
+    "type": "place",
+    "name": "Glendale city"
+  },
+  "Q37043": {
+    "state": "12",
+    "place": "70600",
+    "type": "place",
+    "name": "Tallahassee city"
+  },
+  "Q51694": {
+    "state": "48",
+    "place": "30464",
+    "type": "place",
+    "name": "Grand Prairie city"
+  },
+  "Q51697": {
+    "state": "48",
+    "place": "45744",
+    "type": "place",
+    "name": "McKinney city"
+  },
+  "Q462789": {
+    "state": "12",
+    "place": "10275",
+    "type": "place",
+    "name": "Cape Coral city"
+  },
+  "Q131335": {
+    "state": "46",
+    "place": "59020",
+    "type": "place",
+    "name": "Sioux Falls city"
+  },
+  "Q51686": {
+    "state": "04",
+    "place": "54050",
+    "type": "place",
+    "name": "Peoria city"
+  },
+  "Q18383": {
+    "state": "44",
+    "place": "59000",
+    "type": "place",
+    "name": "Providence city"
+  },
+  "Q234053": {
+    "state": "53",
+    "place": "74060",
+    "type": "place",
+    "name": "Vancouver city"
+  },
+  "Q185582": {
+    "state": "47",
+    "place": "40000",
+    "type": "place",
+    "name": "Knoxville city"
+  },
+  "Q163132": {
+    "state": "39",
+    "place": "01000",
+    "type": "place",
+    "name": "Akron city"
+  },
+  "Q80517": {
+    "state": "22",
+    "place": "70000",
+    "type": "place",
+    "name": "Shreveport city"
+  },
+  "Q79875": {
+    "state": "01",
+    "place": "50000",
+    "type": "place",
+    "name": "Mobile city"
+  },
+  "Q51693": {
+    "state": "48",
+    "place": "10768",
+    "type": "place",
+    "name": "Brownsville city"
+  },
+  "Q335017": {
+    "state": "51",
+    "place": "56000",
+    "type": "place",
+    "name": "Newport News city"
+  },
+  "Q165972": {
+    "state": "12",
+    "place": "24000",
+    "type": "place",
+    "name": "Fort Lauderdale city"
+  },
+  "Q186702": {
+    "state": "47",
+    "place": "14000",
+    "type": "place",
+    "name": "Chattanooga city"
+  },
+  "Q51685": {
+    "state": "04",
+    "place": "73000",
+    "type": "place",
+    "name": "Tempe city"
+  },
+  "Q22595": {
+    "state": "17",
+    "place": "03012",
+    "type": "place",
+    "name": "Aurora city"
+  },
+  "Q212991": {
+    "state": "06",
+    "place": "70098",
+    "type": "place",
+    "name": "Santa Rosa city"
+  },
+  "Q171224": {
+    "state": "41",
+    "place": "23850",
+    "type": "place",
+    "name": "Eugene city"
+  },
+  "Q671314": {
+    "state": "06",
+    "place": "22020",
+    "type": "place",
+    "name": "Elk Grove city"
+  },
+  "Q43919": {
+    "state": "41",
+    "place": "64900",
+    "type": "place",
+    "name": "Salem city"
+  },
+  "Q488134": {
+    "state": "06",
+    "place": "53896",
+    "type": "place",
+    "name": "Ontario city"
+  },
+  "Q852665": {
+    "state": "37",
+    "place": "90536",
+    "type": "cousub",
+    "name": "Cary township"
+  },
+  "Q495365": {
+    "state": "06",
+    "place": "59451",
+    "type": "place",
+    "name": "Rancho Cucamonga city"
+  },
+  "Q488924": {
+    "state": "06",
+    "place": "53322",
+    "type": "place",
+    "name": "Oceanside city"
+  },
+  "Q494711": {
+    "state": "06",
+    "place": "40130",
+    "type": "place",
+    "name": "Lancaster city"
+  },
+  "Q50054": {
+    "state": "06",
+    "place": "29000",
+    "type": "place",
+    "name": "Garden Grove city"
+  },
+  "Q370972": {
+    "state": "12",
+    "place": "55775",
+    "type": "place",
+    "name": "Pembroke Pines city"
+  },
+  "Q490732": {
+    "state": "08",
+    "place": "27425",
+    "type": "place",
+    "name": "Fort Collins city"
+  },
+  "Q488940": {
+    "state": "06",
+    "place": "55156",
+    "type": "place",
+    "name": "Palmdale city"
+  },
+  "Q135615": {
+    "state": "29",
+    "place": "70000",
+    "type": "place",
+    "name": "Springfield city"
+  },
+  "Q328941": {
+    "state": "47",
+    "place": "15160",
+    "type": "place",
+    "name": "Clarksville city"
+  },
+  "Q488125": {
+    "state": "06",
+    "place": "64224",
+    "type": "place",
+    "name": "Salinas city"
+  },
+  "Q491114": {
+    "state": "06",
+    "place": "33000",
+    "type": "place",
+    "name": "Hayward city"
+  },
+  "Q138391": {
+    "state": "34",
+    "place": "57000",
+    "type": "place",
+    "name": "Paterson city"
+  },
+  "Q88": {
+    "state": "51",
+    "place": "01000",
+    "type": "place",
+    "name": "Alexandria city"
+  },
+  "Q219656": {
+    "state": "13",
+    "place": "49008",
+    "type": "place",
+    "name": "Macon-Bibb County"
+  },
+  "Q494707": {
+    "state": "06",
+    "place": "16350",
+    "type": "place",
+    "name": "Corona city"
+  },
+  "Q486472": {
+    "state": "20",
+    "place": "36000",
+    "type": "place",
+    "name": "Kansas City city"
+  },
+  "Q462804": {
+    "state": "08",
+    "place": "43000",
+    "type": "place",
+    "name": "Lakewood city"
+  },
+  "Q49158": {
+    "state": "25",
+    "place": "67000",
+    "type": "place",
+    "name": "Springfield city"
+  },
+  "Q208459": {
+    "state": "06",
+    "place": "77000",
+    "type": "place",
+    "name": "Sunnyvale city"
+  },
+  "Q28198": {
+    "state": "28",
+    "place": "36000",
+    "type": "place",
+    "name": "Jackson city"
+  },
+  "Q128228": {
+    "state": "48",
+    "place": "39148",
+    "type": "place",
+    "name": "Killeen city"
+  },
+  "Q234453": {
+    "state": "12",
+    "place": "32000",
+    "type": "place",
+    "name": "Hollywood city"
+  },
+  "Q501766": {
+    "state": "47",
+    "place": "51560",
+    "type": "place",
+    "name": "Murfreesboro city"
+  },
+  "Q51695": {
+    "state": "48",
+    "place": "56000",
+    "type": "place",
+    "name": "Pasadena city"
+  },
+  "Q214164": {
+    "state": "53",
+    "place": "05210",
+    "type": "place",
+    "name": "Bellevue city"
+  },
+  "Q486868": {
+    "state": "06",
+    "place": "58072",
+    "type": "place",
+    "name": "Pomona city"
+  },
+  "Q372454": {
+    "state": "06",
+    "place": "22804",
+    "type": "place",
+    "name": "Escondido city"
+  },
+  "Q40345": {
+    "state": "17",
+    "place": "38570",
+    "type": "place",
+    "name": "Joliet city"
+  },
+  "Q47716": {
+    "state": "45",
+    "place": "13330",
+    "type": "place",
+    "name": "Charleston city"
+  },
+  "Q51696": {
+    "state": "48",
+    "place": "47892",
+    "type": "place",
+    "name": "Mesquite city"
+  },
+  "Q2633533": {
+    "state": "36",
+    "place": "60510",
+    "type": "cousub",
+    "name": "Ramapo town"
+  },
+  "Q49174": {
+    "state": "09",
+    "place": "08000",
+    "type": "place",
+    "name": "Bridgeport city"
+  },
+  "Q83813": {
+    "state": "13",
+    "place": "69000",
+    "type": "place",
+    "name": "Savannah city"
+  },
+  "Q491340": {
+    "state": "06",
+    "place": "62938",
+    "type": "place",
+    "name": "Roseville city"
+  },
+  "Q489197": {
+    "state": "06",
+    "place": "80000",
+    "type": "place",
+    "name": "Torrance city"
+  },
+  "Q494723": {
+    "state": "06",
+    "place": "28000",
+    "type": "place",
+    "name": "Fullerton city"
+  },
+  "Q51687": {
+    "state": "04",
+    "place": "71510",
+    "type": "place",
+    "name": "Surprise city"
+  },
+  "Q51698": {
+    "state": "48",
+    "place": "45384",
+    "type": "place",
+    "name": "McAllen city"
+  },
+  "Q579761": {
+    "state": "08",
+    "place": "77290",
+    "type": "place",
+    "name": "Thornton city"
+  },
+  "Q495373": {
+    "state": "06",
+    "place": "82954",
+    "type": "place",
+    "name": "Visalia city"
+  },
+  "Q593022": {
+    "state": "20",
+    "place": "52575",
+    "type": "place",
+    "name": "Olathe city"
+  },
+  "Q487999": {
+    "state": "12",
+    "place": "25175",
+    "type": "place",
+    "name": "Gainesville city"
+  },
+  "Q52465": {
+    "state": "49",
+    "place": "83470",
+    "type": "place",
+    "name": "West Valley City city"
+  },
+  "Q506202": {
+    "state": "51",
+    "place": "94311",
+    "type": "cousub",
+    "name": "Livingston district"
+  },
+  "Q491350": {
+    "state": "06",
+    "place": "53980",
+    "type": "place",
+    "name": "Orange city"
+  },
+  "Q128306": {
+    "state": "48",
+    "place": "19972",
+    "type": "place",
+    "name": "Denton city"
+  },
+  "Q499401": {
+    "state": "26",
+    "place": "84000",
+    "type": "place",
+    "name": "Warren city"
+  },
+  "Q485176": {
+    "state": "06",
+    "place": "56000",
+    "type": "place",
+    "name": "Pasadena city"
+  },
+  "Q128244": {
+    "state": "48",
+    "place": "76000",
+    "type": "place",
+    "name": "Waco city"
+  },
+  "Q486439": {
+    "state": "19",
+    "place": "12000",
+    "type": "place",
+    "name": "Cedar Rapids city"
+  },
+  "Q34739": {
+    "state": "39",
+    "place": "21000",
+    "type": "place",
+    "name": "Dayton city"
+  },
+  "Q864024": {
+    "state": "72",
+    "place": "64299",
+    "type": "cousub",
+    "name": "Primero barrio"
+  },
+  "Q138311": {
+    "state": "34",
+    "place": "21000",
+    "type": "place",
+    "name": "Elizabeth city"
+  },
+  "Q342043": {
+    "state": "51",
+    "place": "35000",
+    "type": "place",
+    "name": "Hampton city"
+  },
+  "Q38453": {
+    "state": "45",
+    "place": "16000",
+    "type": "place",
+    "name": "Columbia city"
+  },
+  "Q844008": {
+    "state": "53",
+    "place": "35415",
+    "type": "place",
+    "name": "Kent city"
+  },
+  "Q49169": {
+    "state": "09",
+    "place": "73000",
+    "type": "place",
+    "name": "Stamford city"
+  },
+  "Q495353": {
+    "state": "06",
+    "place": "82590",
+    "type": "place",
+    "name": "Victorville city"
+  },
+  "Q745168": {
+    "state": "12",
+    "place": "45975",
+    "type": "place",
+    "name": "Miramar city"
+  },
+  "Q505557": {
+    "state": "12",
+    "place": "14400",
+    "type": "place",
+    "name": "Coral Springs city"
+  },
+  "Q927243": {
+    "state": "26",
+    "place": "76460",
+    "type": "place",
+    "name": "Sterling Heights city"
+  },
+  "Q49145": {
+    "state": "09",
+    "place": "52000",
+    "type": "place",
+    "name": "New Haven city"
+  },
+  "Q128261": {
+    "state": "48",
+    "place": "13024",
+    "type": "place",
+    "name": "Carrollton city"
+  },
+  "Q128321": {
+    "state": "48",
+    "place": "48072",
+    "type": "place",
+    "name": "Midland city"
+  },
+  "Q470592": {
+    "state": "36",
+    "place": "02000",
+    "type": "cousub",
+    "name": "Amherst town"
+  },
+  "Q40347": {
+    "state": "40",
+    "place": "52500",
+    "type": "place",
+    "name": "Norman city"
+  },
+  "Q159260": {
+    "state": "06",
+    "place": "69084",
+    "type": "place",
+    "name": "Santa Clara city"
+  },
+  "Q203263": {
+    "state": "13",
+    "place": "03440",
+    "type": "place",
+    "name": "Athens-Clarke County unified government (balance)"
+  },
+  "Q527268": {
+    "state": "72",
+    "place": "10377",
+    "type": "cousub",
+    "name": "Caguas barrio-pueblo"
+  },
+  "Q208447": {
+    "state": "06",
+    "place": "78582",
+    "type": "place",
+    "name": "Thousand Oaks city"
+  },
+  "Q41057": {
+    "state": "20",
+    "place": "71000",
+    "type": "place",
+    "name": "Topeka city"
+  },
+  "Q323414": {
+    "state": "06",
+    "place": "72016",
+    "type": "place",
+    "name": "Simi Valley city"
+  },
+  "Q59670": {
+    "state": "29",
+    "place": "15670",
+    "type": "place",
+    "name": "Columbia city"
+  },
+  "Q208445": {
+    "state": "06",
+    "place": "81666",
+    "type": "place",
+    "name": "Vallejo city"
+  },
+  "Q34109": {
+    "state": "38",
+    "place": "25700",
+    "type": "place",
+    "name": "Fargo city"
+  },
+  "Q142811": {
+    "state": "42",
+    "place": "02000",
+    "type": "place",
+    "name": "Allentown city"
+  },
+  "Q982550": {
+    "state": "48",
+    "place": "56348",
+    "type": "place",
+    "name": "Pearland city"
+  },
+  "Q490441": {
+    "state": "06",
+    "place": "16000",
+    "type": "place",
+    "name": "Concord city"
+  },
+  "Q128295": {
+    "state": "48",
+    "place": "01000",
+    "type": "place",
+    "name": "Abilene city"
+  },
+  "Q590849": {
+    "state": "08",
+    "place": "03455",
+    "type": "place",
+    "name": "Arvada city"
+  },
+  "Q484678": {
+    "state": "06",
+    "place": "06000",
+    "type": "place",
+    "name": "Berkeley city"
+  },
+  "Q485172": {
+    "state": "26",
+    "place": "03000",
+    "type": "place",
+    "name": "Ann Arbor city"
+  },
+  "Q24603": {
+    "state": "29",
+    "place": "35000",
+    "type": "place",
+    "name": "Independence city"
+  },
+  "Q486479": {
+    "state": "27",
+    "place": "54880",
+    "type": "place",
+    "name": "Rochester city"
+  },
+  "Q128891": {
+    "state": "22",
+    "place": "40735",
+    "type": "place",
+    "name": "Lafayette city"
+  },
+  "Q33486": {
+    "state": "09",
+    "place": "37000",
+    "type": "place",
+    "name": "Hartford city"
+  },
+  "Q695511": {
+    "state": "48",
+    "place": "15976",
+    "type": "place",
+    "name": "College Station city"
+  },
+  "Q303794": {
+    "state": "06",
+    "place": "14218",
+    "type": "place",
+    "name": "Clovis city"
+  },
+  "Q323432": {
+    "state": "06",
+    "place": "23182",
+    "type": "place",
+    "name": "Fairfield city"
+  },
+  "Q816809": {
+    "state": "12",
+    "place": "54000",
+    "type": "place",
+    "name": "Palm Bay city"
+  },
+  "Q128375": {
+    "state": "48",
+    "place": "61796",
+    "type": "place",
+    "name": "Richardson city"
+  },
+  "Q128334": {
+    "state": "48",
+    "place": "63500",
+    "type": "place",
+    "name": "Round Rock city"
+  },
+  "Q49111": {
+    "state": "25",
+    "place": "11000",
+    "type": "place",
+    "name": "Cambridge city"
+  },
+  "Q1085274": {
+    "state": "16",
+    "place": "52120",
+    "type": "place",
+    "name": "Meridian city"
+  },
+  "Q163749": {
+    "state": "12",
+    "place": "76600",
+    "type": "place",
+    "name": "West Palm Beach city"
+  },
+  "Q486459": {
+    "state": "18",
+    "place": "22000",
+    "type": "place",
+    "name": "Evansville city"
+  },
+  "Q244146": {
+    "state": "12",
+    "place": "12875",
+    "type": "place",
+    "name": "Clearwater city"
+  },
+  "Q166304": {
+    "state": "30",
+    "place": "06550",
+    "type": "place",
+    "name": "Billings city"
+  },
+  "Q52466": {
+    "state": "49",
+    "place": "82950",
+    "type": "place",
+    "name": "West Jordan city"
+  },
+  "Q495377": {
+    "state": "06",
+    "place": "60620",
+    "type": "place",
+    "name": "Richmond city"
+  },
+  "Q948129": {
+    "state": "08",
+    "place": "83835",
+    "type": "place",
+    "name": "Westminster city"
+  },
+  "Q1594054": {
+    "state": "36",
+    "place": "68000",
+    "type": "cousub",
+    "name": "Smithtown town"
+  },
+  "Q48370": {
+    "state": "33",
+    "place": "45140",
+    "type": "place",
+    "name": "Manchester city"
+  },
+  "Q49162": {
+    "state": "25",
+    "place": "37000",
+    "type": "place",
+    "name": "Lowell city"
+  },
+  "Q659400": {
+    "state": "37",
+    "place": "74440",
+    "type": "place",
+    "name": "Wilmington city"
+  },
+  "Q495357": {
+    "state": "06",
+    "place": "02252",
+    "type": "place",
+    "name": "Antioch city"
+  },
+  "Q128282": {
+    "state": "48",
+    "place": "07000",
+    "type": "place",
+    "name": "Beaumont city"
+  },
+  "Q23443": {
+    "state": "49",
+    "place": "62470",
+    "type": "place",
+    "name": "Provo city"
+  },
+  "Q847538": {
+    "state": "45",
+    "place": "50875",
+    "type": "place",
+    "name": "North Charleston city"
+  },
+  "Q491099": {
+    "state": "06",
+    "place": "11194",
+    "type": "place",
+    "name": "Carlsbad city"
+  },
+  "Q128361": {
+    "state": "48",
+    "place": "53388",
+    "type": "place",
+    "name": "Odessa city"
+  },
+  "Q49178": {
+    "state": "09",
+    "place": "80000",
+    "type": "place",
+    "name": "Waterbury city"
+  },
+  "Q28515": {
+    "state": "17",
+    "place": "72000",
+    "type": "place",
+    "name": "Springfield city"
+  },
+  "Q982639": {
+    "state": "48",
+    "place": "41980",
+    "type": "place",
+    "name": "League City city"
+  },
+  "Q488946": {
+    "state": "06",
+    "place": "19766",
+    "type": "place",
+    "name": "Downey city"
+  },
+  "Q81844": {
+    "state": "41",
+    "place": "31250",
+    "type": "place",
+    "name": "Gresham city"
+  },
+  "Q631194": {
+    "state": "37",
+    "place": "31400",
+    "type": "place",
+    "name": "High Point city"
+  },
+  "Q835810": {
+    "state": "40",
+    "place": "09050",
+    "type": "place",
+    "name": "Broken Arrow city"
+  },
+  "Q28237": {
+    "state": "26",
+    "place": "46000",
+    "type": "place",
+    "name": "Lansing city"
+  },
+  "Q639452": {
+    "state": "12",
+    "place": "38250",
+    "type": "place",
+    "name": "Lakeland city"
+  },
+  "Q671458": {
+    "state": "12",
+    "place": "58050",
+    "type": "place",
+    "name": "Pompano Beach city"
+  },
+  "Q499196": {
+    "state": "06",
+    "place": "16532",
+    "type": "place",
+    "name": "Costa Mesa city"
+  },
+  "Q675576": {
+    "state": "08",
+    "place": "62000",
+    "type": "place",
+    "name": "Pueblo city"
+  },
+  "Q26495": {
+    "state": "48",
+    "place": "42508",
+    "type": "place",
+    "name": "Lewisville city"
+  },
+  "Q721455": {
+    "state": "12",
+    "place": "45060",
+    "type": "place",
+    "name": "Miami Gardens city"
+  },
+  "Q33264": {
+    "state": "35",
+    "place": "39380",
+    "type": "place",
+    "name": "Las Cruces city"
+  },
+  "Q93340": {
+    "state": "48",
+    "place": "70808",
+    "type": "place",
+    "name": "Sugar Land city"
+  },
+  "Q838787": {
+    "state": "06",
+    "place": "50076",
+    "type": "place",
+    "name": "Murrieta city"
+  },
+  "Q490434": {
+    "state": "06",
+    "place": "65042",
+    "type": "place",
+    "name": "San Buenaventura (Ventura) city"
+  },
+  "Q392599": {
+    "state": "53",
+    "place": "22640",
+    "type": "place",
+    "name": "Everett city"
+  },
+  "Q838785": {
+    "state": "06",
+    "place": "78120",
+    "type": "place",
+    "name": "Temecula city"
+  },
+  "Q430464": {
+    "state": "26",
+    "place": "21000",
+    "type": "place",
+    "name": "Dearborn city"
+  },
+  "Q643953": {
+    "state": "06",
+    "place": "69196",
+    "type": "place",
+    "name": "Santa Maria city"
+  },
+  "Q494728": {
+    "state": "06",
+    "place": "84200",
+    "type": "place",
+    "name": "West Covina city"
+  },
+  "Q595550": {
+    "state": "06",
+    "place": "22230",
+    "type": "place",
+    "name": "El Monte city"
+  },
+  "Q94274": {
+    "state": "08",
+    "place": "32155",
+    "type": "place",
+    "name": "Greeley city"
+  },
+  "Q211629": {
+    "state": "32",
+    "place": "68400",
+    "type": "place",
+    "name": "Sparks city"
+  },
+  "Q387322": {
+    "state": "08",
+    "place": "12815",
+    "type": "place",
+    "name": "Centennial city"
+  },
+  "Q192517": {
+    "state": "08",
+    "place": "07850",
+    "type": "place",
+    "name": "Boulder city"
+  },
+  "Q914884": {
+    "state": "13",
+    "place": "68516",
+    "type": "place",
+    "name": "Sandy Springs city"
+  },
+  "Q621549": {
+    "state": "06",
+    "place": "36546",
+    "type": "place",
+    "name": "Inglewood city"
+  },
+  "Q7567323": {
+    "state": "13",
+    "place": "72122",
+    "type": "place",
+    "name": "South Fulton city"
+  },
+  "Q47430": {
+    "state": "55",
+    "place": "31000",
+    "type": "place",
+    "name": "Green Bay city"
+  },
+  "Q39561": {
+    "state": "06",
+    "place": "08954",
+    "type": "place",
+    "name": "Burbank city"
+  },
+  "Q370925": {
+    "state": "06",
+    "place": "93170",
+    "type": "cousub",
+    "name": "South San Francisco CCD"
+  },
+  "Q397905": {
+    "state": "24",
+    "place": "90420",
+    "type": "cousub",
+    "name": "District 5, Clarksville"
+  },
+  "Q33147": {
+    "state": "48",
+    "place": "01924",
+    "type": "place",
+    "name": "Allen city"
+  },
+  "Q486877": {
+    "state": "18",
+    "place": "71000",
+    "type": "place",
+    "name": "South Bend city"
+  },
+  "Q494715": {
+    "state": "06",
+    "place": "52526",
+    "type": "place",
+    "name": "Norwalk city"
+  },
+  "Q128349": {
+    "state": "48",
+    "place": "79000",
+    "type": "place",
+    "name": "Wichita Falls city"
+  },
+  "Q26887": {
+    "state": "19",
+    "place": "19000",
+    "type": "place",
+    "name": "Davenport city"
+  },
+  "Q462161": {
+    "state": "55",
+    "place": "39225",
+    "type": "place",
+    "name": "Kenosha city"
+  },
+  "Q925598": {
+    "state": "48",
+    "place": "64472",
+    "type": "place",
+    "name": "San Angelo city"
+  },
+  "Q773516": {
+    "state": "06",
+    "place": "33434",
+    "type": "place",
+    "name": "Hesperia city"
+  },
+  "Q537853": {
+    "state": "18",
+    "place": "10342",
+    "type": "place",
+    "name": "Carmel city"
+  },
+  "Q79580": {
+    "state": "01",
+    "place": "77256",
+    "type": "place",
+    "name": "Tuscaloosa city"
+  },
+  "Q24861": {
+    "state": "36",
+    "place": "01000",
+    "type": "place",
+    "name": "Albany city"
+  },
+  "Q671288": {
+    "state": "41",
+    "place": "05800",
+    "type": "place",
+    "name": "Bend city"
+  },
+  "Q2284046": {
+    "state": "18",
+    "place": "23278",
+    "type": "place",
+    "name": "Fishers city"
+  },
+  "Q988283": {
+    "state": "08",
+    "place": "45970",
+    "type": "place",
+    "name": "Longmont city"
+  },
+  "Q924241": {
+    "state": "06",
+    "place": "82996",
+    "type": "place",
+    "name": "Vista city"
+  },
+  "Q52468": {
+    "state": "49",
+    "place": "57300",
+    "type": "place",
+    "name": "Orem city"
+  },
+  "Q29422": {
+    "state": "12",
+    "place": "07300",
+    "type": "place",
+    "name": "Boca Raton city"
+  },
+  "Q506375": {
+    "state": "12",
+    "place": "69700",
+    "type": "place",
+    "name": "Sunrise city"
+  },
+  "Q499203": {
+    "state": "53",
+    "place": "80010",
+    "type": "place",
+    "name": "Yakima city"
+  },
+  "Q2610369": {
+    "state": "36",
+    "place": "30290",
+    "type": "cousub",
+    "name": "Greece town"
+  },
+  "Q52470": {
+    "state": "49",
+    "place": "67440",
+    "type": "place",
+    "name": "Sandy city"
+  },
+  "Q487119": {
+    "state": "06",
+    "place": "15044",
+    "type": "place",
+    "name": "Compton city"
+  },
+  "Q494690": {
+    "state": "06",
+    "place": "11530",
+    "type": "place",
+    "name": "Carson city"
+  },
+  "Q79820": {
+    "state": "04",
+    "place": "85540",
+    "type": "place",
+    "name": "Yuma city"
+  },
+  "Q853552": {
+    "state": "26",
+    "place": "49000",
+    "type": "place",
+    "name": "Livonia city"
+  },
+  "Q52472": {
+    "state": "49",
+    "place": "65330",
+    "type": "place",
+    "name": "St. George city"
+  },
+  "Q79457": {
+    "state": "04",
+    "place": "28380",
+    "type": "place",
+    "name": "Goodyear city"
+  },
+  "Q237896": {
+    "state": "42",
+    "place": "63624",
+    "type": "place",
+    "name": "Reading city"
+  },
+  "Q493840": {
+    "state": "20",
+    "place": "38900",
+    "type": "place",
+    "name": "Lawrence city"
+  },
+  "Q506411": {
+    "state": "06",
+    "place": "68196",
+    "type": "place",
+    "name": "San Marcos city"
+  },
+  "Q234061": {
+    "state": "42",
+    "place": "24000",
+    "type": "place",
+    "name": "Erie city"
+  },
+  "Q648501": {
+    "state": "37",
+    "place": "02140",
+    "type": "place",
+    "name": "Asheville city"
+  },
+  "Q862645": {
+    "state": "40",
+    "place": "23200",
+    "type": "place",
+    "name": "Edmond city"
+  },
+  "Q49194": {
+    "state": "25",
+    "place": "23000",
+    "type": "place",
+    "name": "Fall River city"
+  },
+  "Q1898798": {
+    "state": "12",
+    "place": "17200",
+    "type": "place",
+    "name": "Deltona city"
+  },
+  "Q506428": {
+    "state": "06",
+    "place": "48256",
+    "type": "place",
+    "name": "Mission Viejo city"
+  },
+  "Q495361": {
+    "state": "06",
+    "place": "59920",
+    "type": "place",
+    "name": "Redding city"
+  },
+  "Q47164": {
+    "state": "06",
+    "place": "70000",
+    "type": "place",
+    "name": "Santa Monica city"
+  },
+  "Q953409": {
+    "state": "06",
+    "place": "80238",
+    "type": "place",
+    "name": "Tracy city"
+  },
+  "Q585176": {
+    "state": "13",
+    "place": "67284",
+    "type": "place",
+    "name": "Roswell city"
+  },
+  "Q838772": {
+    "state": "06",
+    "place": "73080",
+    "type": "place",
+    "name": "South Gate city"
+  },
+  "Q79950": {
+    "state": "01",
+    "place": "35896",
+    "type": "place",
+    "name": "Hoover city"
+  },
+  "Q936768": {
+    "state": "53",
+    "place": "35940",
+    "type": "place",
+    "name": "Kirkland city"
+  },
+  "Q984677": {
+    "state": "12",
+    "place": "57425",
+    "type": "place",
+    "name": "Plantation city"
+  },
+  "Q986528": {
+    "state": "04",
+    "place": "07940",
+    "type": "place",
+    "name": "Buckeye city"
+  },
+  "Q430267": {
+    "state": "53",
+    "place": "05280",
+    "type": "place",
+    "name": "Bellingham city"
+  },
+  "Q506395": {
+    "state": "06",
+    "place": "13210",
+    "type": "place",
+    "name": "Chino city"
+  },
+  "Q48274": {
+    "state": "33",
+    "place": "50260",
+    "type": "place",
+    "name": "Nashua city"
+  },
+  "Q959924": {
+    "state": "29",
+    "place": "54074",
+    "type": "place",
+    "name": "O'Fallon city"
+  },
+  "Q54217": {
+    "state": "09",
+    "place": "55990",
+    "type": "place",
+    "name": "Norwalk city"
+  },
+  "Q851034": {
+    "state": "06",
+    "place": "68084",
+    "type": "place",
+    "name": "San Leandro city"
+  },
+  "Q838759": {
+    "state": "06",
+    "place": "84550",
+    "type": "place",
+    "name": "Westminster city"
+  },
+  "Q25330": {
+    "state": "34",
+    "place": "74000",
+    "type": "place",
+    "name": "Trenton city"
+  },
+  "Q1010216": {
+    "state": "45",
+    "place": "48535",
+    "type": "place",
+    "name": "Mount Pleasant town"
+  },
+  "Q574612": {
+    "state": "48",
+    "place": "50820",
+    "type": "place",
+    "name": "New Braunfels city"
+  },
+  "Q503336": {
+    "state": "40",
+    "place": "41850",
+    "type": "place",
+    "name": "Lawton city"
+  },
+  "Q490737": {
+    "state": "27",
+    "place": "06616",
+    "type": "place",
+    "name": "Bloomington city"
+  },
+  "Q260282": {
+    "state": "48",
+    "place": "16432",
+    "type": "place",
+    "name": "Conroe city"
+  },
+  "Q1068849": {
+    "state": "36",
+    "place": "15011",
+    "type": "cousub",
+    "name": "Cheektowaga town"
+  },
+  "Q948188": {
+    "state": "06",
+    "place": "33182",
+    "type": "place",
+    "name": "Hemet city"
+  },
+  "Q79449": {
+    "state": "04",
+    "place": "04720",
+    "type": "place",
+    "name": "Avondale city"
+  },
+  "Q578289": {
+    "state": "17",
+    "place": "79293",
+    "type": "place",
+    "name": "Waukegan city"
+  },
+  "Q610463": {
+    "state": "12",
+    "place": "54200",
+    "type": "place",
+    "name": "Palm Coast city"
+  },
+  "Q49163": {
+    "state": "25",
+    "place": "34550",
+    "type": "place",
+    "name": "Lawrence city"
+  },
+  "Q79535": {
+    "state": "05",
+    "place": "24550",
+    "type": "place",
+    "name": "Fort Smith city"
+  },
+  "Q838789": {
+    "state": "06",
+    "place": "36448",
+    "type": "place",
+    "name": "Indio city"
+  },
+  "Q49196": {
+    "state": "25",
+    "place": "45560",
+    "type": "place",
+    "name": "Newton city"
+  },
+  "Q159288": {
+    "state": "06",
+    "place": "69070",
+    "type": "place",
+    "name": "Santa Barbara city"
+  },
+  "Q577964": {
+    "state": "17",
+    "place": "12385",
+    "type": "place",
+    "name": "Champaign city"
+  },
+  "Q688596": {
+    "state": "06",
+    "place": "32548",
+    "type": "place",
+    "name": "Hawthorne city"
+  },
+  "Q138901": {
+    "state": "06",
+    "place": "41992",
+    "type": "place",
+    "name": "Livermore city"
+  },
+  "Q584849": {
+    "state": "12",
+    "place": "16725",
+    "type": "place",
+    "name": "Deerfield Beach city"
+  },
+  "Q2430250": {
+    "state": "36",
+    "place": "15968",
+    "type": "cousub",
+    "name": "Clarkstown town"
+  },
+  "Q485708": {
+    "state": "27",
+    "place": "17000",
+    "type": "place",
+    "name": "Duluth city"
+  },
+  "Q49198": {
+    "state": "09",
+    "place": "18430",
+    "type": "place",
+    "name": "Danbury city"
+  },
+  "Q864128": {
+    "state": "27",
+    "place": "07966",
+    "type": "place",
+    "name": "Brooklyn Park city"
+  },
+  "Q506451": {
+    "state": "12",
+    "place": "24125",
+    "type": "place",
+    "name": "Fort Myers city"
+  },
+  "Q499189": {
+    "state": "06",
+    "place": "46898",
+    "type": "place",
+    "name": "Merced city"
+  },
+  "Q70735459": {
+    "state": "22",
+    "place": "67303",
+    "type": "place",
+    "name": "St. George city"
+  },
+  "Q752671": {
+    "state": "06",
+    "place": "39496",
+    "type": "place",
+    "name": "Lake Forest city"
+  },
+  "Q836663": {
+    "state": "41",
+    "place": "47000",
+    "type": "place",
+    "name": "Medford city"
+  },
+  "Q489255": {
+    "state": "19",
+    "place": "73335",
+    "type": "place",
+    "name": "Sioux City city"
+  },
+  "Q239877": {
+    "state": "48",
+    "place": "48768",
+    "type": "place",
+    "name": "Mission city"
+  },
+  "Q3723193": {
+    "state": "36",
+    "place": "17332",
+    "type": "place",
+    "name": "Colonie village"
+  },
+  "Q969300": {
+    "state": "26",
+    "place": "86000",
+    "type": "place",
+    "name": "Westland city"
+  },
+  "Q578221": {
+    "state": "17",
+    "place": "14351",
+    "type": "place",
+    "name": "Cicero town"
+  },
+  "Q268873": {
+    "state": "06",
+    "place": "51182",
+    "type": "place",
+    "name": "Newport Beach city"
+  },
+  "Q864106": {
+    "state": "22",
+    "place": "41155",
+    "type": "place",
+    "name": "Lake Charles city"
+  },
+  "Q949779": {
+    "state": "12",
+    "place": "43975",
+    "type": "place",
+    "name": "Melbourne city"
+  },
+  "Q605472": {
+    "state": "06",
+    "place": "68378",
+    "type": "place",
+    "name": "San Ramon city"
+  },
+  "Q505549": {
+    "state": "06",
+    "place": "60102",
+    "type": "place",
+    "name": "Redwood City city"
+  },
+  "Q79724": {
+    "state": "05",
+    "place": "66080",
+    "type": "place",
+    "name": "Springdale city"
+  },
+  "Q838762": {
+    "state": "06",
+    "place": "08786",
+    "type": "place",
+    "name": "Buena Park city"
+  },
+  "Q989919": {
+    "state": "26",
+    "place": "27440",
+    "type": "place",
+    "name": "Farmington Hills city"
+  },
+  "Q695556": {
+    "state": "48",
+    "place": "10912",
+    "type": "place",
+    "name": "Bryan city"
+  },
+  "Q844033": {
+    "state": "53",
+    "place": "35275",
+    "type": "place",
+    "name": "Kennewick city"
+  },
+  "Q812646": {
+    "state": "48",
+    "place": "06128",
+    "type": "place",
+    "name": "Baytown city"
+  },
+  "Q986109": {
+    "state": "06",
+    "place": "45484",
+    "type": "place",
+    "name": "Manteca city"
+  },
+  "Q984264": {
+    "state": "47",
+    "place": "27740",
+    "type": "place",
+    "name": "Franklin city"
+  },
+  "Q49197": {
+    "state": "44",
+    "place": "19180",
+    "type": "place",
+    "name": "Cranston city"
+  },
+  "Q201516": {
+    "state": "12",
+    "place": "45025",
+    "type": "place",
+    "name": "Miami Beach city"
+  },
+  "Q752681": {
+    "state": "06",
+    "place": "00884",
+    "type": "place",
+    "name": "Alhambra city"
+  },
+  "Q49195": {
+    "state": "44",
+    "place": "74300",
+    "type": "place",
+    "name": "Warwick city"
+  },
+  "Q838757": {
+    "state": "06",
+    "place": "39892",
+    "type": "place",
+    "name": "Lakewood city"
+  },
+  "Q932577": {
+    "state": "12",
+    "place": "39425",
+    "type": "place",
+    "name": "Largo city"
+  },
+  "Q1191460": {
+    "state": "13",
+    "place": "42425",
+    "type": "place",
+    "name": "Johns Creek city"
+  },
+  "Q486860": {
+    "state": "06",
+    "place": "77000",
+    "type": "place",
+    "name": "Sunnyvale city"
+  },
+  "Q427075": {
+    "state": "48",
+    "place": "72176",
+    "type": "place",
+    "name": "Temple city"
+  },
+  "Q52474": {
+    "state": "49",
+    "place": "43660",
+    "type": "place",
+    "name": "Layton city"
+  },
+  "Q852645": {
+    "state": "48",
+    "place": "43888",
+    "type": "place",
+    "name": "Longview city"
+  },
+  "Q490584": {
+    "state": "26",
+    "place": "29000",
+    "type": "place",
+    "name": "Flint city"
+  },
+  "Q862711": {
+    "state": "39",
+    "place": "61000",
+    "type": "place",
+    "name": "Parma city"
+  },
+  "Q49199": {
+    "state": "25",
+    "place": "62535",
+    "type": "place",
+    "name": "Somerville city"
+  },
+  "Q936753": {
+    "state": "27",
+    "place": "51730",
+    "type": "place",
+    "name": "Plymouth city"
+  },
+  "Q280557": {
+    "state": "12",
+    "place": "32275",
+    "type": "place",
+    "name": "Homestead city"
+  },
+  "Q984155": {
+    "state": "06",
+    "place": "24638",
+    "type": "place",
+    "name": "Folsom city"
+  },
+  "Q943775": {
+    "state": "37",
+    "place": "25580",
+    "type": "place",
+    "name": "Gastonia city"
+  },
+  "Q896048": {
+    "state": "12",
+    "place": "07875",
+    "type": "place",
+    "name": "Boynton Beach city"
+  },
+  "Q2003323": {
+    "state": "13",
+    "place": "80508",
+    "type": "place",
+    "name": "Warner Robins city"
+  },
+  "Q917513": {
+    "state": "06",
+    "place": "80854",
+    "type": "place",
+    "name": "Tustin city"
+  },
+  "Q927510": {
+    "state": "06",
+    "place": "47766",
+    "type": "place",
+    "name": "Milpitas city"
+  },
+  "Q747444": {
+    "state": "06",
+    "place": "57792",
+    "type": "place",
+    "name": "Pleasanton city"
+  },
+  "Q744948": {
+    "state": "36",
+    "place": "50617",
+    "type": "place",
+    "name": "New Rochelle city"
+  },
+  "Q982364": {
+    "state": "48",
+    "place": "57200",
+    "type": "place",
+    "name": "Pharr city"
+  },
+  "Q986928": {
+    "state": "06",
+    "place": "59444",
+    "type": "place",
+    "name": "Rancho Cordova city"
+  },
+  "Q60537": {
+    "state": "06",
+    "place": "50258",
+    "type": "place",
+    "name": "Napa city"
+  },
+  "Q583894": {
+    "state": "12",
+    "place": "36950",
+    "type": "place",
+    "name": "Kissimmee city"
+  },
+  "Q815979": {
+    "state": "06",
+    "place": "04982",
+    "type": "place",
+    "name": "Bellflower city"
+  },
+  "Q490385": {
+    "state": "18",
+    "place": "05860",
+    "type": "place",
+    "name": "Bloomington city"
+  },
+  "Q747466": {
+    "state": "06",
+    "place": "81344",
+    "type": "place",
+    "name": "Upland city"
+  },
+  "Q983609": {
+    "state": "06",
+    "place": "56700",
+    "type": "place",
+    "name": "Perris city"
+  },
+  "Q577802": {
+    "state": "17",
+    "place": "06613",
+    "type": "place",
+    "name": "Bloomington city"
+  },
+  "Q61455": {
+    "state": "05",
+    "place": "35710",
+    "type": "place",
+    "name": "Jonesboro city"
+  },
+  "Q852721": {
+    "state": "06",
+    "place": "13214",
+    "type": "place",
+    "name": "Chino Hills city"
+  },
+  "Q490744": {
+    "state": "06",
+    "place": "00562",
+    "type": "place",
+    "name": "Alameda city"
+  },
+  "Q472675": {
+    "state": "24",
+    "place": "30325",
+    "type": "place",
+    "name": "Frederick city"
+  },
+  "Q462799": {
+    "state": "17",
+    "place": "24582",
+    "type": "place",
+    "name": "Evanston city"
+  },
+  "Q856860": {
+    "state": "18",
+    "place": "31000",
+    "type": "place",
+    "name": "Hammond city"
+  },
+  "Q40340": {
+    "state": "55",
+    "place": "66000",
+    "type": "place",
+    "name": "Racine city"
+  },
+  "Q980040": {
+    "state": "48",
+    "place": "13552",
+    "type": "place",
+    "name": "Cedar Park city"
+  },
+  "Q52467": {
+    "state": "49",
+    "place": "70850",
+    "type": "place",
+    "name": "South Jordan city"
+  },
+  "Q844016": {
+    "state": "53",
+    "place": "53545",
+    "type": "place",
+    "name": "Pasco city"
+  },
+  "Q79842": {
+    "state": "04",
+    "place": "23620",
+    "type": "place",
+    "name": "Flagstaff city"
+  },
+  "Q988159": {
+    "state": "26",
+    "place": "74900",
+    "type": "place",
+    "name": "Southfield city"
+  },
+  "Q1022953": {
+    "state": "26",
+    "place": "88940",
+    "type": "place",
+    "name": "Wyoming city"
+  },
+  "Q281248": {
+    "state": "06",
+    "place": "57456",
+    "type": "place",
+    "name": "Pittsburg city"
+  },
+  "Q167155": {
+    "state": "26",
+    "place": "42160",
+    "type": "place",
+    "name": "Kalamazoo city"
+  },
+  "Q9033543": {
+    "state": "06",
+    "place": "66000",
+    "type": "place",
+    "name": "San Diego city"
+  },
+  "Q47265": {
+    "state": "06",
+    "place": "55282",
+    "type": "place",
+    "name": "Palo Alto city"
+  },
+  "Q39042": {
+    "state": "56",
+    "place": "13900",
+    "type": "place",
+    "name": "Cheyenne city"
+  },
+  "Q49142": {
+    "state": "25",
+    "place": "09175",
+    "type": "cousub",
+    "name": "Brookline town"
+  },
+  "Q755149": {
+    "state": "09",
+    "place": "08420",
+    "type": "place",
+    "name": "Bristol city"
+  },
+  "Q189471": {
+    "state": "06",
+    "place": "17610",
+    "type": "place",
+    "name": "Cupertino city"
+  },
+  "Q385825": {
+    "state": "08",
+    "place": "57630",
+    "type": "place",
+    "name": "Parker town"
+  },
+  "Q154462": {
+    "state": "13",
+    "place": "10944",
+    "type": "place",
+    "name": "Brookhaven city"
+  },
+  "Q397826": {
+    "state": "72",
+    "place": "11237",
+    "type": "cousub",
+    "name": "Camaceyes barrio"
+  },
+  "Q3154615": {
+    "state": "17",
+    "place": "14000",
+    "type": "place",
+    "name": "Chicago city"
+  },
+  "Q762743": {
+    "state": "04",
+    "place": "44270",
+    "type": "place",
+    "name": "Marana town"
+  },
+  "Q959443": {
+    "state": "29",
+    "place": "13600",
+    "type": "place",
+    "name": "Chesterfield city"
+  },
+  "Q986689": {
+    "state": "39",
+    "place": "54040",
+    "type": "place",
+    "name": "Newark city"
+  },
+  "Q984834": {
+    "state": "55",
+    "place": "72975",
+    "type": "place",
+    "name": "Sheboygan city"
+  },
+  "Q813867": {
+    "state": "48",
+    "place": "07132",
+    "type": "place",
+    "name": "Bedford city"
+  },
+  "Q966492": {
+    "state": "06",
+    "place": "41474",
+    "type": "place",
+    "name": "Lincoln city"
+  },
+  "Q983758": {
+    "state": "39",
+    "place": "25704",
+    "type": "place",
+    "name": "Euclid city"
+  },
+  "Q4355009": {
+    "state": "36",
+    "place": "59223",
+    "type": "place",
+    "name": "Port Chester village"
+  },
+  "Q575316": {
+    "state": "06",
+    "place": "12552",
+    "type": "place",
+    "name": "Cerritos city"
+  },
+  "Q490720": {
+    "state": "28",
+    "place": "06220",
+    "type": "place",
+    "name": "Biloxi city"
+  },
+  "Q977206": {
+    "state": "18",
+    "place": "38358",
+    "type": "place",
+    "name": "Jeffersonville city"
+  },
+  "Q932601": {
+    "state": "34",
+    "place": "79800",
+    "type": "cousub",
+    "name": "West Orange township"
+  },
+  "Q49192": {
+    "state": "09",
+    "place": "47290",
+    "type": "place",
+    "name": "Middletown city"
+  },
+  "Q1986600": {
+    "state": "12",
+    "place": "15968",
+    "type": "place",
+    "name": "Cutler Bay town"
+  }
+}
