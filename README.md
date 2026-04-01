@@ -42,10 +42,16 @@ An interactive world map that layers city demographics, corporate headquarters, 
 - ~58 currencies editable inline — change any value and economic dot sizes recalculate instantly
 - Rates persist in localStorage across sessions
 
-### Economy tab (US cities)
+### Census tab (US cities)
 - ACS 2023: median income with histogram bars, poverty, unemployment, rent burden, home value, Gini, education, transit use, median age, homeownership
 - CBP 2022: establishment count, payroll, sector mix bars, population sparkline, self-employment rate
 - Compact 2-column layout, no scrolling required
+
+### Eurostat tab (European cities)
+- Unemployment rate, activity rate, total companies from Eurostat Urban Audit (urb_clma, urb_cecfi)
+- Median income (EUR), at-risk-of-poverty rate, homeownership, average rent/m² (urb_clivcon)
+- 512 European cities across 37 countries; latest available year shown per city
+- Tab label switches dynamically between "Census" and "Eurostat" depending on city
 
 ### Stats distribution panel
 - Click **any data value** in the Economy tab, Info tab chips, or World Bank chips → panel slides in to the left of the sidebar
@@ -92,6 +98,9 @@ npm run fetch-country-data
 
 # BEA trade data  (~2 minutes, pre-fetches all countries)
 node scripts/fetch-bea-trade.js
+
+# Eurostat Urban Audit  (~15 seconds, downloads 3 datasets)
+node scripts/fetch-eurostat.js
 ```
 
 Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to restart from scratch.
@@ -110,6 +119,7 @@ Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to 
 | US Census (ACS) | Census Bureau API | 2023 5-year estimates, 470 cities |
 | US Census (CBP) | Census Bureau API | 2022 County Business Patterns, 473 cities |
 | US trade flows | Bureau of Economic Analysis (BEA ITA) | Annual 1999–2025, pre-fetched JSON |
+| European cities | Eurostat Urban Audit | 512 cities, labour market + living conditions |
 | FX rates | Frankfurter / ECB | Any historical date, cached in localStorage |
 
 ---
@@ -136,6 +146,7 @@ public/
   census-cities.json      # ACS 2023, 470 US cities
   census-business.json    # CBP 2022, 473 US cities
   bea-trade.json          # BEA ITA trade data, 57 countries pre-fetched
+  eurostat-cities.json    # Eurostat Urban Audit, 512 European cities
 
 scripts/
   fetch-cities.js         # Wikidata SPARQL → cities-full.json
@@ -146,6 +157,7 @@ scripts/
   fetch-bea-trade.js      # BEA ITA API     → bea-trade.json
   fetch-census-data.js    # Census ACS API  → census-cities.json
   fetch-census-business.js# Census CBP API  → census-business.json
+  fetch-eurostat.js       # Eurostat Urban Audit → eurostat-cities.json
 ```
 
 ---

@@ -1384,12 +1384,18 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     </div>` : '';
 
   // ── Tab data availability ──
-  const censusData   = city.iso === 'US' ? getCensusData(city) : null;
-  const businessData = city.iso === 'US' ? (censusBusiness[city.qid] || null) : null;
-  const hasEconomy   = !!(censusData || businessData);
+  const censusData    = city.iso === 'US' ? getCensusData(city) : null;
+  const businessData  = city.iso === 'US' ? (censusBusiness[city.qid] || null) : null;
+  const eurostatData  = eurostatCities[city.qid] || null;
+  const hasCensus     = !!(censusData || businessData);
+  const hasEurostat   = !!eurostatData;
+  const hasEconomy    = hasCensus || hasEurostat;
 
   const econBtnEl = document.getElementById('wiki-tab-economy-btn');
-  if (econBtnEl) econBtnEl.style.display = hasEconomy ? '' : 'none';
+  if (econBtnEl) {
+    econBtnEl.style.display = hasEconomy ? '' : 'none';
+    econBtnEl.textContent   = hasCensus ? 'Census' : 'Eurostat';
+  }
 
   // Fall back to Info if active tab is invalid or has no data for this city
   if (!VALID_SIDEBAR_TABS.has(_sidebarTab) || (_sidebarTab === 'economy' && !hasEconomy)) _sidebarTab = 'info';
@@ -1408,7 +1414,9 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     ${infoChips}
     ${(govSec || linksSec || wbSec) ? `<table class="wiki-info-table">${govSec}${linksSec}${wbSec}</table>` : ''}
   `;
-  if (economyEl)  economyEl.innerHTML  = hasEconomy ? buildEconomyHtml(censusData, businessData, city.qid) : '';
+  if (economyEl)  economyEl.innerHTML  = hasCensus   ? buildEconomyHtml(censusData, businessData, city.qid)
+                                       : hasEurostat ? buildEurostatHtml(eurostatData, city.qid)
+                                       : '';
   if (overviewEl) overviewEl.innerHTML = `${climateHtml}${extractHtml}`;
 
   switchWikiTab(_sidebarTab);
@@ -1449,6 +1457,7 @@ function toggleExtract() {
 let censusCities   = {};   // QID → ACS indicators (from census-cities.json)
 let censusBusiness = {};   // QID → business/pop data (from census-business.json)
 let beaTradeData   = {};   // ISO2 → [{year,expGds,impGds,expSvc,impSvc}] (from bea-trade.json)
+let eurostatCities = {};   // QID → Eurostat Urban Audit indicators (from eurostat-cities.json)
 let censusColorMetric = null;  // null = off, or key like 'medianIncome'
 
 // Color scale config per metric: { lo, hi, stops: [[r,g,b],…] }
@@ -1720,6 +1729,42 @@ function buildEconomyHtml(acs, biz, qid) {
   return html;
 }
 
+// ── Eurostat Urban Audit tab ──────────────────────────────────────────────────
+function buildEurostatHtml(es, qid) {
+  const fmtPct = v => v != null ? v.toFixed(1) + '%' : '—';
+  const fmtEur = v => v != null ? '€' + fmtNum(Math.round(v)) : '—';
+  const fmtN   = v => v != null ? fmtNum(Math.round(v)) : '—';
+
+  function statCell(label, val, cls = '') {
+    return `<div class="census-stat"><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
+  }
+
+  const yr = es.year ? ` · ${es.year}` : '';
+  const unempCls = es.unemploymentPct > 12 ? 'census-red' : es.unemploymentPct > 7 ? 'census-amber' : '';
+  const povCls   = es.povertyPct > 25 ? 'census-red' : es.povertyPct > 15 ? 'census-amber' : '';
+
+  let html = `<div class="census-wrap">
+    <div class="census-head">Urban Audit · Eurostat${yr}</div>
+    <div class="census-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:6px">
+      ${statCell('Unemployment', fmtPct(es.unemploymentPct), unempCls)}
+      ${statCell('Activity Rate', fmtPct(es.activityRate))}
+      ${statCell('Companies', fmtN(es.totalCompanies))}
+    </div>`;
+
+  if (es.medianIncome != null || es.povertyPct != null || es.homeownershipPct != null || es.rentPerSqm != null) {
+    html += `<div class="census-section-title" style="margin-top:6px">Living Conditions</div>
+    <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
+      ${statCell('Median Income', fmtEur(es.medianIncome), 'census-gold')}
+      ${statCell('At-Risk Poverty', fmtPct(es.povertyPct), povCls)}
+      ${statCell('Homeownership', fmtPct(es.homeownershipPct))}
+      ${statCell('Rent / m²', es.rentPerSqm != null ? '€' + es.rentPerSqm.toFixed(0) : '—')}
+    </div>`;
+  }
+
+  html += `<div class="census-source" style="margin-top:8px">Eurostat Urban Audit · urb_clma · urb_clivcon · urb_cecfi</div></div>`;
+  return html;
+}
+
 async function openWikiSidebar(qid, cityName) {
   const sidebar = document.getElementById('wiki-sidebar');
   const body = document.getElementById('wiki-sidebar-body');
@@ -1964,7 +2009,7 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
@@ -1972,6 +2017,7 @@ async function init() {
       fetch('/census-cities.json').catch(() => null),
       fetch('/census-business.json').catch(() => null),
       fetch('/bea-trade.json').catch(() => null),
+      fetch('/eurostat-cities.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -2035,6 +2081,15 @@ async function init() {
         console.log(`[init] BEA trade data loaded (${Object.keys(beaTradeData).length} countries)`);
       } catch {
         console.warn('[init] bea-trade.json is malformed');
+      }
+    }
+
+    if (eurostatRes && eurostatRes.ok) {
+      try {
+        eurostatCities = await eurostatRes.json();
+        console.log(`[init] Eurostat Urban Audit data loaded (${Object.keys(eurostatCities).length} cities)`);
+      } catch {
+        console.warn('[init] eurostat-cities.json is malformed');
       }
     }
 
