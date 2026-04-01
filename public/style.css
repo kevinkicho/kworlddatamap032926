@@ -116,31 +116,31 @@ header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
   display: block;
 }
 /* City title block */
-.wiki-city-header { padding: 16px 16px 0; }
-.wiki-city-name { font-size: 1.4rem; font-weight: 700; color: #e6edf3; line-height: 1.2; }
-.wiki-city-desc { font-size: 0.82rem; color: #8b949e; margin-top: 4px; font-style: italic; }
+.wiki-city-header { padding: 10px 14px 0; }
+.wiki-city-name { font-size: 1.25rem; font-weight: 700; color: #e6edf3; line-height: 1.2; }
+.wiki-city-desc { font-size: 0.78rem; color: #8b949e; margin-top: 2px; font-style: italic; }
 
 /* Data table */
 .wiki-info-table {
-  width: 100%; border-collapse: collapse; margin: 14px 0 0;
-  font-size: 0.82rem;
+  width: 100%; border-collapse: collapse; margin: 4px 0 0;
+  font-size: 0.8rem;
 }
 .wiki-info-table tr { border-top: 1px solid #21262d; }
 .wiki-info-table tr:first-child { border-top: none; }
 .wiki-info-label {
-  color: #8b949e; padding: 7px 14px 7px 16px;
+  color: #8b949e; padding: 5px 10px 5px 14px;
   width: 38%; vertical-align: top; white-space: nowrap;
   font-weight: 500;
 }
 .wiki-info-val {
-  color: #c9d1d9; padding: 7px 16px 7px 0; vertical-align: top;
+  color: #c9d1d9; padding: 5px 14px 5px 0; vertical-align: top;
 }
 .wiki-info-val a { color: #58a6ff; text-decoration: none; word-break: break-all; }
 .wiki-info-val a:hover { text-decoration: underline; }
 .wiki-info-section-head {
-  background: #0d1117; color: #6e7681; font-size: 0.72rem;
+  background: #0d1117; color: #6e7681; font-size: 0.7rem;
   font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-  padding: 8px 16px; border-top: 1px solid #30363d;
+  padding: 6px 14px; border-top: 1px solid #30363d;
 }
 
 /* Image carousel */
@@ -243,8 +243,18 @@ header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
 }
 .census-chart-wrap { margin-bottom: 10px; }
 .census-stats-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px;
-  margin-top: 10px; padding-top: 10px; border-top: 1px solid #21262d;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5px 8px;
+  margin-top: 8px; padding-top: 8px; border-top: 1px solid #21262d;
+}
+/* Two-column layout for merged Economy tab */
+.econ-two-col {
+  display: flex; gap: 10px; align-items: flex-start; margin-top: 6px;
+}
+.econ-col-left  { flex: 0 0 auto; min-width: 0; }
+.econ-col-right { flex: 1; min-width: 0; }
+.econ-right-grid {
+  grid-template-columns: 1fr 1fr !important;
+  margin-top: 0 !important; padding-top: 0 !important; border-top: none !important; gap: 4px 6px !important;
 }
 .census-stat { display: flex; flex-direction: column; gap: 1px; }
 .census-stat-label { font-size: 0.67rem; color: #6e7681; text-transform: uppercase; letter-spacing: 0.04em; }
@@ -417,6 +427,37 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 }
 #census-color-ramp { border-radius: 3px; }
 .census-leg-lo, .census-leg-hi { font-size: 0.72rem; color: #8b949e; }
+
+/* ── Info tab compact chip grid ── */
+.info-chips {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px 6px;
+  padding: 8px 14px 6px;
+}
+.info-chip {
+  background: #161b22; border: 1px solid #21262d; border-radius: 7px;
+  padding: 5px 7px; min-width: 0;
+}
+.info-chip-wide { grid-column: span 2; }
+.info-chip-lbl { font-size: 0.62rem; color: #6e7681; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1px; }
+.info-chip-val { font-size: 0.78rem; font-weight: 500; color: #c9d1d9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.info-chip-dim { font-size: 0.65rem; color: #6e7681; font-weight: 400; }
+
+/* ── World Bank compact chip grid ── */
+.wb-chips-row { padding: 2px 0 6px; }
+.wb-chips {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;
+}
+.wb-chip {
+  background: #0d1117; border: 1px solid #21262d; border-radius: 6px;
+  padding: 5px 7px; display: flex; flex-direction: column; gap: 2px;
+}
+.wb-chip-clickable { cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+.wb-chip-clickable:hover { border-color: #58a6ff; background: #161b22; }
+.wb-chip-clickable.stats-active { border-color: #f0a500; background: #1c1a0e; }
+.wb-chip-full { grid-column: span 4; flex-direction: row; align-items: center; gap: 8px; }
+.wb-chip-lbl { font-size: 0.62rem; color: #6e7681; text-transform: uppercase; letter-spacing: 0.04em; }
+.wb-chip-val { font-size: 0.78rem; font-weight: 600; color: #c9d1d9; font-variant-numeric: tabular-nums; }
+.wb-chip-yr  { font-size: 0.62rem; color: #484f58; margin-left: 2px; }
 
 /* ── Census section title (secondary heading within census-wrap) ── */
 .census-section-title {
@@ -957,6 +998,104 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 #corp-panel.open { right: 0; }
 /* Shift wiki-sidebar left when both wiki and corp panels are open */
 #wiki-sidebar.open.corp-open { right: 460px; }
+
+/* ── Stats distribution panel ── */
+#stats-panel {
+  position: fixed; top: 60px; right: -310px; width: 290px;
+  max-height: calc(100vh - 70px); background: #161b22;
+  border: 1px solid #30363d; border-radius: 10px 0 0 10px;
+  z-index: 999; display: flex; flex-direction: column;
+  transition: right 0.3s cubic-bezier(.4,0,.2,1);
+  box-shadow: -6px 0 24px rgba(0,0,0,0.5); overflow: hidden;
+}
+#stats-panel.open { right: 420px; }
+#stats-panel-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px; border-bottom: 1px solid #30363d;
+  background: #0d1117; flex-shrink: 0;
+}
+#stats-panel-titles { flex: 1; min-width: 0; }
+#stats-panel-title {
+  font-size: 0.82rem; font-weight: 700; color: #e6edf3;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#stats-panel-city {
+  font-size: 0.72rem; color: #f0a500; margin-top: 1px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#stats-panel-close {
+  background: none; border: none; color: #8b949e;
+  font-size: 1.3rem; cursor: pointer; padding: 0; line-height: 1; flex-shrink: 0;
+}
+#stats-panel-close:hover { color: #e6edf3; }
+#stats-panel-body {
+  flex: 1; overflow-y: auto; overflow-x: hidden; padding: 12px 12px 14px;
+}
+.stats-hist-wrap { margin-bottom: 10px; }
+.stats-ranks {
+  display: flex; gap: 8px; margin-bottom: 8px;
+}
+.stats-rank-badge {
+  flex: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 8px;
+  padding: 6px 8px; display: flex; flex-direction: column; gap: 2px; text-align: center;
+}
+.stats-rank-n {
+  font-size: 0.88rem; font-weight: 700; color: #f0a500;
+  font-variant-numeric: tabular-nums;
+}
+.stats-rank-lbl { font-size: 0.67rem; color: #6e7681; text-transform: uppercase; letter-spacing: 0.04em; }
+.stats-note { font-size: 0.7rem; color: #6e7681; margin-bottom: 8px; }
+.stats-rank-list {
+  border-top: 1px solid #21262d; padding-top: 6px; margin-top: 2px;
+  display: flex; flex-direction: column; gap: 2px;
+  max-height: 240px; overflow-y: auto;
+  scroll-behavior: smooth;
+}
+.stats-rank-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 5px; border-radius: 5px; font-size: 0.75rem;
+  cursor: pointer; flex-shrink: 0;
+}
+.stats-rank-row:hover { background: #21262d; }
+.stats-rank-current {
+  background: #1c2a1c; border: 1px solid #2ea043;
+  font-weight: 600;
+}
+.stats-rank-num { color: #6e7681; min-width: 30px; font-size: 0.7rem; font-variant-numeric: tabular-nums; }
+.stats-rank-name { flex: 1; color: #c9d1d9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stats-rank-val { color: #8b949e; font-size: 0.72rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stats-rank-current .stats-rank-name { color: #3fb950; }
+.stats-rank-current .stats-rank-val  { color: #3fb950; }
+.stats-rank-more {
+  display: block; width: 100%; text-align: center; padding: 5px 4px;
+  font-size: 0.71rem; color: #58a6ff; cursor: pointer; border-radius: 5px;
+  background: none; border: none; font-family: inherit; flex-shrink: 0;
+  transition: background 0.15s;
+}
+.stats-rank-more:hover { background: #21262d; text-decoration: underline; }
+.stats-source { font-size: 0.65rem; color: #484f58; margin-top: 8px; }
+/* Clickable stat cells in Economy tab */
+.census-stat-clickable {
+  cursor: pointer; border-radius: 5px; padding: 3px 4px; margin: -3px -4px;
+  transition: background 0.15s;
+}
+.census-stat-clickable:hover { background: #21262d; }
+.census-stat-clickable.stats-active { background: #1c2a1c; outline: 1px solid #2ea043; }
+/* Clickable info chips in Info tab */
+.info-chip-clickable { cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.info-chip-clickable:hover { background: #1c2233; border-color: #388bfd; }
+.info-chip-clickable.stats-active { background: #1c2a1c; border-color: #2ea043; }
+/* Scope toggle row in stats panel */
+#stats-scope-row {
+  display: flex; gap: 6px; margin-bottom: 10px;
+}
+.stats-scope-btn {
+  flex: 1; padding: 5px 8px; border-radius: 6px; border: 1px solid #30363d;
+  background: #0d1117; color: #8b949e; font-size: 0.72rem; cursor: pointer;
+  font-family: inherit; transition: background 0.15s;
+}
+.stats-scope-btn.active { background: #1c2a1c; border-color: #2ea043; color: #3fb950; font-weight: 600; }
+.stats-scope-btn:hover:not(.active) { background: #21262d; color: #c9d1d9; }
 
 #corp-panel-header {
   display: flex; align-items: center; gap: 10px;

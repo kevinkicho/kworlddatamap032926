@@ -337,7 +337,8 @@ function parseSettlementInfobox(wikitext) {
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function extractWeatherBlock(wikitext) {
-  const startRe = /\{\{\s*Weather\s+box[^\n]*/i;
+  // Matches both {{Weather box}} and {{weatherbox}} (US cities often omit the space)
+  const startRe = /\{\{\s*Weather\s*box[^\n]*/i;
   const m = startRe.exec(wikitext);
   if (!m) return null;
 
@@ -382,19 +383,24 @@ function parseWeatherBox(wikitext) {
   // Location / period label
   const location = fields['location'] ? fields['location'].trim() : undefined;
 
+  const fToC = f => f != null ? Math.round((f - 32) * 5 / 9 * 10) / 10 : null;
+  const inToMm = i => i != null ? Math.round(i * 25.4 * 10) / 10 : null;
+  const inToCm = i => i != null ? Math.round(i * 2.54 * 10) / 10 : null;
+
   // Build monthly array
   const months = MONTHS.map((mon, idx) => {
     const entry = { month: mon };
     const get = suffix => parseNum(fields[`${mon} ${suffix}`]);
+    const getF = suffix => { const v = get(suffix + ' F'); return v != null ? fToC(v) : null; };
 
-    entry.high_c          = get('high C');
-    entry.low_c           = get('low C');
-    entry.mean_c          = get('mean C');
-    entry.record_high_c   = get('record high C');
-    entry.record_low_c    = get('record low C');
-    entry.precipitation_mm = get('precipitation mm');
+    entry.high_c          = get('high C')          ?? getF('high');
+    entry.low_c           = get('low C')           ?? getF('low');
+    entry.mean_c          = get('mean C')          ?? getF('mean');
+    entry.record_high_c   = get('record high C')   ?? getF('record high');
+    entry.record_low_c    = get('record low C')    ?? getF('record low');
+    entry.precipitation_mm = get('precipitation mm') ?? inToMm(get('precipitation inch'));
     entry.precipitation_days = get('precipitation days');
-    entry.snow_cm         = get('snow cm');
+    entry.snow_cm         = get('snow cm')         ?? inToCm(get('snow inch'));
     entry.humidity        = get('humidity');
     entry.sun             = get('sun');
 
@@ -458,9 +464,14 @@ function parseClimateChart(wikitext) {
   const nums = [];
   let locationLabel = null;
   let firstNonNamed = true;
+  let isImperial = false;
 
   for (const part of parts) {
-    if (part.includes('=')) continue;  // named param — skip
+    if (part.includes('=')) {
+      // Detect imperial units flag
+      if (/^\s*units\s*=\s*imperial/i.test(part)) isImperial = true;
+      continue;  // named param — skip for numeric collection
+    }
     if (firstNonNamed) {
       locationLabel = part.replace(/\[\[[^\]]*\]\]/g, s => s.replace(/.*\|/, '').replace(']]', '')).trim();
       firstNonNamed = false;
@@ -473,14 +484,20 @@ function parseClimateChart(wikitext) {
   // Need at least 24 values (8 months × 3) to be useful; full set is 36 (12 × 3)
   if (nums.length < 24) return null;
 
+  const fToC = f => Math.round((f - 32) * 5 / 9 * 10) / 10;
+  const inToMm = i => Math.round(i * 25.4 * 10) / 10;
+
   const months = MONTHS.map((mon, idx) => {
     const base = idx * 3;
     if (base + 2 >= nums.length) return { month: mon };
+    const rawLow   = nums[base];
+    const rawHigh  = nums[base + 1];
+    const rawPrecip = nums[base + 2];
     const entry = {
       month:            mon,
-      low_c:            nums[base],
-      high_c:           nums[base + 1],
-      precipitation_mm: nums[base + 2],
+      low_c:            isImperial ? fToC(rawLow)    : rawLow,
+      high_c:           isImperial ? fToC(rawHigh)   : rawHigh,
+      precipitation_mm: isImperial ? inToMm(rawPrecip) : rawPrecip,
     };
     // Drop null entries
     return Object.fromEntries(Object.entries(entry).filter(([, v]) => v !== null));

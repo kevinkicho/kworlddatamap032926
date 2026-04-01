@@ -796,14 +796,262 @@ function carRender() {
 function closeWikiSidebar() {
   carStop();
   document.getElementById('wiki-sidebar').classList.remove('open');
+  closeStatsPanel();
+}
+
+// ── Stats distribution panel ───────────────────────────────────────────────────
+let _activeStatMetric = null;
+let _statsScope   = 'world';  // 'world' | 'country'
+let _statsCurrent = null;     // { metric, qid }
+let _statsPoints  = [];       // full sorted array from last render
+let _statsWinStart = 0;       // first index shown in list
+let _statsWinEnd   = 0;       // last index shown in list
+const STATS_WIN = 12;         // cities loaded per expand click
+
+function closeStatsPanel() {
+  document.getElementById('stats-panel')?.classList.remove('open');
+  document.querySelectorAll('.census-stat-clickable.stats-active, .info-chip-clickable.stats-active')
+    .forEach(el => el.classList.remove('stats-active'));
+  _activeStatMetric = null;
+  _statsCurrent = null;
+  _statsPoints  = [];
+}
+
+function setStatsScope(scope) {
+  _statsScope = scope;
+  if (_statsCurrent) _renderStatsPanel();
+}
+
+function openStatsPanel(metric, qid) {
+  // Toggle off if clicking same stat again
+  if (_activeStatMetric === metric + ':' + qid) { closeStatsPanel(); return; }
+  _activeStatMetric = metric + ':' + qid;
+  _statsCurrent = { metric, qid };
+  _renderStatsPanel();
+}
+
+function _renderStatsPanel() {
+  const { metric, qid } = _statsCurrent;
+  const censusDef = STAT_DEFS[metric];
+  const cityDef   = CITY_STAT_DEFS[metric];
+  const wbDef     = WB_STAT_DEFS[metric];
+  const def = censusDef || cityDef || wbDef;
+  if (!def) return;
+
+  const isCityStat = !!cityDef;
+  const isWbStat   = !!wbDef;
+
+  // Highlight the clicked cell
+  document.querySelectorAll('.census-stat-clickable.stats-active, .info-chip-clickable.stats-active, .wb-chip-clickable.stats-active')
+    .forEach(el => el.classList.remove('stats-active'));
+  document.querySelectorAll(`[onclick*="openStatsPanel('${metric}'"]`)
+    .forEach(el => el.classList.add('stats-active'));
+
+  // Find the clicked city / country
+  const selfCity    = isWbStat ? null : allCities.find(c => c.qid === qid);
+  const selfIso     = isWbStat ? qid : (selfCity?.iso || '');
+  const selfState   = selfCity?.admin || '';
+  const selfCountry = isWbStat ? (countryData[qid]?.name || qid)
+                                : (selfCity?.country || selfIso);
+
+  // ── Collect points ──
+  const points = [];
+  if (isWbStat) {
+    // Country-level — one point per real country (skip WB regional/income aggregates)
+    for (const [iso2, cdata] of Object.entries(countryData)) {
+      if (!cdata || !cdata.region || cdata.region === 'Aggregates') continue;
+      const val = cdata[wbDef.key];
+      if (val == null || isNaN(val)) continue;
+      points.push({ qid: iso2, val, name: cdata.name || iso2, region: cdata.region || '', iso: iso2 });
+    }
+  } else if (isCityStat) {
+    const pool = (_statsScope === 'country' && selfIso)
+      ? allCities.filter(c => c.iso === selfIso)
+      : allCities;
+    for (const c of pool) {
+      const val = def.key(c);
+      if (val == null || isNaN(val)) continue;
+      points.push({ qid: c.qid, val, name: c.name, state: c.admin || '', iso: c.iso || '', country: c.country || '' });
+    }
+  } else {
+    // Census ACS/BIZ — US cities only
+    const src = def.src === 'acs' ? censusCities : censusBusiness;
+    for (const [cqid, data] of Object.entries(src)) {
+      if (!data) continue;
+      const val = typeof def.key === 'function' ? def.key(data) : data[def.key];
+      if (val == null || isNaN(val)) continue;
+      const city = allCities.find(c => c.qid === cqid);
+      if (!city) continue;
+      points.push({ qid: cqid, val, name: city.name, state: city.admin || '', iso: 'US', country: 'United States' });
+    }
+  }
+  if (!points.length) return;
+
+  // ── Sort & rank ──
+  const ascending = def.higherBetter === false;
+  points.sort((a, b) => ascending ? a.val - b.val : b.val - a.val);
+  points.forEach((p, i) => { p.rank = i + 1; });
+
+  const entityIdx = isWbStat
+    ? points.findIndex(p => p.qid === selfIso)
+    : points.findIndex(p => p.qid === qid);
+  if (entityIdx < 0) { closeStatsPanel(); return; }
+  const cp = points[entityIdx];
+
+  // Store full list + set initial window around current entity
+  _statsPoints   = points;
+  _statsWinStart = Math.max(0, entityIdx - 5);
+  _statsWinEnd   = Math.min(points.length - 1, entityIdx + 5);
+
+  // Sub-rank
+  let subRank = 0, subTotal = 0, subLabel = '';
+  if (isWbStat && cp.region) {
+    const regionPts = points.filter(p => p.region === cp.region);
+    subRank  = regionPts.findIndex(p => p.qid === cp.qid) + 1;
+    subTotal = regionPts.length;
+    subLabel = cp.region;
+  } else if (isCityStat && _statsScope === 'world' && selfIso) {
+    const countryPts = points.filter(p => p.iso === selfIso);
+    subRank  = countryPts.findIndex(p => p.qid === qid) + 1;
+    subTotal = countryPts.length;
+    subLabel = selfCountry;
+  } else if (!isCityStat && !isWbStat && selfState) {
+    const statePts = points.filter(p => p.state === selfState);
+    subRank  = statePts.findIndex(p => p.qid === qid) + 1;
+    subTotal = statePts.length;
+    subLabel = selfState;
+  }
+
+  // ── Histogram ──
+  const vals = points.map(p => p.val);
+  const minV = Math.min(...vals), maxV = Math.max(...vals);
+  const BUCKETS = 14;
+  const bSize = (maxV - minV) / BUCKETS || 1;
+  const counts = Array(BUCKETS).fill(0);
+  const entityBkt = Math.min(BUCKETS-1, Math.floor((cp.val - minV) / bSize));
+  for (const {val} of points) counts[Math.min(BUCKETS-1, Math.floor((val - minV) / bSize))]++;
+  const maxCnt = Math.max(...counts, 1);
+  const HW = 262, HH = 56, HPAD = 2;
+  const bw = (HW - HPAD*2) / BUCKETS;
+  const histBars = counts.map((cnt, i) => {
+    const bh = Math.max(2, (cnt/maxCnt)*(HH-HPAD*2));
+    const x = HPAD + i*bw, y = HH - HPAD - bh;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-1).toFixed(1)}" height="${bh.toFixed(1)}" rx="1.5"
+      fill="${i===entityBkt?'#f0a500':'#2a8ee8'}" opacity="${i===entityBkt?1:0.45}"/>`;
+  }).join('');
+  const markerX = HPAD + (entityBkt+0.5)*bw;
+  const histSvg = `<svg viewBox="0 0 ${HW} ${HH+14}" width="${HW}" height="${HH+14}" style="display:block">
+    ${histBars}
+    <line x1="${markerX.toFixed(1)}" y1="0" x2="${markerX.toFixed(1)}" y2="${HH}" stroke="#f0a500" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <text x="${HPAD}" y="${HH+11}" font-size="7" fill="#6e7681" text-anchor="start">${def.fmt(minV)}</text>
+    <text x="${HW/2}" y="${HH+11}" font-size="7" fill="#6e7681" text-anchor="middle">${def.fmt((minV+maxV)/2)}</text>
+    <text x="${HW-HPAD}" y="${HH+11}" font-size="7" fill="#6e7681" text-anchor="end">${def.fmt(maxV)}</text>
+  </svg>`;
+
+  const note = def.higherBetter === true  ? '↑ higher ranked = higher value'
+             : def.higherBetter === false ? '↑ higher ranked = lower value' : '';
+
+  // ── Scope toggle (city stats only) ──
+  const primaryLabel = isWbStat ? 'countries worldwide'
+    : isCityStat ? (_statsScope === 'world' ? 'worldwide' : escHtml(selfCountry))
+    : 'US cities with Census data';
+  const scopeToggle = isCityStat ? `
+    <div id="stats-scope-row">
+      <button class="stats-scope-btn${_statsScope==='world'?' active':''}" onclick="setStatsScope('world')">🌍 World</button>
+      <button class="stats-scope-btn${_statsScope==='country'?' active':''}" onclick="setStatsScope('country')"
+        >📍 ${escHtml(selfCountry)}</button>
+    </div>` : '';
+
+  // ── Render ──
+  document.getElementById('stats-panel-title').textContent = def.label;
+  document.getElementById('stats-panel-city').textContent  = cp.name + (selfState || (!isWbStat && selfCountry) ? ' · '+(selfState||selfCountry) : '');
+  document.getElementById('stats-panel-body').innerHTML = `
+    ${scopeToggle}
+    <div class="stats-hist-wrap">${histSvg}</div>
+    <div class="stats-ranks">
+      <div class="stats-rank-badge">
+        <span class="stats-rank-n">#${cp.rank} / ${points.length}</span>
+        <span class="stats-rank-lbl">${primaryLabel}</span>
+      </div>
+      ${subRank > 0 ? `<div class="stats-rank-badge">
+        <span class="stats-rank-n">#${subRank} / ${subTotal}</span>
+        <span class="stats-rank-lbl">${escHtml(subLabel)}</span>
+      </div>` : ''}
+    </div>
+    ${note ? `<div class="stats-note">${note}</div>` : ''}
+    <div id="stats-rank-list-wrap" class="stats-rank-list"></div>
+    <div class="stats-source">${points.length} ${primaryLabel} · ${isWbStat ? 'click a country to navigate' : 'click a city to navigate'} · click another stat to compare</div>
+  `;
+  document.getElementById('stats-panel').classList.add('open');
+  _updateStatsListHtml();
+}
+
+function _updateStatsListHtml() {
+  const metric = _statsCurrent?.metric;
+  const def = STAT_DEFS[metric] || CITY_STAT_DEFS[metric] || WB_STAT_DEFS[metric];
+  const listEl = document.getElementById('stats-rank-list-wrap');
+  if (!listEl || !def || !_statsPoints.length) return;
+  const { qid } = _statsCurrent;
+  const isWbStat = !!WB_STAT_DEFS[metric];
+  // For WB stats the current entity qid = iso2; for city stats = city qid
+  const curId = isWbStat ? (_statsCurrent.qid) : qid;
+  const aboveCount = _statsWinStart;
+  const belowCount = _statsPoints.length - 1 - _statsWinEnd;
+  const rows = _statsPoints.slice(_statsWinStart, _statsWinEnd + 1).map(p => {
+    const isCur = p.qid === curId;
+    const navFn = isWbStat ? `statsGoToCountry('${p.qid}')` : `statsGoToCity('${p.qid}')`;
+    return `<div class="stats-rank-row${isCur?' stats-rank-current':''}" onclick="${navFn}">
+      <span class="stats-rank-num">#${p.rank}</span>
+      <span class="stats-rank-name">${escHtml(p.name)}</span>
+      <span class="stats-rank-val">${def.fmt(p.val)}</span>
+    </div>`;
+  }).join('');
+  listEl.innerHTML = `
+    ${aboveCount > 0 ? `<button class="stats-rank-more" onclick="statsExpandUp()">▲ ${aboveCount.toLocaleString()} more above</button>` : ''}
+    ${rows}
+    ${belowCount > 0 ? `<button class="stats-rank-more" onclick="statsExpandDown()">▼ ${belowCount.toLocaleString()} more below</button>` : ''}
+  `;
+  // Scroll current row into view
+  listEl.querySelector('.stats-rank-current')?.scrollIntoView({ block: 'nearest' });
+}
+
+function statsExpandUp() {
+  _statsWinStart = Math.max(0, _statsWinStart - STATS_WIN);
+  _updateStatsListHtml();
+  document.getElementById('stats-rank-list-wrap')?.scrollTo({ top: 0 });
+}
+
+function statsExpandDown() {
+  _statsWinEnd = Math.min(_statsPoints.length - 1, _statsWinEnd + STATS_WIN);
+  _updateStatsListHtml();
+}
+
+function statsGoToCity(qid) {
+  const city = allCities.find(c => c.qid === qid);
+  if (!city || city.lat == null) return;
+  map.flyTo([city.lat, city.lng], Math.max(map.getZoom(), 5), { duration: 1 });
+  openWikiSidebar(qid, city.name);
+  // Update stats panel to highlight the new city (skip if same city — would toggle off)
+  if (_statsCurrent && _statsCurrent.qid !== qid) openStatsPanel(_statsCurrent.metric, qid);
+}
+
+function statsGoToCountry(iso2) {
+  const pt = CAPITAL_COORDS[iso2] || countryCentroids[iso2];
+  if (pt) map.flyTo(pt, Math.max(map.getZoom(), 4), { duration: 1 });
+  // Re-render stats panel highlighting the new country (skip if same — would toggle off)
+  if (_statsCurrent && _statsCurrent.qid !== iso2) openStatsPanel(_statsCurrent.metric, iso2);
 }
 
 // ── Sidebar tab state ─────────────────────────────────────────────────────────
 let _sidebarTab = 'info';   // persists across city clicks
 
+const VALID_SIDEBAR_TABS = new Set(['info','economy','overview']);
+
 function switchWikiTab(tab) {
+  // Guard: if tab name is invalid (e.g. stale 'census'/'business' from old session), fall back to info
+  if (!VALID_SIDEBAR_TABS.has(tab)) tab = 'info';
   _sidebarTab = tab;
-  ['info','census','business','overview'].forEach(t => {
+  ['info','economy','overview'].forEach(t => {
     const el = document.getElementById(`wiki-tab-${t}`);
     if (el) el.style.display = t === tab ? '' : 'none';
   });
@@ -909,59 +1157,66 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     ? (city.utc_offset ? `${escHtml(city.timezone)} (${escHtml(city.utc_offset)})` : escHtml(city.timezone))
     : (city.utc_offset ? escHtml(city.utc_offset) : null);
 
-  const locationSec = section('Location', [
-    row('Country', city.country || ''),
-    row('Region', city.admin || ''),
-    city.settlement_type ? row('Type', city.settlement_type) : '',
-    row('ISO code', city.iso || ''),
-    tzFmt ? `<tr><td class="wiki-info-label">Timezone</td><td class="wiki-info-val">${tzFmt}</td></tr>` : '',
-    row('Coordinates', coordsFmt),
-    row('Elevation', city.elev_m != null ? fmtNum(city.elev_m) + ' m' : null),
-  ]);
+  // ── Compact info chip grid (replaces Location/Demo/History/Economy table sections) ──
+  function infoChip(label, val, isHtml = false, span2 = false, cityMetric = '') {
+    if (!val && val !== 0) return '';
+    const v = isHtml ? val : escHtml(String(val));
+    const extraCls  = cityMetric ? ' info-chip-clickable' : '';
+    const extraAttr = cityMetric ? ` onclick="openStatsPanel('${cityMetric}','${escHtml(city.qid)}')" title="Click to see world ranking"` : '';
+    return `<div class="info-chip${span2?' info-chip-wide':''}${extraCls}"${extraAttr}><div class="info-chip-lbl">${label}</div><div class="info-chip-val">${v}</div></div>`;
+  }
+  const infoChips = `<div class="info-chips">
+    ${city.pop != null ? infoChip('Population', fmtNum(city.pop) + (popAsOf ? ' <span class="info-chip-dim">' + popAsOf.replace(/<[^>]+>/g,'').trim() + '</span>' : ''), true, false, 'pop') : ''}
+    ${city.country ? infoChip('Country', city.country) : ''}
+    ${city.admin   ? infoChip('Region', city.admin)    : ''}
+    ${city.settlement_type ? infoChip('Type', city.settlement_type) : ''}
+    ${city.iso     ? infoChip('ISO', city.iso)         : ''}
+    ${tzFmt        ? infoChip('Timezone', tzFmt, true)  : ''}
+    ${coordsFmt    ? infoChip('Coords', coordsFmt)      : ''}
+    ${city.elev_m != null ? infoChip('Elevation', fmtNum(city.elev_m) + ' m', false, false, 'elev_m') : ''}
+    ${popMetroFmt  ? infoChip('Metro pop', popMetroFmt, false, false, 'pop_metro') : ''}
+    ${popUrbanFmt  ? infoChip('Urban pop', popUrbanFmt) : ''}
+    ${density      ? infoChip('Density', density, false, false, 'density') : ''}
+    ${city.area_km2 != null ? infoChip('Area', fmtNum(city.area_km2) + ' km²', false, false, 'area_km2') : ''}
+    ${foundedFmt   ? infoChip('Founded', foundedFmt, false, false, 'founded') : ''}
+    ${nicknamesHtml ? infoChip('Known as', nicknamesHtml, true, true) : ''}
+    ${gdpHtml      ? infoChip('City GDP', gdpHtml, true): ''}
+    ${hdi          ? infoChip('HDI', hdi)               : ''}
+  </div>`;
+
   const govSec = leadersHtml
     ? `<tr><td colspan="2" class="wiki-info-section-head">Government</td></tr>${leadersHtml}`
     : '';
-  const demoSec = section('Demographics', [
-    city.pop != null
-      ? `<tr><td class="wiki-info-label">Population</td><td class="wiki-info-val">${escHtml(fmtNum(city.pop))}${popAsOf}</td></tr>`
-      : '',
-    popMetroFmt ? row('Metro area', popMetroFmt) : '',
-    popUrbanFmt ? row('Urban area', popUrbanFmt) : '',
-    row('Density', density),
-    row('Area', city.area_km2 != null ? fmtNum(city.area_km2) + ' km\u00b2' : null),
-  ]);
-  const historySec = section('History', [
-    row('Founded', foundedFmt),
-    nicknamesHtml ? `<tr><td class="wiki-info-label">Known as</td><td class="wiki-info-val">${nicknamesHtml}</td></tr>` : '',
-  ]);
-  const economySec = section('Economy', [
-    row('GDP', gdpHtml, !!gdpHtml),
-    row('HDI', hdi),
-  ]);
   const linksSec = section('Links', [
     row('Website', websiteHtml, !!websiteHtml),
     row('Sister cities', sistersHtml, !!sistersHtml),
     row('GeoNames', geonamesHtml, !!geonamesHtml),
   ]);
 
-  // ── World Bank country context (bound via city.iso) ──
+  // ── World Bank country context (bound via city.iso) — compact chip grid ──
   const wb = city.iso ? countryData[city.iso] : null;
-  function wbRow(label, key, fmt) {
+  function wbChip(label, key, fmt, wbMetric) {
     if (!wb || wb[key] == null) return '';
-    const year = wb[key + '_year'] ? ` <span style="color:#484f58;font-size:0.72em">${wb[key + '_year']}</span>` : '';
-    return row(label, escHtml(fmt(wb[key])) + year, true);
+    const yr = wb[key + '_year'] ? ` <span class="wb-chip-yr">${wb[key + '_year']}</span>` : '';
+    const extra = wbMetric && city.iso
+      ? ` wb-chip-clickable" onclick="openStatsPanel('${wbMetric}','${escHtml(city.iso)}')" title="Click to see country rankings"`
+      : `"`;
+    return `<div class="wb-chip${extra}><div class="wb-chip-lbl">${label}</div><div class="wb-chip-val">${escHtml(fmt(wb[key]))}${yr}</div></div>`;
   }
-  const wbSec = wb ? section('Country context · ' + escHtml(wb.name || city.country || city.iso) + ' <span style="color:#484f58;font-size:0.75em">(World Bank)</span>', [
-    wbRow('GDP / capita', 'gdp_per_capita', v => '$' + Math.round(v).toLocaleString()),
-    wbRow('Life expectancy', 'life_expectancy', v => v.toFixed(1) + ' yrs'),
-    wbRow('Urban pop.', 'urban_pct', v => v.toFixed(1) + '%'),
-    wbRow('Internet users', 'internet_pct', v => v.toFixed(1) + '%'),
-    wbRow('Gini index', 'gini', v => v.toFixed(1) + ' / 100'),
-    wbRow('Literacy rate', 'literacy_rate', v => v.toFixed(1) + '%'),
-    wbRow('Child mortality', 'child_mortality', v => v.toFixed(1) + ' / 1k'),
-    wbRow('Electricity access', 'electricity_pct', v => v.toFixed(1) + '%'),
-    wbRow('Income level', 'income_level', v => v),
-  ]) : '';
+  const wbSec = wb ? `<tr><td colspan="2" class="wiki-info-section-head">Country · ${escHtml(wb.name || city.country || city.iso)} <span style="color:#484f58;font-size:0.75em">(World Bank)</span></td></tr>
+    <tr><td colspan="2" class="wb-chips-row">
+      <div class="wb-chips">
+        ${wbChip('GDP/cap',    'gdp_per_capita',  v => '$'+Math.round(v).toLocaleString(), 'wb_gdp_per_capita')}
+        ${wbChip('Life exp.',  'life_expectancy', v => v.toFixed(1)+' yr',                'wb_life_expectancy')}
+        ${wbChip('Urban',      'urban_pct',       v => v.toFixed(1)+'%',                  'wb_urban_pct')}
+        ${wbChip('Internet',   'internet_pct',    v => v.toFixed(1)+'%',                  'wb_internet_pct')}
+        ${wbChip('Gini',       'gini',            v => v.toFixed(1),                      'wb_gini')}
+        ${wbChip('Literacy',   'literacy_rate',   v => v.toFixed(1)+'%',                  'wb_literacy_rate')}
+        ${wbChip('Child mort.','child_mortality', v => v.toFixed(1)+'/1k',               'wb_child_mortality')}
+        ${wbChip('Electric.',  'electricity_pct', v => v.toFixed(1)+'%',                  'wb_electricity_pct')}
+        ${wb.income_level ? `<div class="wb-chip wb-chip-full"><div class="wb-chip-lbl">Income level</div><div class="wb-chip-val">${escHtml(wb.income_level)}</div></div>` : ''}
+      </div>
+    </td></tr>` : '';
 
   // ── Climate chart ──
   const climateHtml = (() => {
@@ -1131,20 +1386,17 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   // ── Tab data availability ──
   const censusData   = city.iso === 'US' ? getCensusData(city) : null;
   const businessData = city.iso === 'US' ? (censusBusiness[city.qid] || null) : null;
+  const hasEconomy   = !!(censusData || businessData);
 
-  const censusBtnEl   = document.getElementById('wiki-tab-census-btn');
-  const businessBtnEl = document.getElementById('wiki-tab-business-btn');
-  if (censusBtnEl)   censusBtnEl.style.display   = censusData   ? '' : 'none';
-  if (businessBtnEl) businessBtnEl.style.display = businessData ? '' : 'none';
+  const econBtnEl = document.getElementById('wiki-tab-economy-btn');
+  if (econBtnEl) econBtnEl.style.display = hasEconomy ? '' : 'none';
 
-  // Fall back to Info if active tab has no data for this city
-  if ((_sidebarTab === 'census'   && !censusData)   ||
-      (_sidebarTab === 'business' && !businessData)) _sidebarTab = 'info';
+  // Fall back to Info if active tab is invalid or has no data for this city
+  if (!VALID_SIDEBAR_TABS.has(_sidebarTab) || (_sidebarTab === 'economy' && !hasEconomy)) _sidebarTab = 'info';
 
   // ── Populate tab content divs ──
   const infoEl     = document.getElementById('wiki-tab-info');
-  const censusEl   = document.getElementById('wiki-tab-census');
-  const businessEl = document.getElementById('wiki-tab-business');
+  const economyEl  = document.getElementById('wiki-tab-economy');
   const overviewEl = document.getElementById('wiki-tab-overview');
 
   if (infoEl) infoEl.innerHTML = `
@@ -1153,12 +1405,10 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
       <div class="wiki-city-name">${escHtml(city.name)}</div>
       ${city.desc ? `<div class="wiki-city-desc">${escHtml(city.desc)}</div>` : ''}
     </div>
-    <table class="wiki-info-table">
-      ${locationSec}${govSec}${demoSec}${historySec}${economySec}${linksSec}${wbSec}
-    </table>
+    ${infoChips}
+    ${(govSec || linksSec || wbSec) ? `<table class="wiki-info-table">${govSec}${linksSec}${wbSec}</table>` : ''}
   `;
-  if (censusEl)   censusEl.innerHTML   = censusData   ? buildCensusHtml(censusData)     : '';
-  if (businessEl) businessEl.innerHTML = businessData ? buildBusinessHtml(businessData) : '';
+  if (economyEl)  economyEl.innerHTML  = hasEconomy ? buildEconomyHtml(censusData, businessData, city.qid) : '';
   if (overviewEl) overviewEl.innerHTML = `${climateHtml}${extractHtml}`;
 
   switchWikiTab(_sidebarTab);
@@ -1198,6 +1448,7 @@ function toggleExtract() {
 
 let censusCities   = {};   // QID → ACS indicators (from census-cities.json)
 let censusBusiness = {};   // QID → business/pop data (from census-business.json)
+let beaTradeData   = {};   // ISO2 → [{year,expGds,impGds,expSvc,impSvc}] (from bea-trade.json)
 let censusColorMetric = null;  // null = off, or key like 'medianIncome'
 
 // Color scale config per metric: { lo, hi, stops: [[r,g,b],…] }
@@ -1271,183 +1522,202 @@ function getCensusData(city) {
 const CENSUS_BRACKET_LABELS = ['< $15k','$15–25k','$25–50k','$50–75k','$75–100k','$100–150k','$150–200k','$200k+'];
 const CENSUS_BRACKET_COLORS = ['#8b949e','#58a6ff','#2a8ee8','#3fb950','#56d364','#ffa657','#f0a500','#e05c2e'];
 
-function buildCensusHtml(d) {
+// Stat definitions for the distribution ranking panel
+// higherBetter: true = rank 1 is highest value, false = rank 1 is lowest, null = no judgment
+const STAT_DEFS = {
+  medianIncome:    { label:'Median Income',       src:'acs', key:'medianIncome',       fmt: v=>'$'+fmtNum(Math.round(v)),        higherBetter:true },
+  povertyPct:      { label:'Poverty Rate',         src:'acs', key:'povertyPct',         fmt: v=>v.toFixed(1)+'%',                 higherBetter:false },
+  unemploymentPct: { label:'Unemployment Rate',    src:'acs', key:'unemploymentPct',    fmt: v=>v.toFixed(1)+'%',                 higherBetter:false },
+  rentBurdenedPct: { label:'Rent-Burdened',        src:'acs', key:'rentBurdenedPct',    fmt: v=>v.toFixed(1)+'%',                 higherBetter:false },
+  medianRent:      { label:'Median Rent',          src:'acs', key:'medianRent',         fmt: v=>'$'+fmtNum(Math.round(v))+'/mo',  higherBetter:null },
+  medianHomeValue: { label:'Median Home Value',    src:'acs', key:'medianHomeValue',    fmt: v=>'$'+fmtNum(Math.round(v)),        higherBetter:null },
+  gini:            { label:'Gini Index',           src:'acs', key:'gini',               fmt: v=>v.toFixed(3),                     higherBetter:false },
+  snapPct:         { label:'SNAP Receipt',         src:'acs', key:'snapPct',            fmt: v=>v.toFixed(1)+'%',                 higherBetter:false },
+  bachelorPlusPct: { label:'College-Educated',     src:'acs', key:'bachelorPlusPct',    fmt: v=>v.toFixed(1)+'%',                 higherBetter:true },
+  transitPct:      { label:'Transit Use',          src:'acs', key:'transitPct',         fmt: v=>v.toFixed(1)+'%',                 higherBetter:null },
+  medianAge:       { label:'Median Age',           src:'acs', key:'medianAge',          fmt: v=>v.toFixed(0)+' yr',               higherBetter:null },
+  ownerOccPct:     { label:'Homeownership Rate',   src:'acs', key:'ownerOccPct',        fmt: v=>v.toFixed(1)+'%',                 higherBetter:null },
+  totalEstab:      { label:'Total Establishments', src:'biz', key: d=>d.cbp?.total?.estab,                                       fmt: v=>fmtNum(v),            higherBetter:null },
+  totalPayroll:    { label:'Total Payroll/yr',     src:'biz', key: d=>d.cbp?.total?.payann,                                      fmt: v=>'$'+fmtRevenue(v*1000), higherBetter:null },
+  mfgShare:        { label:'Manufacturing Share',  src:'biz', key: d=>{const t=d.cbp?.total?.estab,m=d.cbp?.manufacturing?.estab;return t&&m?m/t*100:null;}, fmt:v=>v.toFixed(1)+'%', higherBetter:null },
+  popGrowthPct:    { label:'Population Growth',    src:'biz', key: d=>d.popTrend?.growthPct,                                     fmt: v=>(v>=0?'+':'')+v.toFixed(1)+'%', higherBetter:true },
+  selfEmplPct:     { label:'Self-Employment Rate', src:'biz', key: d=>{const p=d.selfEmpl?.selfEmplPct;return p!=null&&p<35?p:null;}, fmt:v=>v.toFixed(1)+'%', higherBetter:null },
+};
+
+// City-level stats from allCities — support world/national scope toggle
+const CITY_STAT_DEFS = {
+  pop:       { label:'City Population',    key: c=>c.pop,                                                         fmt: v=>fmtNum(v),                     higherBetter:null },
+  pop_metro: { label:'Metro Population',   key: c=>c.pop_metro,                                                   fmt: v=>fmtNum(v),                     higherBetter:null },
+  area_km2:  { label:'City Area',          key: c=>c.area_km2,                                                    fmt: v=>fmtNum(Math.round(v))+' km²',  higherBetter:null },
+  density:   { label:'Pop. Density',       key: c=>c.pop&&c.area_km2?Math.round(c.pop/c.area_km2):null,           fmt: v=>fmtNum(v)+'/km²',             higherBetter:null },
+  elev_m:    { label:'Elevation',          key: c=>c.elev_m,                                                      fmt: v=>fmtNum(Math.round(v))+' m',   higherBetter:null },
+  founded:   { label:'Year Founded',       key: c=>c.founded,                                                     fmt: v=>v<0?Math.abs(v)+' BC':String(v), higherBetter:false },
+};
+
+// Country-level World Bank stats — iso2 used as identifier (not city qid)
+const WB_STAT_DEFS = {
+  wb_gdp_per_capita:  { label:'GDP per Capita',      key:'gdp_per_capita',  fmt: v=>'$'+Math.round(v).toLocaleString(), higherBetter:true  },
+  wb_life_expectancy: { label:'Life Expectancy',      key:'life_expectancy', fmt: v=>v.toFixed(1)+' yrs',               higherBetter:true  },
+  wb_urban_pct:       { label:'Urban Population',     key:'urban_pct',       fmt: v=>v.toFixed(1)+'%',                  higherBetter:null  },
+  wb_internet_pct:    { label:'Internet Access',      key:'internet_pct',    fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
+  wb_gini:            { label:'Gini Coefficient',     key:'gini',            fmt: v=>v.toFixed(1),                      higherBetter:false },
+  wb_literacy_rate:   { label:'Literacy Rate',        key:'literacy_rate',   fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
+  wb_child_mortality: { label:'Child Mortality',      key:'child_mortality', fmt: v=>v.toFixed(1)+'/1k',                higherBetter:false },
+  wb_electricity_pct: { label:'Electricity Access',   key:'electricity_pct', fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
+};
+
+// Combined Census ACS + Business tab
+function buildEconomyHtml(acs, biz, qid) {
   const fmt$ = v => v != null && v > 0 ? '$' + fmtNum(Math.round(v)) : '—';
   const fmtPct = v => v != null && v >= 0 ? v.toFixed(1) + '%' : '—';
-
-  // ── Income distribution chart ─────────────────────────────────────────────
-  const brackets = d.brackets || [];
-  const maxPct = Math.max(...brackets, 0.1);
-  const BAR_W = 148, BAR_H = 9, GAP = 5, LBL_W = 64, PCT_W = 36;
-  const svgW = LBL_W + BAR_W + PCT_W;
-  const svgH = brackets.length * (BAR_H + GAP) + 4;
-
-  const bars = brackets.map((pct, i) => {
-    const y = i * (BAR_H + GAP) + 2;
-    const bw = Math.max(2, (pct / maxPct) * BAR_W);
-    const pctTxt = pct >= 0.5 ? pct.toFixed(1) + '%' : '';
-    return `
-      <text x="${LBL_W - 4}" y="${y + BAR_H - 1}" text-anchor="end" font-size="7.5" fill="#8b949e">${CENSUS_BRACKET_LABELS[i] || ''}</text>
-      <rect x="${LBL_W}" y="${y}" width="${bw.toFixed(1)}" height="${BAR_H}" rx="2" fill="${CENSUS_BRACKET_COLORS[i]}" opacity="0.85"/>
-      <text x="${LBL_W + bw + 3}" y="${y + BAR_H - 1}" font-size="7.5" fill="#8b949e">${pctTxt}</text>`;
-  }).join('');
-
-  const chartSvg = `<svg viewBox="0 0 ${svgW} ${svgH}" width="${svgW}" height="${svgH}" style="display:block;overflow:visible">${bars}</svg>`;
-
-  // ── Stats helpers ─────────────────────────────────────────────────────────
-  function statCell(label, value, cls = '') {
-    return `<div class="census-stat"><div class="census-stat-label">${label}</div><div class="census-stat-value${cls ? ' '+cls : ''}">${value}</div></div>`;
-  }
-  const medIncomeFmt = d.medianIncome > 0 ? '$' + fmtNum(Math.round(d.medianIncome)) : '—';
-  const povCls   = d.povertyPct > 20 ? 'census-red' : d.povertyPct > 10 ? 'census-amber' : '';
-  const unempCls = d.unemploymentPct > 8 ? 'census-red' : d.unemploymentPct > 5 ? 'census-amber' : '';
-  const burdCls  = d.rentBurdenedPct > 40 ? 'census-red' : d.rentBurdenedPct > 25 ? 'census-amber' : '';
-  const snapCls  = d.snapPct > 20 ? 'census-red' : d.snapPct > 10 ? 'census-amber' : '';
-  const giniCls  = d.gini > 0.50 ? 'census-red' : d.gini > 0.43 ? 'census-amber' : '';
-
-  const econGrid = `
-    <div class="census-stats-grid">
-      ${statCell('Median Income', medIncomeFmt, 'census-gold')}
-      ${statCell('Poverty Rate', fmtPct(d.povertyPct), povCls)}
-      ${statCell('Unemployment', fmtPct(d.unemploymentPct), unempCls)}
-      ${statCell('Rent-Burdened', fmtPct(d.rentBurdenedPct), burdCls)}
-      ${statCell('Median Rent', fmt$(d.medianRent) + (d.medianRent > 0 ? '/mo' : ''))}
-      ${statCell('Home Value', fmt$(d.medianHomeValue))}
-      ${statCell('Gini Index', d.gini != null ? d.gini.toFixed(3) : '—', giniCls)}
-      ${statCell('SNAP Receipt', fmtPct(d.snapPct), snapCls)}
-    </div>`;
-
-  const socGrid = `
-    <div class="census-stats-grid">
-      ${statCell('College-Educ.', fmtPct(d.bachelorPlusPct))}
-      ${statCell('Transit Use', fmtPct(d.transitPct))}
-      ${statCell('Long Commute', fmtPct(d.longCommutePct))}
-      ${statCell('Median Age', d.medianAge != null ? d.medianAge + ' yrs' : '—')}
-      ${statCell('Homeownership', fmtPct(d.ownerOccPct))}
-      ${statCell('Vacancy Rate', fmtPct(d.vacancyPct))}
-    </div>`;
-
-  return `
-    <div class="census-wrap">
-      <div class="census-head">US Census · ACS 5-Year (${d.year || 2023})</div>
-      <div class="census-subtitle">Household Income Distribution</div>
-      <div class="census-chart-wrap">${chartSvg}</div>
-      <div class="census-section-title">Economic Indicators</div>
-      ${econGrid}
-      <div class="census-section-title" style="margin-top:8px">Community Profile</div>
-      ${socGrid}
-      <div class="census-source">Source: US Census Bureau · American Community Survey<br>Geography: ${escHtml(d.placeName || '')}</div>
-    </div>`;
-}
-
-function buildBusinessHtml(d) {
-  const fmtPct = v => v != null ? v.toFixed(1) + '%' : '—';
   const fmtN   = v => v != null ? fmtNum(v) : '—';
-  const fmt$M  = v => v != null && v > 0 ? '$' + fmtRevenue(v * 1000) : '—';  // payann in $1k
+  const fmt$M  = v => v != null && v > 0 ? '$' + fmtRevenue(v * 1000) : '—';
 
-  // ── Population trend sparkline ────────────────────────────────────────────
-  const pt = d.popTrend || {};
-  const popYears  = [2019, 2020, 2021, 2022].filter(y => pt[`pop${y}`] != null);
-  const popVals   = popYears.map(y => pt[`pop${y}`]);
-  let sparkSvg = '';
-  if (popVals.length >= 2) {
-    const W = 200, H = 36, PAD = 4;
-    const minV = Math.min(...popVals), maxV = Math.max(...popVals);
-    const range = maxV - minV || 1;
-    const xs = popVals.map((_, i) => PAD + i * (W - PAD * 2) / (popVals.length - 1));
-    const ys = popVals.map(v => H - PAD - (v - minV) / range * (H - PAD * 2));
-    const pts = xs.map((x, i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
-    const growthColor = (pt.growthPct || 0) >= 0 ? '#3fb950' : '#f85149';
-    const dots = xs.map((x, i) =>
-      `<circle cx="${x.toFixed(1)}" cy="${ys[i].toFixed(1)}" r="2.5" fill="${growthColor}"/>
-       <text x="${x.toFixed(1)}" y="${H - 1}" text-anchor="middle" font-size="7" fill="#6e7681">${popYears[i]}</text>`
-    ).join('');
-    sparkSvg = `<svg viewBox="0 0 ${W} ${H+10}" width="${W}" height="${H+10}" style="display:block;overflow:visible">
-      <polyline points="${pts}" fill="none" stroke="${growthColor}" stroke-width="1.8" opacity="0.8"/>
-      ${dots}
-    </svg>`;
+  function statCell(label, val, cls = '', metric = '') {
+    const extra = metric && qid
+      ? ` census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="Click to see ranking"`
+      : `"`;
+    return `<div class="census-stat${extra}><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
   }
 
-  const growthCls = (pt.growthPct || 0) >= 0 ? 'census-gold' : 'census-red';
-  const popSummary = popVals.length >= 2
-    ? `<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <span class="census-stat-value ${growthCls}">${(pt.growthPct || 0) >= 0 ? '+' : ''}${(pt.growthPct||0).toFixed(1)}%</span>
-        <span class="census-stat-label">2019→2022 &nbsp; Latest: ${fmtN(popVals[popVals.length-1])}</span>
-      </div>`
-    : '';
+  let html = '<div class="census-wrap">';
 
-  // ── Business sector chart (CBP) ──────────────────────────────────────────
-  const cbp = d.cbp || {};
-  const SECTORS = [
-    { key: 'manufacturing', label: 'Manufacturing', color: '#f0a500' },
-    { key: 'professional',  label: 'Professional/Tech', color: '#58a6ff' },
-    { key: 'information',   label: 'Information/Tech', color: '#a371f7' },
-    { key: 'finance',       label: 'Finance', color: '#3fb950' },
-    { key: 'hospitality',   label: 'Hospitality/Food', color: '#ffa657' },
-  ];
-  const totalEstab = cbp.total?.estab || 1;
-  const BAR_W = 148, BAR_H = 9, GAP = 5, LBL_W = 82, PCT_W = 36;
-  const svgW = LBL_W + BAR_W + PCT_W;
-  const svgH = SECTORS.length * (BAR_H + GAP) + 4;
-  const maxEstab = Math.max(...SECTORS.map(s => cbp[s.key]?.estab || 0), 1);
+  // ── ACS block ─────────────────────────────────────────────────────────────
+  if (acs) {
+    // Income distribution bars (compact: narrower)
+    const brackets = acs.brackets || [];
+    const maxPct = Math.max(...brackets, 0.1);
+    const BAR_W = 128, BAR_H = 8, GAP = 4, LBL_W = 60, PCT_W = 30;
+    const svgW = LBL_W + BAR_W + PCT_W;
+    const svgH = brackets.length * (BAR_H + GAP) + 2;
+    const incomeBars = brackets.map((pct, i) => {
+      const y = i * (BAR_H + GAP) + 1;
+      const bw = Math.max(2, (pct / maxPct) * BAR_W);
+      const pctTxt = pct >= 0.5 ? pct.toFixed(1) + '%' : '';
+      return `<text x="${LBL_W-3}" y="${y+BAR_H-1}" text-anchor="end" font-size="7" fill="#8b949e">${CENSUS_BRACKET_LABELS[i]||''}</text>
+        <rect x="${LBL_W}" y="${y}" width="${bw.toFixed(1)}" height="${BAR_H}" rx="1.5" fill="${CENSUS_BRACKET_COLORS[i]}" opacity="0.85"/>
+        <text x="${LBL_W+bw+2}" y="${y+BAR_H-1}" font-size="7" fill="#8b949e">${pctTxt}</text>`;
+    }).join('');
+    const incomeSvg = `<svg viewBox="0 0 ${svgW} ${svgH}" width="${svgW}" height="${svgH}" style="display:block;overflow:visible">${incomeBars}</svg>`;
 
-  const sectorBars = SECTORS.map((s, i) => {
-    const estab = cbp[s.key]?.estab || 0;
-    const pct = estab / totalEstab * 100;
-    const y = i * (BAR_H + GAP) + 2;
-    const bw = Math.max(2, (estab / maxEstab) * BAR_W);
-    return `
-      <text x="${LBL_W-4}" y="${y+BAR_H-1}" text-anchor="end" font-size="7.5" fill="#8b949e">${s.label}</text>
-      <rect x="${LBL_W}" y="${y}" width="${bw.toFixed(1)}" height="${BAR_H}" rx="2" fill="${s.color}" opacity="0.85"/>
-      <text x="${LBL_W+bw+3}" y="${y+BAR_H-1}" font-size="7.5" fill="#8b949e">${estab > 0 ? fmtN(estab) : ''}</text>`;
-  }).join('');
-  const sectorSvg = `<svg viewBox="0 0 ${svgW} ${svgH}" width="${svgW}" height="${svgH}" style="display:block;overflow:visible">${sectorBars}</svg>`;
+    const medIncomeFmt = acs.medianIncome > 0 ? '$' + fmtNum(Math.round(acs.medianIncome)) : '—';
+    const povCls   = acs.povertyPct   > 20 ? 'census-red' : acs.povertyPct   > 10 ? 'census-amber' : '';
+    const unempCls = acs.unemploymentPct > 8 ? 'census-red' : acs.unemploymentPct > 5 ? 'census-amber' : '';
+    const burdCls  = acs.rentBurdenedPct > 40 ? 'census-red' : acs.rentBurdenedPct > 25 ? 'census-amber' : '';
+    const snapCls  = acs.snapPct > 20 ? 'census-red' : acs.snapPct > 10 ? 'census-amber' : '';
+    const giniCls  = acs.gini > 0.50 ? 'census-red' : acs.gini > 0.43 ? 'census-amber' : '';
 
-  // ── Stats grid ────────────────────────────────────────────────────────────
-  function statCell(label, val, cls = '') {
-    return `<div class="census-stat"><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
-  }
-
-  const mfgShare = cbp.manufacturing?.estab && cbp.total?.estab
-    ? (cbp.manufacturing.estab / cbp.total.estab * 100).toFixed(1) + '%' : '—';
-  const mfgPayroll = fmt$M(cbp.manufacturing?.payann);
-  const totalPayroll = fmt$M(cbp.total?.payann);
-  const selfEmplPct = d.selfEmpl?.selfEmplPct;
-  // Sanity-check: selfEmpl from ACS B24080 can be anomalous for dense metros; show if plausible
-  const selfEmplDisplay = selfEmplPct != null && selfEmplPct < 35
-    ? fmtPct(selfEmplPct) : '—';
-
-  const statsGrid = `<div class="census-stats-grid">
-    ${statCell('Total Establishments', fmtN(cbp.total?.estab))}
-    ${statCell('Total Payroll/yr', totalPayroll)}
-    ${statCell('Mfg Establishments', fmtN(cbp.manufacturing?.estab))}
-    ${statCell('Mfg Share', mfgShare, cbp.manufacturing?.estab / totalEstab > 0.08 ? 'census-gold' : '')}
-    ${statCell('Mfg Payroll/yr', mfgPayroll)}
-    ${statCell('Self-Employed', selfEmplDisplay)}
-    ${d.abs?.firmCount ? statCell('State Employer Firms', fmtN(d.abs.firmCount)) : ''}
-  </div>`;
-
-  return `
-    <div class="census-wrap">
-      <div class="census-head">US Census · Business Structure (CBP 2022 · ACS 2023)</div>
-      ${d.countyName ? `<div class="census-source" style="margin-top:0;margin-bottom:6px">County: ${escHtml(d.countyName)}</div>` : ''}
-
-      <div class="census-subtitle">Population Trend</div>
-      ${popSummary}
-      ${sparkSvg ? `<div class="census-chart-wrap">${sparkSvg}</div>` : '<div class="census-source">Population trend not available</div>'}
-
-      <div class="census-section-title" style="margin-top:10px">Business Sector Composition</div>
-      <div class="census-chart-wrap">${sectorSvg}</div>
-      <div style="font-size:0.67rem;color:#484f58;margin-bottom:6px">Bar length = number of establishments</div>
-
-      <div class="census-section-title">Key Indicators</div>
-      ${statsGrid}
-
-      <div class="census-source" style="margin-top:8px">
-        Sources: Census Bureau · County Business Patterns 2022 · ACS 5-Year 2023<br>
-        ABS 2021 (state level) · Decennial Census 2020
+    html += `
+      <div class="census-head">Household Economy · ACS ${acs.year || 2023}</div>
+      <div class="econ-two-col">
+        <div class="econ-col-left">
+          <div class="census-subtitle" style="margin-bottom:4px">Income Distribution</div>
+          ${incomeSvg}
+        </div>
+        <div class="econ-col-right">
+          <div class="census-stats-grid econ-right-grid">
+            ${statCell('Median Income', medIncomeFmt, 'census-gold', 'medianIncome')}
+            ${statCell('Poverty', fmtPct(acs.povertyPct), povCls, 'povertyPct')}
+            ${statCell('Unemployed', fmtPct(acs.unemploymentPct), unempCls, 'unemploymentPct')}
+            ${statCell('Rent-Burdened', fmtPct(acs.rentBurdenedPct), burdCls, 'rentBurdenedPct')}
+            ${statCell('Median Rent', fmt$(acs.medianRent)+(acs.medianRent>0?'/mo':''), '', 'medianRent')}
+            ${statCell('Home Value', fmt$(acs.medianHomeValue), '', 'medianHomeValue')}
+            ${statCell('Gini', acs.gini!=null?acs.gini.toFixed(3):'—', giniCls, 'gini')}
+            ${statCell('SNAP', fmtPct(acs.snapPct), snapCls, 'snapPct')}
+          </div>
+        </div>
       </div>
-    </div>`;
+      <div class="census-stats-grid" style="margin-top:6px;grid-template-columns:repeat(4,1fr)">
+        ${statCell('College+', fmtPct(acs.bachelorPlusPct), '', 'bachelorPlusPct')}
+        ${statCell('Transit', fmtPct(acs.transitPct), '', 'transitPct')}
+        ${statCell('Med. Age', acs.medianAge!=null?acs.medianAge+' yr':'—', '', 'medianAge')}
+        ${statCell('Homeown.', fmtPct(acs.ownerOccPct), '', 'ownerOccPct')}
+      </div>`;
+  }
+
+  // ── Business block ─────────────────────────────────────────────────────────
+  if (biz) {
+    const pt = biz.popTrend || {};
+    const popYears = [2019,2020,2021,2022].filter(y => pt[`pop${y}`] != null);
+    const popVals  = popYears.map(y => pt[`pop${y}`]);
+
+    // Pop sparkline (compact)
+    let sparkSvg = '';
+    if (popVals.length >= 2) {
+      const W = 108, H = 30, PAD = 3;
+      const minV = Math.min(...popVals), maxV = Math.max(...popVals);
+      const range = maxV - minV || 1;
+      const xs = popVals.map((_, i) => PAD + i * (W - PAD*2) / (popVals.length - 1));
+      const ys = popVals.map(v => H - PAD - (v - minV) / range * (H - PAD*2));
+      const pts = xs.map((x,i) => `${x.toFixed(1)},${ys[i].toFixed(1)}`).join(' ');
+      const gc  = (pt.growthPct||0) >= 0 ? '#3fb950' : '#f85149';
+      const dots = xs.map((x,i) =>
+        `<circle cx="${x.toFixed(1)}" cy="${ys[i].toFixed(1)}" r="2" fill="${gc}"/>
+         <text x="${x.toFixed(1)}" y="${H+6}" text-anchor="middle" font-size="6.5" fill="#6e7681">${String(popYears[i]).slice(2)}</text>`
+      ).join('');
+      sparkSvg = `<svg viewBox="0 0 ${W} ${H+10}" width="${W}" height="${H+10}" style="display:block;overflow:visible">
+        <polyline points="${pts}" fill="none" stroke="${gc}" stroke-width="1.6" opacity="0.85"/>
+        ${dots}
+      </svg>`;
+    }
+
+    const growthCls = (pt.growthPct||0) >= 0 ? 'census-gold' : 'census-red';
+    const growthStr = popVals.length >= 2
+      ? `<span class="census-stat-value ${growthCls} census-stat-clickable" style="font-size:0.78rem" onclick="openStatsPanel('popGrowthPct','${qid}')" title="Click to see ranking">${(pt.growthPct||0)>=0?'+':''}${(pt.growthPct||0).toFixed(1)}%</span> <span class="census-stat-label">pop 19→22</span>`
+      : '';
+
+    // Sector bars (compact)
+    const cbp = biz.cbp || {};
+    const SECTORS = [
+      { key:'manufacturing', label:'Mfg',           color:'#f0a500' },
+      { key:'professional',  label:'Prof/Tech',      color:'#58a6ff' },
+      { key:'information',   label:'Info/Tech',      color:'#a371f7' },
+      { key:'finance',       label:'Finance',        color:'#3fb950' },
+      { key:'hospitality',   label:'Hospitality',    color:'#ffa657' },
+    ];
+    const totalEstab = cbp.total?.estab || 1;
+    const maxEstab = Math.max(...SECTORS.map(s => cbp[s.key]?.estab||0), 1);
+    const SBW=100, SBH=8, SGAP=4, SLBW=52, SPCTW=28;
+    const sSvgW = SLBW+SBW+SPCTW, sSvgH = SECTORS.length*(SBH+SGAP)+2;
+    const sectorBars = SECTORS.map((s,i) => {
+      const estab = cbp[s.key]?.estab||0;
+      const y = i*(SBH+SGAP)+1;
+      const bw = Math.max(2, (estab/maxEstab)*SBW);
+      return `<text x="${SLBW-3}" y="${y+SBH-1}" text-anchor="end" font-size="7" fill="#8b949e">${s.label}</text>
+        <rect x="${SLBW}" y="${y}" width="${bw.toFixed(1)}" height="${SBH}" rx="1.5" fill="${s.color}" opacity="0.85"/>
+        <text x="${SLBW+bw+2}" y="${y+SBH-1}" font-size="7" fill="#8b949e">${estab>0?fmtN(estab):''}</text>`;
+    }).join('');
+    const sectorSvg = `<svg viewBox="0 0 ${sSvgW} ${sSvgH}" width="${sSvgW}" height="${sSvgH}" style="display:block;overflow:visible">${sectorBars}</svg>`;
+
+    const mfgShare = cbp.manufacturing?.estab && cbp.total?.estab
+      ? (cbp.manufacturing.estab/cbp.total.estab*100).toFixed(1)+'%' : '—';
+    const selfEmplPct = biz.selfEmpl?.selfEmplPct;
+    const selfEmplDisplay = selfEmplPct!=null && selfEmplPct<35 ? fmtPct(selfEmplPct) : '—';
+
+    html += `
+      <div class="census-section-title" style="margin-top:${acs?'10':'0'}px">Business Structure · CBP 2022</div>
+      ${biz.countyName ? `<div class="census-source" style="margin-top:0;margin-bottom:4px">County: ${escHtml(biz.countyName)}</div>` : ''}
+      <div class="econ-two-col">
+        <div class="econ-col-left">
+          <div class="census-subtitle" style="margin-bottom:3px">Population ${growthStr ? '' : 'Trend'}</div>
+          ${growthStr ? `<div style="margin-bottom:4px">${growthStr}</div>` : ''}
+          ${sparkSvg ? sparkSvg : '<div class="census-source">N/A</div>'}
+        </div>
+        <div class="econ-col-right">
+          <div class="census-subtitle" style="margin-bottom:3px">Sector Mix</div>
+          ${sectorSvg}
+        </div>
+      </div>
+      <div class="census-stats-grid" style="margin-top:6px;grid-template-columns:repeat(4,1fr)">
+        ${statCell('Estab.', fmtN(cbp.total?.estab), '', 'totalEstab')}
+        ${statCell('Payroll', fmt$M(cbp.total?.payann), '', 'totalPayroll')}
+        ${statCell('Mfg Share', mfgShare, cbp.manufacturing?.estab/totalEstab>0.08?'census-gold':'', 'mfgShare')}
+        ${statCell('Self-Empl.', selfEmplDisplay, '', 'selfEmplPct')}
+      </div>`;
+  }
+
+  html += `<div class="census-source" style="margin-top:8px">US Census Bureau · ACS 2023 · CBP 2022 · Decennial 2020</div></div>`;
+  return html;
 }
 
 async function openWikiSidebar(qid, cityName) {
@@ -1483,17 +1753,16 @@ async function openWikiSidebar(qid, cityName) {
 
   // Show loading spinner inside the Info tab (preserves tab div structure)
   const _infoEl = document.getElementById('wiki-tab-info');
-  const _censusEl = document.getElementById('wiki-tab-census');
+  const _economyEl = document.getElementById('wiki-tab-economy');
   const _overviewEl = document.getElementById('wiki-tab-overview');
   if (_infoEl) _infoEl.innerHTML = `<div class="wiki-loading"><div class="spinner"></div><span>Loading Wikipedia article…</span></div>`;
-  if (_censusEl) _censusEl.innerHTML = '';
+  if (_economyEl) _economyEl.innerHTML = '';
   if (_overviewEl) _overviewEl.innerHTML = '';
-  // Hide data tabs while loading
-  const _censusBtnEl   = document.getElementById('wiki-tab-census-btn');
-  const _businessBtnEl = document.getElementById('wiki-tab-business-btn');
-  if (_censusBtnEl)   _censusBtnEl.style.display   = 'none';
-  if (_businessBtnEl) _businessBtnEl.style.display = 'none';
-  const _safeTab = ['census','business'].includes(_sidebarTab) ? 'info' : _sidebarTab;
+  // Hide economy tab while loading (may not have US census data yet)
+  const _econBtnEl = document.getElementById('wiki-tab-economy-btn');
+  if (_econBtnEl) _econBtnEl.style.display = 'none';
+  // Guard against stale tab names or economy-only tabs during load
+  const _safeTab = (!VALID_SIDEBAR_TABS.has(_sidebarTab) || _sidebarTab === 'economy') ? 'info' : _sidebarTab;
   switchWikiTab(_safeTab);
 
   try {
@@ -1695,13 +1964,14 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
       fetch('/companies.json').catch(() => null),   // graceful — run npm run fetch-companies
       fetch('/census-cities.json').catch(() => null),
       fetch('/census-business.json').catch(() => null),
+      fetch('/bea-trade.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -1755,6 +2025,16 @@ async function init() {
         console.log(`[init] Census business data loaded (${Object.keys(censusBusiness).length} US cities)`);
       } catch {
         console.warn('[init] census-cities.json is malformed');
+      }
+    }
+
+    // ── Phase 5b3: load BEA trade data (optional, eliminates runtime BEA API calls) ──
+    if (beaTradeRes && beaTradeRes.ok) {
+      try {
+        beaTradeData = await beaTradeRes.json();
+        console.log(`[init] BEA trade data loaded (${Object.keys(beaTradeData).length} countries)`);
+      } catch {
+        console.warn('[init] bea-trade.json is malformed');
       }
     }
 
@@ -2114,6 +2394,27 @@ const CAPITAL_COORDS = {
   MK:[41.99,21.43],   LY:[32.90,13.18],   SD:[15.55,32.53],  TN:[36.82,10.17],
   CM:[3.87,11.52],    SN:[14.69,-17.44],  CD:[-4.32,15.32],  MG:[-18.91,47.54],
   RW:[-1.94,30.06],   UG:[0.32,32.58],    CI:[5.36,-4.01],
+  // Small countries / microstates missing from world GeoJSON centroids
+  MC:[43.74,7.43],   SM:[43.94,12.46],   LI:[47.14,9.52],   AD:[42.51,1.52],
+  VA:[41.90,12.45],  SG:[1.35,103.82],   IS:[64.14,-21.90], BH:[26.21,50.59],
+  MV:[4.18,73.51],   MT:[35.90,14.51],   BN:[4.94,114.95],  KW:[29.37,47.98],
+  QA:[25.29,51.53],  SC:[-4.62,55.45],   MO:[22.20,113.54], XK:[42.67,21.17],
+  PS:[31.95,35.23],  KP:[39.02,125.76],  KI:[1.33,172.98],  TV:[-8.52,179.20],
+  NR:[-0.53,166.92], PW:[7.50,134.62],   MH:[7.11,171.18],  FM:[6.92,158.16],
+  WS:[-13.82,-172.14],TO:[-21.14,-175.20],VU:[-17.73,168.32],SB:[-9.43,160.04],
+  FO:[62.01,-6.77],  GL:[64.18,-51.74],  NC:[-22.27,166.46],PF:[-17.53,-149.57],
+  KG:[42.87,74.59],  TJ:[38.56,68.77],   TM:[37.95,58.38],  TL:[-8.56,125.57],
+  LA:[17.97,102.60], KH:[11.55,104.92],  GY:[6.80,-58.16],  SR:[5.85,-55.20],
+  GN:[9.54,-13.68],  GM:[13.45,-16.58],  GW:[11.86,-15.60], SL:[8.49,-13.23],
+  LR:[6.30,-10.80],  ML:[12.65,-8.00],   BF:[12.37,-1.52],  NE:[13.51,2.12],
+  TD:[12.11,15.04],  CF:[4.36,18.55],    CG:[-4.27,15.29],  GQ:[3.75,8.78],
+  GA:[0.39,9.45],    DJ:[11.59,43.15],   ER:[15.34,38.93],  SO:[2.05,45.34],
+  SS:[4.86,31.57],   LS:[-29.32,27.48],  SZ:[-26.32,31.14], MW:[-13.97,33.79],
+  MR:[18.08,-15.97], ST:[0.34,6.73],     CV:[14.93,-23.51], KM:[-11.70,43.26],
+  GD:[12.06,-61.74], DM:[15.30,-61.39],  LC:[13.91,-60.98], KN:[17.30,-62.72],
+  VC:[13.16,-61.23], AG:[17.12,-61.85],  BB:[13.10,-59.62], TT:[10.65,-61.52],
+  BS:[25.08,-77.35], HT:[18.54,-72.34],  BZ:[17.25,-88.77], SR:[5.85,-55.20],
+  GI:[36.14,-5.35],  IM:[54.15,-4.49],   FJ:[-18.14,178.44],
 };
 
 // Great-circle arc between two [lat,lng] points with a perpendicular offset
@@ -2327,25 +2628,31 @@ async function _loadAndShowTrade(iso2, countryName) {
   if (!beaName) return;
 
   if (!tradeCache[iso2]) {
-    // Check localStorage before hitting the API
-    const cached = _loadTradeFromLS(iso2);
-    if (cached) {
-      tradeCache[iso2] = cached;
+    // 1) Check pre-built local file first (fastest, no API call)
+    if (beaTradeData[iso2]) {
+      tradeCache[iso2] = beaTradeData[iso2];
     } else {
-      document.getElementById('trade-panel-flag').textContent  = '⏳';
-      document.getElementById('trade-panel-title').textContent = 'Loading…';
-      document.getElementById('trade-panel').classList.add('open');
-      try {
-        const data = await fetchBeaTrade(beaName);
-        if (!data || !data.length) {
-          document.getElementById('trade-panel-title').textContent = `No BEA data for ${countryName}`;
+      // 2) Check localStorage cache
+      const cached = _loadTradeFromLS(iso2);
+      if (cached) {
+        tradeCache[iso2] = cached;
+      } else {
+        // 3) Fall back to live BEA API
+        document.getElementById('trade-panel-flag').textContent  = '⏳';
+        document.getElementById('trade-panel-title').textContent = 'Loading…';
+        document.getElementById('trade-panel').classList.add('open');
+        try {
+          const data = await fetchBeaTrade(beaName);
+          if (!data || !data.length) {
+            document.getElementById('trade-panel-title').textContent = `No BEA data for ${countryName}`;
+            return;
+          }
+          tradeCache[iso2] = data;
+          _saveTradeToLS(iso2, data);
+        } catch (_) {
+          document.getElementById('trade-panel-title').textContent = 'Trade data unavailable';
           return;
         }
-        tradeCache[iso2] = data;
-        _saveTradeToLS(iso2, data);
-      } catch (_) {
-        document.getElementById('trade-panel-title').textContent = 'Trade data unavailable';
-        return;
       }
     }
   }
