@@ -82,6 +82,20 @@ header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
 }
 #wiki-sidebar-close:hover { color: #e6edf3; }
 
+#wiki-sidebar-tabs {
+  display: flex; gap: 2px; padding: 6px 12px 0;
+  background: #0d1117; border-bottom: 1px solid #30363d; flex-shrink: 0;
+}
+.wiki-tab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  color: #8b949e; font-size: 0.78rem; font-weight: 500;
+  padding: 5px 10px 6px; cursor: pointer; border-radius: 4px 4px 0 0;
+  transition: color 0.15s, border-color 0.15s;
+  letter-spacing: 0.02em;
+}
+.wiki-tab:hover { color: #c9d1d9; }
+.wiki-tab.active { color: #58a6ff; border-bottom-color: #58a6ff; }
+
 #wiki-sidebar-body { flex: 1; overflow-y: auto; overflow-x: hidden; }
 
 /* Loading state */

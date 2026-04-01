@@ -798,6 +798,23 @@ function closeWikiSidebar() {
   document.getElementById('wiki-sidebar').classList.remove('open');
 }
 
+// ── Sidebar tab state ─────────────────────────────────────────────────────────
+let _sidebarTab = 'info';   // persists across city clicks
+
+function switchWikiTab(tab) {
+  _sidebarTab = tab;
+  ['info','census','overview'].forEach(t => {
+    const el = document.getElementById(`wiki-tab-${t}`);
+    if (el) el.style.display = t === tab ? '' : 'none';
+  });
+  document.querySelectorAll('.wiki-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+  // Scroll tab content to top on switch
+  const body = document.getElementById('wiki-sidebar-body');
+  if (body) body.scrollTop = 0;
+}
+
 // Render the infobox using city Wikidata fields + optional Wikipedia API data
 function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   const body = document.getElementById('wiki-sidebar-body');
@@ -1112,25 +1129,34 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
       <button class="wiki-expand-btn" id="wiki-expand-btn" onclick="toggleExtract()">Show more</button>
     </div>` : '';
 
-  body.innerHTML = `
+  // ── Census tab availability ──
+  const censusData = city.iso === 'US' ? getCensusData(city) : null;
+  const censusBtnEl = document.getElementById('wiki-tab-census-btn');
+  if (censusBtnEl) censusBtnEl.style.display = censusData ? '' : 'none';
+
+  // If Census tab was active but this city has no census data, fall back to Info
+  if (_sidebarTab === 'census' && !censusData) _sidebarTab = 'info';
+
+  // ── Populate tab content divs ──
+  const infoEl     = document.getElementById('wiki-tab-info');
+  const censusEl   = document.getElementById('wiki-tab-census');
+  const overviewEl = document.getElementById('wiki-tab-overview');
+
+  if (infoEl) infoEl.innerHTML = `
     ${carouselHtml}
     <div class="wiki-city-header">
       <div class="wiki-city-name">${escHtml(city.name)}</div>
       ${city.desc ? `<div class="wiki-city-desc">${escHtml(city.desc)}</div>` : ''}
     </div>
     <table class="wiki-info-table">
-      ${locationSec}
-      ${govSec}
-      ${demoSec}
-      ${historySec}
-      ${economySec}
-      ${linksSec}
-      ${wbSec}
+      ${locationSec}${govSec}${demoSec}${historySec}${economySec}${linksSec}${wbSec}
     </table>
-    ${climateHtml}
-    ${city.iso === 'US' ? (() => { const d = getCensusData(city); return d ? buildCensusHtml(d) : ''; })() : ''}
-    ${extractHtml}
   `;
+  if (censusEl) censusEl.innerHTML = censusData ? buildCensusHtml(censusData) : '';
+  if (overviewEl) overviewEl.innerHTML = `${climateHtml}${extractHtml}`;
+
+  // Apply active tab visibility
+  switchWikiTab(_sidebarTab);
 
   if (images && images.length > 0) carStart(images);
 

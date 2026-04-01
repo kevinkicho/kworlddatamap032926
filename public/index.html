@@ -227,7 +227,16 @@
       <span id="wiki-sidebar-title">Wikipedia</span>
       <button id="wiki-sidebar-close" onclick="closeWikiSidebar()" title="Close">×</button>
     </div>
-    <div id="wiki-sidebar-body"></div>
+    <div id="wiki-sidebar-tabs">
+      <button class="wiki-tab active" data-tab="info"     onclick="switchWikiTab('info')">Info</button>
+      <button class="wiki-tab"        data-tab="census"   onclick="switchWikiTab('census')" id="wiki-tab-census-btn" style="display:none">Census</button>
+      <button class="wiki-tab"        data-tab="overview" onclick="switchWikiTab('overview')">Overview</button>
+    </div>
+    <div id="wiki-sidebar-body">
+      <div id="wiki-tab-info"></div>
+      <div id="wiki-tab-census" style="display:none"></div>
+      <div id="wiki-tab-overview" style="display:none"></div>
+    </div>
     <div id="wiki-sidebar-footer"></div>
   </div>
 
