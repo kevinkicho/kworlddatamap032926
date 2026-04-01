@@ -194,6 +194,16 @@ header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
 /* Climate chart */
 .wiki-climate-wrap { padding: 12px 16px; border-top: 1px solid #30363d; }
 .wiki-climate-head { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #6e7681; margin-bottom: 8px; }
+.climate-col { cursor: default; }
+.climate-col-bg { fill: transparent; transition: fill 0.12s; }
+.climate-col:hover .climate-col-bg { fill: rgba(255,255,255,0.06); }
+.climate-mon-abbr { transition: opacity 0.12s; }
+.climate-col:hover .climate-mon-abbr { opacity: 0; }
+.climate-mon-full { opacity: 0; transition: opacity 0.12s; }
+.climate-col:hover .climate-mon-full { opacity: 1; }
+.clim-legend { font-size: 0.63rem; color: #8b949e; margin-top: 4px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.clim-swatch { display: inline-block; width: 10px; height: 7px; border-radius: 1px; vertical-align: middle; margin-right: 2px; }
+.clim-line-swatch { display: inline-block; width: 12px; height: 2px; background: #ffa657; border-radius: 1px; vertical-align: middle; margin-right: 2px; }
 
 /* Extract */
 .wiki-extract-wrap { padding: 14px 16px; border-top: 1px solid #30363d; }

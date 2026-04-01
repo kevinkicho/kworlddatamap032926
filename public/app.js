@@ -950,81 +950,154 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   const climateHtml = (() => {
     const cl = city.climate;
     if (!cl || !cl.months || !cl.months.length) return '';
-
-    const mons = cl.months;  // array of 12 month objects
-    // Determine what data is available
+    const mons = cl.months;
     const hasTemp = mons.some(m => m.high_c != null || m.low_c != null);
     const hasPrec = mons.some(m => m.precipitation_mm != null);
-    const hasSun = mons.some(m => m.sun != null);
+    const hasMean = mons.some(m => m.mean_c != null);
     if (!hasTemp && !hasPrec) return '';
 
-    const MON_LABELS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+    const MON_ABB  = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+    const MON_MED  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const MON_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    // Temperature range sparkline (SVG bar chart, high=top, low=bottom)
-    const CHART_W = 220, CHART_H = 70;
-    const barW = Math.floor(CHART_W / 12) - 1;
+    // ── Layout ──────────────────────────────────────────────────────────────
+    const LP = 30, RP = hasPrec ? 26 : 4, TP = 16, BP = 18;
+    const CW = 204, CH = 94;
+    const TW = LP + CW + RP, TH = TP + CH + BP;
+    const barW = Math.floor(CW / 12) - 1;  // ~16 px per column
 
-    // Find temp range for scaling
+    // ── Temperature scale ───────────────────────────────────────────────────
     const allTemps = mons.flatMap(m => [m.high_c, m.low_c, m.mean_c].filter(v => v != null));
-    const allPrec = mons.map(m => m.precipitation_mm || 0);
-    const tMin = allTemps.length ? Math.min(...allTemps) : 0;
-    const tMax = allTemps.length ? Math.max(...allTemps) : 30;
+    const tMinRaw = allTemps.length ? Math.min(...allTemps) : 0;
+    const tMaxRaw = allTemps.length ? Math.max(...allTemps) : 30;
+    const tPad  = Math.max((tMaxRaw - tMinRaw) * 0.12, 2);
+    const tMin  = Math.floor((tMinRaw - tPad) / 5) * 5;
+    const tMax  = Math.ceil((tMaxRaw  + tPad) / 5) * 5;
     const tRange = tMax - tMin || 1;
-    const pMax = Math.max(...allPrec, 1);
+    const tY = v => v == null ? null : TP + CH - Math.round(((v - tMin) / tRange) * CH);
 
-    const tY = v => v == null ? null : Math.round(CHART_H - ((v - tMin) / tRange) * (CHART_H - 4) - 2);
+    // ── Precipitation scale ─────────────────────────────────────────────────
+    const allPrec  = mons.map(m => m.precipitation_mm || 0);
+    const pMaxRaw  = Math.max(...allPrec, 1);
+    const pAxisMax = Math.ceil(pMaxRaw / 50) * 50;
+    const pBarH    = v => Math.round((v / pAxisMax) * CH);
 
-    // Build SVG bars + temp line
-    let svgBars = '', svgLine = '', svgPoints = '', svgPrecBars = '';
-    mons.forEach((m, i) => {
-      const x = i * (barW + 1);
-      // Precipitation bars (blue, background)
-      if (hasPrec && m.precipitation_mm != null) {
-        const bh = Math.round((m.precipitation_mm / pMax) * (CHART_H - 4));
-        svgPrecBars += `<rect x="${x}" y="${CHART_H - bh}" width="${barW}" height="${bh}" fill="#1f6feb" opacity="0.35" rx="1"/>`;
-      }
-      // Temp range bar (high to low)
-      if (m.high_c != null && m.low_c != null) {
-        const y1 = tY(m.high_c), y2 = tY(m.low_c);
-        svgBars += `<rect x="${x + 1}" y="${y1}" width="${barW - 2}" height="${Math.max(y2 - y1, 1)}" fill="#f78166" rx="1"/>`;
-      }
-      // Mean temp line
-      if (m.mean_c != null) {
-        const y = tY(m.mean_c);
-        const cx2 = x + Math.floor(barW / 2);
-        svgPoints += `${i === 0 ? 'M' : 'L'}${cx2},${y} `;
-      }
-    });
-    if (svgPoints) svgLine = `<path d="${svgPoints.trim()}" fill="none" stroke="#ffa657" stroke-width="1.5" stroke-linejoin="round"/>`;
+    // ── Y-axis ticks ────────────────────────────────────────────────────────
+    const tStep = (tMax - tMin) <= 20 ? 5 : (tMax - tMin) <= 45 ? 10 : 20;
+    const tTicks = [];
+    for (let t = Math.ceil(tMin / tStep) * tStep; t <= tMax; t += tStep) tTicks.push(t);
+    const pStep = pAxisMax <= 100 ? 50 : pAxisMax <= 400 ? 100 : 200;
+    const pTicks = [];
+    for (let p = pStep; p < pAxisMax; p += pStep) pTicks.push(p);
 
-    // Month labels row
-    const labelCells = MON_LABELS.map((l, i) => {
-      const m = mons[i] || {};
-      const t = m.high_c != null ? `${m.high_c > 0 ? '+' : ''}${m.high_c}° / ${m.low_c != null ? m.low_c + '°' : '—'}` : '';
-      const p = m.precipitation_mm != null ? `${m.precipitation_mm}mm` : '';
-      return `<td title="${escHtml(t + (t && p ? '  ' : '') + p)}" style="text-align:center;font-size:0.6rem;color:#8b949e;padding:0 1px;cursor:default">${l}</td>`;
+    // ── Grid lines ──────────────────────────────────────────────────────────
+    const svgGrid = tTicks.map(t => {
+      const y = tY(t), zero = t === 0;
+      return `<line x1="${LP}" y1="${y}" x2="${LP+CW}" y2="${y}"
+        stroke="${zero ? '#388bfd' : '#21262d'}" stroke-width="${zero ? 1.2 : 0.7}"
+        stroke-dasharray="${zero ? '3 2' : '4 3'}"/>`;
     }).join('');
 
-    // Source label
-    const sourceLabel = cl.location
-      ? `<div style="font-size:0.65rem;color:#484f58;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(cl.location)}</div>`
-      : '';
+    // ── Axes ────────────────────────────────────────────────────────────────
+    const svgAxes = `
+      <line x1="${LP}" y1="${TP}" x2="${LP}" y2="${TP+CH}" stroke="#30363d" stroke-width="1.2"/>
+      <line x1="${LP}" y1="${TP+CH}" x2="${LP+CW}" y2="${TP+CH}" stroke="#30363d" stroke-width="1.2"/>
+      ${hasPrec ? `<line x1="${LP+CW}" y1="${TP}" x2="${LP+CW}" y2="${TP+CH}" stroke="#1e3a5f" stroke-width="0.9"/>` : ''}`;
 
-    // Legend
+    // ── Y-axis labels ───────────────────────────────────────────────────────
+    const svgTLabels = tTicks.map(t => {
+      const y = tY(t), zero = t === 0;
+      return `<text x="${LP-4}" y="${y+3}" text-anchor="end" font-size="7.5"
+        fill="${zero ? '#58a6ff' : '#6e7681'}">${t > 0 ? '+' : ''}${t}°</text>`;
+    }).join('');
+    const svgPLabels = hasPrec ? pTicks.map(p => {
+      const y = TP + CH - pBarH(p);
+      if (y < TP + 6 || y > TP + CH - 6) return '';
+      return `<text x="${LP+CW+4}" y="${y+3}" text-anchor="start" font-size="7" fill="#3b82f6aa">${p}</text>`;
+    }).join('') : '';
+    const svgUnits = `
+      <text x="${LP-4}" y="${TP-4}" text-anchor="end" font-size="7" fill="#484f58">°C</text>
+      ${hasPrec ? `<text x="${LP+CW+4}" y="${TP-4}" text-anchor="start" font-size="7" fill="#1f4d8e">mm</text>` : ''}`;
+
+    // ── Column groups (bars + hover + labels) ───────────────────────────────
+    const svgCols = mons.map((m, i) => {
+      const x  = LP + i * (barW + 1);
+      const cx = x + Math.floor(barW / 2);
+      let bars = '';
+
+      // Precipitation bar
+      if (hasPrec && m.precipitation_mm != null) {
+        const bh = pBarH(m.precipitation_mm);
+        const by = TP + CH - bh;
+        bars += `<rect x="${x}" y="${by}" width="${barW}" height="${bh}" fill="#1f6feb" opacity="0.28" rx="1"/>`;
+        const pv = Math.round(m.precipitation_mm);
+        if (bh >= 16) {
+          bars += `<text x="${cx}" y="${by+bh-3}" text-anchor="middle" font-size="6.5" fill="#58a6ff" opacity="0.95">${pv}</text>`;
+        } else if (bh >= 3) {
+          bars += `<text x="${cx}" y="${by-2}" text-anchor="middle" font-size="6" fill="#3b82f6" opacity="0.8">${pv}</text>`;
+        }
+      }
+
+      // Temperature range bar
+      if (m.high_c != null) {
+        const y1 = tY(m.high_c);
+        const y2 = m.low_c != null ? tY(m.low_c) : y1 + 4;
+        bars += `<rect x="${x+1}" y="${y1}" width="${barW-2}" height="${Math.max(y2-y1,2)}" fill="#f78166" opacity="0.82" rx="1"/>`;
+        // High temp value above bar
+        const hSign = m.high_c > 0 ? '+' : '';
+        bars += `<text x="${cx}" y="${y1-3}" text-anchor="middle" font-size="7" fill="#ffa07a" font-weight="600">${hSign}${m.high_c}°</text>`;
+      }
+
+      // Tooltip
+      const tip = [MON_FULL[i],
+        m.high_c  != null ? `↑ ${m.high_c > 0?'+':''}${m.high_c}°C`  : null,
+        m.low_c   != null ? `↓ ${m.low_c  > 0?'+':''}${m.low_c}°C`   : null,
+        m.mean_c  != null ? `≈ ${m.mean_c > 0?'+':''}${m.mean_c}°C`  : null,
+        m.precipitation_mm != null ? `💧 ${m.precipitation_mm} mm`    : null,
+        m.sun     != null ? `☀ ${m.sun} hrs`                          : null,
+      ].filter(Boolean).join('\n');
+
+      return `<g class="climate-col">
+        <title>${escHtml(tip)}</title>
+        <rect class="climate-col-bg" x="${x}" y="${TP}" width="${barW}" height="${CH}" rx="1"/>
+        ${bars}
+        <text class="climate-mon-abbr" x="${cx}" y="${TP+CH+13}" text-anchor="middle" font-size="8" fill="#8b949e">${MON_ABB[i]}</text>
+        <text class="climate-mon-full" x="${cx}" y="${TP+CH+13}" text-anchor="middle" font-size="7" fill="#c9d1d9" font-weight="600">${MON_MED[i]}</text>
+      </g>`;
+    }).join('');
+
+    // ── Mean temperature line (drawn on top of bars) ─────────────────────────
+    let meanSvg = '';
+    if (hasMean) {
+      const pts = mons.map((m, i) => {
+        if (m.mean_c == null) return null;
+        return `${LP + i*(barW+1) + Math.floor(barW/2)},${tY(m.mean_c)}`;
+      }).filter(Boolean);
+      if (pts.length > 1) {
+        meanSvg  = `<path d="M${pts.join('L')}" fill="none" stroke="#ffa657" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.9" pointer-events="none"/>`;
+        meanSvg += pts.map(p => `<circle cx="${p.split(',')[0]}" cy="${p.split(',')[1]}" r="2" fill="#ffa657" opacity="0.9" pointer-events="none"/>`).join('');
+      }
+    }
+
+    // ── Legend + source ─────────────────────────────────────────────────────
     const legend = [
-      hasTemp ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:8px;background:#f78166;border-radius:1px"></span> High/low</span>` : '',
-      mons.some(m => m.mean_c != null) ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:2px;background:#ffa657;"></span> Mean</span>` : '',
-      hasPrec ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:8px;background:#1f6feb;opacity:0.6;border-radius:1px"></span> Precip.</span>` : '',
-    ].filter(Boolean).join(' ');
+      hasTemp ? `<span><span class="clim-swatch" style="background:#f78166;opacity:0.85"></span>Hi/Lo °C</span>` : '',
+      hasMean ? `<span><span class="clim-line-swatch"></span>Mean</span>` : '',
+      hasPrec ? `<span><span class="clim-swatch" style="background:#1f6feb;opacity:0.45"></span>Precip mm</span>` : '',
+    ].filter(Boolean).join('');
+    const sourceLabel = cl.location
+      ? `<div style="font-size:0.63rem;color:#484f58;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(cl.location)}</div>`
+      : '';
 
     return `
       <div class="wiki-climate-wrap">
-        <div class="wiki-climate-head">Climate</div>
-        <svg viewBox="0 0 ${CHART_W} ${CHART_H}" width="100%" height="${CHART_H}" style="display:block;overflow:visible">
-          ${svgPrecBars}${svgBars}${svgLine}
+        <div class="wiki-climate-head">Climate <span style="font-size:0.65rem;color:#484f58;font-weight:400">· hover for details</span></div>
+        <svg viewBox="0 0 ${TW} ${TH}" width="100%" style="display:block;overflow:visible">
+          ${svgGrid}${svgAxes}${svgTLabels}${svgPLabels}${svgUnits}
+          ${svgCols}
+          ${meanSvg}
         </svg>
-        <table style="width:100%;border-collapse:collapse"><tr>${labelCells}</tr></table>
-        <div style="font-size:0.65rem;color:#8b949e;margin-top:4px;display:flex;gap:8px;flex-wrap:wrap">${legend}</div>
+        <div class="clim-legend">${legend}</div>
         ${sourceLabel}
       </div>`;
   })();
