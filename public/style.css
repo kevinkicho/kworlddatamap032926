@@ -465,6 +465,22 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
   text-transform: uppercase; color: #8b949e; margin: 8px 0 4px;
 }
 
+/* ── Eurostat trend sparklines ── */
+.es-trends { display: flex; flex-direction: column; gap: 3px; margin-top: 2px; }
+.es-trend-row {
+  display: grid;
+  grid-template-columns: 88px 114px 60px 1fr;
+  align-items: center; gap: 4px;
+  padding: 3px 4px; border-radius: 5px; cursor: pointer;
+  transition: background 0.15s;
+}
+.es-trend-row:hover { background: #21262d; }
+.es-trend-label { font-size: 0.67rem; color: #8b949e; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
+.es-trend-spark { display: flex; align-items: center; }
+.es-trend-val   { font-size: 0.78rem; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.es-trend-range { font-size: 0.62rem; color: #484f58; text-align: right; white-space: nowrap; }
+.stats-rank-sub { font-size: 0.67rem; color: #6e7681; margin-left: 3px; }
+
 /* ── Choropleth control bar ── */
 #choropleth-bar {
   width: 100%; max-width: 1000px; margin-bottom: 12px;
@@ -1032,6 +1048,10 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
   flex: 1; overflow-y: auto; overflow-x: hidden; padding: 12px 12px 14px;
 }
 .stats-hist-wrap { margin-bottom: 10px; }
+.stats-trend-wrap {
+  margin-bottom: 8px; background: #0d1117; border-radius: 6px;
+  padding: 6px 6px 2px; border: 1px solid #21262d;
+}
 .stats-ranks {
   display: flex; gap: 8px; margin-bottom: 8px;
 }

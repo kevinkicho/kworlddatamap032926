@@ -197,50 +197,49 @@ async function fetchDataset(dataset) {
   return res.json();
 }
 
-// Extract the latest available value for each city for a given indicator.
-// Returns Map<eurostatCityCode, { val, year }>
-function extractLatest(json, indicatorCode) {
-  const dims    = json.id;         // e.g. ['freq','indic_ur','cities','time']
-  const sizes   = json.size;
-  const values  = json.value;
+// Extract all values (full time series) for each city for a given indicator.
+// Returns Map<eurostatCityCode, { latest: {val, year}, history: [[year, val], ...] }>
+function extractAll(json, indicatorCode) {
+  const dims   = json.id;
+  const sizes  = json.size;
+  const values = json.value;
 
-  const freqIdx  = dims.indexOf('freq');
   const indicIdx = dims.indexOf('indic_ur');
   const cityIdx  = dims.indexOf('cities');
   const timeIdx  = dims.indexOf('time');
 
-  const freqCats  = Object.keys(json.dimension.freq.category.index);
   const indicCats = Object.keys(json.dimension.indic_ur.category.index);
   const cityCats  = Object.keys(json.dimension.cities.category.index);
   const timeCats  = Object.keys(json.dimension.time.category.index);
 
-  const nFreq  = sizes[freqIdx];
-  const nIndic = sizes[indicIdx];
   const nCity  = sizes[cityIdx];
   const nTime  = sizes[timeIdx];
 
-  // Find index of this indicator
   const iI = indicCats.indexOf(indicatorCode);
   if (iI === -1) {
-    console.warn(`    Indicator ${indicatorCode} not found in ${Object.keys(json.dimension.indic_ur.category.index).slice(0,5).join(',')}`);
+    console.warn(`    Indicator ${indicatorCode} not found`);
     return new Map();
   }
 
-  // Time categories are typically sorted desc (newest first) — find newest first
-  // Build result map
   const result = new Map();
   for (let iC = 0; iC < nCity; iC++) {
     const cityCode = cityCats[iC];
-    // Only keep "C" cities (core city), skip "K" (greater city) and "F" (functional urban area)
     if (!cityCode.endsWith('C')) continue;
+    const history = [];
+    let latest = null;
     for (let iT = 0; iT < nTime; iT++) {
       const flatIdx = iI * nCity * nTime + iC * nTime + iT;
       const raw = values[flatIdx];
       if (raw == null) continue;
       const year = parseInt(timeCats[iT], 10);
-      if (!result.has(cityCode) || year > result.get(cityCode).year) {
-        result.set(cityCode, { val: parseFloat(raw), year });
-      }
+      if (isNaN(year)) continue;
+      const val = parseFloat(raw);
+      history.push([year, val]);
+      if (!latest || year > latest.year) latest = { val, year };
+    }
+    if (latest) {
+      history.sort((a, b) => a[0] - b[0]);
+      result.set(cityCode, { latest, history });
     }
   }
   return result;
@@ -312,15 +311,15 @@ async function main() {
   const eurostatCodes = Object.keys(eurostatNames).filter(c => c.endsWith('C'));
   console.log(`Eurostat city codes (core cities): ${eurostatCodes.length}`);
 
-  // Extract indicators
+  // Extract indicators (full time series)
   console.log('  Extracting indicators…');
-  const unemploymentMap   = extractLatest(clmaJson, 'EC1020I');
-  const activityMap       = extractLatest(clmaJson, 'EC1001I');
-  const medianIncomeMap   = extractLatest(clivconJson, 'EC3039V');
-  const povertyMap        = extractLatest(clivconJson, 'EC3065V');
-  const homeownershipMap  = extractLatest(clivconJson, 'SA1011I');
-  const rentMap           = extractLatest(clivconJson, 'SA1049V');
-  const companiesMap      = extractLatest(cecfiJson, 'EC2021V');
+  const unemploymentMap   = extractAll(clmaJson,    'EC1020I');
+  const activityMap       = extractAll(clmaJson,    'EC1001I');
+  const medianIncomeMap   = extractAll(clivconJson, 'EC3039V');
+  const povertyMap        = extractAll(clivconJson, 'EC3065V');
+  const homeownershipMap  = extractAll(clivconJson, 'SA1011I');
+  const rentMap           = extractAll(clivconJson, 'SA1049V');
+  const companiesMap      = extractAll(cecfiJson,   'EC2021V');
 
   // ── Match Eurostat codes → our city QIDs ────────────────────────────────
   let matched = 0, unmatched = [];
@@ -363,19 +362,31 @@ async function main() {
     const comp  = companiesMap.get(code);
 
     // Determine best year (prefer labour market year)
-    const year = unemp?.year || act?.year || inc?.year || pov?.year || null;
+    const year = unemp?.latest?.year || act?.latest?.year || inc?.latest?.year || pov?.latest?.year || null;
+
+    // Helper: round history pairs
+    const hist = (m, dp) => m?.history?.length > 1
+      ? m.history.map(([y, v]) => [y, dp === 0 ? Math.round(v) : +v.toFixed(dp)])
+      : null;
 
     const record = {
       eurostatCode: code,
       country: iso2,
       year,
-      unemploymentPct:  unemp ? +unemp.val.toFixed(2) : null,
-      activityRate:     act   ? +act.val.toFixed(2)   : null,
-      medianIncome:     inc   ? +inc.val.toFixed(0)   : null,
-      povertyPct:       pov   ? +pov.val.toFixed(2)   : null,
-      homeownershipPct: home  ? +home.val.toFixed(2)  : null,
-      rentPerSqm:       rent  ? +rent.val.toFixed(2)  : null,
-      totalCompanies:   comp  ? Math.round(comp.val)  : null,
+      unemploymentPct:       unemp?.latest ? +unemp.latest.val.toFixed(2)  : null,
+      unemploymentHistory:   hist(unemp, 2),
+      activityRate:          act?.latest   ? +act.latest.val.toFixed(2)    : null,
+      activityHistory:       hist(act, 2),
+      medianIncome:          inc?.latest   ? +inc.latest.val.toFixed(0)    : null,
+      medianIncomeHistory:   hist(inc, 0),
+      povertyPct:            pov?.latest   ? +pov.latest.val.toFixed(2)    : null,
+      povertyHistory:        hist(pov, 2),
+      homeownershipPct:      home?.latest  ? +home.latest.val.toFixed(2)   : null,
+      homeownershipHistory:  hist(home, 2),
+      rentPerSqm:            rent?.latest  ? +rent.latest.val.toFixed(2)   : null,
+      rentHistory:           hist(rent, 2),
+      totalCompanies:        comp?.latest  ? Math.round(comp.latest.val)   : null,
+      companiesHistory:      hist(comp, 0),
     };
 
     // Only keep if at least one real value

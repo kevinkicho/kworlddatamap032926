@@ -832,14 +832,16 @@ function openStatsPanel(metric, qid) {
 
 function _renderStatsPanel() {
   const { metric, qid } = _statsCurrent;
-  const censusDef = STAT_DEFS[metric];
-  const cityDef   = CITY_STAT_DEFS[metric];
-  const wbDef     = WB_STAT_DEFS[metric];
-  const def = censusDef || cityDef || wbDef;
+  const censusDef    = STAT_DEFS[metric];
+  const cityDef      = CITY_STAT_DEFS[metric];
+  const wbDef        = WB_STAT_DEFS[metric];
+  const eurostatDef  = EUROSTAT_STAT_DEFS[metric];
+  const def = censusDef || cityDef || wbDef || eurostatDef;
   if (!def) return;
 
-  const isCityStat = !!cityDef;
-  const isWbStat   = !!wbDef;
+  const isCityStat    = !!cityDef;
+  const isWbStat      = !!wbDef;
+  const isEurostatStat = !!eurostatDef;
 
   // Highlight the clicked cell
   document.querySelectorAll('.census-stat-clickable.stats-active, .info-chip-clickable.stats-active, .wb-chip-clickable.stats-active')
@@ -848,7 +850,7 @@ function _renderStatsPanel() {
     .forEach(el => el.classList.add('stats-active'));
 
   // Find the clicked city / country
-  const selfCity    = isWbStat ? null : allCities.find(c => c.qid === qid);
+  const selfCity    = (isWbStat) ? null : allCities.find(c => c.qid === qid);
   const selfIso     = isWbStat ? qid : (selfCity?.iso || '');
   const selfState   = selfCity?.admin || '';
   const selfCountry = isWbStat ? (countryData[qid]?.name || qid)
@@ -873,6 +875,16 @@ function _renderStatsPanel() {
       if (val == null || isNaN(val)) continue;
       points.push({ qid: c.qid, val, name: c.name, state: c.admin || '', iso: c.iso || '', country: c.country || '' });
     }
+  } else if (isEurostatStat) {
+    // Eurostat Urban Audit — European cities
+    for (const [cqid, data] of Object.entries(eurostatCities)) {
+      if (!data) continue;
+      const val = data[eurostatDef.key];
+      if (val == null || isNaN(val)) continue;
+      const city = allCities.find(c => c.qid === cqid);
+      if (!city) continue;
+      points.push({ qid: cqid, val, name: city.name, state: data.country || city.iso || '', iso: city.iso || '', country: city.country || city.iso || '' });
+    }
   } else {
     // Census ACS/BIZ — US cities only
     const src = def.src === 'acs' ? censusCities : censusBusiness;
@@ -894,7 +906,7 @@ function _renderStatsPanel() {
 
   const entityIdx = isWbStat
     ? points.findIndex(p => p.qid === selfIso)
-    : points.findIndex(p => p.qid === qid);
+    : points.findIndex(p => p.qid === qid);  // works for census, city, eurostat
   if (entityIdx < 0) { closeStatsPanel(); return; }
   const cp = points[entityIdx];
 
@@ -910,12 +922,18 @@ function _renderStatsPanel() {
     subRank  = regionPts.findIndex(p => p.qid === cp.qid) + 1;
     subTotal = regionPts.length;
     subLabel = cp.region;
+  } else if (isEurostatStat && selfIso) {
+    // Sub-rank by country among all Eurostat cities in same country
+    const countryPts = points.filter(p => p.iso === selfIso);
+    subRank  = countryPts.findIndex(p => p.qid === qid) + 1;
+    subTotal = countryPts.length;
+    subLabel = selfCountry || selfIso;
   } else if (isCityStat && _statsScope === 'world' && selfIso) {
     const countryPts = points.filter(p => p.iso === selfIso);
     subRank  = countryPts.findIndex(p => p.qid === qid) + 1;
     subTotal = countryPts.length;
     subLabel = selfCountry;
-  } else if (!isCityStat && !isWbStat && selfState) {
+  } else if (!isCityStat && !isWbStat && !isEurostatStat && selfState) {
     const statePts = points.filter(p => p.state === selfState);
     subRank  = statePts.findIndex(p => p.qid === qid) + 1;
     subTotal = statePts.length;
@@ -953,6 +971,7 @@ function _renderStatsPanel() {
 
   // ── Scope toggle (city stats only) ──
   const primaryLabel = isWbStat ? 'countries worldwide'
+    : isEurostatStat ? 'European cities (Eurostat)'
     : isCityStat ? (_statsScope === 'world' ? 'worldwide' : escHtml(selfCountry))
     : 'US cities with Census data';
   const scopeToggle = isCityStat ? `
@@ -962,11 +981,44 @@ function _renderStatsPanel() {
         >📍 ${escHtml(selfCountry)}</button>
     </div>` : '';
 
+  // ── Eurostat time-series chart for clicked city ──────────────────────────
+  let trendChartHtml = '';
+  if (isEurostatStat && eurostatDef.histKey) {
+    const esRecord = eurostatCities[qid];
+    const history  = esRecord?.[eurostatDef.histKey];
+    if (history && history.length >= 2) {
+      const TW = 262, TH = 54, TPAD = 4;
+      const xs = history.map(([y]) => y);
+      const vs = history.map(([, v]) => v);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minV = Math.min(...vs), maxV = Math.max(...vs);
+      const rangeV = maxV - minV || 1;
+      const toX = x => TPAD + (x - minX) / (maxX - minX || 1) * (TW - TPAD * 2);
+      const toY = v => TH - TPAD - (v - minV) / rangeV * (TH - TPAD * 2);
+      const pts = history.map(([x, v]) => `${toX(x).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+      // Dots for every data point
+      const dots = history.map(([x, v]) =>
+        `<circle cx="${toX(x).toFixed(1)}" cy="${toY(v).toFixed(1)}" r="1.8" fill="#f0a500" opacity="0.7"/>`).join('');
+      // Labels
+      const firstLbl = `${xs[0]}: ${def.fmt(vs[0])}`;
+      const lastLbl  = `${xs[xs.length-1]}: ${def.fmt(vs[vs.length-1])}`;
+      trendChartHtml = `<div class="stats-trend-wrap">
+        <svg viewBox="0 0 ${TW} ${TH+16}" width="${TW}" height="${TH+16}" style="display:block">
+          <polyline points="${pts}" fill="none" stroke="#58a6ff" stroke-width="1.8" stroke-linejoin="round" opacity="0.85"/>
+          ${dots}
+          <text x="${TPAD}" y="${TH+13}" font-size="7" fill="#6e7681">${escHtml(firstLbl)}</text>
+          <text x="${TW-TPAD}" y="${TH+13}" font-size="7" fill="#f0a500" text-anchor="end">${escHtml(lastLbl)}</text>
+        </svg>
+      </div>`;
+    }
+  }
+
   // ── Render ──
   document.getElementById('stats-panel-title').textContent = def.label;
   document.getElementById('stats-panel-city').textContent  = cp.name + (selfState || (!isWbStat && selfCountry) ? ' · '+(selfState||selfCountry) : '');
   document.getElementById('stats-panel-body').innerHTML = `
     ${scopeToggle}
+    ${trendChartHtml}
     <div class="stats-hist-wrap">${histSvg}</div>
     <div class="stats-ranks">
       <div class="stats-rank-badge">
@@ -988,21 +1040,21 @@ function _renderStatsPanel() {
 
 function _updateStatsListHtml() {
   const metric = _statsCurrent?.metric;
-  const def = STAT_DEFS[metric] || CITY_STAT_DEFS[metric] || WB_STAT_DEFS[metric];
+  const def = STAT_DEFS[metric] || CITY_STAT_DEFS[metric] || WB_STAT_DEFS[metric] || EUROSTAT_STAT_DEFS[metric];
   const listEl = document.getElementById('stats-rank-list-wrap');
   if (!listEl || !def || !_statsPoints.length) return;
   const { qid } = _statsCurrent;
   const isWbStat = !!WB_STAT_DEFS[metric];
-  // For WB stats the current entity qid = iso2; for city stats = city qid
   const curId = isWbStat ? (_statsCurrent.qid) : qid;
   const aboveCount = _statsWinStart;
   const belowCount = _statsPoints.length - 1 - _statsWinEnd;
   const rows = _statsPoints.slice(_statsWinStart, _statsWinEnd + 1).map(p => {
     const isCur = p.qid === curId;
     const navFn = isWbStat ? `statsGoToCountry('${p.qid}')` : `statsGoToCity('${p.qid}')`;
+    const sub = isWbStat ? '' : (p.state ? ` · ${escHtml(p.state)}` : '');
     return `<div class="stats-rank-row${isCur?' stats-rank-current':''}" onclick="${navFn}">
       <span class="stats-rank-num">#${p.rank}</span>
-      <span class="stats-rank-name">${escHtml(p.name)}</span>
+      <span class="stats-rank-name">${escHtml(p.name)}<span class="stats-rank-sub">${sub}</span></span>
       <span class="stats-rank-val">${def.fmt(p.val)}</span>
     </div>`;
   }).join('');
@@ -1575,6 +1627,17 @@ const WB_STAT_DEFS = {
   wb_electricity_pct: { label:'Electricity Access',   key:'electricity_pct', fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
 };
 
+// Eurostat Urban Audit city-level stats — qid used as identifier
+const EUROSTAT_STAT_DEFS = {
+  eurostat_unemploymentPct:  { label:'Unemployment Rate',  key:'unemploymentPct',  histKey:'unemploymentHistory',  fmt: v=>v.toFixed(1)+'%',                  higherBetter:false },
+  eurostat_activityRate:     { label:'Activity Rate',      key:'activityRate',     histKey:'activityHistory',      fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
+  eurostat_medianIncome:     { label:'Median Income (€)',  key:'medianIncome',     histKey:'medianIncomeHistory',  fmt: v=>'€'+Math.round(v).toLocaleString(), higherBetter:true  },
+  eurostat_povertyPct:       { label:'At-Risk Poverty',    key:'povertyPct',       histKey:'povertyHistory',       fmt: v=>v.toFixed(1)+'%',                  higherBetter:false },
+  eurostat_homeownershipPct: { label:'Homeownership Rate', key:'homeownershipPct', histKey:'homeownershipHistory', fmt: v=>v.toFixed(1)+'%',                  higherBetter:null  },
+  eurostat_rentPerSqm:       { label:'Avg Rent / m²',      key:'rentPerSqm',       histKey:'rentHistory',          fmt: v=>'€'+v.toFixed(1),                  higherBetter:null  },
+  eurostat_totalCompanies:   { label:'Total Companies',    key:'totalCompanies',   histKey:'companiesHistory',     fmt: v=>fmtNum(Math.round(v)),             higherBetter:null  },
+};
+
 // Combined Census ACS + Business tab
 function buildEconomyHtml(acs, biz, qid) {
   const fmt$ = v => v != null && v > 0 ? '$' + fmtNum(Math.round(v)) : '—';
@@ -1730,13 +1793,38 @@ function buildEconomyHtml(acs, biz, qid) {
 }
 
 // ── Eurostat Urban Audit tab ──────────────────────────────────────────────────
+
+// Build a compact SVG sparkline from a [[year, val], ...] history array.
+// Returns an SVG string and year-range label.
+function _eurostatSparkline(history, color, W, H) {
+  if (!history || history.length < 2) return { svg: '', range: '' };
+  const xs = history.map(([y]) => y);
+  const vs = history.map(([, v]) => v);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minV = Math.min(...vs), maxV = Math.max(...vs);
+  const rangeV = maxV - minV || 1;
+  const PAD = 2;
+  const toX = x => PAD + (x - minX) / (maxX - minX || 1) * (W - PAD * 2);
+  const toY = v => H - PAD - (v - minV) / rangeV * (H - PAD * 2);
+  const pts = history.map(([x, v]) => `${toX(x).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+  const svg = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block;overflow:visible">
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" opacity="0.9"/>
+    <circle cx="${toX(xs[xs.length-1]).toFixed(1)}" cy="${toY(vs[vs.length-1]).toFixed(1)}" r="2.2" fill="${color}"/>
+  </svg>`;
+  const range = `${minX}–${maxX}`;
+  return { svg, range };
+}
+
 function buildEurostatHtml(es, qid) {
   const fmtPct = v => v != null ? v.toFixed(1) + '%' : '—';
   const fmtEur = v => v != null ? '€' + fmtNum(Math.round(v)) : '—';
   const fmtN   = v => v != null ? fmtNum(Math.round(v)) : '—';
 
-  function statCell(label, val, cls = '') {
-    return `<div class="census-stat"><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
+  function statCell(label, val, cls, metric) {
+    const extra = metric
+      ? ` census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="Click to see European ranking"`
+      : `"`;
+    return `<div class="census-stat${extra}><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
   }
 
   const yr = es.year ? ` · ${es.year}` : '';
@@ -1746,19 +1834,46 @@ function buildEurostatHtml(es, qid) {
   let html = `<div class="census-wrap">
     <div class="census-head">Urban Audit · Eurostat${yr}</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:6px">
-      ${statCell('Unemployment', fmtPct(es.unemploymentPct), unempCls)}
-      ${statCell('Activity Rate', fmtPct(es.activityRate))}
-      ${statCell('Companies', fmtN(es.totalCompanies))}
+      ${statCell('Unemployment', fmtPct(es.unemploymentPct), unempCls, 'eurostat_unemploymentPct')}
+      ${statCell('Activity Rate', fmtPct(es.activityRate), '', 'eurostat_activityRate')}
+      ${statCell('Companies', fmtN(es.totalCompanies), '', 'eurostat_totalCompanies')}
     </div>`;
 
   if (es.medianIncome != null || es.povertyPct != null || es.homeownershipPct != null || es.rentPerSqm != null) {
     html += `<div class="census-section-title" style="margin-top:6px">Living Conditions</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
-      ${statCell('Median Income', fmtEur(es.medianIncome), 'census-gold')}
-      ${statCell('At-Risk Poverty', fmtPct(es.povertyPct), povCls)}
-      ${statCell('Homeownership', fmtPct(es.homeownershipPct))}
-      ${statCell('Rent / m²', es.rentPerSqm != null ? '€' + es.rentPerSqm.toFixed(0) : '—')}
+      ${statCell('Median Income', fmtEur(es.medianIncome), 'census-gold', 'eurostat_medianIncome')}
+      ${statCell('At-Risk Poverty', fmtPct(es.povertyPct), povCls, 'eurostat_povertyPct')}
+      ${statCell('Homeownership', fmtPct(es.homeownershipPct), '', 'eurostat_homeownershipPct')}
+      ${statCell('Rent / m²', es.rentPerSqm != null ? '€' + es.rentPerSqm.toFixed(1) : '—', '', 'eurostat_rentPerSqm')}
     </div>`;
+  }
+
+  // ── Trend sparklines ───────────────────────────────────────────────────────
+  const TREND_ROWS = [
+    { key:'unemploymentHistory',  label:'Unemployment',  valKey:'unemploymentPct',  fmt:fmtPct, color:'#f85149', metric:'eurostat_unemploymentPct'  },
+    { key:'medianIncomeHistory',  label:'Median Income', valKey:'medianIncome',     fmt:fmtEur, color:'#f0a500', metric:'eurostat_medianIncome'     },
+    { key:'povertyHistory',       label:'At-Risk Poverty', valKey:'povertyPct',     fmt:fmtPct, color:'#ffa657', metric:'eurostat_povertyPct'       },
+    { key:'activityHistory',      label:'Activity Rate', valKey:'activityRate',     fmt:fmtPct, color:'#3fb950', metric:'eurostat_activityRate'     },
+    { key:'homeownershipHistory', label:'Homeownership', valKey:'homeownershipPct', fmt:fmtPct, color:'#58a6ff', metric:'eurostat_homeownershipPct' },
+    { key:'rentHistory',          label:'Rent / m²',     valKey:'rentPerSqm',       fmt:v=>'€'+v.toFixed(1), color:'#a371f7', metric:'eurostat_rentPerSqm' },
+    { key:'companiesHistory',     label:'Companies',     valKey:'totalCompanies',   fmt:fmtN,   color:'#79c0ff', metric:'eurostat_totalCompanies'   },
+  ].filter(r => es[r.key] && es[r.key].length >= 2);
+
+  if (TREND_ROWS.length > 0) {
+    html += `<div class="census-section-title" style="margin-top:10px">Trends</div>
+    <div class="es-trends">`;
+    for (const r of TREND_ROWS) {
+      const { svg, range } = _eurostatSparkline(es[r.key], r.color, 110, 28);
+      const latestVal = es[r.valKey] != null ? r.fmt(es[r.valKey]) : '—';
+      html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('${r.metric}','${escHtml(qid)}')" title="Click to see European ranking">
+        <span class="es-trend-label">${r.label}</span>
+        <span class="es-trend-spark">${svg}</span>
+        <span class="es-trend-val" style="color:${r.color}">${latestVal}</span>
+        <span class="es-trend-range">${range}</span>
+      </div>`;
+    }
+    html += `</div>`;
   }
 
   html += `<div class="census-source" style="margin-top:8px">Eurostat Urban Audit · urb_clma · urb_clivcon · urb_cecfi</div></div>`;
