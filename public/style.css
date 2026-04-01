@@ -591,6 +591,26 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 }
 #fx-fab:hover { background: #21262d; border-color: #f0a500; color: #f0a500; }
 
+/* ── Draw boundary floating action button ── */
+#draw-fab {
+  position: fixed;
+  bottom: 80px;
+  left: 12px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 20px;
+  color: #c9d1d9;
+  font-size: 0.78rem;
+  padding: 5px 11px;
+  cursor: pointer;
+  z-index: 994;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+#draw-fab:hover { background: #21262d; border-color: #58a6ff; color: #58a6ff; }
+#draw-fab.active { background: #1f2a1f; border-color: #f0a500; color: #f0a500; }
+
 /* ── Trade flow panel (left side) ── */
 #trade-panel {
   position: fixed;
@@ -887,6 +907,18 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 }
 #corp-sort:focus { border-color: #58a6ff; }
 #corp-count { font-size: 0.72rem; color: #484f58; }
+
+#corp-display-currency {
+  background: #21262d;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  color: #c9d1d9;
+  font-size: 0.73rem;
+  padding: 3px 5px;
+  cursor: pointer;
+  max-width: 120px;
+}
+#corp-display-currency:focus { outline: none; border-color: #58a6ff; }
 
 #corp-list { flex: 1; overflow-y: auto; }
 

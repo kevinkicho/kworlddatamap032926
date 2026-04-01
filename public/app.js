@@ -59,6 +59,7 @@ const FX_TO_USD = {
   COP: 0.00024, PEN: 0.27, CLP: 0.00107, ARS: 0.00098, ILS: 0.27, JOD: 1.41,
   PKR: 0.0036, BDT: 0.0091, LKR: 0.0034, VND: 0.000039, MNT: 0.00029,
   NZD: 0.613, OMR: 2.60,
+  BTC: 65000, ETH: 3200,
 };
 
 // ISO-2 country → default/dominant currency (used when Wikidata currency unit is missing)
@@ -112,6 +113,7 @@ const FX_LABELS = {
   ILS:'Israeli Shekel', JOD:'Jordanian Dinar', PKR:'Pakistani Rupee',
   BDT:'Bangladeshi Taka', LKR:'Sri Lankan Rupee', VND:'Vietnamese Dong',
   MNT:'Mongolian Tögrög', NZD:'New Zealand Dollar',
+  BTC:'Bitcoin', ETH:'Ethereum',
 };
 
 function toggleFxSidebar() {
@@ -1305,8 +1307,28 @@ async function init() {
   // Rebuild economic layer clusters whenever zoom changes
   map.on('zoomend', () => { if (econOn) buildEconLayer(); });
 
-  // Close trade panel when clicking bare map (not on a country or marker)
-  map.on('click', () => closeTradePanelFn());
+  // Close trade panel when clicking bare map; in draw mode, add vertex instead.
+  // Use a 220ms debounce so the two click events that fire before dblclick are
+  // suppressed — without this, double-clicking to close adds 2 stray vertices.
+  let _drawClickTimer = null;
+  map.on('click', e => {
+    if (_drawActive) {
+      _drawClickTimer = setTimeout(() => { _drawClickTimer = null; _drawAddVertex(e.latlng); }, 220);
+      return;
+    }
+    closeTradePanelFn();
+  });
+  map.on('dblclick', e => {
+    if (_drawActive) {
+      if (_drawClickTimer) { clearTimeout(_drawClickTimer); _drawClickTimer = null; }
+      L.DomEvent.preventDefault(e);
+      _drawFinish();
+    }
+  });
+  // Escape key cancels draw mode
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && (_drawActive || _drawPolygon)) _drawClear();
+  });
 
   const terminator = L.terminator({
     fillColor: '#0a0f1a', fillOpacity: 0.45,
@@ -2428,6 +2450,136 @@ function closeCorpPanel() {
   document.getElementById('wiki-sidebar').classList.remove('corp-open');
 }
 
+// ── Draw boundary feature ─────────────────────────────────────────────────────
+let _drawActive   = false;   // currently adding vertices
+let _drawVertices = [];      // [[lat,lng], ...]
+let _drawPolyline = null;    // live dashed outline while drawing
+let _drawPolygon  = null;    // closed polygon layer
+let _drawDots     = [];      // vertex circle markers
+
+function toggleDrawMode() {
+  if (_drawPolygon) { _drawClear(); return; }   // polygon exists → clear it
+  if (_drawActive)  { _drawFinish(); return; }  // drawing → finish
+  // Start drawing
+  _drawActive = true;
+  _drawVertices = [];
+  map.doubleClickZoom.disable();                // prevent map zoom on double-click
+  const btn = document.getElementById('draw-fab');
+  if (btn) { btn.textContent = '✓ Done'; btn.title = 'Click to add points · Double-click or Done to close · Esc to cancel'; btn.classList.add('active'); }
+  map.getContainer().style.cursor = 'crosshair';
+}
+
+function _drawClear() {
+  _drawActive = false;
+  _drawVertices = [];
+  [_drawPolyline, _drawPolygon, ..._drawDots].forEach(l => { try { if(l) map.removeLayer(l); } catch(_){} });
+  _drawPolyline = _drawPolygon = null;
+  _drawDots = [];
+  map.doubleClickZoom.enable();
+  const btn = document.getElementById('draw-fab');
+  if (btn) { btn.textContent = '⬡ Draw'; btn.title = 'Draw a region to explore'; btn.classList.remove('active'); }
+  map.getContainer().style.cursor = '';
+}
+
+function _drawAddVertex(latlng) {
+  _drawVertices.push([latlng.lat, latlng.lng]);
+  const dot = L.circleMarker([latlng.lat, latlng.lng], {
+    radius: 5, color: '#f0a500', fillColor: '#f0a500',
+    fillOpacity: 1, weight: 2, pane: 'econPane', interactive: false,
+  }).addTo(map);
+  _drawDots.push(dot);
+  if (_drawPolyline) map.removeLayer(_drawPolyline);
+  if (_drawVertices.length >= 2) {
+    _drawPolyline = L.polyline(_drawVertices, {
+      color: '#f0a500', weight: 2, opacity: 0.85,
+      dashArray: '6 4', pane: 'econPane', interactive: false,
+    }).addTo(map);
+  }
+  // Update button hint after first point
+  const btn = document.getElementById('draw-fab');
+  if (btn && _drawVertices.length === 1) btn.title = 'Keep clicking to add points · Double-click or click Done to close';
+}
+
+function _drawFinish() {
+  if (_drawVertices.length < 3) { _drawClear(); return; }
+  // Close the polygon visually
+  if (_drawPolyline) { map.removeLayer(_drawPolyline); _drawPolyline = null; }
+  _drawPolygon = L.polygon(_drawVertices, {
+    color: '#f0a500', weight: 2, opacity: 0.85,
+    fillColor: '#f0a500', fillOpacity: 0.06,
+    dashArray: '6 4', pane: 'econPane', interactive: false,
+  }).addTo(map);
+  _drawActive = false;
+  map.doubleClickZoom.enable();
+  map.getContainer().style.cursor = '';
+  const btn = document.getElementById('draw-fab');
+  if (btn) { btn.textContent = '✕ Clear'; btn.title = 'Clear drawn region'; btn.classList.add('active'); }
+  _drawProcessResults();
+}
+
+// Ray-casting point-in-polygon [[lat,lng]…]
+function _pointInPolygon(lat, lng, poly) {
+  let inside = false;
+  const n = poly.length;
+  for (let i = 0, j = n - 1; i < n; j = i++) {
+    const [ai, bi] = poly[i], [aj, bj] = poly[j];
+    if ((bi > lng) !== (bj > lng) &&
+        lat < (aj - ai) * (lng - bi) / (bj - bi) + ai) inside = !inside;
+  }
+  return inside;
+}
+
+function _drawProcessResults() {
+  const enclosed = allCities.filter(c =>
+    c.lat != null && c.lng != null && _pointInPolygon(c.lat, c.lng, _drawVertices)
+  );
+  if (!enclosed.length) {
+    alert('No cities found inside the drawn region.');
+    _drawClear();
+    return;
+  }
+
+  // Build cityPoints group (same format as econ clustering)
+  const MAX_USD = 2e12;
+  const metric  = document.getElementById('econ-metric')?.value || 'revenue';
+  const group   = enclosed.map(city => {
+    const companies = companiesData[city.qid] || [];
+    let totalUSD = 0;
+    const validCos = [];
+    const fallbackCur = ISO2_TO_CURRENCY[city.iso] || null;
+    for (const co of companies) {
+      const val = co[metric] || co.revenue || co.market_cap;
+      const cur = co[metric+'_currency'] || co.revenue_currency || co.market_cap_currency || fallbackCur;
+      if (!val || !cur) continue;
+      const usd = toUSD(val, cur);
+      if (usd > 0 && usd <= MAX_USD) { totalUSD += usd; validCos.push({ co, usd, usedMetric: metric }); }
+    }
+    return { qid: city.qid, city, totalUSD, validCos };
+  });
+
+  const totalUSD = group.reduce((s, p) => s + p.totalUSD, 0);
+  const cLat = enclosed.reduce((s, c) => s + c.lat, 0) / enclosed.length;
+  const cLng = enclosed.reduce((s, c) => s + c.lng, 0) / enclosed.length;
+  const title = `Drawn region · ${enclosed.length} cit${enclosed.length===1?'y':'ies'}`;
+
+  // Corp panel — show all companies in region
+  openCorpPanelCluster(group, title);
+
+  // City list — filter to enclosed cities
+  filtered = enclosed.slice();
+  visibleCount = PAGE_SIZE;
+  renderRows();
+  document.getElementById('list-meta-text').textContent =
+    `${enclosed.length} cities in drawn region`;
+  document.getElementById('list-panel').style.display = '';
+
+  // Economic visualization (only if we have data)
+  if (totalUSD > 0) {
+    collapseEconCluster();
+    expandEconCluster(group.filter(p => p.totalUSD > 0), totalUSD, cLat, cLng);
+  }
+}
+
 function renderCorpList() {
   const tbody = document.getElementById('corp-tbody');
   const countEl = document.getElementById('corp-count');
@@ -2435,7 +2587,40 @@ function renderCorpList() {
 
   const query = document.getElementById('corp-search').value.toLowerCase().trim();
   const sortBy = document.getElementById('corp-sort').value;
+  const displayCur = document.getElementById('corp-display-currency')?.value || '';
   let companies = (corpOverrideList || companiesData[corpCityQid] || []).slice();
+
+  // Populate currency options dynamically from what's in this list
+  const curSel = document.getElementById('corp-display-currency');
+  if (curSel) {
+    const usedCurs = [...new Set(companies.flatMap(co => [
+      co.revenue_currency, co.net_income_currency
+    ].filter(Boolean)))].sort();
+    const extras = ['USD','EUR','JPY','CNY','BTC','ETH'];
+    const allOpts = [...new Set([...extras, ...usedCurs])];
+    const prev = curSel.value;
+    curSel.innerHTML = '<option value="">As reported</option>' +
+      allOpts.map(c => `<option value="${c}"${c===prev?' selected':''}>${c}${FX_LABELS[c]?' · '+FX_LABELS[c]:''}</option>`).join('');
+  }
+
+  // Helper: convert a financial value to the display currency
+  function _toDisp(val, cur) {
+    if (!val) return null;
+    if (!displayCur || displayCur === (cur || '')) return val;
+    const usd = toUSD(val, cur || ISO2_TO_CURRENCY[allCities.find(c=>c.qid===corpCityQid)?.iso] || 'USD');
+    if (!usd) return null;
+    const rate = fxRates[displayCur];
+    return rate ? usd / rate : null;
+  }
+  function _fmtDisp(val, cur) {
+    const v = _toDisp(val, cur);
+    if (v == null) return '—';
+    const sym = displayCur === 'BTC' ? '₿' : displayCur === 'ETH' ? 'Ξ' : displayCur ? displayCur+' ' : '';
+    const decimals = displayCur === 'BTC' ? (v < 1 ? v.toFixed(4) : v.toFixed(2))
+                   : displayCur === 'ETH' ? (v < 1 ? v.toFixed(3) : v.toFixed(1))
+                   : fmtRevenue(v);
+    return sym + decimals;
+  }
 
   if (query) {
     companies = companies.filter(co =>
@@ -2445,8 +2630,16 @@ function renderCorpList() {
   }
 
   companies.sort((a, b) => {
-    if (sortBy === 'revenue') return (b.revenue || 0) - (a.revenue || 0);
-    if (sortBy === 'net_income') return (b.net_income || 0) - (a.net_income || 0);
+    if (sortBy === 'revenue') {
+      const av = displayCur ? (_toDisp(a.revenue, a.revenue_currency) || 0) : (a.revenue || 0);
+      const bv = displayCur ? (_toDisp(b.revenue, b.revenue_currency) || 0) : (b.revenue || 0);
+      return bv - av;
+    }
+    if (sortBy === 'net_income') {
+      const av = displayCur ? (_toDisp(a.net_income, a.net_income_currency) || 0) : (a.net_income || 0);
+      const bv = displayCur ? (_toDisp(b.net_income, b.net_income_currency) || 0) : (b.net_income || 0);
+      return bv - av;
+    }
     if (sortBy === 'founded') return (a.founded || 9999) - (b.founded || 9999);
     return a.name.localeCompare(b.name);
   });
@@ -2490,8 +2683,12 @@ function renderCorpList() {
     return `<tr${wikiAttr} data-fin="${finJson}" onclick="corpRowClick(this)" title="${escAttr(co.name)}">
       <td class="co-name-cell">${escHtml(co.name)}</td>
       <td class="co-industry-cell">${co.industry ? escHtml(co.industry) : '—'}</td>
-      <td class="co-num">${fmtRevenue(co.revenue) ? fmtRevenue(co.revenue) + revYearHtml : '—'}</td>
-      <td class="co-num">${fmtRevenue(co.net_income) || '—'}</td>
+      <td class="co-num" title="${displayCur ? '≈ '+displayCur : (co.revenue_currency||'')}">
+        ${_fmtDisp(co.revenue, co.revenue_currency) !== '—' ? _fmtDisp(co.revenue, co.revenue_currency) + (displayCur ? '' : revYearHtml) : '—'}
+      </td>
+      <td class="co-num" title="${displayCur ? '≈ '+displayCur : (co.net_income_currency||'')}">
+        ${_fmtDisp(co.net_income, co.net_income_currency)}
+      </td>
       <td class="co-neutral">${co.founded || '—'}</td>
       <td class="co-link">${linkHtml}</td>
     </tr>`;

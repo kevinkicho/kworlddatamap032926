@@ -217,12 +217,16 @@
     <div id="corp-panel-controls">
       <input id="corp-search" type="text" placeholder="Search corporations…" oninput="renderCorpList()" />
       <div id="corp-sort-row">
-        <label for="corp-sort">Sort by</label>
+        <label for="corp-sort">Sort</label>
         <select id="corp-sort" onchange="renderCorpList()">
           <option value="revenue">Revenue</option>
           <option value="net_income">Net Income</option>
           <option value="founded">Founded</option>
           <option value="name">Name A–Z</option>
+        </select>
+        <label for="corp-display-currency">in</label>
+        <select id="corp-display-currency" onchange="renderCorpList()" title="Display and sort financial values in this currency">
+          <option value="">As reported</option>
         </select>
         <span id="corp-count"></span>
       </div>
@@ -320,6 +324,9 @@
 
   <!-- ── FX toggle button (always visible) ── -->
   <button id="fx-fab" onclick="toggleFxSidebar()" title="FX Rate Settings">💱</button>
+
+  <!-- ── Draw boundary button (always visible) ── -->
+  <button id="draw-fab" onclick="toggleDrawMode()" title="Draw a region to explore">⬡ Draw</button>
 
   <!-- ── Edit modal ── -->
   <div id="edit-modal">
