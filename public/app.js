@@ -1127,10 +1127,24 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
       ${wbSec}
     </table>
     ${climateHtml}
+    ${city.iso === 'US' ? '<div id="census-section" class="census-loading"><span class="census-spinner"></span> Loading US Census data…</div>' : ''}
     ${extractHtml}
   `;
 
   if (images && images.length > 0) carStart(images);
+
+  // Async Census fetch for US cities
+  if (city.iso === 'US') {
+    fetchCensusData(city).then(d => {
+      const el = document.getElementById('census-section');
+      if (!el) return;
+      if (!d) { el.remove(); return; }
+      el.outerHTML = buildCensusHtml(d);
+    }).catch(() => {
+      const el = document.getElementById('census-section');
+      if (el) el.remove();
+    });
+  }
 
   // ── Footer links ──
   const wikiLink = wpUrl
@@ -1157,6 +1171,178 @@ function toggleExtract() {
   if (!el) return;
   const collapsed = el.classList.toggle('collapsed');
   btn.textContent = collapsed ? 'Show more' : 'Show less';
+}
+
+// ── US Census ACS Data ────────────────────────────────────────────────────────
+// Fetches household income, economic, and housing indicators from the
+// Census Bureau ACS 5-Year Estimates for US cities.
+
+const CENSUS_ACS_VARS = [
+  'B19013_001E',                              // median household income
+  'B19001_001E','B19001_002E','B19001_003E',  // total HH, <10k, 10-15k
+  'B19001_004E','B19001_005E',                // 15-20k, 20-25k
+  'B19001_006E','B19001_007E','B19001_008E',  // 25-30k, 30-35k, 35-40k
+  'B19001_009E','B19001_010E',                // 40-45k, 45-50k
+  'B19001_011E','B19001_012E',                // 50-60k, 60-75k
+  'B19001_013E',                              // 75-100k
+  'B19001_014E','B19001_015E',                // 100-125k, 125-150k
+  'B19001_016E',                              // 150-200k
+  'B19001_017E',                              // 200k+
+  'B17001_001E','B17001_002E',                // poverty universe, below poverty
+  'B23025_002E','B23025_005E',                // labor force, unemployed
+  'B25070_001E','B25070_007E','B25070_008E',  // renter universe, 30-35%, 35-40%
+  'B25070_009E','B25070_010E',                // 40-50%, 50%+
+  'B25064_001E',                              // median gross rent
+  'B25077_001E',                              // median home value
+  'B19083_001E',                              // Gini index
+  'B22003_001E','B22003_002E',                // SNAP universe, SNAP recipients
+].join(',');
+
+async function fetchCensusFips(city) {
+  const cacheKey = `census_fips_v1_${city.qid}`;
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) return JSON.parse(cached);
+
+  const url = `https://geocoding.geo.census.gov/geocoder/geographies/coordinates` +
+    `?x=${city.lng}&y=${city.lat}&benchmark=Public_AR_Current&vintage=Current_Current&format=json`;
+  const res = await fetch(url);
+  const json = await res.json();
+  const geos = json?.result?.geographies;
+
+  // Try incorporated places first, then county subdivisions
+  const place = geos?.['Incorporated Places']?.[0] || geos?.['County Subdivisions']?.[0];
+  if (!place) return null;
+
+  const fips = { state: place.STATE, place: place.PLACE || place.COUSUB, type: place.PLACE ? 'place' : 'cousub' };
+  // Cache FIPS indefinitely (political boundaries rarely change)
+  localStorage.setItem(cacheKey, JSON.stringify(fips));
+  return fips;
+}
+
+async function fetchCensusACS(fips) {
+  const geoPart = fips.type === 'place'
+    ? `for=place:${fips.place}&in=state:${fips.state}`
+    : `for=county+subdivision:${fips.place}&in=state:${fips.state}`;
+  const url = `https://api.census.gov/data/2023/acs/acs5?get=NAME,${CENSUS_ACS_VARS}&${geoPart}`;
+  const res = await fetch(url);
+  if (!res.ok) return null;
+  const json = await res.json();
+  if (!Array.isArray(json) || json.length < 2) return null;
+
+  const headers = json[0];
+  const vals = json[1];
+  const get = key => {
+    const i = headers.indexOf(key);
+    return i >= 0 ? parseFloat(vals[i]) : null;
+  };
+
+  const totalHH = get('B19001_001E') || 1;
+  // Consolidate 17 ACS brackets → 8 groups
+  const rawBrackets = [
+    get('B19001_002E') + get('B19001_003E'),                           // < $15k
+    get('B19001_004E') + get('B19001_005E'),                           // $15–25k
+    get('B19001_006E') + get('B19001_007E') + get('B19001_008E') +
+      get('B19001_009E') + get('B19001_010E'),                         // $25–50k
+    get('B19001_011E') + get('B19001_012E'),                           // $50–75k
+    get('B19001_013E'),                                                // $75–100k
+    get('B19001_014E') + get('B19001_015E'),                           // $100–150k
+    get('B19001_016E'),                                                // $150–200k
+    get('B19001_017E'),                                                // $200k+
+  ];
+  const brackets = rawBrackets.map(v => Math.max(0, v || 0) / totalHH * 100);
+
+  const lf = get('B23025_002E') || 1;
+  const rentUniverse = get('B25070_001E') || 1;
+  const burdenedRenters = (get('B25070_007E') || 0) + (get('B25070_008E') || 0) +
+    (get('B25070_009E') || 0) + (get('B25070_010E') || 0);
+  const snapUniverse = get('B22003_001E') || 1;
+
+  return {
+    placeName: vals[headers.indexOf('NAME')],
+    medianIncome: get('B19013_001E'),
+    brackets,                                           // 8 pct values
+    bracketLabels: ['< $15k','$15–25k','$25–50k','$50–75k','$75–100k','$100–150k','$150–200k','$200k+'],
+    povertyPct: get('B17001_002E') / (get('B17001_001E') || 1) * 100,
+    unemploymentPct: get('B23025_005E') / lf * 100,
+    rentBurdenedPct: burdenedRenters / rentUniverse * 100,
+    medianRent: get('B25064_001E'),
+    medianHomeValue: get('B25077_001E'),
+    gini: get('B19083_001E'),
+    snapPct: get('B22003_002E') / snapUniverse * 100,
+  };
+}
+
+async function fetchCensusData(city) {
+  const cacheKey = `census_data_v1_${city.qid}`;
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    try {
+      const obj = JSON.parse(cached);
+      if (Date.now() - obj.ts < 30 * 24 * 3600 * 1000) return obj.data;
+    } catch (_) {}
+  }
+  const fips = await fetchCensusFips(city);
+  if (!fips) return null;
+  const data = await fetchCensusACS(fips);
+  if (!data) return null;
+  localStorage.setItem(cacheKey, JSON.stringify({ ts: Date.now(), data }));
+  return data;
+}
+
+function buildCensusHtml(d) {
+  const fmt$ = v => v != null && v > 0 ? '$' + fmtNum(Math.round(v)) : '—';
+  const fmtPct = v => v != null && v >= 0 ? v.toFixed(1) + '%' : '—';
+
+  // ── Income distribution chart ─────────────────────────────────────────────
+  const maxPct = Math.max(...d.brackets, 0.1);
+  const BAR_W = 148, BAR_H = 9, GAP = 5, LBL_W = 64, PCT_W = 36;
+  const svgW = LBL_W + BAR_W + PCT_W;
+  const svgH = d.brackets.length * (BAR_H + GAP) + 4;
+  // Color ramp: gray-blue (low) → blue → green → gold → warm orange (high)
+  const COLORS = ['#8b949e','#58a6ff','#2a8ee8','#3fb950','#56d364','#ffa657','#f0a500','#e05c2e'];
+
+  const bars = d.brackets.map((pct, i) => {
+    const y = i * (BAR_H + GAP) + 2;
+    const bw = Math.max(2, (pct / maxPct) * BAR_W);
+    const pctTxt = pct >= 0.5 ? pct.toFixed(1) + '%' : '';
+    return `
+      <text x="${LBL_W - 4}" y="${y + BAR_H - 1}" text-anchor="end" font-size="7.5" fill="#8b949e">${escHtml(d.bracketLabels[i])}</text>
+      <rect x="${LBL_W}" y="${y}" width="${bw.toFixed(1)}" height="${BAR_H}" rx="2" fill="${COLORS[i]}" opacity="0.85"/>
+      <text x="${LBL_W + bw + 3}" y="${y + BAR_H - 1}" font-size="7.5" fill="#8b949e">${escHtml(pctTxt)}</text>`;
+  }).join('');
+
+  const chartSvg = `<svg viewBox="0 0 ${svgW} ${svgH}" width="${svgW}" height="${svgH}" style="display:block;overflow:visible">${bars}</svg>`;
+
+  // ── Stats grid ────────────────────────────────────────────────────────────
+  function statCell(label, value, colorClass = '') {
+    return `<div class="census-stat"><div class="census-stat-label">${label}</div><div class="census-stat-value${colorClass ? ' ' + colorClass : ''}">${value}</div></div>`;
+  }
+
+  const medIncomeFmt = d.medianIncome && d.medianIncome > 0 ? '$' + fmtNum(Math.round(d.medianIncome)) : '—';
+  const povColor = d.povertyPct > 20 ? ' census-red' : d.povertyPct > 10 ? ' census-amber' : '';
+  const unempColor = d.unemploymentPct > 8 ? ' census-red' : d.unemploymentPct > 5 ? ' census-amber' : '';
+  const burdenColor = d.rentBurdenedPct > 40 ? ' census-red' : d.rentBurdenedPct > 25 ? ' census-amber' : '';
+
+  const statsGrid = `
+    <div class="census-stats-grid">
+      ${statCell('Median Income', medIncomeFmt, ' census-gold')}
+      ${statCell('Poverty Rate', fmtPct(d.povertyPct), povColor)}
+      ${statCell('Unemployment', fmtPct(d.unemploymentPct), unempColor)}
+      ${statCell('Rent-Burdened', fmtPct(d.rentBurdenedPct), burdenColor)}
+      ${statCell('Median Rent', fmt$(d.medianRent) + (d.medianRent > 0 ? '/mo' : ''))}
+      ${statCell('Home Value', fmt$(d.medianHomeValue))}
+      ${statCell('Gini Index', d.gini != null && d.gini > 0 ? d.gini.toFixed(3) : '—')}
+      ${statCell('SNAP Receipt', fmtPct(d.snapPct))}
+    </div>`;
+
+  return `
+    <div class="census-wrap">
+      <div class="census-head">US Census · ACS 5-Year (2023)</div>
+      <div class="census-subtitle">Household Income Distribution</div>
+      <div class="census-chart-wrap">${chartSvg}</div>
+      ${statsGrid}
+      <div class="census-source">Source: US Census Bureau · American Community Survey<br>Geography: ${escHtml(d.placeName || '')}</div>
+    </div>`;
 }
 
 async function openWikiSidebar(qid, cityName) {
