@@ -31,6 +31,29 @@
     <span id="choro-coverage"></span>
   </div>
 
+  <!-- ── Census city color bar ── -->
+  <div id="census-color-bar" style="display:none">
+    <label for="census-metric-select">Color US cities by:</label>
+    <select id="census-metric-select" onchange="setCensusColorMetric(this.value)">
+      <option value="">Off</option>
+      <option value="medianIncome">Median Income</option>
+      <option value="povertyPct">Poverty Rate</option>
+      <option value="unemploymentPct">Unemployment</option>
+      <option value="rentBurdenedPct">Rent-Burdened</option>
+      <option value="gini">Gini Index</option>
+      <option value="bachelorPlusPct">College-Educated</option>
+      <option value="snapPct">SNAP Receipt</option>
+      <option value="transitPct">Transit Use</option>
+      <option value="medianAge">Median Age</option>
+      <option value="ownerOccPct">Homeownership</option>
+    </select>
+    <span id="census-color-legend-inner" style="display:none">
+      <span class="census-leg-lo" id="census-leg-lo"></span>
+      <canvas id="census-color-ramp" width="80" height="8"></canvas>
+      <span class="census-leg-hi" id="census-leg-hi"></span>
+    </span>
+  </div>
+
   <!-- ── Economic centers bar ── -->
   <div id="econ-bar" style="display:none">
     <label>Economic centers:</label>
