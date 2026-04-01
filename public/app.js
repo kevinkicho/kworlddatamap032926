@@ -41,6 +41,11 @@ let activeChoroKey = 'gdp_per_capita';
 let econLayer = null;
 let econOn = false;
 
+// Trade flow layer state
+let tradeArrowLayer  = null;   // current trade arrows LayerGroup
+const tradeCache     = {};     // iso2 → [{year, expGds, impGds}]
+const countryCentroids = {};   // iso2 → [lat, lng]
+
 // Approximate 2026 FX rates to USD (used only for relative dot sizing, not financial reporting)
 const FX_TO_USD = {
   USD: 1, EUR: 1.08, GBP: 1.27, JPY: 0.0067, CNY: 0.138, KRW: 0.00075,
@@ -55,10 +60,174 @@ const FX_TO_USD = {
   PKR: 0.0036, BDT: 0.0091, LKR: 0.0034, VND: 0.000039, MNT: 0.00029,
   NZD: 0.613, OMR: 2.60,
 };
+
+// ISO-2 country → default/dominant currency (used when Wikidata currency unit is missing)
+const ISO2_TO_CURRENCY = {
+  US:'USD', GB:'GBP', DE:'EUR', FR:'EUR', IT:'EUR', ES:'EUR', NL:'EUR',
+  BE:'EUR', AT:'EUR', PT:'EUR', FI:'EUR', IE:'EUR', GR:'EUR', LU:'EUR',
+  JP:'JPY', CN:'CNY', KR:'KRW', IN:'INR', BR:'BRL', CA:'CAD', AU:'AUD',
+  CH:'CHF', SE:'SEK', NO:'NOK', DK:'DKK', PL:'PLN', HK:'HKD', SG:'SGD',
+  TW:'TWD', MX:'MXN', ZA:'ZAR', TR:'TRY', RU:'RUB', ID:'IDR', MY:'MYR',
+  PH:'PHP', TH:'THB', NG:'NGN', AE:'AED', SA:'SAR', EG:'EGP', QA:'QAR',
+  KW:'KWD', BH:'BHD', OM:'OMR', CZ:'CZK', HU:'HUF', RO:'RON', BG:'BGN',
+  HR:'HRK', RS:'RSD', UA:'UAH', KZ:'KZT', DZ:'DZD', MA:'MAD', TN:'TND',
+  GH:'GHS', KE:'KES', ET:'ETB', CO:'COP', PE:'PEN', CL:'CLP', AR:'ARS',
+  IL:'ILS', JO:'JOD', PK:'PKR', BD:'BDT', LK:'LKR', VN:'VND', MN:'MNT',
+  NZ:'NZD', HU:'HUF', SK:'EUR', SI:'EUR', EE:'EUR', LV:'EUR', LT:'EUR',
+  CY:'EUR', MT:'EUR',
+};
+
+// Mutable FX rates — start from hardcoded table, overridden by sidebar / localStorage
+let fxRates = { ...FX_TO_USD };
+
 function toUSD(value, currency) {
-  if (!value || !currency) return 0;   // unknown currency → skip rather than assume USD
-  const rate = FX_TO_USD[(currency + '').toUpperCase()];
-  return rate ? value * rate : 0;       // unmapped currency code → skip
+  if (!value || !currency) return 0;
+  const rate = fxRates[(currency + '').toUpperCase()];
+  return rate ? value * rate : 0;
+}
+
+// ── FX Sidebar ────────────────────────────────────────────────────────────────
+
+const LS_FX_KEY = 'fx_rates_v2';
+
+// Currency labels shown in the sidebar list
+const FX_LABELS = {
+  USD:'US Dollar', EUR:'Euro', GBP:'British Pound', JPY:'Japanese Yen',
+  CNY:'Chinese Yuan', KRW:'South Korean Won', INR:'Indian Rupee',
+  BRL:'Brazilian Real', CAD:'Canadian Dollar', AUD:'Australian Dollar',
+  CHF:'Swiss Franc', SEK:'Swedish Krona', NOK:'Norwegian Krone',
+  DKK:'Danish Krone', PLN:'Polish Złoty', HKD:'Hong Kong Dollar',
+  SGD:'Singapore Dollar', TWD:'New Taiwan Dollar', MXN:'Mexican Peso',
+  ZAR:'South African Rand', TRY:'Turkish Lira', RUB:'Russian Ruble',
+  IDR:'Indonesian Rupiah', MYR:'Malaysian Ringgit', PHP:'Philippine Peso',
+  THB:'Thai Baht', NGN:'Nigerian Naira', AED:'UAE Dirham',
+  SAR:'Saudi Riyal', EGP:'Egyptian Pound', QAR:'Qatari Riyal',
+  KWD:'Kuwaiti Dinar', BHD:'Bahraini Dinar', OMR:'Omani Rial',
+  CZK:'Czech Koruna', HUF:'Hungarian Forint', RON:'Romanian Leu',
+  BGN:'Bulgarian Lev', HRK:'Croatian Kuna', RSD:'Serbian Dinar',
+  UAH:'Ukrainian Hryvnia', KZT:'Kazakhstani Tenge', DZD:'Algerian Dinar',
+  MAD:'Moroccan Dirham', TND:'Tunisian Dinar', GHS:'Ghanaian Cedi',
+  KES:'Kenyan Shilling', ETB:'Ethiopian Birr', COP:'Colombian Peso',
+  PEN:'Peruvian Sol', CLP:'Chilean Peso', ARS:'Argentine Peso',
+  ILS:'Israeli Shekel', JOD:'Jordanian Dinar', PKR:'Pakistani Rupee',
+  BDT:'Bangladeshi Taka', LKR:'Sri Lankan Rupee', VND:'Vietnamese Dong',
+  MNT:'Mongolian Tögrög', NZD:'New Zealand Dollar',
+};
+
+function toggleFxSidebar() {
+  const el = document.getElementById('fx-sidebar');
+  const opening = !el.classList.contains('open');
+  el.classList.toggle('open', opening);
+  if (opening) _fxRenderList();
+}
+
+function _fxSaveToLS() {
+  try {
+    const date = document.getElementById('fx-date')?.value || 'latest';
+    localStorage.setItem(LS_FX_KEY, JSON.stringify({ date, rates: fxRates }));
+  } catch (_) {}
+}
+
+function _fxLoadFromLS() {
+  try {
+    const raw = localStorage.getItem(LS_FX_KEY);
+    if (!raw) return false;
+    const { date, rates } = JSON.parse(raw);
+    if (rates && typeof rates === 'object') {
+      Object.assign(fxRates, rates);
+      const dateEl = document.getElementById('fx-date');
+      if (dateEl && date && date !== 'latest') dateEl.value = date;
+      return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
+async function fxFetchRates() {
+  const date = document.getElementById('fx-date')?.value || 'latest';
+  const statusEl = document.getElementById('fx-status');
+  const btn = document.getElementById('fx-fetch-btn');
+  statusEl.textContent = '⏳ Fetching…';
+  if (btn) btn.disabled = true;
+  try {
+    // Frankfurter returns how many of each currency = 1 USD (ECB reference rates)
+    const apiDate = date || 'latest';
+    const res = await fetch(`https://api.frankfurter.app/${apiDate}?from=USD`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    if (!json.rates) throw new Error('No rates in response');
+    // Convert: Frankfurter "1 USD = X cur" → our format "1 cur = Y USD" (Y = 1/X)
+    for (const [cur, val] of Object.entries(json.rates)) {
+      if (val > 0) fxRates[cur.toUpperCase()] = 1 / val;
+    }
+    const returnedDate = json.date || apiDate;
+    const dateEl = document.getElementById('fx-date');
+    if (dateEl) dateEl.value = returnedDate;
+    statusEl.textContent = `✓ ECB rates · ${returnedDate}`;
+    statusEl.style.color = '#3fb950';
+    _fxSaveToLS();
+    _fxRenderList();
+    _fxApplyRates();
+  } catch (e) {
+    statusEl.textContent = `✗ ${e.message}`;
+    statusEl.style.color = '#f85149';
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+function fxResetDefaults() {
+  fxRates = { ...FX_TO_USD };
+  localStorage.removeItem(LS_FX_KEY);
+  const statusEl = document.getElementById('fx-status');
+  if (statusEl) { statusEl.textContent = 'Reset to built-in rates'; statusEl.style.color = '#8b949e'; }
+  const dateEl = document.getElementById('fx-date');
+  if (dateEl) dateEl.value = '2025-01-02';
+  _fxRenderList();
+  _fxApplyRates();
+}
+
+function fxInputChanged(cur, val) {
+  const n = parseFloat(val);
+  if (!n || n <= 0) return;
+  fxRates[cur] = n;
+  _fxSaveToLS();
+  _fxApplyRates();
+}
+
+function _fxRenderList() {
+  const list = document.getElementById('fx-list');
+  if (!list) return;
+  const curs = Object.keys(FX_TO_USD).filter(c => c !== 'USD').sort();
+  list.innerHTML = curs.map(cur => {
+    const rate = fxRates[cur] ?? FX_TO_USD[cur];
+    const def  = FX_TO_USD[cur];
+    const diff = Math.abs(rate - def) / def;
+    const modified = diff > 0.001;
+    // Show: how many units of this currency = 1 USD (inverse, easier to read)
+    const perUSD = rate > 0 ? (1 / rate) : 0;
+    const dispPerUSD = perUSD >= 1000 ? perUSD.toFixed(0)
+                     : perUSD >= 10   ? perUSD.toFixed(2)
+                     : perUSD >= 1    ? perUSD.toFixed(3)
+                     :                  perUSD.toPrecision(3);
+    return `<div class="fx-row${modified ? ' fx-modified' : ''}">
+      <span class="fx-cur">${cur}</span>
+      <span class="fx-label">${FX_LABELS[cur] || ''}</span>
+      <input class="fx-input" type="number" step="any" min="0"
+        value="${rate.toPrecision(4)}"
+        title="1 ${cur} = X USD"
+        onchange="fxInputChanged('${cur}', this.value)" />
+      <span class="fx-per-usd">${dispPerUSD}<span class="fx-per-usd-unit">/USD</span></span>
+    </div>`;
+  }).join('');
+}
+
+function _fxApplyRates() {
+  if (econOn) buildEconLayer();
+  if (corpCityQid) renderCorpList();
+  // Refresh global corp list if visible
+  const gPanel = document.getElementById('global-corp-panel');
+  if (gPanel && gPanel.style.display !== 'none') renderGlobalCorpList();
 }
 
 // Build a World Bank data portal URL slug from a country name.
@@ -1100,13 +1269,31 @@ async function init() {
     worldCopyJump: false,
   });
 
-  // Choropleth sits below city markers so city dot clicks always win
+  // ── Leaflet pane z-index registry ────────────────────────────────────────────
+  // Leaflet built-ins for reference: tilePane=200, overlayPane=400, shadowPane=500,
+  // markerPane=600, tooltipPane=650, popupPane=700.
+  //
+  // Custom pane stack (lowest → highest):
+  //   choroplethPane  350  — country fill polygons; always below everything interactive
+  //   tradePane       390  — BEA trade-flow arc lines; non-interactive, above choropleth
+  //   cityPane        400  — city dot markers (CircleMarkers); same level as overlayPane
+  //   econPane        420  — economic center dots; highest custom pane so econ clicks win
+  //
+  // Rules for future layers:
+  //   • New non-interactive overlays  → use tradePane (390) or add a new pane < 400
+  //   • New interactive dot layers    → add a pane between cityPane and econPane (401–419)
+  //     unless they must beat econ dots for mouse events (then > 420, but beware of
+  //     blocking econ clicks everywhere else)
+  //   • Never assign the same z-index to two panes that compete for mouse events
+  // ─────────────────────────────────────────────────────────────────────────────
   map.createPane('choroplethPane');
-  map.getPane('choroplethPane').style.zIndex = 350;  // below overlayPane (400)
+  map.getPane('choroplethPane').style.zIndex = 350;
+  map.createPane('tradePane');
+  map.getPane('tradePane').style.zIndex = 390;
   map.createPane('cityPane');
-  map.getPane('cityPane').style.zIndex = 400;        // same as default overlayPane
+  map.getPane('cityPane').style.zIndex = 400;
   map.createPane('econPane');
-  map.getPane('econPane').style.zIndex = 420;        // above city dots so econ markers capture mouse first
+  map.getPane('econPane').style.zIndex = 420;
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution:
@@ -1117,6 +1304,9 @@ async function init() {
 
   // Rebuild economic layer clusters whenever zoom changes
   map.on('zoomend', () => { if (econOn) buildEconLayer(); });
+
+  // Close trade panel when clicking bare map (not on a country or marker)
+  map.on('click', () => closeTradePanelFn());
 
   const terminator = L.terminator({
     fillColor: '#0a0f1a', fillOpacity: 0.45,
@@ -1174,6 +1364,7 @@ async function init() {
       try {
         worldGeo = await geoRes.json();
         console.log(`[init] World GeoJSON loaded (${worldGeo.features.length} features)`);
+        _computeCountryCentroids();
       } catch {
         console.warn('[init] world-countries.json is malformed — choropleth unavailable');
       }
@@ -1190,6 +1381,23 @@ async function init() {
     }
     updateStats();
     showLoading(false);
+
+    // Trade year slider + country dropdown
+    document.getElementById('trade-year-slider').addEventListener('input', function () {
+      const iso2 = this.dataset.iso2;
+      const data = tradeCache[iso2];
+      if (!data) return;
+      const yr = parseInt(this.value, 10);
+      _updateTradePanelNumbers(iso2, data, yr);
+      drawTradeArrows(iso2, data, yr);
+    });
+    _populateTradeCountryDropdown();
+
+    // ── FX rates: load from localStorage or auto-fetch latest ECB rates ──
+    if (!_fxLoadFromLS()) {
+      // First visit — silently fetch latest rates in background (no UI shown yet)
+      fxFetchRates().catch(() => {});
+    }
 
     populateCountryFilter();
     document.getElementById('f-search').addEventListener('input', applyFilters);
@@ -1277,7 +1485,7 @@ function buildChoropleth() {
           e.target.bringToFront();
         },
         mouseout: function (e) { choroplethLayer.resetStyle(e.target); },
-        click: function (e) { showCountryPopup(iso2, e.latlng); },
+        click: function (e) { L.DomEvent.stopPropagation(e); showCountryPopup(iso2, e.latlng); },
       });
     },
   }).addTo(map);
@@ -1354,10 +1562,395 @@ function showCountryPopup(iso2, latlng) {
       View on World Bank
     </a>` : ''}`;
 
-  L.popup({ maxWidth: 280, className: '' })
+  // Smart offset: keep popup within map bounds (no top-cutoff, no right-cutoff)
+  const containerPt = map.latLngToContainerPoint(latlng);
+  const mapH = map.getContainer().clientHeight;
+  const mapW = map.getContainer().clientWidth;
+  const POPUP_H = 280;
+  let oy = 0, ox = 0;
+  if (containerPt.y - POPUP_H < 10) oy = POPUP_H - containerPt.y + 20;
+  if (containerPt.x > mapW - 160) ox = -(containerPt.x - (mapW - 170));
+
+  L.popup({ maxWidth: 280, className: '', autoPan: false, offset: L.point(ox, oy) })
     .setLatLng(latlng)
     .setContent(html)
     .openOn(map);
+
+  // Trigger trade flow arrows (async, non-blocking)
+  _loadAndShowTrade(iso2, c.name || iso2);
+}
+
+// ── Trade flow arrows (BEA API) ──────────────────────────────────────────────
+
+// ISO-2 → BEA country name (BEA uses display names, not ISO codes)
+const ISO2_TO_BEA = {
+  AU:'Australia', AT:'Austria', BE:'Belgium', BR:'Brazil', CA:'Canada',
+  CL:'Chile', CN:'China', CO:'Colombia', CZ:'Czech Republic', DK:'Denmark',
+  EG:'Egypt', FI:'Finland', FR:'France', DE:'Germany', GR:'Greece',
+  HK:'Hong Kong', HU:'Hungary', IN:'India', ID:'Indonesia', IE:'Ireland',
+  IL:'Israel', IT:'Italy', JP:'Japan', JO:'Jordan', KE:'Kenya', KW:'Kuwait',
+  MY:'Malaysia', MX:'Mexico', MA:'Morocco', NL:'Netherlands', NZ:'New Zealand',
+  NG:'Nigeria', NO:'Norway', OM:'Oman', PK:'Pakistan', PE:'Peru',
+  PH:'Philippines', PL:'Poland', PT:'Portugal', QA:'Qatar', RU:'Russia',
+  SA:'Saudi Arabia', ZA:'South Africa', KR:'South Korea', ES:'Spain',
+  SE:'Sweden', CH:'Switzerland', TW:'Taiwan', TH:'Thailand', TR:'Turkey',
+  AE:'United Arab Emirates', GB:'United Kingdom', VN:'Vietnam',
+  BD:'Bangladesh', AR:'Argentina', UA:'Ukraine', RO:'Romania', SK:'Slovak Republic',
+  DZ:'Algeria', GT:'Guatemala', HN:'Honduras', CR:'Costa Rica', PA:'Panama',
+  DO:'Dominican Republic', CU:'Cuba', TT:'Trinidad and Tobago',
+  KZ:'Kazakhstan', UZ:'Uzbekistan', AZ:'Azerbaijan', GE:'Georgia',
+  AM:'Armenia', LB:'Lebanon', IQ:'Iraq', LK:'Sri Lanka', MM:'Burma',
+  KH:'Cambodia', MN:'Mongolia', ET:'Ethiopia', GH:'Ghana', TZ:'Tanzania',
+  AO:'Angola', ZM:'Zambia', MZ:'Mozambique', BW:'Botswana', MU:'Mauritius',
+  EC:'Ecuador', VE:'Venezuela', UY:'Uruguay', BO:'Bolivia', PY:'Paraguay',
+  SV:'El Salvador', NI:'Nicaragua', BZ:'Belize', JM:'Jamaica',
+  AF:'Afghanistan', NP:'Nepal', FJ:'Fiji', PG:'Papua New Guinea',
+  BG:'Bulgaria', HR:'Croatia', RS:'Serbia', SI:'Slovenia', LU:'Luxembourg',
+  CY:'Cyprus', MT:'Malta', LT:'Lithuania', LV:'Latvia', EE:'Estonia',
+  MD:'Moldova', BA:'Bosnia and Herzegovina', AL:'Albania', MK:'North Macedonia',
+  LY:'Libya', SD:'Sudan', YE:'Yemen', SY:'Syria', TN:'Tunisia',
+  CM:'Cameroon', SN:'Senegal', CD:'Democratic Republic of the Congo',
+  CI:"Cote d'Ivoire", MG:'Madagascar', RW:'Rwanda', UG:'Uganda',
+};
+
+function _computeCountryCentroids() {
+  if (!worldGeo) return;
+  for (const feat of worldGeo.features) {
+    const iso2 = feat.properties?.iso2;
+    if (!iso2) continue;
+    const pts = [];
+    const collect = ring => ring.forEach(([lng, lat]) => pts.push([lat, lng]));
+    const g = feat.geometry;
+    if (g.type === 'Polygon') g.coordinates.forEach(collect);
+    else if (g.type === 'MultiPolygon') g.coordinates.forEach(p => p.forEach(collect));
+    if (pts.length) {
+      countryCentroids[iso2] = [
+        pts.reduce((s, c) => s + c[0], 0) / pts.length,
+        pts.reduce((s, c) => s + c[1], 0) / pts.length,
+      ];
+    }
+  }
+}
+
+async function fetchBeaTrade(beaCountryName) {
+  // Fetch goods AND services in one call
+  const url = 'https://apps.bea.gov/api/data/?UserID=YOUR_BEA_API_KEY_HERE' +
+    '&method=GetData&DataSetName=ITA&Indicator=ExpGds,ImpGds,ExpSvcs,ImpSvcs' +
+    `&AreaOrCountry=${encodeURIComponent(beaCountryName)}&Frequency=A&Year=ALL&ResultFormat=JSON`;
+  const res = await fetch(url);
+  const json = await res.json();
+  const rows = json?.BEAAPI?.Results?.Data;
+  if (!rows) return null;
+  const byYear = {};
+  for (const r of rows) {
+    const yr = parseInt(r.TimePeriod, 10);
+    if (isNaN(yr)) continue;
+    const raw = parseFloat((r.DataValue || '').replace(/,/g, ''));
+    if (isNaN(raw)) continue;
+    const val = raw * 1e6;  // millions → dollars
+    if (!byYear[yr]) byYear[yr] = { year: yr };
+    if (r.Indicator === 'ExpGds')  byYear[yr].expGds  = val;
+    if (r.Indicator === 'ImpGds')  byYear[yr].impGds  = val;
+    if (r.Indicator === 'ExpSvcs') byYear[yr].expSvcs = val;
+    if (r.Indicator === 'ImpSvcs') byYear[yr].impSvcs = val;
+  }
+  return Object.values(byYear).sort((a, b) => a.year - b.year);
+}
+
+// localStorage helpers (7-day TTL keeps panel fast on repeat visits)
+const LS_TRADE_PREFIX = 'bea_trade_v1_';
+const LS_TRADE_TTL    = 7 * 24 * 60 * 60 * 1000;
+
+function _saveTradeToLS(iso2, data) {
+  try { localStorage.setItem(LS_TRADE_PREFIX + iso2, JSON.stringify({ ts: Date.now(), data })); } catch (_) {}
+}
+function _loadTradeFromLS(iso2) {
+  try {
+    const raw = localStorage.getItem(LS_TRADE_PREFIX + iso2);
+    if (!raw) return null;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > LS_TRADE_TTL) { localStorage.removeItem(LS_TRADE_PREFIX + iso2); return null; }
+    return data;
+  } catch (_) { return null; }
+}
+
+// ISO-2 → flag emoji via Unicode regional indicators
+function isoToFlag(iso2) {
+  if (!iso2 || iso2.length !== 2) return '🌐';
+  return [...iso2.toUpperCase()].map(c =>
+    String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65)
+  ).join('');
+}
+
+// Capital city coordinates — used as arrow endpoints instead of polygon centroids
+const CAPITAL_COORDS = {
+  US:[38.91,-77.04],  AU:[-35.28,149.13], AT:[48.21,16.37],  BE:[50.85,4.35],
+  BR:[-15.78,-47.93], CA:[45.42,-75.69],  CL:[-33.46,-70.65],CN:[39.91,116.39],
+  CO:[4.71,-74.07],   CZ:[50.08,14.44],   DK:[55.68,12.57],  EG:[30.06,31.25],
+  FI:[60.17,24.94],   FR:[48.86,2.35],    DE:[52.52,13.41],  GR:[37.98,23.73],
+  HK:[22.32,114.17],  HU:[47.50,19.04],   IN:[28.61,77.21],  ID:[-6.21,106.85],
+  IE:[53.33,-6.25],   IL:[31.78,35.22],   IT:[41.90,12.50],  JP:[35.69,139.69],
+  JO:[31.96,35.95],   KE:[-1.29,36.82],   KW:[29.37,47.98],  MY:[3.14,101.69],
+  MX:[19.43,-99.13],  MA:[34.02,-6.85],   NL:[52.37,4.89],   NZ:[-41.29,174.78],
+  NG:[9.07,7.40],     NO:[59.91,10.75],   OM:[23.61,58.59],  PK:[33.72,73.04],
+  PE:[-12.04,-77.03], PH:[14.60,120.98],  PL:[52.23,21.01],  PT:[38.72,-9.14],
+  QA:[25.29,51.53],   RU:[55.75,37.62],   SA:[24.69,46.72],  ZA:[-25.74,28.19],
+  KR:[37.57,126.98],  ES:[40.42,-3.70],   SE:[59.33,18.07],  CH:[46.95,7.45],
+  TW:[25.04,121.56],  TH:[13.75,100.52],  TR:[39.92,32.85],  AE:[24.47,54.37],
+  GB:[51.51,-0.13],   VN:[21.03,105.83],  BD:[23.72,90.41],  AR:[-34.61,-58.38],
+  UA:[50.45,30.52],   RO:[44.44,26.10],   SK:[48.15,17.11],  DZ:[36.74,3.06],
+  GT:[14.64,-90.51],  HN:[14.10,-87.21],  CR:[9.93,-84.08],  PA:[8.99,-79.52],
+  DO:[18.48,-69.90],  CU:[23.13,-82.38],  TT:[10.65,-61.52], KZ:[51.18,71.45],
+  UZ:[41.30,69.24],   AZ:[40.41,49.87],   GE:[41.69,44.83],  AM:[40.18,44.51],
+  LB:[33.89,35.50],   IQ:[33.34,44.40],   LK:[6.93,79.85],   MM:[16.87,96.19],
+  KH:[11.55,104.92],  MN:[47.91,106.89],  ET:[9.03,38.74],   GH:[5.56,-0.20],
+  TZ:[-6.80,39.27],   AO:[-8.84,13.23],   ZM:[-15.42,28.28], MZ:[-25.97,32.57],
+  BW:[-24.65,25.91],  MU:[-20.16,57.50],  EC:[-0.22,-78.51], VE:[10.50,-66.92],
+  UY:[-34.90,-56.19], BO:[-16.50,-68.15], PY:[-25.28,-57.64],SV:[13.69,-89.19],
+  NI:[12.14,-86.28],  BZ:[17.25,-88.77],  JM:[17.99,-76.79], AF:[34.53,69.17],
+  NP:[27.70,85.32],   FJ:[-18.14,178.44], PG:[-9.44,147.18], BG:[42.70,23.32],
+  HR:[45.81,15.97],   RS:[44.82,20.46],   SI:[46.05,14.51],  LU:[49.61,6.13],
+  CY:[35.17,33.36],   MT:[35.90,14.51],   LT:[54.69,25.28],  LV:[56.95,24.11],
+  EE:[59.44,24.75],   MD:[47.00,28.86],   BA:[43.85,18.40],  AL:[41.33,19.82],
+  MK:[41.99,21.43],   LY:[32.90,13.18],   SD:[15.55,32.53],  TN:[36.82,10.17],
+  CM:[3.87,11.52],    SN:[14.69,-17.44],  CD:[-4.32,15.32],  MG:[-18.91,47.54],
+  RW:[-1.94,30.06],   UG:[0.32,32.58],    CI:[5.36,-4.01],
+};
+
+// Great-circle arc between two [lat,lng] points with a perpendicular offset
+// offsetDir +1 / -1 separates export and import arrows visually
+function _tradeArc(lat1, lon1, lat2, lon2, offsetDir) {
+  // Normalise longitude to use the shorter path (avoid wrapping the long way)
+  let lon2a = lon2;
+  if (lon2a - lon1 > 180)  lon2a -= 360;
+  if (lon2a - lon1 < -180) lon2a += 360;
+
+  const dl = lat2 - lat1, dn = lon2a - lon1;
+  const len = Math.sqrt(dl * dl + dn * dn) || 1;
+
+  // Midpoint of the chord
+  const midLat = (lat1 + lat2) / 2;
+  const midLon = (lon1 + lon2a) / 2;
+
+  // Perpendicular unit vector × 5° offset — keeps curve reasonable at any distance
+  const ctrl = [
+    midLat + (-dn / len) * 5 * offsetDir,
+    midLon + ( dl / len) * 5 * offsetDir,
+  ];
+
+  // 40-point quadratic Bezier
+  const pts = [];
+  for (let i = 0; i <= 40; i++) {
+    const t = i / 40, u = 1 - t;
+    pts.push([
+      u * u * lat1 + 2 * u * t * ctrl[0] + t * t * lat2,
+      u * u * lon1 + 2 * u * t * ctrl[1] + t * t * lon2a,
+    ]);
+  }
+  return pts;
+}
+
+function _tradeArrowWeight(usd) {
+  const log = Math.log10(Math.max(usd, 1e9));
+  return Math.max(2, Math.min(14, 2 + 12 * (log - 9) / (12 - 9)));
+}
+
+function drawTradeArrows(iso2, data, year) {
+  clearTradeArrows();
+  // Use capital city as anchor; fall back to polygon centroid
+  const targetPt = CAPITAL_COORDS[iso2] || countryCentroids[iso2];
+  const usPt     = CAPITAL_COORDS['US'];
+  if (!targetPt) return;
+
+  const row = data.find(d => d.year === year) || data[data.length - 1];
+  if (!row) return;
+
+  const markers = [];
+  const expTotal = (row.expGds || 0) + (row.expSvcs || 0);
+  const impTotal = (row.impGds || 0) + (row.impSvcs || 0);
+
+  // Export: US → country (blue, offset +1 so arc curves one way)
+  if (expTotal > 0) {
+    const pts = _tradeArc(usPt[0], usPt[1], targetPt[0], targetPt[1], 1);
+    markers.push(L.polyline(pts, {
+      color: '#58a6ff', weight: _tradeArrowWeight(expTotal),
+      opacity: 0.85, className: 'trade-arrow-export',
+      pane: 'tradePane', interactive: false,
+    }));
+    // Arrowhead dot at destination
+    markers.push(L.circleMarker(targetPt, {
+      radius: Math.max(4, _tradeArrowWeight(expTotal) * 0.65),
+      color: '#58a6ff', fillColor: '#58a6ff', fillOpacity: 0.9, weight: 0,
+      pane: 'tradePane', interactive: false,
+    }));
+  }
+
+  // Import: country → US (gold, offset −1 so arc curves the other way)
+  if (impTotal > 0) {
+    const pts = _tradeArc(targetPt[0], targetPt[1], usPt[0], usPt[1], -1);
+    markers.push(L.polyline(pts, {
+      color: '#f0a500', weight: _tradeArrowWeight(impTotal),
+      opacity: 0.85, className: 'trade-arrow-import',
+      pane: 'tradePane', interactive: false,
+    }));
+    markers.push(L.circleMarker(usPt, {
+      radius: Math.max(4, _tradeArrowWeight(impTotal) * 0.65),
+      color: '#f0a500', fillColor: '#f0a500', fillOpacity: 0.9, weight: 0,
+      pane: 'tradePane', interactive: false,
+    }));
+  }
+
+  tradeArrowLayer = L.layerGroup(markers).addTo(map);
+}
+
+function clearTradeArrows() {
+  if (tradeArrowLayer) { map.removeLayer(tradeArrowLayer); tradeArrowLayer = null; }
+}
+
+// Render a trade-balance sparkline as inline SVG (goods balance, last 16 years)
+function _renderTradeSparkline(data) {
+  if (!data || data.length < 2) return '';
+  const recent   = data.slice(-16);
+  const balances = recent.map(d => (d.expGds || 0) - (d.impGds || 0));
+  const maxAbs   = Math.max(...balances.map(Math.abs), 1);
+  const W = 258, H = 34, gap = 2;
+  const barW = Math.max(1, Math.floor((W - gap * (recent.length - 1)) / recent.length));
+  const bars = recent.map((d, i) => {
+    const bal  = (d.expGds || 0) - (d.impGds || 0);
+    const norm = bal / maxAbs;
+    const barH = Math.max(2, Math.abs(norm) * (H / 2 - 2));
+    const y    = norm >= 0 ? H / 2 - barH : H / 2;
+    const fill = norm >= 0 ? '#3fb950' : '#f85149';
+    return `<rect x="${i * (barW + gap)}" y="${y.toFixed(1)}" width="${barW}" height="${barH.toFixed(1)}" fill="${fill}" rx="1" opacity="0.8"/>`;
+  }).join('');
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block">
+    <line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="#30363d" stroke-width="1"/>
+    ${bars}
+  </svg>
+  <div class="trade-spark-labels">
+    <span>${recent[0].year}</span><span>${recent[recent.length - 1].year}</span>
+  </div>`;
+}
+
+// Pull top companies for a country from our existing companiesData
+function _getTopCompaniesByIso(iso2, limit = 6) {
+  const cos = [];
+  for (const city of allCities) {
+    if (city.iso !== iso2) continue;
+    for (const co of (companiesData[city.qid] || [])) {
+      if (co.name) cos.push(co);
+    }
+  }
+  const fallbackCur = ISO2_TO_CURRENCY[iso2] || null;
+  cos.sort((a, b) => toUSD(b.revenue || 0, b.revenue_currency || fallbackCur) - toUSD(a.revenue || 0, a.revenue_currency || fallbackCur));
+  return cos.slice(0, limit);
+}
+
+// Populate country dropdown once — called after init
+function _populateTradeCountryDropdown() {
+  const sel = document.getElementById('trade-country-select');
+  if (!sel) return;
+  const entries = Object.entries(ISO2_TO_BEA).sort((a, b) => a[1].localeCompare(b[1]));
+  sel.innerHTML = '<option value="">— pick a country —</option>' +
+    entries.map(([iso2, name]) =>
+      `<option value="${iso2}">${isoToFlag(iso2)} ${escHtml(name)}</option>`
+    ).join('');
+  sel.addEventListener('change', function () {
+    const iso2 = this.value;
+    if (iso2) _loadAndShowTrade(iso2, ISO2_TO_BEA[iso2]);
+  });
+}
+
+function openTradePanel(iso2, countryName, data) {
+  const latestYear = data[data.length - 1]?.year || 2024;
+
+  // Header
+  document.getElementById('trade-panel-flag').textContent  = isoToFlag(iso2);
+  document.getElementById('trade-panel-title').textContent = `${countryName} ↔ US`;
+
+  // Sync dropdown
+  const sel = document.getElementById('trade-country-select');
+  if (sel) sel.value = iso2;
+
+  // Year slider
+  const slider = document.getElementById('trade-year-slider');
+  slider.min   = data[0]?.year || 1999;
+  slider.max   = latestYear;
+  slider.value = latestYear;
+  slider.dataset.iso2 = iso2;
+
+  // Sparkline (static — same regardless of selected year)
+  document.getElementById('trade-spark').innerHTML = _renderTradeSparkline(data);
+
+  // Top companies from our existing data
+  const topCos = _getTopCompaniesByIso(iso2, 6);
+  document.getElementById('trade-companies-list').innerHTML = topCos.length
+    ? topCos.map(co => {
+        const rev = co.revenue ? `<span class="tco-rev">$${fmtRevenue(toUSD(co.revenue, co.revenue_currency))}</span>` : '';
+        const ind = co.industry ? `<span class="tco-ind">${escHtml(co.industry)}</span>` : '';
+        return `<div class="tco-row"><span class="tco-name">${escHtml(co.name)}</span>${ind}${rev}</div>`;
+      }).join('')
+    : '<div class="tco-empty">No company data available</div>';
+
+  _updateTradePanelNumbers(iso2, data, latestYear);
+  drawTradeArrows(iso2, data, latestYear);
+  document.getElementById('trade-panel').classList.add('open');
+}
+
+function _updateTradePanelNumbers(iso2, data, year) {
+  const row = data.find(d => d.year === year) || data[data.length - 1];
+  if (!row) return;
+  document.getElementById('trade-year-label').textContent = year;
+
+  const fmt = v => v ? '$' + fmtRevenue(v) : '—';
+  document.getElementById('tg-exp-gds').textContent  = fmt(row.expGds);
+  document.getElementById('tg-imp-gds').textContent  = fmt(row.impGds);
+  document.getElementById('tg-exp-svcs').textContent = fmt(row.expSvcs);
+  document.getElementById('tg-imp-svcs').textContent = fmt(row.impSvcs);
+
+  const totalExp = (row.expGds || 0) + (row.expSvcs || 0);
+  const totalImp = (row.impGds || 0) + (row.impSvcs || 0);
+  const balance  = totalExp - totalImp;
+  const balEl    = document.getElementById('trade-balance-val');
+  balEl.textContent  = (balance >= 0 ? '+' : '\u2212') + '$' + fmtRevenue(Math.abs(balance));
+  balEl.style.color  = balance >= 0 ? '#3fb950' : '#f85149';
+  document.getElementById('trade-balance-label').textContent = balance >= 0 ? 'US surplus' : 'US deficit';
+}
+
+function closeTradePanelFn() {
+  document.getElementById('trade-panel').classList.remove('open');
+  clearTradeArrows();
+}
+
+async function _loadAndShowTrade(iso2, countryName) {
+  if (iso2 === 'US') return;
+  const beaName = ISO2_TO_BEA[iso2];
+  if (!beaName) return;
+
+  if (!tradeCache[iso2]) {
+    // Check localStorage before hitting the API
+    const cached = _loadTradeFromLS(iso2);
+    if (cached) {
+      tradeCache[iso2] = cached;
+    } else {
+      document.getElementById('trade-panel-flag').textContent  = '⏳';
+      document.getElementById('trade-panel-title').textContent = 'Loading…';
+      document.getElementById('trade-panel').classList.add('open');
+      try {
+        const data = await fetchBeaTrade(beaName);
+        if (!data || !data.length) {
+          document.getElementById('trade-panel-title').textContent = `No BEA data for ${countryName}`;
+          return;
+        }
+        tradeCache[iso2] = data;
+        _saveTradeToLS(iso2, data);
+      } catch (_) {
+        document.getElementById('trade-panel-title').textContent = 'Trade data unavailable';
+        return;
+      }
+    }
+  }
+  openTradePanel(iso2, countryName, tradeCache[iso2]);
 }
 
 function toggleChoropleth() {
@@ -1429,14 +2022,23 @@ function toggleEconLayer() {
 }
 
 // ── Econ cluster expansion ────────────────────────────────────────────────────
-let _expandedLayers = null;
+let _expandedLayers  = null;
 let _collapseOnClick = null;   // reference kept so we can remove the map listener cleanly
+let _pinnedExpansion = null;   // {group, clusterUSD, cLat, cLng} — survives zoom rebuilds
 
-function collapseEconCluster() {
+// Remove drawn expansion layers without touching the pin (used by buildEconLayer)
+function _clearExpandedLayers() {
   if (_collapseOnClick) { map.off('click', _collapseOnClick); _collapseOnClick = null; }
-  if (!_expandedLayers) return;
-  _expandedLayers.forEach(l => { try { map.removeLayer(l); } catch (_) { } });
-  _expandedLayers = null;
+  if (_expandedLayers) {
+    _expandedLayers.forEach(l => { try { map.removeLayer(l); } catch (_) {} });
+    _expandedLayers = null;
+  }
+}
+
+// Full collapse: remove layers AND clear the pin so zoom no longer re-expands
+function collapseEconCluster() {
+  _clearExpandedLayers();
+  _pinnedExpansion = null;
 }
 
 // Convex hull via Jarvis march on [[lat,lng]…] points
@@ -1475,7 +2077,8 @@ function _arcLine(p1, p2, curve = 0.22) {
 }
 
 function expandEconCluster(group, clusterUSD, cLat, cLng) {
-  collapseEconCluster();
+  _clearExpandedLayers();                              // remove old visuals, keep any existing pin
+  _pinnedExpansion = { group, clusterUSD, cLat, cLng }; // pin so zoom rebuilds re-expand
   const layers = [];
   const col = econDotColor(clusterUSD);
   const MAX_USD = 2e12;
@@ -1608,7 +2211,9 @@ function _econCellDeg(zoom) {
 
 function buildEconLayer() {
   if (!econOn) return;
-  collapseEconCluster();
+  const _savedPin = _pinnedExpansion;  // preserve across rebuild so zoom keeps expansion
+  _clearExpandedLayers();              // remove old expansion visuals (don't clear pin yet)
+  _pinnedExpansion = null;             // reset so re-expand below is clean
   if (econLayer) { map.removeLayer(econLayer); econLayer = null; }
   if (!Object.keys(companiesData).length) return;
 
@@ -1626,10 +2231,13 @@ function buildEconLayer() {
     let totalUSD = 0;
     const validCos = [];
     for (const co of companies) {
-      // Primary: selected metric; fallback: the other metric
-      const hasPrimary = !!(co[metric] && co[metric + '_currency']);
+      // Primary: selected metric; fallback: the other metric.
+      // Currency may be null in Wikidata data — fall back to country default.
+      const countryDefaultCur = ISO2_TO_CURRENCY[city.iso] || null;
+      const hasPrimary = !!(co[metric] && (co[metric + '_currency'] || countryDefaultCur));
       const val = hasPrimary ? co[metric] : (co.revenue || co.market_cap);
-      const cur = hasPrimary ? co[metric + '_currency'] : (co.revenue_currency || co.market_cap_currency);
+      const rawCur = hasPrimary ? co[metric + '_currency'] : (co.revenue_currency || co.market_cap_currency);
+      const cur = rawCur || countryDefaultCur;
       if (!val || !cur) continue;
       const usd = toUSD(val, cur);
       if (usd > 0 && usd <= MAX_PLAUSIBLE_USD) {
@@ -1642,31 +2250,44 @@ function buildEconLayer() {
     cityPoints.push({ qid, city, totalUSD, validCos });
   }
 
-  // Cluster city points based on current zoom radius
-  const cellDeg = _econCellDeg(map.getZoom());
-  const clusters = [];
+  // ── Overlap-based clustering (zoom-adaptive) ──────────────────────────────────
+  // Start with one cluster per city. Iteratively merge any two clusters whose
+  // screen circles overlap (pixel distance < r1 + r2 + padding). Repeat until
+  // stable. Because cities within the same country are geographically close,
+  // they naturally merge into national/regional blobs at low zoom and separate
+  // back into individual city dots as the user zooms in — no hard country-grouping
+  // needed; geography does the work.
 
-  if (cellDeg === 0) {
-    // No clustering — one cluster per city
-    for (const p of cityPoints) clusters.push([p]);
-  } else {
-    // Greedy clustering anchored by the largest economic hubs.
-    // Sort points by USD descending so hubs form the centers, and absorb nearby smaller cities.
-    cityPoints.sort((a, b) => b.totalUSD - a.totalUSD);
-    const enforceBorders = map.getZoom() > 3;
-    for (const p of cityPoints) {
-      let merged = false;
-      for (const group of clusters) {
-        const center = group[0];
-        const dist = Math.sqrt(Math.pow(p.city.lng - center.city.lng, 2) + Math.pow(p.city.lat - center.city.lat, 2));
-        // Use cellDeg as the search radius; strictly enforce national borders unless maximally zoomed out
-        if (dist <= cellDeg && (!enforceBorders || p.city.country === center.city.country)) {
-          group.push(p);
-          merged = true;
-          break;
+  let clusters = cityPoints.map(p => [p]);  // one cluster per city to start
+
+  // Helper: compute cluster USD total and revenue-weighted lat/lng centroid
+  function _clusterMeta(group) {
+    const totalUSD = group.reduce((s, p) => s + p.totalUSD, 0);
+    const lat = group.reduce((s, p) => s + p.city.lat * p.totalUSD, 0) / totalUSD;
+    const lng = group.reduce((s, p) => s + p.city.lng * p.totalUSD, 0) / totalUSD;
+    const logVal = Math.log10(Math.max(totalUSD, 1e8));
+    const r = Math.max(6, Math.min(32, 4 + 28 * (logVal - 8) / (13 - 8)));
+    const px = map.latLngToContainerPoint([lat, lng]);
+    return { lat, lng, r, px, totalUSD };
+  }
+
+  // Phase 2: iteratively merge overlapping clusters until stable
+  const OVERLAP_PAD = 4; // px — small buffer so touching circles don't flicker
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const meta = clusters.map(_clusterMeta);
+    outer: for (let i = 0; i < clusters.length; i++) {
+      for (let j = i + 1; j < clusters.length; j++) {
+        const a = meta[i], b = meta[j];
+        const dx = a.px.x - b.px.x, dy = a.px.y - b.px.y;
+        if (Math.sqrt(dx * dx + dy * dy) < a.r + b.r + OVERLAP_PAD) {
+          clusters[i] = clusters[i].concat(clusters[j]);
+          clusters.splice(j, 1);
+          changed = true;
+          break outer;
         }
       }
-      if (!merged) clusters.push([p]);
     }
   }
 
@@ -1674,9 +2295,9 @@ function buildEconLayer() {
   const markers = [];
   for (const group of clusters) {
     const clusterUSD = group.reduce((s, p) => s + p.totalUSD, 0);
-    // Anchor marker at the midpoint (geographic center) of the cluster
-    const lat = group.reduce((s, p) => s + p.city.lat, 0) / group.length;
-    const lng = group.reduce((s, p) => s + p.city.lng, 0) / group.length;
+    // Revenue-weighted centroid — matches the centroid used for overlap detection
+    const lat = group.reduce((s, p) => s + p.city.lat * p.totalUSD, 0) / clusterUSD;
+    const lng = group.reduce((s, p) => s + p.city.lng * p.totalUSD, 0) / clusterUSD;
 
     // Log-scale radius: $100M → 4px, $10T → 32px
     const logVal = Math.log10(Math.max(clusterUSD, 1e8));
@@ -1746,6 +2367,11 @@ function buildEconLayer() {
     ? ` · ${primaryCount} mkt cap, rest revenue` : '';
   document.getElementById('econ-info').textContent =
     `${cityPoints.length} cities${clusters.length < cityPoints.length ? ` → ${clusters.length} clusters` : ''} · ${metricLabel}${fallbackNote} · click to explore`;
+
+  // Re-expand pinned cluster after zoom rebuild so the selection survives zoom changes
+  if (_savedPin) {
+    expandEconCluster(_savedPin.group, _savedPin.clusterUSD, _savedPin.cLat, _savedPin.cLng);
+  }
 }
 
 // ── Corporations panel ───────────────────────────────────────────────────────
@@ -1901,7 +2527,8 @@ function buildGlobalCorpList() {
     const cityName = city ? city.name : '—';
     const country = city ? (city.country || '') : '';
     for (const co of companies) {
-      const revenueUSD = (co.revenue && co.revenue_currency) ? toUSD(co.revenue, co.revenue_currency) : 0;
+      const fallbackCur = city ? (ISO2_TO_CURRENCY[city.iso] || null) : null;
+      const revenueUSD = co.revenue ? toUSD(co.revenue, co.revenue_currency || fallbackCur) : 0;
       globalCorpList.push({ co, cityName, country, cityQid: qid, revenueUSD });
     }
   }
