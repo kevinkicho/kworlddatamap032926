@@ -42,13 +42,16 @@ async function geocode(city) {
   // Try incorporated places first, then county subdivisions
   const place = geos?.['Incorporated Places']?.[0];
   const cousub = geos?.['County Subdivisions']?.[0];
+  const county = geos?.['Counties']?.[0];
   const hit = place || cousub;
   if (!hit) return null;
   return {
-    state: hit.STATE,
-    place: place ? place.PLACE : cousub.COUSUB,
-    type:  place ? 'place' : 'cousub',
-    name:  hit.NAME || city.name,
+    state:  hit.STATE,
+    place:  place ? place.PLACE : cousub.COUSUB,
+    type:   place ? 'place' : 'cousub',
+    name:   hit.NAME || city.name,
+    county: county?.COUNTY || null,   // 3-digit county FIPS (combine with state for full 5-digit)
+    countyName: county?.NAME || null,
   };
 }
 

@@ -3,2832 +3,3784 @@
     "state": "34",
     "place": "52470",
     "type": "cousub",
-    "name": "North Bergen township"
+    "name": "North Bergen township",
+    "county": "017",
+    "countyName": "Hudson County"
   },
   "Q60": {
     "state": "36",
     "place": "51000",
     "type": "place",
-    "name": "New York city"
+    "name": "New York city",
+    "county": "061",
+    "countyName": "New York County"
   },
   "Q65": {
     "state": "06",
     "place": "44000",
     "type": "place",
-    "name": "Los Angeles city"
+    "name": "Los Angeles city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q1297": {
     "state": "17",
     "place": "14000",
     "type": "place",
-    "name": "Chicago city"
+    "name": "Chicago city",
+    "county": "031",
+    "countyName": "Cook County"
   },
   "Q16555": {
     "state": "48",
     "place": "35000",
     "type": "place",
-    "name": "Houston city"
+    "name": "Houston city",
+    "county": "201",
+    "countyName": "Harris County"
   },
   "Q16556": {
     "state": "04",
     "place": "55000",
     "type": "place",
-    "name": "Phoenix city"
+    "name": "Phoenix city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q1345": {
     "state": "42",
     "place": "60000",
     "type": "place",
-    "name": "Philadelphia city"
+    "name": "Philadelphia city",
+    "county": "101",
+    "countyName": "Philadelphia County"
   },
   "Q975": {
     "state": "48",
     "place": "65000",
     "type": "place",
-    "name": "San Antonio city"
+    "name": "San Antonio city",
+    "county": "029",
+    "countyName": "Bexar County"
   },
   "Q16552": {
     "state": "06",
     "place": "66000",
     "type": "place",
-    "name": "San Diego city"
+    "name": "San Diego city",
+    "county": "073",
+    "countyName": "San Diego County"
   },
   "Q16557": {
     "state": "48",
     "place": "19000",
     "type": "place",
-    "name": "Dallas city"
+    "name": "Dallas city",
+    "county": "113",
+    "countyName": "Dallas County"
   },
   "Q16553": {
     "state": "06",
     "place": "68000",
     "type": "place",
-    "name": "San Jose city"
+    "name": "San Jose city",
+    "county": "085",
+    "countyName": "Santa Clara County"
   },
   "Q16559": {
     "state": "48",
     "place": "05000",
     "type": "place",
-    "name": "Austin city"
+    "name": "Austin city",
+    "county": "453",
+    "countyName": "Travis County"
   },
   "Q16568": {
     "state": "12",
     "place": "35000",
     "type": "place",
-    "name": "Jacksonville city"
+    "name": "Jacksonville city",
+    "county": "031",
+    "countyName": "Duval County"
   },
   "Q16558": {
     "state": "48",
     "place": "27000",
     "type": "place",
-    "name": "Fort Worth city"
+    "name": "Fort Worth city",
+    "county": "439",
+    "countyName": "Tarrant County"
   },
   "Q16567": {
     "state": "39",
     "place": "18000",
     "type": "place",
-    "name": "Columbus city"
+    "name": "Columbus city",
+    "county": "049",
+    "countyName": "Franklin County"
   },
   "Q6346": {
     "state": "18",
     "place": "36003",
     "type": "place",
-    "name": "Indianapolis city (balance)"
+    "name": "Indianapolis city (balance)",
+    "county": "097",
+    "countyName": "Marion County"
   },
   "Q16565": {
     "state": "37",
     "place": "12000",
     "type": "place",
-    "name": "Charlotte city"
+    "name": "Charlotte city",
+    "county": "119",
+    "countyName": "Mecklenburg County"
   },
   "Q62": {
     "state": "06",
     "place": "67000",
     "type": "place",
-    "name": "San Francisco city"
+    "name": "San Francisco city",
+    "county": "075",
+    "countyName": "San Francisco County"
   },
   "Q1583289": {
     "state": "36",
     "place": "33139",
     "type": "place",
-    "name": "Hempstead village"
+    "name": "Hempstead village",
+    "county": "059",
+    "countyName": "Nassau County"
   },
   "Q5083": {
     "state": "53",
     "place": "63000",
     "type": "place",
-    "name": "Seattle city"
+    "name": "Seattle city",
+    "county": "033",
+    "countyName": "King County"
   },
   "Q16554": {
     "state": "08",
     "place": "20000",
     "type": "place",
-    "name": "Denver city"
+    "name": "Denver city",
+    "county": "031",
+    "countyName": "Denver County"
   },
   "Q61": {
     "state": "11",
     "place": "50000",
     "type": "place",
-    "name": "Washington city"
+    "name": "Washington city",
+    "county": "001",
+    "countyName": "District of Columbia"
   },
   "Q23197": {
     "state": "47",
     "place": "52006",
     "type": "place",
-    "name": "Nashville-Davidson metropolitan government (balance)"
+    "name": "Nashville-Davidson metropolitan government (balance)",
+    "county": "037",
+    "countyName": "Davidson County"
   },
   "Q34863": {
     "state": "40",
     "place": "55000",
     "type": "place",
-    "name": "Oklahoma City city"
+    "name": "Oklahoma City city",
+    "county": "109",
+    "countyName": "Oklahoma County"
   },
   "Q16562": {
     "state": "48",
     "place": "24000",
     "type": "place",
-    "name": "El Paso city"
+    "name": "El Paso city",
+    "county": "141",
+    "countyName": "El Paso County"
   },
   "Q100": {
     "state": "25",
     "place": "07000",
     "type": "place",
-    "name": "Boston city"
+    "name": "Boston city",
+    "county": "025",
+    "countyName": "Suffolk County"
   },
   "Q6106": {
     "state": "41",
     "place": "59000",
     "type": "place",
-    "name": "Portland city"
+    "name": "Portland city",
+    "county": "051",
+    "countyName": "Multnomah County"
   },
   "Q23768": {
     "state": "32",
     "place": "40000",
     "type": "place",
-    "name": "Las Vegas city"
+    "name": "Las Vegas city",
+    "county": "003",
+    "countyName": "Clark County"
   },
   "Q12439": {
     "state": "26",
     "place": "22000",
     "type": "place",
-    "name": "Detroit city"
+    "name": "Detroit city",
+    "county": "163",
+    "countyName": "Wayne County"
   },
   "Q16563": {
     "state": "47",
     "place": "48000",
     "type": "place",
-    "name": "Memphis city"
+    "name": "Memphis city",
+    "county": "157",
+    "countyName": "Shelby County"
   },
   "Q37836": {
     "state": "55",
     "place": "53000",
     "type": "place",
-    "name": "Milwaukee city"
+    "name": "Milwaukee city",
+    "county": "079",
+    "countyName": "Milwaukee County"
   },
   "Q34804": {
     "state": "35",
     "place": "02000",
     "type": "place",
-    "name": "Albuquerque city"
+    "name": "Albuquerque city",
+    "county": "001",
+    "countyName": "Bernalillo County"
   },
   "Q18575": {
     "state": "04",
     "place": "77000",
     "type": "place",
-    "name": "Tucson city"
+    "name": "Tucson city",
+    "county": "019",
+    "countyName": "Pima County"
   },
   "Q43301": {
     "state": "06",
     "place": "27000",
     "type": "place",
-    "name": "Fresno city"
+    "name": "Fresno city",
+    "county": "019",
+    "countyName": "Fresno County"
   },
   "Q18013": {
     "state": "06",
     "place": "64000",
     "type": "place",
-    "name": "Sacramento city"
+    "name": "Sacramento city",
+    "county": "067",
+    "countyName": "Sacramento County"
   },
   "Q41819": {
     "state": "29",
     "place": "38000",
     "type": "place",
-    "name": "Kansas City city"
+    "name": "Kansas City city",
+    "county": "095",
+    "countyName": "Jackson County"
   },
   "Q49261": {
     "state": "04",
     "place": "46000",
     "type": "place",
-    "name": "Mesa city"
+    "name": "Mesa city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q23556": {
     "state": "13",
     "place": "04000",
     "type": "place",
-    "name": "Atlanta city"
+    "name": "Atlanta city",
+    "county": "121",
+    "countyName": "Fulton County"
   },
   "Q43199": {
     "state": "31",
     "place": "37000",
     "type": "place",
-    "name": "Omaha city"
+    "name": "Omaha city",
+    "county": "055",
+    "countyName": "Douglas County"
   },
   "Q49258": {
     "state": "08",
     "place": "16000",
     "type": "place",
-    "name": "Colorado Springs city"
+    "name": "Colorado Springs city",
+    "county": "041",
+    "countyName": "El Paso County"
   },
   "Q41087": {
     "state": "37",
     "place": "55000",
     "type": "place",
-    "name": "Raleigh city"
+    "name": "Raleigh city",
+    "county": "183",
+    "countyName": "Wake County"
   },
   "Q16739": {
     "state": "06",
     "place": "43000",
     "type": "place",
-    "name": "Long Beach city"
+    "name": "Long Beach city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q49259": {
     "state": "51",
     "place": "82000",
     "type": "place",
-    "name": "Virginia Beach city"
+    "name": "Virginia Beach city",
+    "county": "810",
+    "countyName": "Virginia Beach city"
   },
   "Q8652": {
     "state": "12",
     "place": "45000",
     "type": "place",
-    "name": "Miami city"
+    "name": "Miami city",
+    "county": "086",
+    "countyName": "Miami-Dade County"
   },
   "Q17042": {
     "state": "06",
     "place": "53000",
     "type": "place",
-    "name": "Oakland city"
+    "name": "Oakland city",
+    "county": "001",
+    "countyName": "Alameda County"
   },
   "Q36091": {
     "state": "27",
     "place": "43000",
     "type": "place",
-    "name": "Minneapolis city"
+    "name": "Minneapolis city",
+    "county": "053",
+    "countyName": "Hennepin County"
   },
   "Q44989": {
     "state": "40",
     "place": "75000",
     "type": "place",
-    "name": "Tulsa city"
+    "name": "Tulsa city",
+    "county": "143",
+    "countyName": "Tulsa County"
   },
   "Q49256": {
     "state": "06",
     "place": "03526",
     "type": "place",
-    "name": "Bakersfield city"
+    "name": "Bakersfield city",
+    "county": "029",
+    "countyName": "Kern County"
   },
   "Q49266": {
     "state": "20",
     "place": "79000",
     "type": "place",
-    "name": "Wichita city"
+    "name": "Wichita city",
+    "county": "173",
+    "countyName": "Sedgwick County"
   },
   "Q17943": {
     "state": "48",
     "place": "04000",
     "type": "place",
-    "name": "Arlington city"
+    "name": "Arlington city",
+    "county": "439",
+    "countyName": "Tarrant County"
   },
   "Q49246": {
     "state": "08",
     "place": "04000",
     "type": "place",
-    "name": "Aurora city"
+    "name": "Aurora city",
+    "county": "005",
+    "countyName": "Arapahoe County"
   },
   "Q49255": {
     "state": "12",
     "place": "71000",
     "type": "place",
-    "name": "Tampa city"
+    "name": "Tampa city",
+    "county": "057",
+    "countyName": "Hillsborough County"
   },
   "Q34404": {
     "state": "22",
     "place": "55000",
     "type": "place",
-    "name": "New Orleans city"
+    "name": "New Orleans city",
+    "county": "071",
+    "countyName": "Orleans Parish"
   },
   "Q37320": {
     "state": "39",
     "place": "16000",
     "type": "place",
-    "name": "Cleveland city"
+    "name": "Cleveland city",
+    "county": "035",
+    "countyName": "Cuyahoga County"
   },
   "Q18094": {
     "state": "15",
     "place": "90810",
     "type": "cousub",
-    "name": "Honolulu CCD"
+    "name": "Honolulu CCD",
+    "county": "003",
+    "countyName": "Honolulu County"
   },
   "Q49247": {
     "state": "06",
     "place": "02000",
     "type": "place",
-    "name": "Anaheim city"
+    "name": "Anaheim city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q41211": {
     "state": "72",
     "place": "76812",
     "type": "cousub",
-    "name": "San Juan Antiguo barrio"
+    "name": "San Juan Antiguo barrio",
+    "county": "127",
+    "countyName": "San Juan Municipio"
   },
   "Q1751219": {
     "state": "36",
     "place": "38000",
     "type": "cousub",
-    "name": "Islip town"
+    "name": "Islip town",
+    "county": "103",
+    "countyName": "Suffolk County"
   },
   "Q49233": {
     "state": "12",
     "place": "53000",
     "type": "place",
-    "name": "Orlando city"
+    "name": "Orlando city",
+    "county": "095",
+    "countyName": "Orange County"
   },
   "Q49241": {
     "state": "21",
     "place": "46027",
     "type": "place",
-    "name": "Lexington-Fayette urban county"
+    "name": "Lexington-Fayette urban county",
+    "county": "067",
+    "countyName": "Fayette County"
   },
   "Q49240": {
     "state": "06",
     "place": "75000",
     "type": "place",
-    "name": "Stockton city"
+    "name": "Stockton city",
+    "county": "077",
+    "countyName": "San Joaquin County"
   },
   "Q49242": {
     "state": "48",
     "place": "17000",
     "type": "place",
-    "name": "Corpus Christi city"
+    "name": "Corpus Christi city",
+    "county": "355",
+    "countyName": "Nueces County"
   },
   "Q49267": {
     "state": "32",
     "place": "31900",
     "type": "place",
-    "name": "Henderson city"
+    "name": "Henderson city",
+    "county": "003",
+    "countyName": "Clark County"
   },
   "Q49243": {
     "state": "06",
     "place": "62000",
     "type": "place",
-    "name": "Riverside city"
+    "name": "Riverside city",
+    "county": "065",
+    "countyName": "Riverside County"
   },
   "Q25395": {
     "state": "34",
     "place": "51000",
     "type": "place",
-    "name": "Newark city"
+    "name": "Newark city",
+    "county": "013",
+    "countyName": "Essex County"
   },
   "Q28848": {
     "state": "27",
     "place": "58000",
     "type": "place",
-    "name": "St. Paul city"
+    "name": "St. Paul city",
+    "county": "123",
+    "countyName": "Ramsey County"
   },
   "Q49244": {
     "state": "06",
     "place": "69000",
     "type": "place",
-    "name": "Santa Ana city"
+    "name": "Santa Ana city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q43196": {
     "state": "39",
     "place": "15000",
     "type": "place",
-    "name": "Cincinnati city"
+    "name": "Cincinnati city",
+    "county": "061",
+    "countyName": "Hamilton County"
   },
   "Q49219": {
     "state": "06",
     "place": "36770",
     "type": "place",
-    "name": "Irvine city"
+    "name": "Irvine city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q1342": {
     "state": "42",
     "place": "61000",
     "type": "place",
-    "name": "Pittsburgh city"
+    "name": "Pittsburgh city",
+    "county": "003",
+    "countyName": "Allegheny County"
   },
   "Q38022": {
     "state": "29",
     "place": "65000",
     "type": "place",
-    "name": "St. Louis city"
+    "name": "St. Louis city",
+    "county": "510",
+    "countyName": "St. Louis city"
   },
   "Q129361": {
     "state": "36",
     "place": "56000",
     "type": "cousub",
-    "name": "Oyster Bay town"
+    "name": "Oyster Bay town",
+    "county": "059",
+    "countyName": "Nassau County"
   },
   "Q49238": {
     "state": "37",
     "place": "28000",
     "type": "place",
-    "name": "Greensboro city"
+    "name": "Greensboro city",
+    "county": "081",
+    "countyName": "Guilford County"
   },
   "Q26339": {
     "state": "34",
     "place": "36000",
     "type": "place",
-    "name": "Jersey City city"
+    "name": "Jersey City city",
+    "county": "017",
+    "countyName": "Hudson County"
   },
   "Q39450": {
     "state": "02",
     "place": "03000",
     "type": "place",
-    "name": "Anchorage municipality"
+    "name": "Anchorage municipality",
+    "county": "020",
+    "countyName": "Anchorage Municipality"
   },
   "Q28260": {
     "state": "31",
     "place": "28000",
     "type": "place",
-    "name": "Lincoln city"
+    "name": "Lincoln city",
+    "county": "109",
+    "countyName": "Lancaster County"
   },
   "Q51689": {
     "state": "48",
     "place": "58016",
     "type": "place",
-    "name": "Plano city"
+    "name": "Plano city",
+    "county": "085",
+    "countyName": "Collin County"
   },
   "Q49229": {
     "state": "37",
     "place": "19000",
     "type": "place",
-    "name": "Durham city"
+    "name": "Durham city",
+    "county": "063",
+    "countyName": "Durham County"
   },
   "Q40435": {
     "state": "36",
     "place": "11000",
     "type": "place",
-    "name": "Buffalo city"
+    "name": "Buffalo city",
+    "county": "029",
+    "countyName": "Erie County"
   },
   "Q49272": {
     "state": "04",
     "place": "12000",
     "type": "place",
-    "name": "Chandler city"
+    "name": "Chandler city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q49270": {
     "state": "06",
     "place": "13392",
     "type": "place",
-    "name": "Chula Vista city"
+    "name": "Chula Vista city",
+    "county": "073",
+    "countyName": "San Diego County"
   },
   "Q49239": {
     "state": "39",
     "place": "77000",
     "type": "place",
-    "name": "Toledo city"
+    "name": "Toledo city",
+    "county": "095",
+    "countyName": "Lucas County"
   },
   "Q43788": {
     "state": "55",
     "place": "48000",
     "type": "place",
-    "name": "Madison city"
+    "name": "Madison city",
+    "county": "025",
+    "countyName": "Dane County"
   },
   "Q51684": {
     "state": "04",
     "place": "27400",
     "type": "place",
-    "name": "Gilbert town"
+    "name": "Gilbert town",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q49225": {
     "state": "32",
     "place": "60600",
     "type": "place",
-    "name": "Reno city"
+    "name": "Reno city",
+    "county": "031",
+    "countyName": "Washoe County"
   },
   "Q49268": {
     "state": "18",
     "place": "25000",
     "type": "place",
-    "name": "Fort Wayne city"
+    "name": "Fort Wayne city",
+    "county": "003",
+    "countyName": "Allen County"
   },
   "Q143782": {
     "state": "32",
     "place": "51800",
     "type": "place",
-    "name": "North Las Vegas city"
+    "name": "North Las Vegas city",
+    "county": "003",
+    "countyName": "Clark County"
   },
   "Q49236": {
     "state": "12",
     "place": "63000",
     "type": "place",
-    "name": "St. Petersburg city"
+    "name": "St. Petersburg city",
+    "county": "103",
+    "countyName": "Pinellas County"
   },
   "Q49273": {
     "state": "48",
     "place": "45000",
     "type": "place",
-    "name": "Lubbock city"
+    "name": "Lubbock city",
+    "county": "303",
+    "countyName": "Lubbock County"
   },
   "Q51690": {
     "state": "48",
     "place": "37000",
     "type": "place",
-    "name": "Irving city"
+    "name": "Irving city",
+    "county": "113",
+    "countyName": "Dallas County"
   },
   "Q16868": {
     "state": "48",
     "place": "41464",
     "type": "place",
-    "name": "Laredo city"
+    "name": "Laredo city",
+    "county": "479",
+    "countyName": "Webb County"
   },
   "Q49227": {
     "state": "37",
     "place": "75000",
     "type": "place",
-    "name": "Winston-Salem city"
+    "name": "Winston-Salem city",
+    "county": "067",
+    "countyName": "Forsyth County"
   },
   "Q49222": {
     "state": "51",
     "place": "16000",
     "type": "place",
-    "name": "Chesapeake city"
+    "name": "Chesapeake city",
+    "county": "550",
+    "countyName": "Chesapeake city"
   },
   "Q51682": {
     "state": "04",
     "place": "27820",
     "type": "place",
-    "name": "Glendale city"
+    "name": "Glendale city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q43668": {
     "state": "21",
     "place": "48000",
     "type": "place",
-    "name": "Louisville city"
+    "name": "Louisville city",
+    "county": "111",
+    "countyName": "Jefferson County"
   },
   "Q49274": {
     "state": "48",
     "place": "29000",
     "type": "place",
-    "name": "Garland city"
+    "name": "Garland city",
+    "county": "113",
+    "countyName": "Dallas County"
   },
   "Q49221": {
     "state": "04",
     "place": "65000",
     "type": "place",
-    "name": "Scottsdale city"
+    "name": "Scottsdale city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q49279759": {
     "state": "51",
     "place": "90072",
     "type": "cousub",
-    "name": "Arlington"
+    "name": "Arlington",
+    "county": "013",
+    "countyName": "Arlington County"
   },
   "Q2723817": {
     "state": "36",
     "place": "79444",
     "type": "place",
-    "name": "Westbury village"
+    "name": "Westbury village",
+    "county": "059",
+    "countyName": "Nassau County"
   },
   "Q35775": {
     "state": "16",
     "place": "08830",
     "type": "place",
-    "name": "Boise City city"
+    "name": "Boise City city",
+    "county": "001",
+    "countyName": "Ada County"
   },
   "Q49220": {
     "state": "06",
     "place": "26000",
     "type": "place",
-    "name": "Fremont city"
+    "name": "Fremont city",
+    "county": "001",
+    "countyName": "Alameda County"
   },
   "Q187805": {
     "state": "53",
     "place": "67000",
     "type": "place",
-    "name": "Spokane city"
+    "name": "Spokane city",
+    "county": "063",
+    "countyName": "Spokane County"
   },
   "Q491132": {
     "state": "06",
     "place": "69088",
     "type": "place",
-    "name": "Santa Clarita city"
+    "name": "Santa Clarita city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q28218": {
     "state": "22",
     "place": "05000",
     "type": "place",
-    "name": "Baton Rouge city"
+    "name": "Baton Rouge city",
+    "county": "033",
+    "countyName": "East Baton Rouge Parish"
   },
   "Q43421": {
     "state": "51",
     "place": "67000",
     "type": "place",
-    "name": "Richmond city"
+    "name": "Richmond city",
+    "county": "760",
+    "countyName": "Richmond city"
   },
   "Q49276": {
     "state": "12",
     "place": "30000",
     "type": "place",
-    "name": "Hialeah city"
+    "name": "Hialeah city",
+    "county": "086",
+    "countyName": "Miami-Dade County"
   },
   "Q486168": {
     "state": "06",
     "place": "65000",
     "type": "place",
-    "name": "San Bernardino city"
+    "name": "San Bernardino city",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q199797": {
     "state": "53",
     "place": "70000",
     "type": "place",
-    "name": "Tacoma city"
+    "name": "Tacoma city",
+    "county": "053",
+    "countyName": "Pierce County"
   },
   "Q204561": {
     "state": "06",
     "place": "48354",
     "type": "place",
-    "name": "Modesto city"
+    "name": "Modesto city",
+    "county": "099",
+    "countyName": "Stanislaus County"
   },
   "Q1750870": {
     "state": "36",
     "place": "03408",
     "type": "place",
-    "name": "Babylon village"
+    "name": "Babylon village",
+    "county": "103",
+    "countyName": "Suffolk County"
   },
   "Q79860": {
     "state": "01",
     "place": "37000",
     "type": "place",
-    "name": "Huntsville city"
+    "name": "Huntsville city",
+    "county": "089",
+    "countyName": "Madison County"
   },
   "Q39709": {
     "state": "19",
     "place": "21000",
     "type": "place",
-    "name": "Des Moines city"
+    "name": "Des Moines city",
+    "county": "153",
+    "countyName": "Polk County"
   },
   "Q49218": {
     "state": "36",
     "place": "63000",
     "type": "place",
-    "name": "Rochester city"
+    "name": "Rochester city",
+    "county": "055",
+    "countyName": "Monroe County"
   },
   "Q494720": {
     "state": "06",
     "place": "49270",
     "type": "place",
-    "name": "Moreno Valley city"
+    "name": "Moreno Valley city",
+    "county": "065",
+    "countyName": "Riverside County"
   },
   "Q331104": {
     "state": "37",
     "place": "22920",
     "type": "place",
-    "name": "Fayetteville city"
+    "name": "Fayetteville city",
+    "county": "051",
+    "countyName": "Cumberland County"
   },
   "Q491128": {
     "state": "06",
     "place": "92770",
     "type": "cousub",
-    "name": "San Bernardino CCD"
+    "name": "San Bernardino CCD",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q239870": {
     "state": "13",
     "place": "19000",
     "type": "place",
-    "name": "Columbus city"
+    "name": "Columbus city",
+    "county": "215",
+    "countyName": "Muscogee County"
   },
   "Q49179": {
     "state": "25",
     "place": "82000",
     "type": "place",
-    "name": "Worcester city"
+    "name": "Worcester city",
+    "county": "027",
+    "countyName": "Worcester County"
   },
   "Q667749": {
     "state": "12",
     "place": "58715",
     "type": "place",
-    "name": "Port St. Lucie city"
+    "name": "Port St. Lucie city",
+    "county": "111",
+    "countyName": "St. Lucie County"
   },
   "Q999123": {
     "state": "36",
     "place": "37000",
     "type": "cousub",
-    "name": "Huntington town"
+    "name": "Huntington town",
+    "county": "103",
+    "countyName": "Suffolk County"
   },
   "Q33405": {
     "state": "05",
     "place": "41000",
     "type": "place",
-    "name": "Little Rock city"
+    "name": "Little Rock city",
+    "county": "119",
+    "countyName": "Pulaski County"
   },
   "Q209338": {
     "state": "06",
     "place": "54652",
     "type": "place",
-    "name": "Oxnard city"
+    "name": "Oxnard city",
+    "county": "111",
+    "countyName": "Ventura County"
   },
   "Q79867": {
     "state": "01",
     "place": "07000",
     "type": "place",
-    "name": "Birmingham city"
+    "name": "Birmingham city",
+    "county": "073",
+    "countyName": "Jefferson County"
   },
   "Q29364": {
     "state": "01",
     "place": "51000",
     "type": "place",
-    "name": "Montgomery city"
+    "name": "Montgomery city",
+    "county": "101",
+    "countyName": "Montgomery County"
   },
   "Q128269": {
     "state": "48",
     "place": "27684",
     "type": "place",
-    "name": "Frisco city"
+    "name": "Frisco city",
+    "county": "085",
+    "countyName": "Collin County"
   },
   "Q51691": {
     "state": "48",
     "place": "03000",
     "type": "place",
-    "name": "Amarillo city"
+    "name": "Amarillo city",
+    "county": "375",
+    "countyName": "Potter County"
   },
   "Q23337": {
     "state": "49",
     "place": "67000",
     "type": "place",
-    "name": "Salt Lake City city"
+    "name": "Salt Lake City city",
+    "county": "035",
+    "countyName": "Salt Lake County"
   },
   "Q184587": {
     "state": "26",
     "place": "34000",
     "type": "place",
-    "name": "Grand Rapids city"
+    "name": "Grand Rapids city",
+    "county": "081",
+    "countyName": "Kent County"
   },
   "Q5917": {
     "state": "06",
     "place": "36000",
     "type": "place",
-    "name": "Huntington Beach city"
+    "name": "Huntington Beach city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q500481": {
     "state": "20",
     "place": "53775",
     "type": "place",
-    "name": "Overland Park city"
+    "name": "Overland Park city",
+    "county": "091",
+    "countyName": "Johnson County"
   },
   "Q485716": {
     "state": "06",
     "place": "30000",
     "type": "place",
-    "name": "Glendale city"
+    "name": "Glendale city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q37043": {
     "state": "12",
     "place": "70600",
     "type": "place",
-    "name": "Tallahassee city"
+    "name": "Tallahassee city",
+    "county": "073",
+    "countyName": "Leon County"
   },
   "Q51694": {
     "state": "48",
     "place": "30464",
     "type": "place",
-    "name": "Grand Prairie city"
+    "name": "Grand Prairie city",
+    "county": "113",
+    "countyName": "Dallas County"
   },
   "Q51697": {
     "state": "48",
     "place": "45744",
     "type": "place",
-    "name": "McKinney city"
+    "name": "McKinney city",
+    "county": "085",
+    "countyName": "Collin County"
   },
   "Q462789": {
     "state": "12",
     "place": "10275",
     "type": "place",
-    "name": "Cape Coral city"
+    "name": "Cape Coral city",
+    "county": "071",
+    "countyName": "Lee County"
   },
   "Q131335": {
     "state": "46",
     "place": "59020",
     "type": "place",
-    "name": "Sioux Falls city"
+    "name": "Sioux Falls city",
+    "county": "099",
+    "countyName": "Minnehaha County"
   },
   "Q51686": {
     "state": "04",
     "place": "54050",
     "type": "place",
-    "name": "Peoria city"
+    "name": "Peoria city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q18383": {
     "state": "44",
     "place": "59000",
     "type": "place",
-    "name": "Providence city"
+    "name": "Providence city",
+    "county": "007",
+    "countyName": "Providence County"
   },
   "Q234053": {
     "state": "53",
     "place": "74060",
     "type": "place",
-    "name": "Vancouver city"
+    "name": "Vancouver city",
+    "county": "011",
+    "countyName": "Clark County"
   },
   "Q185582": {
     "state": "47",
     "place": "40000",
     "type": "place",
-    "name": "Knoxville city"
+    "name": "Knoxville city",
+    "county": "093",
+    "countyName": "Knox County"
   },
   "Q163132": {
     "state": "39",
     "place": "01000",
     "type": "place",
-    "name": "Akron city"
+    "name": "Akron city",
+    "county": "153",
+    "countyName": "Summit County"
   },
   "Q80517": {
     "state": "22",
     "place": "70000",
     "type": "place",
-    "name": "Shreveport city"
+    "name": "Shreveport city",
+    "county": "017",
+    "countyName": "Caddo Parish"
   },
   "Q79875": {
     "state": "01",
     "place": "50000",
     "type": "place",
-    "name": "Mobile city"
+    "name": "Mobile city",
+    "county": "097",
+    "countyName": "Mobile County"
   },
   "Q51693": {
     "state": "48",
     "place": "10768",
     "type": "place",
-    "name": "Brownsville city"
+    "name": "Brownsville city",
+    "county": "061",
+    "countyName": "Cameron County"
   },
   "Q335017": {
     "state": "51",
     "place": "56000",
     "type": "place",
-    "name": "Newport News city"
+    "name": "Newport News city",
+    "county": "700",
+    "countyName": "Newport News city"
   },
   "Q165972": {
     "state": "12",
     "place": "24000",
     "type": "place",
-    "name": "Fort Lauderdale city"
+    "name": "Fort Lauderdale city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q186702": {
     "state": "47",
     "place": "14000",
     "type": "place",
-    "name": "Chattanooga city"
+    "name": "Chattanooga city",
+    "county": "065",
+    "countyName": "Hamilton County"
   },
   "Q51685": {
     "state": "04",
     "place": "73000",
     "type": "place",
-    "name": "Tempe city"
+    "name": "Tempe city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q22595": {
     "state": "17",
     "place": "03012",
     "type": "place",
-    "name": "Aurora city"
+    "name": "Aurora city",
+    "county": "089",
+    "countyName": "Kane County"
   },
   "Q212991": {
     "state": "06",
     "place": "70098",
     "type": "place",
-    "name": "Santa Rosa city"
+    "name": "Santa Rosa city",
+    "county": "097",
+    "countyName": "Sonoma County"
   },
   "Q171224": {
     "state": "41",
     "place": "23850",
     "type": "place",
-    "name": "Eugene city"
+    "name": "Eugene city",
+    "county": "039",
+    "countyName": "Lane County"
   },
   "Q671314": {
     "state": "06",
     "place": "22020",
     "type": "place",
-    "name": "Elk Grove city"
+    "name": "Elk Grove city",
+    "county": "067",
+    "countyName": "Sacramento County"
   },
   "Q43919": {
     "state": "41",
     "place": "64900",
     "type": "place",
-    "name": "Salem city"
+    "name": "Salem city",
+    "county": "047",
+    "countyName": "Marion County"
   },
   "Q488134": {
     "state": "06",
     "place": "53896",
     "type": "place",
-    "name": "Ontario city"
+    "name": "Ontario city",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q852665": {
     "state": "37",
     "place": "90536",
     "type": "cousub",
-    "name": "Cary township"
+    "name": "Cary township",
+    "county": "183",
+    "countyName": "Wake County"
   },
   "Q495365": {
     "state": "06",
     "place": "59451",
     "type": "place",
-    "name": "Rancho Cucamonga city"
+    "name": "Rancho Cucamonga city",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q488924": {
     "state": "06",
     "place": "53322",
     "type": "place",
-    "name": "Oceanside city"
+    "name": "Oceanside city",
+    "county": "073",
+    "countyName": "San Diego County"
   },
   "Q494711": {
     "state": "06",
     "place": "40130",
     "type": "place",
-    "name": "Lancaster city"
+    "name": "Lancaster city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q50054": {
     "state": "06",
     "place": "29000",
     "type": "place",
-    "name": "Garden Grove city"
+    "name": "Garden Grove city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q370972": {
     "state": "12",
     "place": "55775",
     "type": "place",
-    "name": "Pembroke Pines city"
+    "name": "Pembroke Pines city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q490732": {
     "state": "08",
     "place": "27425",
     "type": "place",
-    "name": "Fort Collins city"
+    "name": "Fort Collins city",
+    "county": "069",
+    "countyName": "Larimer County"
   },
   "Q488940": {
     "state": "06",
     "place": "55156",
     "type": "place",
-    "name": "Palmdale city"
+    "name": "Palmdale city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q135615": {
     "state": "29",
     "place": "70000",
     "type": "place",
-    "name": "Springfield city"
+    "name": "Springfield city",
+    "county": "077",
+    "countyName": "Greene County"
   },
   "Q328941": {
     "state": "47",
     "place": "15160",
     "type": "place",
-    "name": "Clarksville city"
+    "name": "Clarksville city",
+    "county": "125",
+    "countyName": "Montgomery County"
   },
   "Q488125": {
     "state": "06",
     "place": "64224",
     "type": "place",
-    "name": "Salinas city"
+    "name": "Salinas city",
+    "county": "053",
+    "countyName": "Monterey County"
   },
   "Q491114": {
     "state": "06",
     "place": "33000",
     "type": "place",
-    "name": "Hayward city"
+    "name": "Hayward city",
+    "county": "001",
+    "countyName": "Alameda County"
   },
   "Q138391": {
     "state": "34",
     "place": "57000",
     "type": "place",
-    "name": "Paterson city"
+    "name": "Paterson city",
+    "county": "031",
+    "countyName": "Passaic County"
   },
   "Q88": {
     "state": "51",
     "place": "01000",
     "type": "place",
-    "name": "Alexandria city"
+    "name": "Alexandria city",
+    "county": "510",
+    "countyName": "Alexandria city"
   },
   "Q219656": {
     "state": "13",
     "place": "49008",
     "type": "place",
-    "name": "Macon-Bibb County"
+    "name": "Macon-Bibb County",
+    "county": "021",
+    "countyName": "Bibb County"
   },
   "Q494707": {
     "state": "06",
     "place": "16350",
     "type": "place",
-    "name": "Corona city"
+    "name": "Corona city",
+    "county": "065",
+    "countyName": "Riverside County"
   },
   "Q486472": {
     "state": "20",
     "place": "36000",
     "type": "place",
-    "name": "Kansas City city"
+    "name": "Kansas City city",
+    "county": "209",
+    "countyName": "Wyandotte County"
   },
   "Q462804": {
     "state": "08",
     "place": "43000",
     "type": "place",
-    "name": "Lakewood city"
+    "name": "Lakewood city",
+    "county": "059",
+    "countyName": "Jefferson County"
   },
   "Q49158": {
     "state": "25",
     "place": "67000",
     "type": "place",
-    "name": "Springfield city"
+    "name": "Springfield city",
+    "county": "013",
+    "countyName": "Hampden County"
   },
   "Q208459": {
     "state": "06",
     "place": "77000",
     "type": "place",
-    "name": "Sunnyvale city"
+    "name": "Sunnyvale city",
+    "county": "085",
+    "countyName": "Santa Clara County"
   },
   "Q28198": {
     "state": "28",
     "place": "36000",
     "type": "place",
-    "name": "Jackson city"
+    "name": "Jackson city",
+    "county": "049",
+    "countyName": "Hinds County"
   },
   "Q128228": {
     "state": "48",
     "place": "39148",
     "type": "place",
-    "name": "Killeen city"
+    "name": "Killeen city",
+    "county": "027",
+    "countyName": "Bell County"
   },
   "Q234453": {
     "state": "12",
     "place": "32000",
     "type": "place",
-    "name": "Hollywood city"
+    "name": "Hollywood city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q501766": {
     "state": "47",
     "place": "51560",
     "type": "place",
-    "name": "Murfreesboro city"
+    "name": "Murfreesboro city",
+    "county": "149",
+    "countyName": "Rutherford County"
   },
   "Q51695": {
     "state": "48",
     "place": "56000",
     "type": "place",
-    "name": "Pasadena city"
+    "name": "Pasadena city",
+    "county": "201",
+    "countyName": "Harris County"
   },
   "Q214164": {
     "state": "53",
     "place": "05210",
     "type": "place",
-    "name": "Bellevue city"
+    "name": "Bellevue city",
+    "county": "033",
+    "countyName": "King County"
   },
   "Q486868": {
     "state": "06",
     "place": "58072",
     "type": "place",
-    "name": "Pomona city"
+    "name": "Pomona city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q372454": {
     "state": "06",
     "place": "22804",
     "type": "place",
-    "name": "Escondido city"
+    "name": "Escondido city",
+    "county": "073",
+    "countyName": "San Diego County"
   },
   "Q40345": {
     "state": "17",
     "place": "38570",
     "type": "place",
-    "name": "Joliet city"
+    "name": "Joliet city",
+    "county": "197",
+    "countyName": "Will County"
   },
   "Q47716": {
     "state": "45",
     "place": "13330",
     "type": "place",
-    "name": "Charleston city"
+    "name": "Charleston city",
+    "county": "019",
+    "countyName": "Charleston County"
   },
   "Q51696": {
     "state": "48",
     "place": "47892",
     "type": "place",
-    "name": "Mesquite city"
+    "name": "Mesquite city",
+    "county": "113",
+    "countyName": "Dallas County"
   },
   "Q2633533": {
     "state": "36",
     "place": "60510",
     "type": "cousub",
-    "name": "Ramapo town"
+    "name": "Ramapo town",
+    "county": "087",
+    "countyName": "Rockland County"
   },
   "Q49174": {
     "state": "09",
     "place": "08000",
     "type": "place",
-    "name": "Bridgeport city"
+    "name": "Bridgeport city",
+    "county": "120",
+    "countyName": "Greater Bridgeport Planning Region"
   },
   "Q83813": {
     "state": "13",
     "place": "69000",
     "type": "place",
-    "name": "Savannah city"
+    "name": "Savannah city",
+    "county": "051",
+    "countyName": "Chatham County"
   },
   "Q491340": {
     "state": "06",
     "place": "62938",
     "type": "place",
-    "name": "Roseville city"
+    "name": "Roseville city",
+    "county": "061",
+    "countyName": "Placer County"
   },
   "Q489197": {
     "state": "06",
     "place": "80000",
     "type": "place",
-    "name": "Torrance city"
+    "name": "Torrance city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q494723": {
     "state": "06",
     "place": "28000",
     "type": "place",
-    "name": "Fullerton city"
+    "name": "Fullerton city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q51687": {
     "state": "04",
     "place": "71510",
     "type": "place",
-    "name": "Surprise city"
+    "name": "Surprise city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q51698": {
     "state": "48",
     "place": "45384",
     "type": "place",
-    "name": "McAllen city"
+    "name": "McAllen city",
+    "county": "215",
+    "countyName": "Hidalgo County"
   },
   "Q579761": {
     "state": "08",
     "place": "77290",
     "type": "place",
-    "name": "Thornton city"
+    "name": "Thornton city",
+    "county": "001",
+    "countyName": "Adams County"
   },
   "Q495373": {
     "state": "06",
     "place": "82954",
     "type": "place",
-    "name": "Visalia city"
+    "name": "Visalia city",
+    "county": "107",
+    "countyName": "Tulare County"
   },
   "Q593022": {
     "state": "20",
     "place": "52575",
     "type": "place",
-    "name": "Olathe city"
+    "name": "Olathe city",
+    "county": "091",
+    "countyName": "Johnson County"
   },
   "Q487999": {
     "state": "12",
     "place": "25175",
     "type": "place",
-    "name": "Gainesville city"
+    "name": "Gainesville city",
+    "county": "001",
+    "countyName": "Alachua County"
   },
   "Q52465": {
     "state": "49",
     "place": "83470",
     "type": "place",
-    "name": "West Valley City city"
+    "name": "West Valley City city",
+    "county": "035",
+    "countyName": "Salt Lake County"
   },
   "Q506202": {
     "state": "51",
     "place": "94311",
     "type": "cousub",
-    "name": "Livingston district"
+    "name": "Livingston district",
+    "county": "177",
+    "countyName": "Spotsylvania County"
   },
   "Q491350": {
     "state": "06",
     "place": "53980",
     "type": "place",
-    "name": "Orange city"
+    "name": "Orange city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q128306": {
     "state": "48",
     "place": "19972",
     "type": "place",
-    "name": "Denton city"
+    "name": "Denton city",
+    "county": "121",
+    "countyName": "Denton County"
   },
   "Q499401": {
     "state": "26",
     "place": "84000",
     "type": "place",
-    "name": "Warren city"
+    "name": "Warren city",
+    "county": "099",
+    "countyName": "Macomb County"
   },
   "Q485176": {
     "state": "06",
     "place": "56000",
     "type": "place",
-    "name": "Pasadena city"
+    "name": "Pasadena city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q128244": {
     "state": "48",
     "place": "76000",
     "type": "place",
-    "name": "Waco city"
+    "name": "Waco city",
+    "county": "309",
+    "countyName": "McLennan County"
   },
   "Q486439": {
     "state": "19",
     "place": "12000",
     "type": "place",
-    "name": "Cedar Rapids city"
+    "name": "Cedar Rapids city",
+    "county": "113",
+    "countyName": "Linn County"
   },
   "Q34739": {
     "state": "39",
     "place": "21000",
     "type": "place",
-    "name": "Dayton city"
+    "name": "Dayton city",
+    "county": "113",
+    "countyName": "Montgomery County"
   },
   "Q864024": {
     "state": "72",
     "place": "64299",
     "type": "cousub",
-    "name": "Primero barrio"
+    "name": "Primero barrio",
+    "county": "113",
+    "countyName": "Ponce Municipio"
   },
   "Q138311": {
     "state": "34",
     "place": "21000",
     "type": "place",
-    "name": "Elizabeth city"
+    "name": "Elizabeth city",
+    "county": "039",
+    "countyName": "Union County"
   },
   "Q342043": {
     "state": "51",
     "place": "35000",
     "type": "place",
-    "name": "Hampton city"
+    "name": "Hampton city",
+    "county": "650",
+    "countyName": "Hampton city"
   },
   "Q38453": {
     "state": "45",
     "place": "16000",
     "type": "place",
-    "name": "Columbia city"
+    "name": "Columbia city",
+    "county": "079",
+    "countyName": "Richland County"
   },
   "Q844008": {
     "state": "53",
     "place": "35415",
     "type": "place",
-    "name": "Kent city"
+    "name": "Kent city",
+    "county": "033",
+    "countyName": "King County"
   },
   "Q49169": {
     "state": "09",
     "place": "73000",
     "type": "place",
-    "name": "Stamford city"
+    "name": "Stamford city",
+    "county": "190",
+    "countyName": "Western Connecticut Planning Region"
   },
   "Q495353": {
     "state": "06",
     "place": "82590",
     "type": "place",
-    "name": "Victorville city"
+    "name": "Victorville city",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q745168": {
     "state": "12",
     "place": "45975",
     "type": "place",
-    "name": "Miramar city"
+    "name": "Miramar city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q505557": {
     "state": "12",
     "place": "14400",
     "type": "place",
-    "name": "Coral Springs city"
+    "name": "Coral Springs city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q927243": {
     "state": "26",
     "place": "76460",
     "type": "place",
-    "name": "Sterling Heights city"
+    "name": "Sterling Heights city",
+    "county": "099",
+    "countyName": "Macomb County"
   },
   "Q49145": {
     "state": "09",
     "place": "52000",
     "type": "place",
-    "name": "New Haven city"
+    "name": "New Haven city",
+    "county": "170",
+    "countyName": "South Central Connecticut Planning Region"
   },
   "Q128261": {
     "state": "48",
     "place": "13024",
     "type": "place",
-    "name": "Carrollton city"
+    "name": "Carrollton city",
+    "county": "121",
+    "countyName": "Denton County"
   },
   "Q128321": {
     "state": "48",
     "place": "48072",
     "type": "place",
-    "name": "Midland city"
+    "name": "Midland city",
+    "county": "329",
+    "countyName": "Midland County"
   },
   "Q470592": {
     "state": "36",
     "place": "02000",
     "type": "cousub",
-    "name": "Amherst town"
+    "name": "Amherst town",
+    "county": "029",
+    "countyName": "Erie County"
   },
   "Q40347": {
     "state": "40",
     "place": "52500",
     "type": "place",
-    "name": "Norman city"
+    "name": "Norman city",
+    "county": "027",
+    "countyName": "Cleveland County"
   },
   "Q159260": {
     "state": "06",
     "place": "69084",
     "type": "place",
-    "name": "Santa Clara city"
+    "name": "Santa Clara city",
+    "county": "085",
+    "countyName": "Santa Clara County"
   },
   "Q203263": {
     "state": "13",
     "place": "03440",
     "type": "place",
-    "name": "Athens-Clarke County unified government (balance)"
+    "name": "Athens-Clarke County unified government (balance)",
+    "county": "059",
+    "countyName": "Clarke County"
   },
   "Q527268": {
     "state": "72",
     "place": "10377",
     "type": "cousub",
-    "name": "Caguas barrio-pueblo"
+    "name": "Caguas barrio-pueblo",
+    "county": "025",
+    "countyName": "Caguas Municipio"
   },
   "Q208447": {
     "state": "06",
     "place": "78582",
     "type": "place",
-    "name": "Thousand Oaks city"
+    "name": "Thousand Oaks city",
+    "county": "111",
+    "countyName": "Ventura County"
   },
   "Q41057": {
     "state": "20",
     "place": "71000",
     "type": "place",
-    "name": "Topeka city"
+    "name": "Topeka city",
+    "county": "177",
+    "countyName": "Shawnee County"
   },
   "Q323414": {
     "state": "06",
     "place": "72016",
     "type": "place",
-    "name": "Simi Valley city"
+    "name": "Simi Valley city",
+    "county": "111",
+    "countyName": "Ventura County"
   },
   "Q59670": {
     "state": "29",
     "place": "15670",
     "type": "place",
-    "name": "Columbia city"
+    "name": "Columbia city",
+    "county": "019",
+    "countyName": "Boone County"
   },
   "Q208445": {
     "state": "06",
     "place": "81666",
     "type": "place",
-    "name": "Vallejo city"
+    "name": "Vallejo city",
+    "county": "095",
+    "countyName": "Solano County"
   },
   "Q34109": {
     "state": "38",
     "place": "25700",
     "type": "place",
-    "name": "Fargo city"
+    "name": "Fargo city",
+    "county": "017",
+    "countyName": "Cass County"
   },
   "Q142811": {
     "state": "42",
     "place": "02000",
     "type": "place",
-    "name": "Allentown city"
+    "name": "Allentown city",
+    "county": "077",
+    "countyName": "Lehigh County"
   },
   "Q982550": {
     "state": "48",
     "place": "56348",
     "type": "place",
-    "name": "Pearland city"
+    "name": "Pearland city",
+    "county": "039",
+    "countyName": "Brazoria County"
   },
   "Q490441": {
     "state": "06",
     "place": "16000",
     "type": "place",
-    "name": "Concord city"
+    "name": "Concord city",
+    "county": "013",
+    "countyName": "Contra Costa County"
   },
   "Q128295": {
     "state": "48",
     "place": "01000",
     "type": "place",
-    "name": "Abilene city"
+    "name": "Abilene city",
+    "county": "441",
+    "countyName": "Taylor County"
   },
   "Q590849": {
     "state": "08",
     "place": "03455",
     "type": "place",
-    "name": "Arvada city"
+    "name": "Arvada city",
+    "county": "059",
+    "countyName": "Jefferson County"
   },
   "Q484678": {
     "state": "06",
     "place": "06000",
     "type": "place",
-    "name": "Berkeley city"
+    "name": "Berkeley city",
+    "county": "001",
+    "countyName": "Alameda County"
   },
   "Q485172": {
     "state": "26",
     "place": "03000",
     "type": "place",
-    "name": "Ann Arbor city"
+    "name": "Ann Arbor city",
+    "county": "161",
+    "countyName": "Washtenaw County"
   },
   "Q24603": {
     "state": "29",
     "place": "35000",
     "type": "place",
-    "name": "Independence city"
+    "name": "Independence city",
+    "county": "095",
+    "countyName": "Jackson County"
   },
   "Q486479": {
     "state": "27",
     "place": "54880",
     "type": "place",
-    "name": "Rochester city"
+    "name": "Rochester city",
+    "county": "109",
+    "countyName": "Olmsted County"
   },
   "Q128891": {
     "state": "22",
     "place": "40735",
     "type": "place",
-    "name": "Lafayette city"
+    "name": "Lafayette city",
+    "county": "055",
+    "countyName": "Lafayette Parish"
   },
   "Q33486": {
     "state": "09",
     "place": "37000",
     "type": "place",
-    "name": "Hartford city"
+    "name": "Hartford city",
+    "county": "110",
+    "countyName": "Capitol Planning Region"
   },
   "Q695511": {
     "state": "48",
     "place": "15976",
     "type": "place",
-    "name": "College Station city"
+    "name": "College Station city",
+    "county": "041",
+    "countyName": "Brazos County"
   },
   "Q303794": {
     "state": "06",
     "place": "14218",
     "type": "place",
-    "name": "Clovis city"
+    "name": "Clovis city",
+    "county": "019",
+    "countyName": "Fresno County"
   },
   "Q323432": {
     "state": "06",
     "place": "23182",
     "type": "place",
-    "name": "Fairfield city"
+    "name": "Fairfield city",
+    "county": "095",
+    "countyName": "Solano County"
   },
   "Q816809": {
     "state": "12",
     "place": "54000",
     "type": "place",
-    "name": "Palm Bay city"
+    "name": "Palm Bay city",
+    "county": "009",
+    "countyName": "Brevard County"
   },
   "Q128375": {
     "state": "48",
     "place": "61796",
     "type": "place",
-    "name": "Richardson city"
+    "name": "Richardson city",
+    "county": "113",
+    "countyName": "Dallas County"
   },
   "Q128334": {
     "state": "48",
     "place": "63500",
     "type": "place",
-    "name": "Round Rock city"
+    "name": "Round Rock city",
+    "county": "491",
+    "countyName": "Williamson County"
   },
   "Q49111": {
     "state": "25",
     "place": "11000",
     "type": "place",
-    "name": "Cambridge city"
+    "name": "Cambridge city",
+    "county": "017",
+    "countyName": "Middlesex County"
   },
   "Q1085274": {
     "state": "16",
     "place": "52120",
     "type": "place",
-    "name": "Meridian city"
+    "name": "Meridian city",
+    "county": "001",
+    "countyName": "Ada County"
   },
   "Q163749": {
     "state": "12",
     "place": "76600",
     "type": "place",
-    "name": "West Palm Beach city"
+    "name": "West Palm Beach city",
+    "county": "099",
+    "countyName": "Palm Beach County"
   },
   "Q486459": {
     "state": "18",
     "place": "22000",
     "type": "place",
-    "name": "Evansville city"
+    "name": "Evansville city",
+    "county": "163",
+    "countyName": "Vanderburgh County"
   },
   "Q244146": {
     "state": "12",
     "place": "12875",
     "type": "place",
-    "name": "Clearwater city"
+    "name": "Clearwater city",
+    "county": "103",
+    "countyName": "Pinellas County"
   },
   "Q166304": {
     "state": "30",
     "place": "06550",
     "type": "place",
-    "name": "Billings city"
+    "name": "Billings city",
+    "county": "111",
+    "countyName": "Yellowstone County"
   },
   "Q52466": {
     "state": "49",
     "place": "82950",
     "type": "place",
-    "name": "West Jordan city"
+    "name": "West Jordan city",
+    "county": "035",
+    "countyName": "Salt Lake County"
   },
   "Q495377": {
     "state": "06",
     "place": "60620",
     "type": "place",
-    "name": "Richmond city"
+    "name": "Richmond city",
+    "county": "013",
+    "countyName": "Contra Costa County"
   },
   "Q948129": {
     "state": "08",
     "place": "83835",
     "type": "place",
-    "name": "Westminster city"
+    "name": "Westminster city",
+    "county": "001",
+    "countyName": "Adams County"
   },
   "Q1594054": {
     "state": "36",
     "place": "68000",
     "type": "cousub",
-    "name": "Smithtown town"
+    "name": "Smithtown town",
+    "county": "103",
+    "countyName": "Suffolk County"
   },
   "Q48370": {
     "state": "33",
     "place": "45140",
     "type": "place",
-    "name": "Manchester city"
+    "name": "Manchester city",
+    "county": "011",
+    "countyName": "Hillsborough County"
   },
   "Q49162": {
     "state": "25",
     "place": "37000",
     "type": "place",
-    "name": "Lowell city"
+    "name": "Lowell city",
+    "county": "017",
+    "countyName": "Middlesex County"
   },
   "Q659400": {
     "state": "37",
     "place": "74440",
     "type": "place",
-    "name": "Wilmington city"
+    "name": "Wilmington city",
+    "county": "129",
+    "countyName": "New Hanover County"
   },
   "Q495357": {
     "state": "06",
     "place": "02252",
     "type": "place",
-    "name": "Antioch city"
+    "name": "Antioch city",
+    "county": "013",
+    "countyName": "Contra Costa County"
   },
   "Q128282": {
     "state": "48",
     "place": "07000",
     "type": "place",
-    "name": "Beaumont city"
+    "name": "Beaumont city",
+    "county": "245",
+    "countyName": "Jefferson County"
   },
   "Q23443": {
     "state": "49",
     "place": "62470",
     "type": "place",
-    "name": "Provo city"
+    "name": "Provo city",
+    "county": "049",
+    "countyName": "Utah County"
   },
   "Q847538": {
     "state": "45",
     "place": "50875",
     "type": "place",
-    "name": "North Charleston city"
+    "name": "North Charleston city",
+    "county": "019",
+    "countyName": "Charleston County"
   },
   "Q491099": {
     "state": "06",
     "place": "11194",
     "type": "place",
-    "name": "Carlsbad city"
+    "name": "Carlsbad city",
+    "county": "073",
+    "countyName": "San Diego County"
   },
   "Q128361": {
     "state": "48",
     "place": "53388",
     "type": "place",
-    "name": "Odessa city"
+    "name": "Odessa city",
+    "county": "135",
+    "countyName": "Ector County"
   },
   "Q49178": {
     "state": "09",
     "place": "80000",
     "type": "place",
-    "name": "Waterbury city"
+    "name": "Waterbury city",
+    "county": "140",
+    "countyName": "Naugatuck Valley Planning Region"
   },
   "Q28515": {
     "state": "17",
     "place": "72000",
     "type": "place",
-    "name": "Springfield city"
+    "name": "Springfield city",
+    "county": "167",
+    "countyName": "Sangamon County"
   },
   "Q982639": {
     "state": "48",
     "place": "41980",
     "type": "place",
-    "name": "League City city"
+    "name": "League City city",
+    "county": "167",
+    "countyName": "Galveston County"
   },
   "Q488946": {
     "state": "06",
     "place": "19766",
     "type": "place",
-    "name": "Downey city"
+    "name": "Downey city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q81844": {
     "state": "41",
     "place": "31250",
     "type": "place",
-    "name": "Gresham city"
+    "name": "Gresham city",
+    "county": "051",
+    "countyName": "Multnomah County"
   },
   "Q631194": {
     "state": "37",
     "place": "31400",
     "type": "place",
-    "name": "High Point city"
+    "name": "High Point city",
+    "county": "081",
+    "countyName": "Guilford County"
   },
   "Q835810": {
     "state": "40",
     "place": "09050",
     "type": "place",
-    "name": "Broken Arrow city"
+    "name": "Broken Arrow city",
+    "county": "143",
+    "countyName": "Tulsa County"
   },
   "Q28237": {
     "state": "26",
     "place": "46000",
     "type": "place",
-    "name": "Lansing city"
+    "name": "Lansing city",
+    "county": "065",
+    "countyName": "Ingham County"
   },
   "Q639452": {
     "state": "12",
     "place": "38250",
     "type": "place",
-    "name": "Lakeland city"
+    "name": "Lakeland city",
+    "county": "105",
+    "countyName": "Polk County"
   },
   "Q671458": {
     "state": "12",
     "place": "58050",
     "type": "place",
-    "name": "Pompano Beach city"
+    "name": "Pompano Beach city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q499196": {
     "state": "06",
     "place": "16532",
     "type": "place",
-    "name": "Costa Mesa city"
+    "name": "Costa Mesa city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q675576": {
     "state": "08",
     "place": "62000",
     "type": "place",
-    "name": "Pueblo city"
+    "name": "Pueblo city",
+    "county": "101",
+    "countyName": "Pueblo County"
   },
   "Q26495": {
     "state": "48",
     "place": "42508",
     "type": "place",
-    "name": "Lewisville city"
+    "name": "Lewisville city",
+    "county": "121",
+    "countyName": "Denton County"
   },
   "Q721455": {
     "state": "12",
     "place": "45060",
     "type": "place",
-    "name": "Miami Gardens city"
+    "name": "Miami Gardens city",
+    "county": "086",
+    "countyName": "Miami-Dade County"
   },
   "Q33264": {
     "state": "35",
     "place": "39380",
     "type": "place",
-    "name": "Las Cruces city"
+    "name": "Las Cruces city",
+    "county": "013",
+    "countyName": "Doña Ana County"
   },
   "Q93340": {
     "state": "48",
     "place": "70808",
     "type": "place",
-    "name": "Sugar Land city"
+    "name": "Sugar Land city",
+    "county": "157",
+    "countyName": "Fort Bend County"
   },
   "Q838787": {
     "state": "06",
     "place": "50076",
     "type": "place",
-    "name": "Murrieta city"
+    "name": "Murrieta city",
+    "county": "065",
+    "countyName": "Riverside County"
   },
   "Q490434": {
     "state": "06",
     "place": "65042",
     "type": "place",
-    "name": "San Buenaventura (Ventura) city"
+    "name": "San Buenaventura (Ventura) city",
+    "county": "111",
+    "countyName": "Ventura County"
   },
   "Q392599": {
     "state": "53",
     "place": "22640",
     "type": "place",
-    "name": "Everett city"
+    "name": "Everett city",
+    "county": "061",
+    "countyName": "Snohomish County"
   },
   "Q838785": {
     "state": "06",
     "place": "78120",
     "type": "place",
-    "name": "Temecula city"
+    "name": "Temecula city",
+    "county": "065",
+    "countyName": "Riverside County"
   },
   "Q430464": {
     "state": "26",
     "place": "21000",
     "type": "place",
-    "name": "Dearborn city"
+    "name": "Dearborn city",
+    "county": "163",
+    "countyName": "Wayne County"
   },
   "Q643953": {
     "state": "06",
     "place": "69196",
     "type": "place",
-    "name": "Santa Maria city"
+    "name": "Santa Maria city",
+    "county": "083",
+    "countyName": "Santa Barbara County"
   },
   "Q494728": {
     "state": "06",
     "place": "84200",
     "type": "place",
-    "name": "West Covina city"
+    "name": "West Covina city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q595550": {
     "state": "06",
     "place": "22230",
     "type": "place",
-    "name": "El Monte city"
+    "name": "El Monte city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q94274": {
     "state": "08",
     "place": "32155",
     "type": "place",
-    "name": "Greeley city"
+    "name": "Greeley city",
+    "county": "123",
+    "countyName": "Weld County"
   },
   "Q211629": {
     "state": "32",
     "place": "68400",
     "type": "place",
-    "name": "Sparks city"
+    "name": "Sparks city",
+    "county": "031",
+    "countyName": "Washoe County"
   },
   "Q387322": {
     "state": "08",
     "place": "12815",
     "type": "place",
-    "name": "Centennial city"
+    "name": "Centennial city",
+    "county": "005",
+    "countyName": "Arapahoe County"
   },
   "Q192517": {
     "state": "08",
     "place": "07850",
     "type": "place",
-    "name": "Boulder city"
+    "name": "Boulder city",
+    "county": "013",
+    "countyName": "Boulder County"
   },
   "Q914884": {
     "state": "13",
     "place": "68516",
     "type": "place",
-    "name": "Sandy Springs city"
+    "name": "Sandy Springs city",
+    "county": "121",
+    "countyName": "Fulton County"
   },
   "Q621549": {
     "state": "06",
     "place": "36546",
     "type": "place",
-    "name": "Inglewood city"
+    "name": "Inglewood city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q7567323": {
     "state": "13",
     "place": "72122",
     "type": "place",
-    "name": "South Fulton city"
+    "name": "South Fulton city",
+    "county": "121",
+    "countyName": "Fulton County"
   },
   "Q47430": {
     "state": "55",
     "place": "31000",
     "type": "place",
-    "name": "Green Bay city"
+    "name": "Green Bay city",
+    "county": "009",
+    "countyName": "Brown County"
   },
   "Q39561": {
     "state": "06",
     "place": "08954",
     "type": "place",
-    "name": "Burbank city"
+    "name": "Burbank city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q370925": {
     "state": "06",
     "place": "93170",
     "type": "cousub",
-    "name": "South San Francisco CCD"
+    "name": "South San Francisco CCD",
+    "county": "081",
+    "countyName": "San Mateo County"
   },
   "Q397905": {
     "state": "24",
     "place": "90420",
     "type": "cousub",
-    "name": "District 5, Clarksville"
+    "name": "District 5, Clarksville",
+    "county": "027",
+    "countyName": "Howard County"
   },
   "Q33147": {
     "state": "48",
     "place": "01924",
     "type": "place",
-    "name": "Allen city"
+    "name": "Allen city",
+    "county": "085",
+    "countyName": "Collin County"
   },
   "Q486877": {
     "state": "18",
     "place": "71000",
     "type": "place",
-    "name": "South Bend city"
+    "name": "South Bend city",
+    "county": "141",
+    "countyName": "St. Joseph County"
   },
   "Q494715": {
     "state": "06",
     "place": "52526",
     "type": "place",
-    "name": "Norwalk city"
+    "name": "Norwalk city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q128349": {
     "state": "48",
     "place": "79000",
     "type": "place",
-    "name": "Wichita Falls city"
+    "name": "Wichita Falls city",
+    "county": "485",
+    "countyName": "Wichita County"
   },
   "Q26887": {
     "state": "19",
     "place": "19000",
     "type": "place",
-    "name": "Davenport city"
+    "name": "Davenport city",
+    "county": "163",
+    "countyName": "Scott County"
   },
   "Q462161": {
     "state": "55",
     "place": "39225",
     "type": "place",
-    "name": "Kenosha city"
+    "name": "Kenosha city",
+    "county": "059",
+    "countyName": "Kenosha County"
   },
   "Q925598": {
     "state": "48",
     "place": "64472",
     "type": "place",
-    "name": "San Angelo city"
+    "name": "San Angelo city",
+    "county": "451",
+    "countyName": "Tom Green County"
   },
   "Q773516": {
     "state": "06",
     "place": "33434",
     "type": "place",
-    "name": "Hesperia city"
+    "name": "Hesperia city",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q537853": {
     "state": "18",
     "place": "10342",
     "type": "place",
-    "name": "Carmel city"
+    "name": "Carmel city",
+    "county": "057",
+    "countyName": "Hamilton County"
   },
   "Q79580": {
     "state": "01",
     "place": "77256",
     "type": "place",
-    "name": "Tuscaloosa city"
+    "name": "Tuscaloosa city",
+    "county": "125",
+    "countyName": "Tuscaloosa County"
   },
   "Q24861": {
     "state": "36",
     "place": "01000",
     "type": "place",
-    "name": "Albany city"
+    "name": "Albany city",
+    "county": "001",
+    "countyName": "Albany County"
   },
   "Q671288": {
     "state": "41",
     "place": "05800",
     "type": "place",
-    "name": "Bend city"
+    "name": "Bend city",
+    "county": "017",
+    "countyName": "Deschutes County"
   },
   "Q2284046": {
     "state": "18",
     "place": "23278",
     "type": "place",
-    "name": "Fishers city"
+    "name": "Fishers city",
+    "county": "057",
+    "countyName": "Hamilton County"
   },
   "Q988283": {
     "state": "08",
     "place": "45970",
     "type": "place",
-    "name": "Longmont city"
+    "name": "Longmont city",
+    "county": "013",
+    "countyName": "Boulder County"
   },
   "Q924241": {
     "state": "06",
     "place": "82996",
     "type": "place",
-    "name": "Vista city"
+    "name": "Vista city",
+    "county": "073",
+    "countyName": "San Diego County"
   },
   "Q52468": {
     "state": "49",
     "place": "57300",
     "type": "place",
-    "name": "Orem city"
+    "name": "Orem city",
+    "county": "049",
+    "countyName": "Utah County"
   },
   "Q29422": {
     "state": "12",
     "place": "07300",
     "type": "place",
-    "name": "Boca Raton city"
+    "name": "Boca Raton city",
+    "county": "099",
+    "countyName": "Palm Beach County"
   },
   "Q506375": {
     "state": "12",
     "place": "69700",
     "type": "place",
-    "name": "Sunrise city"
+    "name": "Sunrise city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q499203": {
     "state": "53",
     "place": "80010",
     "type": "place",
-    "name": "Yakima city"
+    "name": "Yakima city",
+    "county": "077",
+    "countyName": "Yakima County"
   },
   "Q2610369": {
     "state": "36",
     "place": "30290",
     "type": "cousub",
-    "name": "Greece town"
+    "name": "Greece town",
+    "county": "055",
+    "countyName": "Monroe County"
   },
   "Q52470": {
     "state": "49",
     "place": "67440",
     "type": "place",
-    "name": "Sandy city"
+    "name": "Sandy city",
+    "county": "035",
+    "countyName": "Salt Lake County"
   },
   "Q487119": {
     "state": "06",
     "place": "15044",
     "type": "place",
-    "name": "Compton city"
+    "name": "Compton city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q494690": {
     "state": "06",
     "place": "11530",
     "type": "place",
-    "name": "Carson city"
+    "name": "Carson city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q79820": {
     "state": "04",
     "place": "85540",
     "type": "place",
-    "name": "Yuma city"
+    "name": "Yuma city",
+    "county": "027",
+    "countyName": "Yuma County"
   },
   "Q853552": {
     "state": "26",
     "place": "49000",
     "type": "place",
-    "name": "Livonia city"
+    "name": "Livonia city",
+    "county": "163",
+    "countyName": "Wayne County"
   },
   "Q52472": {
     "state": "49",
     "place": "65330",
     "type": "place",
-    "name": "St. George city"
+    "name": "St. George city",
+    "county": "053",
+    "countyName": "Washington County"
   },
   "Q79457": {
     "state": "04",
     "place": "28380",
     "type": "place",
-    "name": "Goodyear city"
+    "name": "Goodyear city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q237896": {
     "state": "42",
     "place": "63624",
     "type": "place",
-    "name": "Reading city"
+    "name": "Reading city",
+    "county": "011",
+    "countyName": "Berks County"
   },
   "Q493840": {
     "state": "20",
     "place": "38900",
     "type": "place",
-    "name": "Lawrence city"
+    "name": "Lawrence city",
+    "county": "045",
+    "countyName": "Douglas County"
   },
   "Q506411": {
     "state": "06",
     "place": "68196",
     "type": "place",
-    "name": "San Marcos city"
+    "name": "San Marcos city",
+    "county": "073",
+    "countyName": "San Diego County"
   },
   "Q234061": {
     "state": "42",
     "place": "24000",
     "type": "place",
-    "name": "Erie city"
+    "name": "Erie city",
+    "county": "049",
+    "countyName": "Erie County"
   },
   "Q648501": {
     "state": "37",
     "place": "02140",
     "type": "place",
-    "name": "Asheville city"
+    "name": "Asheville city",
+    "county": "021",
+    "countyName": "Buncombe County"
   },
   "Q862645": {
     "state": "40",
     "place": "23200",
     "type": "place",
-    "name": "Edmond city"
+    "name": "Edmond city",
+    "county": "109",
+    "countyName": "Oklahoma County"
   },
   "Q49194": {
     "state": "25",
     "place": "23000",
     "type": "place",
-    "name": "Fall River city"
+    "name": "Fall River city",
+    "county": "005",
+    "countyName": "Bristol County"
+  },
+  "Q219526": {
+    "state": "05",
+    "place": "23290",
+    "type": "place",
+    "name": "Fayetteville city",
+    "county": "143",
+    "countyName": "Washington County"
   },
   "Q1898798": {
     "state": "12",
     "place": "17200",
     "type": "place",
-    "name": "Deltona city"
+    "name": "Deltona city",
+    "county": "127",
+    "countyName": "Volusia County"
   },
   "Q506428": {
     "state": "06",
     "place": "48256",
     "type": "place",
-    "name": "Mission Viejo city"
+    "name": "Mission Viejo city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q495361": {
     "state": "06",
     "place": "59920",
     "type": "place",
-    "name": "Redding city"
+    "name": "Redding city",
+    "county": "089",
+    "countyName": "Shasta County"
   },
   "Q47164": {
     "state": "06",
     "place": "70000",
     "type": "place",
-    "name": "Santa Monica city"
+    "name": "Santa Monica city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q953409": {
     "state": "06",
     "place": "80238",
     "type": "place",
-    "name": "Tracy city"
+    "name": "Tracy city",
+    "county": "077",
+    "countyName": "San Joaquin County"
   },
   "Q585176": {
     "state": "13",
     "place": "67284",
     "type": "place",
-    "name": "Roswell city"
+    "name": "Roswell city",
+    "county": "121",
+    "countyName": "Fulton County"
   },
   "Q838772": {
     "state": "06",
     "place": "73080",
     "type": "place",
-    "name": "South Gate city"
+    "name": "South Gate city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q79950": {
     "state": "01",
     "place": "35896",
     "type": "place",
-    "name": "Hoover city"
+    "name": "Hoover city",
+    "county": "073",
+    "countyName": "Jefferson County"
   },
   "Q936768": {
     "state": "53",
     "place": "35940",
     "type": "place",
-    "name": "Kirkland city"
+    "name": "Kirkland city",
+    "county": "033",
+    "countyName": "King County"
   },
   "Q984677": {
     "state": "12",
     "place": "57425",
     "type": "place",
-    "name": "Plantation city"
+    "name": "Plantation city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q986528": {
     "state": "04",
     "place": "07940",
     "type": "place",
-    "name": "Buckeye city"
+    "name": "Buckeye city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q430267": {
     "state": "53",
     "place": "05280",
     "type": "place",
-    "name": "Bellingham city"
+    "name": "Bellingham city",
+    "county": "073",
+    "countyName": "Whatcom County"
   },
   "Q506395": {
     "state": "06",
     "place": "13210",
     "type": "place",
-    "name": "Chino city"
+    "name": "Chino city",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q48274": {
     "state": "33",
     "place": "50260",
     "type": "place",
-    "name": "Nashua city"
+    "name": "Nashua city",
+    "county": "011",
+    "countyName": "Hillsborough County"
   },
   "Q959924": {
     "state": "29",
     "place": "54074",
     "type": "place",
-    "name": "O'Fallon city"
+    "name": "O'Fallon city",
+    "county": "183",
+    "countyName": "St. Charles County"
   },
   "Q54217": {
     "state": "09",
     "place": "55990",
     "type": "place",
-    "name": "Norwalk city"
+    "name": "Norwalk city",
+    "county": "190",
+    "countyName": "Western Connecticut Planning Region"
   },
   "Q851034": {
     "state": "06",
     "place": "68084",
     "type": "place",
-    "name": "San Leandro city"
+    "name": "San Leandro city",
+    "county": "001",
+    "countyName": "Alameda County"
   },
   "Q838759": {
     "state": "06",
     "place": "84550",
     "type": "place",
-    "name": "Westminster city"
+    "name": "Westminster city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q25330": {
     "state": "34",
     "place": "74000",
     "type": "place",
-    "name": "Trenton city"
+    "name": "Trenton city",
+    "county": "021",
+    "countyName": "Mercer County"
   },
   "Q1010216": {
     "state": "45",
     "place": "48535",
     "type": "place",
-    "name": "Mount Pleasant town"
+    "name": "Mount Pleasant town",
+    "county": "019",
+    "countyName": "Charleston County"
   },
   "Q574612": {
     "state": "48",
     "place": "50820",
     "type": "place",
-    "name": "New Braunfels city"
+    "name": "New Braunfels city",
+    "county": "091",
+    "countyName": "Comal County"
   },
   "Q503336": {
     "state": "40",
     "place": "41850",
     "type": "place",
-    "name": "Lawton city"
+    "name": "Lawton city",
+    "county": "031",
+    "countyName": "Comanche County"
   },
   "Q490737": {
     "state": "27",
     "place": "06616",
     "type": "place",
-    "name": "Bloomington city"
+    "name": "Bloomington city",
+    "county": "053",
+    "countyName": "Hennepin County"
   },
   "Q260282": {
     "state": "48",
     "place": "16432",
     "type": "place",
-    "name": "Conroe city"
+    "name": "Conroe city",
+    "county": "339",
+    "countyName": "Montgomery County"
   },
   "Q1068849": {
     "state": "36",
     "place": "15011",
     "type": "cousub",
-    "name": "Cheektowaga town"
+    "name": "Cheektowaga town",
+    "county": "029",
+    "countyName": "Erie County"
   },
   "Q948188": {
     "state": "06",
     "place": "33182",
     "type": "place",
-    "name": "Hemet city"
+    "name": "Hemet city",
+    "county": "065",
+    "countyName": "Riverside County"
   },
   "Q79449": {
     "state": "04",
     "place": "04720",
     "type": "place",
-    "name": "Avondale city"
+    "name": "Avondale city",
+    "county": "013",
+    "countyName": "Maricopa County"
   },
   "Q578289": {
     "state": "17",
     "place": "79293",
     "type": "place",
-    "name": "Waukegan city"
+    "name": "Waukegan city",
+    "county": "097",
+    "countyName": "Lake County"
   },
   "Q610463": {
     "state": "12",
     "place": "54200",
     "type": "place",
-    "name": "Palm Coast city"
+    "name": "Palm Coast city",
+    "county": "035",
+    "countyName": "Flagler County"
   },
   "Q49163": {
     "state": "25",
     "place": "34550",
     "type": "place",
-    "name": "Lawrence city"
+    "name": "Lawrence city",
+    "county": "009",
+    "countyName": "Essex County"
   },
   "Q79535": {
     "state": "05",
     "place": "24550",
     "type": "place",
-    "name": "Fort Smith city"
+    "name": "Fort Smith city",
+    "county": "131",
+    "countyName": "Sebastian County"
   },
   "Q838789": {
     "state": "06",
     "place": "36448",
     "type": "place",
-    "name": "Indio city"
+    "name": "Indio city",
+    "county": "065",
+    "countyName": "Riverside County"
   },
   "Q49196": {
     "state": "25",
     "place": "45560",
     "type": "place",
-    "name": "Newton city"
+    "name": "Newton city",
+    "county": "017",
+    "countyName": "Middlesex County"
   },
   "Q159288": {
     "state": "06",
     "place": "69070",
     "type": "place",
-    "name": "Santa Barbara city"
+    "name": "Santa Barbara city",
+    "county": "083",
+    "countyName": "Santa Barbara County"
   },
   "Q577964": {
     "state": "17",
     "place": "12385",
     "type": "place",
-    "name": "Champaign city"
+    "name": "Champaign city",
+    "county": "019",
+    "countyName": "Champaign County"
   },
   "Q688596": {
     "state": "06",
     "place": "32548",
     "type": "place",
-    "name": "Hawthorne city"
+    "name": "Hawthorne city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q138901": {
     "state": "06",
     "place": "41992",
     "type": "place",
-    "name": "Livermore city"
+    "name": "Livermore city",
+    "county": "001",
+    "countyName": "Alameda County"
   },
   "Q584849": {
     "state": "12",
     "place": "16725",
     "type": "place",
-    "name": "Deerfield Beach city"
+    "name": "Deerfield Beach city",
+    "county": "011",
+    "countyName": "Broward County"
   },
   "Q2430250": {
     "state": "36",
     "place": "15968",
     "type": "cousub",
-    "name": "Clarkstown town"
+    "name": "Clarkstown town",
+    "county": "087",
+    "countyName": "Rockland County"
   },
   "Q485708": {
     "state": "27",
     "place": "17000",
     "type": "place",
-    "name": "Duluth city"
+    "name": "Duluth city",
+    "county": "137",
+    "countyName": "St. Louis County"
   },
   "Q49198": {
     "state": "09",
     "place": "18430",
     "type": "place",
-    "name": "Danbury city"
+    "name": "Danbury city",
+    "county": "190",
+    "countyName": "Western Connecticut Planning Region"
   },
   "Q864128": {
     "state": "27",
     "place": "07966",
     "type": "place",
-    "name": "Brooklyn Park city"
+    "name": "Brooklyn Park city",
+    "county": "053",
+    "countyName": "Hennepin County"
   },
   "Q506451": {
     "state": "12",
     "place": "24125",
     "type": "place",
-    "name": "Fort Myers city"
+    "name": "Fort Myers city",
+    "county": "071",
+    "countyName": "Lee County"
   },
   "Q499189": {
     "state": "06",
     "place": "46898",
     "type": "place",
-    "name": "Merced city"
+    "name": "Merced city",
+    "county": "047",
+    "countyName": "Merced County"
   },
   "Q70735459": {
     "state": "22",
     "place": "67303",
     "type": "place",
-    "name": "St. George city"
+    "name": "St. George city",
+    "county": "033",
+    "countyName": "East Baton Rouge Parish"
   },
   "Q752671": {
     "state": "06",
     "place": "39496",
     "type": "place",
-    "name": "Lake Forest city"
+    "name": "Lake Forest city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q836663": {
     "state": "41",
     "place": "47000",
     "type": "place",
-    "name": "Medford city"
+    "name": "Medford city",
+    "county": "029",
+    "countyName": "Jackson County"
   },
   "Q489255": {
     "state": "19",
     "place": "73335",
     "type": "place",
-    "name": "Sioux City city"
+    "name": "Sioux City city",
+    "county": "193",
+    "countyName": "Woodbury County"
   },
   "Q239877": {
     "state": "48",
     "place": "48768",
     "type": "place",
-    "name": "Mission city"
+    "name": "Mission city",
+    "county": "215",
+    "countyName": "Hidalgo County"
   },
   "Q3723193": {
     "state": "36",
     "place": "17332",
     "type": "place",
-    "name": "Colonie village"
+    "name": "Colonie village",
+    "county": "001",
+    "countyName": "Albany County"
   },
   "Q969300": {
     "state": "26",
     "place": "86000",
     "type": "place",
-    "name": "Westland city"
+    "name": "Westland city",
+    "county": "163",
+    "countyName": "Wayne County"
   },
   "Q578221": {
     "state": "17",
     "place": "14351",
     "type": "place",
-    "name": "Cicero town"
+    "name": "Cicero town",
+    "county": "031",
+    "countyName": "Cook County"
   },
   "Q268873": {
     "state": "06",
     "place": "51182",
     "type": "place",
-    "name": "Newport Beach city"
+    "name": "Newport Beach city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q864106": {
     "state": "22",
     "place": "41155",
     "type": "place",
-    "name": "Lake Charles city"
+    "name": "Lake Charles city",
+    "county": "019",
+    "countyName": "Calcasieu Parish"
   },
   "Q949779": {
     "state": "12",
     "place": "43975",
     "type": "place",
-    "name": "Melbourne city"
+    "name": "Melbourne city",
+    "county": "009",
+    "countyName": "Brevard County"
   },
   "Q605472": {
     "state": "06",
     "place": "68378",
     "type": "place",
-    "name": "San Ramon city"
+    "name": "San Ramon city",
+    "county": "013",
+    "countyName": "Contra Costa County"
   },
   "Q505549": {
     "state": "06",
     "place": "60102",
     "type": "place",
-    "name": "Redwood City city"
+    "name": "Redwood City city",
+    "county": "081",
+    "countyName": "San Mateo County"
   },
   "Q79724": {
     "state": "05",
     "place": "66080",
     "type": "place",
-    "name": "Springdale city"
+    "name": "Springdale city",
+    "county": "143",
+    "countyName": "Washington County"
   },
   "Q838762": {
     "state": "06",
     "place": "08786",
     "type": "place",
-    "name": "Buena Park city"
+    "name": "Buena Park city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q989919": {
     "state": "26",
     "place": "27440",
     "type": "place",
-    "name": "Farmington Hills city"
+    "name": "Farmington Hills city",
+    "county": "125",
+    "countyName": "Oakland County"
   },
   "Q695556": {
     "state": "48",
     "place": "10912",
     "type": "place",
-    "name": "Bryan city"
+    "name": "Bryan city",
+    "county": "041",
+    "countyName": "Brazos County"
   },
   "Q844033": {
     "state": "53",
     "place": "35275",
     "type": "place",
-    "name": "Kennewick city"
+    "name": "Kennewick city",
+    "county": "005",
+    "countyName": "Benton County"
   },
   "Q812646": {
     "state": "48",
     "place": "06128",
     "type": "place",
-    "name": "Baytown city"
+    "name": "Baytown city",
+    "county": "201",
+    "countyName": "Harris County"
   },
   "Q986109": {
     "state": "06",
     "place": "45484",
     "type": "place",
-    "name": "Manteca city"
+    "name": "Manteca city",
+    "county": "077",
+    "countyName": "San Joaquin County"
   },
   "Q984264": {
     "state": "47",
     "place": "27740",
     "type": "place",
-    "name": "Franklin city"
+    "name": "Franklin city",
+    "county": "187",
+    "countyName": "Williamson County"
   },
   "Q49197": {
     "state": "44",
     "place": "19180",
     "type": "place",
-    "name": "Cranston city"
+    "name": "Cranston city",
+    "county": "007",
+    "countyName": "Providence County"
   },
   "Q201516": {
     "state": "12",
     "place": "45025",
     "type": "place",
-    "name": "Miami Beach city"
+    "name": "Miami Beach city",
+    "county": "086",
+    "countyName": "Miami-Dade County"
   },
   "Q752681": {
     "state": "06",
     "place": "00884",
     "type": "place",
-    "name": "Alhambra city"
+    "name": "Alhambra city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q49195": {
     "state": "44",
     "place": "74300",
     "type": "place",
-    "name": "Warwick city"
+    "name": "Warwick city",
+    "county": "003",
+    "countyName": "Kent County"
   },
   "Q838757": {
     "state": "06",
     "place": "39892",
     "type": "place",
-    "name": "Lakewood city"
+    "name": "Lakewood city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q932577": {
     "state": "12",
     "place": "39425",
     "type": "place",
-    "name": "Largo city"
+    "name": "Largo city",
+    "county": "103",
+    "countyName": "Pinellas County"
   },
   "Q1191460": {
     "state": "13",
     "place": "42425",
     "type": "place",
-    "name": "Johns Creek city"
+    "name": "Johns Creek city",
+    "county": "121",
+    "countyName": "Fulton County"
   },
   "Q486860": {
     "state": "06",
     "place": "77000",
     "type": "place",
-    "name": "Sunnyvale city"
+    "name": "Sunnyvale city",
+    "county": "085",
+    "countyName": "Santa Clara County"
   },
   "Q427075": {
     "state": "48",
     "place": "72176",
     "type": "place",
-    "name": "Temple city"
+    "name": "Temple city",
+    "county": "027",
+    "countyName": "Bell County"
   },
   "Q52474": {
     "state": "49",
     "place": "43660",
     "type": "place",
-    "name": "Layton city"
+    "name": "Layton city",
+    "county": "011",
+    "countyName": "Davis County"
   },
   "Q852645": {
     "state": "48",
     "place": "43888",
     "type": "place",
-    "name": "Longview city"
+    "name": "Longview city",
+    "county": "183",
+    "countyName": "Gregg County"
   },
   "Q490584": {
     "state": "26",
     "place": "29000",
     "type": "place",
-    "name": "Flint city"
+    "name": "Flint city",
+    "county": "049",
+    "countyName": "Genesee County"
   },
   "Q862711": {
     "state": "39",
     "place": "61000",
     "type": "place",
-    "name": "Parma city"
+    "name": "Parma city",
+    "county": "035",
+    "countyName": "Cuyahoga County"
   },
   "Q49199": {
     "state": "25",
     "place": "62535",
     "type": "place",
-    "name": "Somerville city"
+    "name": "Somerville city",
+    "county": "017",
+    "countyName": "Middlesex County"
   },
   "Q936753": {
     "state": "27",
     "place": "51730",
     "type": "place",
-    "name": "Plymouth city"
+    "name": "Plymouth city",
+    "county": "053",
+    "countyName": "Hennepin County"
   },
   "Q280557": {
     "state": "12",
     "place": "32275",
     "type": "place",
-    "name": "Homestead city"
+    "name": "Homestead city",
+    "county": "086",
+    "countyName": "Miami-Dade County"
   },
   "Q984155": {
     "state": "06",
     "place": "24638",
     "type": "place",
-    "name": "Folsom city"
+    "name": "Folsom city",
+    "county": "067",
+    "countyName": "Sacramento County"
   },
   "Q943775": {
     "state": "37",
     "place": "25580",
     "type": "place",
-    "name": "Gastonia city"
+    "name": "Gastonia city",
+    "county": "071",
+    "countyName": "Gaston County"
   },
   "Q896048": {
     "state": "12",
     "place": "07875",
     "type": "place",
-    "name": "Boynton Beach city"
+    "name": "Boynton Beach city",
+    "county": "099",
+    "countyName": "Palm Beach County"
   },
   "Q2003323": {
     "state": "13",
     "place": "80508",
     "type": "place",
-    "name": "Warner Robins city"
+    "name": "Warner Robins city",
+    "county": "153",
+    "countyName": "Houston County"
   },
   "Q917513": {
     "state": "06",
     "place": "80854",
     "type": "place",
-    "name": "Tustin city"
+    "name": "Tustin city",
+    "county": "059",
+    "countyName": "Orange County"
   },
   "Q927510": {
     "state": "06",
     "place": "47766",
     "type": "place",
-    "name": "Milpitas city"
+    "name": "Milpitas city",
+    "county": "085",
+    "countyName": "Santa Clara County"
   },
   "Q747444": {
     "state": "06",
     "place": "57792",
     "type": "place",
-    "name": "Pleasanton city"
+    "name": "Pleasanton city",
+    "county": "001",
+    "countyName": "Alameda County"
   },
   "Q744948": {
     "state": "36",
     "place": "50617",
     "type": "place",
-    "name": "New Rochelle city"
+    "name": "New Rochelle city",
+    "county": "119",
+    "countyName": "Westchester County"
   },
   "Q982364": {
     "state": "48",
     "place": "57200",
     "type": "place",
-    "name": "Pharr city"
+    "name": "Pharr city",
+    "county": "215",
+    "countyName": "Hidalgo County"
   },
   "Q986928": {
     "state": "06",
     "place": "59444",
     "type": "place",
-    "name": "Rancho Cordova city"
+    "name": "Rancho Cordova city",
+    "county": "067",
+    "countyName": "Sacramento County"
   },
   "Q60537": {
     "state": "06",
     "place": "50258",
     "type": "place",
-    "name": "Napa city"
+    "name": "Napa city",
+    "county": "055",
+    "countyName": "Napa County"
   },
   "Q583894": {
     "state": "12",
     "place": "36950",
     "type": "place",
-    "name": "Kissimmee city"
+    "name": "Kissimmee city",
+    "county": "097",
+    "countyName": "Osceola County"
   },
   "Q815979": {
     "state": "06",
     "place": "04982",
     "type": "place",
-    "name": "Bellflower city"
+    "name": "Bellflower city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q490385": {
     "state": "18",
     "place": "05860",
     "type": "place",
-    "name": "Bloomington city"
+    "name": "Bloomington city",
+    "county": "105",
+    "countyName": "Monroe County"
   },
   "Q747466": {
     "state": "06",
     "place": "81344",
     "type": "place",
-    "name": "Upland city"
+    "name": "Upland city",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q983609": {
     "state": "06",
     "place": "56700",
     "type": "place",
-    "name": "Perris city"
+    "name": "Perris city",
+    "county": "065",
+    "countyName": "Riverside County"
   },
   "Q577802": {
     "state": "17",
     "place": "06613",
     "type": "place",
-    "name": "Bloomington city"
+    "name": "Bloomington city",
+    "county": "113",
+    "countyName": "McLean County"
   },
   "Q61455": {
     "state": "05",
     "place": "35710",
     "type": "place",
-    "name": "Jonesboro city"
+    "name": "Jonesboro city",
+    "county": "031",
+    "countyName": "Craighead County"
   },
   "Q852721": {
     "state": "06",
     "place": "13214",
     "type": "place",
-    "name": "Chino Hills city"
+    "name": "Chino Hills city",
+    "county": "071",
+    "countyName": "San Bernardino County"
   },
   "Q490744": {
     "state": "06",
     "place": "00562",
     "type": "place",
-    "name": "Alameda city"
+    "name": "Alameda city",
+    "county": "001",
+    "countyName": "Alameda County"
   },
   "Q472675": {
     "state": "24",
     "place": "30325",
     "type": "place",
-    "name": "Frederick city"
+    "name": "Frederick city",
+    "county": "021",
+    "countyName": "Frederick County"
   },
   "Q462799": {
     "state": "17",
     "place": "24582",
     "type": "place",
-    "name": "Evanston city"
+    "name": "Evanston city",
+    "county": "031",
+    "countyName": "Cook County"
   },
   "Q856860": {
     "state": "18",
     "place": "31000",
     "type": "place",
-    "name": "Hammond city"
+    "name": "Hammond city",
+    "county": "089",
+    "countyName": "Lake County"
   },
   "Q40340": {
     "state": "55",
     "place": "66000",
     "type": "place",
-    "name": "Racine city"
+    "name": "Racine city",
+    "county": "101",
+    "countyName": "Racine County"
   },
   "Q980040": {
     "state": "48",
     "place": "13552",
     "type": "place",
-    "name": "Cedar Park city"
+    "name": "Cedar Park city",
+    "county": "491",
+    "countyName": "Williamson County"
   },
   "Q52467": {
     "state": "49",
     "place": "70850",
     "type": "place",
-    "name": "South Jordan city"
+    "name": "South Jordan city",
+    "county": "035",
+    "countyName": "Salt Lake County"
   },
   "Q844016": {
     "state": "53",
     "place": "53545",
     "type": "place",
-    "name": "Pasco city"
+    "name": "Pasco city",
+    "county": "021",
+    "countyName": "Franklin County"
   },
   "Q79842": {
     "state": "04",
     "place": "23620",
     "type": "place",
-    "name": "Flagstaff city"
+    "name": "Flagstaff city",
+    "county": "005",
+    "countyName": "Coconino County"
   },
   "Q988159": {
     "state": "26",
     "place": "74900",
     "type": "place",
-    "name": "Southfield city"
+    "name": "Southfield city",
+    "county": "125",
+    "countyName": "Oakland County"
   },
   "Q1022953": {
     "state": "26",
     "place": "88940",
     "type": "place",
-    "name": "Wyoming city"
+    "name": "Wyoming city",
+    "county": "081",
+    "countyName": "Kent County"
   },
   "Q281248": {
     "state": "06",
     "place": "57456",
     "type": "place",
-    "name": "Pittsburg city"
+    "name": "Pittsburg city",
+    "county": "013",
+    "countyName": "Contra Costa County"
   },
   "Q167155": {
     "state": "26",
     "place": "42160",
     "type": "place",
-    "name": "Kalamazoo city"
+    "name": "Kalamazoo city",
+    "county": "077",
+    "countyName": "Kalamazoo County"
   },
   "Q9033543": {
     "state": "06",
     "place": "66000",
     "type": "place",
-    "name": "San Diego city"
+    "name": "San Diego city",
+    "county": "073",
+    "countyName": "San Diego County"
   },
   "Q47265": {
     "state": "06",
     "place": "55282",
     "type": "place",
-    "name": "Palo Alto city"
+    "name": "Palo Alto city",
+    "county": "085",
+    "countyName": "Santa Clara County"
   },
   "Q39042": {
     "state": "56",
     "place": "13900",
     "type": "place",
-    "name": "Cheyenne city"
+    "name": "Cheyenne city",
+    "county": "021",
+    "countyName": "Laramie County"
   },
   "Q49142": {
     "state": "25",
     "place": "09175",
     "type": "cousub",
-    "name": "Brookline town"
+    "name": "Brookline town",
+    "county": "021",
+    "countyName": "Norfolk County"
   },
   "Q755149": {
     "state": "09",
     "place": "08420",
     "type": "place",
-    "name": "Bristol city"
+    "name": "Bristol city",
+    "county": "140",
+    "countyName": "Naugatuck Valley Planning Region"
   },
   "Q189471": {
     "state": "06",
     "place": "17610",
     "type": "place",
-    "name": "Cupertino city"
+    "name": "Cupertino city",
+    "county": "085",
+    "countyName": "Santa Clara County"
   },
   "Q385825": {
     "state": "08",
     "place": "57630",
     "type": "place",
-    "name": "Parker town"
+    "name": "Parker town",
+    "county": "035",
+    "countyName": "Douglas County"
   },
   "Q154462": {
     "state": "13",
     "place": "10944",
     "type": "place",
-    "name": "Brookhaven city"
+    "name": "Brookhaven city",
+    "county": "089",
+    "countyName": "DeKalb County"
   },
   "Q397826": {
     "state": "72",
     "place": "11237",
     "type": "cousub",
-    "name": "Camaceyes barrio"
+    "name": "Camaceyes barrio",
+    "county": "005",
+    "countyName": "Aguadilla Municipio"
   },
   "Q3154615": {
     "state": "17",
     "place": "14000",
     "type": "place",
-    "name": "Chicago city"
+    "name": "Chicago city",
+    "county": "031",
+    "countyName": "Cook County"
   },
   "Q762743": {
     "state": "04",
     "place": "44270",
     "type": "place",
-    "name": "Marana town"
+    "name": "Marana town",
+    "county": "019",
+    "countyName": "Pima County"
   },
   "Q959443": {
     "state": "29",
     "place": "13600",
     "type": "place",
-    "name": "Chesterfield city"
+    "name": "Chesterfield city",
+    "county": "189",
+    "countyName": "St. Louis County"
   },
   "Q986689": {
     "state": "39",
     "place": "54040",
     "type": "place",
-    "name": "Newark city"
+    "name": "Newark city",
+    "county": "089",
+    "countyName": "Licking County"
   },
   "Q984834": {
     "state": "55",
     "place": "72975",
     "type": "place",
-    "name": "Sheboygan city"
+    "name": "Sheboygan city",
+    "county": "117",
+    "countyName": "Sheboygan County"
   },
   "Q813867": {
     "state": "48",
     "place": "07132",
     "type": "place",
-    "name": "Bedford city"
+    "name": "Bedford city",
+    "county": "439",
+    "countyName": "Tarrant County"
   },
   "Q966492": {
     "state": "06",
     "place": "41474",
     "type": "place",
-    "name": "Lincoln city"
+    "name": "Lincoln city",
+    "county": "061",
+    "countyName": "Placer County"
   },
   "Q983758": {
     "state": "39",
     "place": "25704",
     "type": "place",
-    "name": "Euclid city"
+    "name": "Euclid city",
+    "county": "035",
+    "countyName": "Cuyahoga County"
   },
   "Q4355009": {
     "state": "36",
     "place": "59223",
     "type": "place",
-    "name": "Port Chester village"
+    "name": "Port Chester village",
+    "county": "119",
+    "countyName": "Westchester County"
   },
   "Q575316": {
     "state": "06",
     "place": "12552",
     "type": "place",
-    "name": "Cerritos city"
+    "name": "Cerritos city",
+    "county": "037",
+    "countyName": "Los Angeles County"
   },
   "Q490720": {
     "state": "28",
     "place": "06220",
     "type": "place",
-    "name": "Biloxi city"
+    "name": "Biloxi city",
+    "county": "047",
+    "countyName": "Harrison County"
   },
   "Q977206": {
     "state": "18",
     "place": "38358",
     "type": "place",
-    "name": "Jeffersonville city"
+    "name": "Jeffersonville city",
+    "county": "019",
+    "countyName": "Clark County"
   },
   "Q932601": {
     "state": "34",
     "place": "79800",
     "type": "cousub",
-    "name": "West Orange township"
+    "name": "West Orange township",
+    "county": "013",
+    "countyName": "Essex County"
   },
   "Q49192": {
     "state": "09",
     "place": "47290",
     "type": "place",
-    "name": "Middletown city"
+    "name": "Middletown city",
+    "county": "130",
+    "countyName": "Lower Connecticut River Valley Planning Region"
   },
   "Q1986600": {
     "state": "12",
     "place": "15968",
     "type": "place",
-    "name": "Cutler Bay town"
+    "name": "Cutler Bay town",
+    "county": "086",
+    "countyName": "Miami-Dade County"
   }
 }
