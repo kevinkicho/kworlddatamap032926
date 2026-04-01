@@ -1,19 +1,26 @@
 #!/usr/bin/env node
 /**
- * scripts/fetch-companies.js
+ * scripts/fetch-companies.js  (v2 — two-phase pipeline)
  *
- * Fetches companies headquartered in our cities from Wikidata.
+ * Phase 1 — Discovery (SPARQL, lightweight)
+ *   Simple query: city QID → {company QID, city QID} pairs.
+ *   No OPTIONALs, no financials, no GROUP BY. Never times out.
+ *   50 cities per SPARQL batch.
  *
- * Filters applied:
- *  - Revenue (P2139) is REQUIRED — eliminates govt agencies, schools, police depts, etc.
- *  - Defunct companies (P576 dissolution date) are excluded
- *  - One P131 hop so district-level HQs (e.g. Samsung in Gangnam-gu → Seoul) are attributed correctly
+ * Phase 2 — Enrichment (Wikidata wbgetentities, 50 companies/request)
+ *   Full entity JSON per company. Extracts complete financial time-series
+ *   (all years, all fields), key people (CEO, founders), exchange listings,
+ *   descriptions, parent org, Wikipedia sitelinks.
  *
- * Output: public/companies.json  keyed by city QID
- *   { "Q8684": [ { qid, name, industry, employees, revenue, net_income,
- *                  founded, website, wikipedia }, ... ] }
+ * Phase 3 — Label resolution (wbgetentities, labels only)
+ *   Resolves entity QIDs (exchanges, industries, CEOs…) → readable names.
  *
- * Usage:  npm run fetch-companies
+ * Phase 4 — Assembly
+ *   Groups by city, sorts by revenue, writes companies.json.
+ *
+ * Usage:
+ *   npm run fetch-companies             resume from checkpoint
+ *   npm run fetch-companies -- --fresh  restart from scratch
  */
 
 'use strict';
@@ -27,41 +34,72 @@ const { URL } = require('url');
 const CITIES_FILE     = path.join(__dirname, '..', 'public', 'cities-full.json');
 const OUT_FILE        = path.join(__dirname, '..', 'public', 'companies.json');
 const CHECKPOINT_FILE = path.join(__dirname, '.companies-checkpoint.json');
-const SPARQL_URL      = 'https://query.wikidata.org/sparql';
 
-const BATCH_SIZE  = 20;     // smaller batches → less query cost per request
-const QUERY_LIMIT = 2000;   // SPARQL row cap — if hit, batch is truncated and needs splitting
-const DELAY_MS    = 5000;   // pause between batches (ms)
-const RETRY_BASE  = 30000;  // base wait for exponential backoff (ms): 30s, 60s, 90s, 120s, 150s
-const MAX_RETRIES = 5;      // more attempts before giving up or falling back
+const SPARQL_ENDPOINT = 'https://query.wikidata.org/sparql';
+const WD_API          = 'https://www.wikidata.org/w/api.php';
+
+const DISC_BATCH        = 30;   // cities per SPARQL discovery batch (smaller = less truncation risk)
+const ENR_BATCH         = 50;   // entities per wbgetentities request
+const SPARQL_DELAY      = 3500; // ms between SPARQL requests (politeness + 429 avoidance)
+const API_DELAY         = 1200; // ms between entity API requests
+const RETRY_BASE        = 30000;// ms base for exponential backoff (30s, 60s, 90s…)
+const MAX_RETRIES       = 5;
+const CHECKPOINT_EVERY  = 10;   // save enrichment checkpoint every N batches
+
+const UA = 'kworlddatamap/2.0 (educational; github.com/kworlddatamap)';
+
+// ── Wikidata currency QID → ISO code ─────────────────────────────────────────
+// Each Wikidata quantity value has a `unit` field pointing to a currency entity.
+// We map the most common ones here; anything unmapped is left null.
+const WIKIDATA_CURRENCY = {
+  Q4917:'USD',   Q4916:'EUR',   Q25224:'GBP',  Q8146:'JPY',
+  Q47026:'KRW',  Q25239:'SGD',  Q1104069:'CNY',Q80973:'INR',
+  Q7362:'BRL',   Q1043616:'AUD',Q42585:'CAD',  Q25517:'CHF',
+  Q62613:'HKD',  Q192152:'TWD', Q170494:'IDR', Q208856:'MXN',
+  Q3028:'NOK',   Q41801:'SEK',  Q13114:'DKK',  Q80474:'PLN',
+  Q125861:'RUB', Q25255:'ZAR',  Q34735:'MYR',  Q4714:'TRY',
+  Q171015:'AED', Q37150:'SAR',  Q174924:'THB', Q193778:'PHP',
+  Q213014:'NGN', Q179241:'EGP', Q5185:'CZK',   Q47494:'HUF',
+  Q1104676:'RON',Q1464125:'CLP',Q47073:'COP',  Q200185:'ILS',
+  Q134144:'PKR', Q131316:'BDT', Q214400:'VND', Q181619:'KWD',
+  Q202040:'QAR', Q25343:'DZD',  Q173977:'MAD', Q111490:'TND',
+};
+
+function unitToCurrency(unitUrl) {
+  if (!unitUrl || unitUrl === '1') return null;
+  const m = unitUrl.match(/Q(\d+)$/);
+  return m ? (WIKIDATA_CURRENCY['Q' + m[1]] || null) : null;
+}
 
 // ── HTTP helper ───────────────────────────────────────────────────────────────
-function httpGet(url, headers = {}, hops = 5) {
+function httpGet(urlStr, headers = {}, hops = 5) {
   return new Promise((resolve, reject) => {
-    const p   = new URL(url);
+    const p   = new URL(urlStr);
     const lib = p.protocol === 'http:' ? http : https;
     lib.get({
       hostname: p.hostname,
       path:     p.pathname + p.search,
-      headers:  { 'User-Agent': 'kworlddatamap/1.0 (educational)', ...headers },
+      headers:  { 'User-Agent': UA, ...headers },
     }, res => {
-      if ([301,302,303,307,308].includes(res.statusCode) && hops > 0) {
+      if ([301, 302, 303, 307, 308].includes(res.statusCode) && hops > 0) {
         const loc  = res.headers.location || '';
-        const next = loc.startsWith('http') ? loc : new URL(loc, url).href;
+        const next = loc.startsWith('http') ? loc : new URL(loc, urlStr).href;
         res.resume();
         return httpGet(next, headers, hops - 1).then(resolve, reject);
       }
       if (res.statusCode !== 200) {
-        // Drain body so socket is released, attach status for caller
         const chunks = [];
+        // Capture Retry-After before consuming body (header available immediately)
+        const retryAfterSec = res.headers['retry-after']
+          ? parseInt(res.headers['retry-after'], 10) || null
+          : null;
         res.on('data', d => chunks.push(d));
         res.on('end', () => {
-          const body = Buffer.concat(chunks).toString('utf8').slice(0, 300);
-          const err  = Object.assign(
+          const body = Buffer.concat(chunks).toString('utf8').slice(0, 400);
+          reject(Object.assign(
             new Error(`HTTP ${res.statusCode}`),
-            { status: res.statusCode, body }
-          );
-          reject(err);
+            { status: res.statusCode, body, retryAfterSec }
+          ));
         });
         return;
       }
@@ -72,466 +110,547 @@ function httpGet(url, headers = {}, hops = 5) {
     }).on('error', reject);
   });
 }
+
 const delay = ms => new Promise(r => setTimeout(r, ms));
 
-// ── SPARQL query (full) ───────────────────────────────────────────────────────
-// Uses GROUP BY + GROUP_CONCAT to fetch complete time-series for all financial
-// fields in a single pass, without row-count explosion from cross-product joins.
-// LIMIT now applies to companies (one row per company after GROUP BY), so the
-// 2000-row cap no longer silently truncates large city hubs like Tokyo or Seoul.
-function buildQuery(qids) {
-  const vals = qids.map(q => `wd:${q}`).join(' ');
+// Exponential backoff for transient HTTP errors (429 rate-limit, 5xx server errors).
+// For 429, honours the Retry-After header if present — otherwise falls back to RETRY_BASE.
+async function withRetry(fn, label, retries = MAX_RETRIES) {
+  for (let attempt = 1; attempt <= retries + 1; attempt++) {
+    try {
+      return await fn();
+    } catch (e) {
+      if ([429, 500, 502, 503, 504].includes(e.status) && attempt <= retries) {
+        let wait;
+        if (e.status === 429 && e.retryAfterSec) {
+          // Wikidata says exactly how long to wait — add 2s buffer
+          wait = (e.retryAfterSec + 2) * 1000;
+        } else {
+          wait = RETRY_BASE * attempt;
+        }
+        process.stdout.write(
+          `\n    ⚠  ${label}: HTTP ${e.status} → retry ${attempt}/${retries} in ${wait / 1000}s\n    `
+        );
+        await delay(wait);
+      } else throw e;
+    }
+  }
+}
+
+// ── SPARQL helper ─────────────────────────────────────────────────────────────
+async function sparql(query) {
+  const url = SPARQL_ENDPOINT + '?query=' + encodeURIComponent(query) + '&format=json';
+  // Wrap both fetch AND parse inside withRetry so truncated JSON responses are retried.
+  // A truncated response produces a SyntaxError from JSON.parse — we re-throw it as a
+  // 502-coded error so withRetry's backoff logic picks it up.
+  return await withRetry(async () => {
+    const raw = await httpGet(url, { Accept: 'application/sparql-results+json' });
+    try {
+      return JSON.parse(raw).results?.bindings || [];
+    } catch (parseErr) {
+      throw Object.assign(
+        new Error(`Truncated SPARQL response (${raw.length} bytes): ${parseErr.message}`),
+        { status: 502 }
+      );
+    }
+  }, 'SPARQL');
+}
+
+// ── Wikidata entity API helper ────────────────────────────────────────────────
+// props: labels | descriptions | claims | sitelinks (any subset)
+async function wbGetEntities(qids, props = ['labels', 'descriptions', 'claims', 'sitelinks']) {
+  const params = new URLSearchParams({
+    action:           'wbgetentities',
+    ids:              qids.join('|'),
+    props:            props.join('|'),
+    languages:        'en|ko|ja|zh|ar|hi|ru|de|fr|es|pt',
+    languagefallback: '1',
+    format:           'json',
+    formatversion:    '2',
+  });
+  const raw = await withRetry(
+    () => httpGet(`${WD_API}?${params}`, { Accept: 'application/json' }),
+    'wbGetEntities'
+  );
+  return JSON.parse(raw).entities || {};
+}
+
+// ── Phase 1: Discovery SPARQL query ──────────────────────────────────────────
+// Returns DISTINCT {?co, ?hq} pairs — no OPTIONALs, no financial data, no GROUP BY.
+// Significance filter: stock-exchange listed (P414) OR revenue ≥ 1B (non-profits excluded).
+// One P131 hop catches district-level HQs (e.g. Samsung in Gangnam-gu → Seoul).
+function discoveryQuery(cityQids) {
+  const vals = cityQids.map(q => `wd:${q}`).join(' ');
   return `
-SELECT ?co ?coLabel ?hq
-  (SAMPLE(STR(?indLabel))  AS ?industry)
-  (GROUP_CONCAT(DISTINCT STR(?exLabel); separator="§")  AS ?exchangeLabels)
-  (SAMPLE(STR(?tk))        AS ?ticker)
-  (GROUP_CONCAT(DISTINCT CONCAT(STR(?rev), "|", IF(BOUND(?revYr), STR(?revYr), "")); separator="§") AS ?revenueHist)
-  (SAMPLE(?emp)            AS ?employees)
-  (SAMPLE(?ni)             AS ?netIncome)
-  (SAMPLE(?oi)             AS ?operatingIncome)
-  (SAMPLE(?ta)             AS ?totalAssets)
-  (SAMPLE(?te)             AS ?totalEquity)
-  (SAMPLE(?foundedYr)      AS ?founded)
-  (SAMPLE(STR(?site))      AS ?website)
-  (SAMPLE(?wpStr)          AS ?wpUrl)
-WHERE {
+SELECT DISTINCT ?co ?hq WHERE {
   VALUES ?hq { ${vals} }
-
-  # Direct HQ match OR one P131 hop (e.g. Samsung in Gangnam-gu → Seoul)
-  { ?co wdt:P159 ?hq . }
-  UNION
-  { ?co wdt:P159 ?loc . ?loc wdt:P131 ?hq . }
-
-  # ── Significance filter ────────────────────────────────────────────────────
-  # Path 1: publicly traded (P414 existence check — no variable binding to keep
-  #   the significance check cheap; exchange label fetched separately below).
-  # Path 2: large private companies with revenue ≥ 1B (local currency).
+  {
+    { ?co wdt:P159 ?hq . }
+    UNION
+    { ?co wdt:P159 ?loc . ?loc wdt:P131 ?hq . }
+  }
   {
     { ?co wdt:P414 [] . }
     UNION
     {
-      ?co wdt:P2139 ?bigRev .
-      FILTER(?bigRev >= 1000000000)
+      ?co wdt:P2139 ?r .
+      FILTER(?r >= 1000000000)
       FILTER NOT EXISTS {
         VALUES ?npType {
-          wd:Q163740   # non-profit organization
-          wd:Q157031   # foundation
-          wd:Q41487    # charitable organization
-          wd:Q7397682  # non-profit corporation
-          wd:Q327333   # government organization
-          wd:Q208586   # public library
+          wd:Q163740  wd:Q157031  wd:Q41487
+          wd:Q7397682 wd:Q327333  wd:Q208586
         }
         ?co wdt:P31 ?npType .
       }
     }
   }
-
-  # Exclude dissolved / defunct companies
   FILTER NOT EXISTS { ?co wdt:P576 [] }
+}`;
+}
 
-  OPTIONAL { ?co wdt:P452 ?ind . }
-  OPTIONAL { ?co wdt:P414 ?ex .  }
-  OPTIONAL { ?co wdt:P249 ?tk .  }
+// ── Phase 2 & 3: Entity parsing helpers ──────────────────────────────────────
 
-  # Revenue: full statement path gives all historical years in GROUP_CONCAT.
-  # Cross-product: N_rev_years × 1 (others return single preferred-rank value).
-  # DISTINCT in GROUP_CONCAT removes duplicates from any residual cross-product.
-  OPTIONAL {
-    ?co p:P2139 ?revStmt . ?revStmt ps:P2139 ?rev .
-    OPTIONAL { ?revStmt pq:P585 ?revDate . BIND(YEAR(?revDate) AS ?revYr) }
+// All non-deprecated, value-type statements for a property
+function stmts(claims, prop) {
+  return (claims[prop] || []).filter(
+    s => s.rank !== 'deprecated' && s.mainsnak.snaktype === 'value'
+  );
+}
+
+// Full time-series for a quantity property.
+// Returns [{year, value, currency}] sorted by year ascending; entries without a year qualifier go last.
+function timeSeries(claims, prop) {
+  const out = [];
+  for (const s of stmts(claims, prop)) {
+    const raw = s.mainsnak.datavalue?.value;
+    if (!raw?.amount) continue;
+    const value = Math.round(Number(raw.amount));
+    if (isNaN(value)) continue;
+    const currency = unitToCurrency(raw.unit);
+
+    // Year from P585 (point in time) qualifier
+    let year = null;
+    const t = s.qualifiers?.P585?.[0]?.datavalue?.value?.time;
+    if (t) {
+      const m = t.match(/^[+-](\d{4})/);
+      if (m) year = +m[1];
+    }
+    out.push({ year, value, currency });
   }
 
-  # Other financial fields use wdt: (preferred-rank single value) to keep the
-  # cross-product at 1 and avoid the query-timeout that full statement paths cause.
-  OPTIONAL { ?co wdt:P1082 ?emp . }
-  OPTIONAL { ?co wdt:P2295 ?ni  . }
-  OPTIONAL { ?co wdt:P3362 ?oi  . }
-  OPTIONAL { ?co wdt:P2403 ?ta  . }
-  OPTIONAL { ?co wdt:P2137 ?te  . }
-  OPTIONAL { ?co wdt:P571 ?fd    . BIND(YEAR(?fd) AS ?foundedYr) }
-  OPTIONAL { ?co wdt:P856 ?site  . }
-  OPTIONAL {
-    ?wpPage schema:about ?co ;
-            schema:inLanguage "en" ;
-            schema:isPartOf <https://en.wikipedia.org/> .
-    BIND(STR(?wpPage) AS ?wpStr)
-  }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,ko,ja,zh,de,fr,es,pt,ru,it,ar,tr,nl,pl,sv". }
-}
-GROUP BY ?co ?coLabel ?hq
-ORDER BY ?hq ?coLabel
-LIMIT ${QUERY_LIMIT}`;
+  // Sort: year asc, null-year entries at the end
+  out.sort((a, b) => {
+    if (a.year == null && b.year == null) return 0;
+    if (a.year == null) return 1;
+    if (b.year == null) return -1;
+    return a.year - b.year;
+  });
+
+  // Deduplicate by year (keep first occurrence)
+  const seen = new Set();
+  return out.filter(r => {
+    const k = r.year != null ? String(r.year) : `_${r.value}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
 }
 
-// ── SPARQL query (lite — P414 only, no revenue filter, fewer OPTIONALs) ──────
-// Used as fallback when the full query silently times out on a single city.
-// Fewer OPTIONAL clauses → far less computation → completes where full query fails.
-function buildLiteQuery(qid) {
-  return `
-SELECT DISTINCT ?co ?coLabel ?hq ?indLabel ?employees ?founded ?website ?wpUrl ?exchangeLabel ?ticker WHERE {
-  VALUES ?hq { wd:${qid} }
-  { ?co wdt:P159 ?hq . }
-  UNION
-  { ?co wdt:P159 ?loc . ?loc wdt:P131 ?hq . }
-  ?co wdt:P414 ?exchange .
-  FILTER NOT EXISTS { ?co wdt:P576 [] }
-  OPTIONAL { ?co wdt:P452 ?ind . }
-  OPTIONAL { ?co wdt:P1082 ?employees . }
-  OPTIONAL { ?co wdt:P249 ?ticker . }
-  OPTIONAL { ?co wdt:P571 ?fd . BIND(YEAR(?fd) AS ?founded) }
-  OPTIONAL { ?co wdt:P856 ?website . }
-  OPTIONAL {
-    ?wpPage schema:about ?co ;
-            schema:inLanguage "en" ;
-            schema:isPartOf <https://en.wikipedia.org/> .
-    BIND(STR(?wpPage) AS ?wpUrl)
-  }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en,ko,ja,zh,de,fr,es,pt,ru,it,ar,tr,nl,pl,sv". }
-}
-ORDER BY ?coLabel
-LIMIT ${QUERY_LIMIT}`;
+// Most recent (highest year) value for a property. Falls back to last entry if no year data.
+function latest(claims, prop) {
+  const h = timeSeries(claims, prop);
+  if (!h.length) return { value: null, year: null, currency: null };
+  const withYear = h.filter(e => e.year != null);
+  return withYear.length ? withYear[withYear.length - 1] : h[h.length - 1];
 }
 
-// ── Fetch lite (single heavy city — P414 only, fast) ─────────────────────────
-async function fetchLite(qid) {
-  process.stdout.write(`\n    ⚡ full query too heavy — using lite query for ${qid}…\n    `);
-  const url = SPARQL_URL + '?query=' + encodeURIComponent(buildLiteQuery(qid)) + '&format=json';
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    const t0 = Date.now();
-    try {
-      const raw  = await httpGet(url, { Accept: 'application/sparql-results+json' });
-      const data = JSON.parse(raw);
-      const rows = data.results?.bindings || [];
-      const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-      const out  = parseBatchRows(rows);
-      const n    = Object.values(out).reduce((s, a) => s + a.length, 0);
-      process.stdout.write(`lite OK: ${rows.length} rows → ${n} cos (${elapsed}s) `);
-      return out;
-    } catch (e) {
-      const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-      if (attempt < 3) {
-        process.stdout.write(`\n    ⚠  lite HTTP ${e.status} after ${elapsed}s → retrying in 20s (${3 - attempt} left)\n    `);
-        await delay(20_000);
-      } else {
-        process.stdout.write(`\n    ✗ lite query also failed — skipping ${qid}\n    `);
-        return {};
-      }
+// QID list from item-type property values (P414=exchange, P452=industry, P169=CEO…)
+function itemRefs(claims, prop) {
+  return [
+    ...new Set(
+      stmts(claims, prop)
+        .map(s => s.mainsnak.datavalue?.value?.id)
+        .filter(Boolean)
+    ),
+  ];
+}
+
+// First non-deprecated string value
+function strVal(claims, prop) {
+  for (const s of stmts(claims, prop)) {
+    const v = s.mainsnak.datavalue?.value;
+    if (typeof v === 'string') return v;
+    if (v?.text) return v.text;  // monolingualtext type
+  }
+  return null;
+}
+
+// Year from first non-deprecated time-type statement
+function yearVal(claims, prop) {
+  for (const s of stmts(claims, prop)) {
+    const t = s.mainsnak.datavalue?.value?.time;
+    if (t) {
+      const m = t.match(/^[+-](\d{4})/);
+      if (m) return +m[1];
     }
   }
-  return {};
+  return null;
 }
 
-// ── Fetch one batch ───────────────────────────────────────────────────────────
-async function fetchBatch(qids, retries = MAX_RETRIES) {
-  const url = SPARQL_URL + '?query=' + encodeURIComponent(buildQuery(qids)) + '&format=json';
-  const t0  = Date.now();
-  let raw;
-  try {
-    raw = await httpGet(url, { Accept: 'application/sparql-results+json' });
-  } catch (e) {
-    const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-    const retryable = [429, 500, 502, 503, 504].includes(e.status);
-    if (retryable && retries > 0) {
-      const attempt = MAX_RETRIES - retries + 1;
-      const wait    = RETRY_BASE * attempt;   // 30s, 60s, 90s, 120s, 150s
-      process.stdout.write(
-        `\n    ⚠  HTTP ${e.status} after ${elapsed}s` +
-        (e.body ? ` — "${e.body.replace(/\s+/g,' ').trim().slice(0,80)}"` : '') +
-        ` → retrying in ${wait/1000}s (${retries} left)\n    `
-      );
-      await delay(wait);
-      return fetchBatch(qids, retries - 1);
-    }
-    // All retries exhausted — for 504 (query timeout) with multiple cities,
-    // fall back to individual city queries rather than skipping entirely.
-    if (e.status === 504 && qids.length > 1) {
-      process.stdout.write(`\n    ⚡ HTTP 504 — batch too heavy, re-querying ${qids.length} cities individually…\n    `);
-      const out = {};
-      for (const qid of qids) {
-        await delay(1500);
-        // Only 2 retries for individual-city fallback — if the full query truly
-        // can't complete for this city, fail fast and switch to the lite query.
-        const single = await fetchBatch([qid], 2);
-        if (single) Object.assign(out, single);
-      }
-      return out;
-    }
-    // Single city exhausted all retries on 504 — full query is too heavy.
-    // Try the lite query (P414-only, far fewer OPTIONALs) as a last resort.
-    if (e.status === 504 && qids.length === 1) {
-      return fetchLite(qids[0]);
-    }
-    process.stdout.write(`\n    ✗ HTTP ${e.status} after ${elapsed}s — skipping batch\n    `);
-    return null;
-  }
+// Parse a Wikidata entity → partial company object.
+// Quantitative fields are fully resolved. Entity-valued fields (exchange, industry, CEO…)
+// are stored as QID arrays prefixed with _ for label resolution in Phase 3.
+function parsePartial(entity) {
+  const claims  = entity.claims || {};
+  const wpTitle = entity.sitelinks?.enwiki?.title;
 
-  let data;
-  try { data = JSON.parse(raw); }
-  catch (e) {
-    process.stdout.write(`\n    ✗ JSON parse error — skipping batch\n    `);
-    return null;
-  }
+  const revenueHist        = timeSeries(claims, 'P2139');
+  const employeesHist      = timeSeries(claims, 'P1082');
+  const netIncomeHist      = timeSeries(claims, 'P2295');
+  const opIncomeHist       = timeSeries(claims, 'P3362');
+  const totalAssetsHist    = timeSeries(claims, 'P2403');
+  const totalEquityHist    = timeSeries(claims, 'P2137');
 
-  const elapsedMs = Date.now() - t0;
-  const elapsed   = (elapsedMs / 1000).toFixed(1);
-  const rows      = data.results?.bindings || [];
+  const { value: revenue,          year: revenue_year,      currency: revenue_currency }          = latest(claims, 'P2139');
+  const { value: employees }                                                                       = latest(claims, 'P1082');
+  const { value: net_income,                               currency: net_income_currency }         = latest(claims, 'P2295');
+  const { value: operating_income,                         currency: operating_income_currency }   = latest(claims, 'P3362');
+  const { value: total_assets,                             currency: total_assets_currency }       = latest(claims, 'P2403');
+  const { value: total_equity,                             currency: total_equity_currency }       = latest(claims, 'P2137');
+  const { value: market_cap,        year: market_cap_year,  currency: market_cap_currency }        = latest(claims, 'P2226');
 
-  // Silent-timeout detection: Wikidata sometimes returns HTTP 200 with 0 rows
-  // when its internal Blazegraph engine exhausts its ~60s compute budget.
-  // Symptom: single-city query, 0 rows, took >30s.  Retry with the lite query
-  // (P414-only, fewer OPTIONALs) which completes where the full query fails.
-  if (rows.length === 0 && qids.length === 1 && elapsedMs > 30_000) {
-    process.stdout.write(`\n    ⚠  silent timeout (${elapsed}s, 0 rows) — retrying with lite query…\n    `);
-    await delay(5_000);
-    const liteUrl = SPARQL_URL + '?query=' + encodeURIComponent(buildLiteQuery(qids[0])) + '&format=json';
-    const t1 = Date.now();
-    let liteRaw;
-    try {
-      liteRaw = await httpGet(liteUrl, { Accept: 'application/sparql-results+json' });
-    } catch (e2) {
-      process.stdout.write(`\n    ✗ lite query also failed (${e2.status}) — skipping city ${qids[0]}\n    `);
-      return {};
-    }
-    let liteData;
-    try { liteData = JSON.parse(liteRaw); } catch { return {}; }
-    const liteRows    = liteData.results?.bindings || [];
-    const liteElapsed = ((Date.now() - t1) / 1000).toFixed(1);
-    process.stdout.write(`lite: ${liteRows.length} rows (${liteElapsed}s) `);
-    // Re-parse using the same row structure (revenue/financial fields will be null)
-    return parseBatchRows(liteRows);
-  }
+  return {
+    // Name: prefer English, fall back to Korean/Japanese/Chinese/other language labels.
+    // For companies that only exist in local-language Wikipedia, this avoids showing raw QIDs.
+    qid:         entity.id,
+    name:        entity.labels?.en?.value
+               || entity.labels?.ko?.value
+               || entity.labels?.ja?.value
+               || entity.labels?.zh?.value
+               || entity.labels?.ar?.value
+               || entity.labels?.ru?.value
+               || entity.labels?.de?.value
+               || entity.labels?.fr?.value
+               || entity.id,
+    description: entity.descriptions?.en?.value
+               || entity.descriptions?.ko?.value
+               || entity.descriptions?.ja?.value
+               || entity.descriptions?.zh?.value
+               || null,
+    ticker:      strVal(claims, 'P249'),
+    founded:     yearVal(claims, 'P571'),
+    website:     strVal(claims, 'P856'),
+    // Wikipedia: prefer English article; fall back to Japanese/Korean for local companies
+    wikipedia:   wpTitle
+      ? `https://en.wikipedia.org/wiki/${encodeURIComponent(wpTitle.replace(/ /g, '_'))}`
+      : entity.sitelinks?.jawiki?.title
+        ? `https://ja.wikipedia.org/wiki/${encodeURIComponent(entity.sitelinks.jawiki.title.replace(/ /g, '_'))}`
+        : entity.sitelinks?.kowiki?.title
+          ? `https://ko.wikipedia.org/wiki/${encodeURIComponent(entity.sitelinks.kowiki.title.replace(/ /g, '_'))}`
+          : null,
 
-  // Hit the row cap — this batch was truncated. Re-query each city individually
-  // so no companies are silently dropped from large hubs like Tokyo or Seoul.
-  if (rows.length >= QUERY_LIMIT && qids.length > 1) {
-    process.stdout.write(`\n    ⚡ hit ${QUERY_LIMIT}-row cap — re-querying ${qids.length} cities individually…\n    `);
-    const out = {};
-    for (const qid of qids) {
-      await delay(1500);
-      const single = await fetchBatch([qid], retries);
-      if (single) Object.assign(out, single);
-    }
-    return out;
-  }
+    // Quantitative: fully resolved (currency from Wikidata unit QID)
+    revenue,          revenue_year,     revenue_currency,          revenue_history:          revenueHist,
+    employees,                                                     employees_history:         employeesHist,
+    net_income,                         net_income_currency,       net_income_history:        netIncomeHist,
+    operating_income,                   operating_income_currency, operating_income_history:  opIncomeHist,
+    total_assets,                       total_assets_currency,     total_assets_history:      totalAssetsHist,
+    total_equity,                       total_equity_currency,     total_equity_history:      totalEquityHist,
+    market_cap,       market_cap_year,  market_cap_currency,
 
-  const out = parseBatchRows(rows);
-  process.stdout.write(`${rows.length} rows → ${Object.values(out).reduce((s,a) => s+a.length, 0)} cos (${elapsed}s)`);
-  return out;
+    // Entity-valued: QID refs resolved in Phase 3
+    _exchangeQids: itemRefs(claims, 'P414'),
+    _industryQid:  itemRefs(claims, 'P452')[0] || null,
+    _ceoQids:      itemRefs(claims, 'P169'),
+    _founderQids:  itemRefs(claims, 'P112'),
+    _parentQid:    itemRefs(claims, 'P749')[0] || null,
+  };
 }
 
-// ── History parser (GROUP_CONCAT → [{year, value}] sorted ascending) ─────────
-// GROUP_CONCAT format: "val1|yr1§val2|yr2§..." (DISTINCT already applied in SPARQL)
-// Returns [] when str is empty or null.
-function parseHistory(str) {
-  if (!str) return [];
-  return str.split('§')
-    .map(s => {
-      const [v, y] = s.split('|');
-      const value = v ? Math.round(Number(v)) : null;
-      const year  = y ? Number(y)             : null;
-      return { year, value };
-    })
-    .filter(h => h.value !== null && !isNaN(h.value))
-    .sort((a, b) => (a.year ?? 0) - (b.year ?? 0));
-}
+// Finalize company: resolve QID refs → labels, strip internal _ fields.
+function finalizeCompany(partial, labelMap) {
+  const {
+    _exchangeQids, _industryQid, _ceoQids, _founderQids, _parentQid,
+    ...co
+  } = partial;
 
-// Returns the most-recent entry from a history array, or {value:null, year:null}.
-function latestOf(hist) {
-  if (!hist.length) return { value: null, year: null };
-  return hist[hist.length - 1];
-}
+  co.exchange   = _exchangeQids.map(q => labelMap.get(q)).filter(Boolean).join(', ') || null;
+  co.industry   = _industryQid  ? labelMap.get(_industryQid) || null : null;
+  co.ceo        = _ceoQids.map(q => labelMap.get(q)).filter(Boolean).join(', ') || null;
+  const fArr    = _founderQids.map(q => labelMap.get(q)).filter(Boolean);
+  co.founders   = fArr.length ? fArr : null;
+  co.parent_org = _parentQid   ? labelMap.get(_parentQid)   || null : null;
 
-// ── Row parser (shared by full query and lite fallback) ───────────────────────
-// Full query uses GROUP BY — one row per company with GROUP_CONCAT history strings.
-// Lite query uses SELECT DISTINCT — one row per company (no financial fields).
-function parseBatchRows(rows) {
-  const byCity = {};
-  for (const row of rows) {
-    const cityQid = row.hq?.value?.split('/').pop();
-    const coQid   = row.co?.value?.split('/').pop();
-    if (!cityQid || !coQid) continue;
-    if (!byCity[cityQid]) byCity[cityQid] = {};
-
-    // Revenue: GROUP_CONCAT history string → full time-series.
-    // Other financials: scalar SAMPLE values (wdt: preferred-rank, no year info).
-    // Exchange labels: GROUP_CONCAT ("§"-joined) or single value from lite query.
-    const revenueHist = parseHistory(row.revenueHist?.value);
-    const { value: revenue, year: revenue_year } = latestOf(revenueHist);
-
-    const employees       = row.employees       ? Math.round(Number(row.employees.value))       : null;
-    const net_income      = row.netIncome       ? Math.round(Number(row.netIncome.value))       : null;
-    const operating_income= row.operatingIncome ? Math.round(Number(row.operatingIncome.value)) : null;
-    const total_assets    = row.totalAssets     ? Math.round(Number(row.totalAssets.value))     : null;
-    const total_equity    = row.totalEquity     ? Math.round(Number(row.totalEquity.value))     : null;
-
-    const exchRaw = row.exchangeLabels?.value || row.exchangeLabel?.value || '';
-    const exchange = exchRaw.split('§').filter(Boolean)[0] || null;
-
-    byCity[cityQid][coQid] = {
-      qid:             coQid,
-      name:            row.coLabel?.value  || coQid,
-      industry:        row.industry?.value || row.indLabel?.value || null,
-      exchange,
-      ticker:          row.ticker?.value   || null,
-      employees,
-      revenue,
-      revenue_year,
-      revenue_history: revenueHist,
-      net_income,
-      operating_income,
-      total_assets,
-      total_equity,
-      founded:         row.founded?.value  ? Number(row.founded.value) : null,
-      website:         row.website?.value  || null,
-      wikipedia:       row.wpUrl?.value    || null,
-    };
-  }
-
-  const out = {};
-  for (const [cq, cos] of Object.entries(byCity)) {
-    out[cq] = Object.values(cos).sort((a, b) => {
-      const ar = a.revenue || 0, br = b.revenue || 0;
-      if (br !== ar) return br - ar;
-      return a.name.localeCompare(b.name);
-    });
-  }
-  return out;
+  return co;
 }
 
 // ── Checkpoint helpers ────────────────────────────────────────────────────────
+const CP_VERSION = 2;
 
-function saveCheckpoint(result, nextBatch, skipped) {
-  fs.writeFileSync(CHECKPOINT_FILE, JSON.stringify({
-    version:   1,
-    nextBatch,
-    skipped,
-    savedAt:   new Date().toISOString(),
-    result:    Object.entries(result),   // [[cityQid, [co, ...]], ...]
-  }), 'utf8');
+function saveCheckpoint(data) {
+  fs.writeFileSync(
+    CHECKPOINT_FILE,
+    JSON.stringify({ version: CP_VERSION, savedAt: new Date().toISOString(), ...data }),
+    'utf8'
+  );
 }
 
 function loadCheckpoint() {
   if (!fs.existsSync(CHECKPOINT_FILE)) return null;
   try {
-    const data = JSON.parse(fs.readFileSync(CHECKPOINT_FILE, 'utf8'));
-    if (data.version !== 1) return null;
-    return data;
-  } catch(e) { return null; }
+    const d = JSON.parse(fs.readFileSync(CHECKPOINT_FILE, 'utf8'));
+    return d.version === CP_VERSION ? d : null;
+  } catch { return null; }
 }
 
 function deleteCheckpoint() {
   if (fs.existsSync(CHECKPOINT_FILE)) fs.unlinkSync(CHECKPOINT_FILE);
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-async function main() {
-  const FRESH  = process.argv.includes('--fresh');
-  const cities = JSON.parse(fs.readFileSync(CITIES_FILE, 'utf8'));
-  const qids   = [...new Set(cities.map(c => c.qid).filter(Boolean))];
-  const total  = Math.ceil(qids.length / BATCH_SIZE);
-
-  console.log(`\n╔══════════════════════════════════════════════════╗`);
-  console.log(`║   fetch-companies — with checkpoint/resume       ║`);
-  console.log(`╚══════════════════════════════════════════════════╝`);
-  console.log(`Cities : ${cities.length} | QIDs: ${qids.length} | Batches: ${total}`);
-  console.log(`Filter : stock-exchange listed (P414) OR revenue ≥ 1B; defunct excluded`);
-  console.log(`Output : ${OUT_FILE}\n`);
-
-  // --fresh wipes any existing checkpoint and output
-  if (FRESH) {
-    deleteCheckpoint();
-    console.log(`Mode: --fresh — ignoring checkpoint and existing data\n`);
-  }
-
-  // ── Resume from checkpoint if available ──────────────────────────────────
-  let result     = {};
-  let startBatch = 0;
-  let skipped    = 0;
-
-  const cp = !FRESH && loadCheckpoint();
-  if (cp) {
-    result     = Object.fromEntries(cp.result);
-    startBatch = cp.nextBatch;
-    skipped    = cp.skipped ?? 0;
-    const coSoFar = Object.values(result).reduce((s, a) => s + a.length, 0);
-    console.log(`Resuming from checkpoint saved at ${cp.savedAt}`);
-    console.log(`  Batches already done : ${startBatch}/${total}`);
-    console.log(`  Companies so far     : ${coSoFar}`);
-    console.log(`  Skipped so far       : ${skipped}\n`);
-  } else if (!FRESH) {
-    // No checkpoint — load existing output for end-of-run merge
-    // (preserves data from any city batches that get skipped this run)
-    console.log(`No checkpoint found — starting from batch 1.\n`);
-  }
-
-  // ── Batch loop ────────────────────────────────────────────────────────────
-  let totalCo = Object.values(result).reduce((s, a) => s + a.length, 0);
-
-  for (let i = startBatch * BATCH_SIZE; i < qids.length; i += BATCH_SIZE) {
-    const batch = qids.slice(i, i + BATCH_SIZE);
-    const n     = Math.floor(i / BATCH_SIZE) + 1;
-    process.stdout.write(`  [${String(n).padStart(3)}/${total}] `);
-
-    const batchStart = Date.now();
-    const br = await fetchBatch(batch);
-    const batchMs = Date.now() - batchStart;
-
-    if (br === null) {
-      skipped++;
-      console.log('');
-    } else {
-      const nc = Object.values(br).reduce((s, a) => s + a.length, 0);
-      totalCo += nc;
-      Object.assign(result, br);
-      console.log('');
-    }
-
-    // Save checkpoint after every batch so any interruption is recoverable
-    saveCheckpoint(result, n, skipped);
-
-    // Progress summary every 20 batches
-    if (n % 20 === 0) {
-      const pct = ((n / total) * 100).toFixed(0);
-      console.log(`\n  ── ${pct}% done | ${totalCo} companies so far | ${skipped} batches skipped ──\n`);
-    }
-
-    if (i + BATCH_SIZE < qids.length) {
-      // After a heavy batch (>60s total including retries), give Wikidata extra
-      // breathing room to reset rate-limit counters before the next request.
-      const cooldown = batchMs > 60_000 ? 20_000 : DELAY_MS;
-      if (cooldown > DELAY_MS) process.stdout.write(`  (heavy batch — cooling down ${cooldown/1000}s)\n`);
-      await delay(cooldown);
-    }
-  }
-
-  // ── Merge with existing output for any skipped batches ───────────────────
-  // Companies from a previous run whose city batch was skipped this run
-  // are preserved here so the file only ever grows, never loses data.
-  let existing = {};
-  if (!FRESH && fs.existsSync(OUT_FILE)) {
-    try { existing = JSON.parse(fs.readFileSync(OUT_FILE, 'utf8')); }
-    catch(e) { /* ignore */ }
-  }
-  let preserved = 0;
-  for (const [cityQid, existingCos] of Object.entries(existing)) {
-    if (!result[cityQid]) { result[cityQid] = existingCos; preserved++; }
-  }
-  if (preserved) console.log(`\n  Preserved ${preserved} cities from previous output (skipped batches)`);
-
-  // ── Write output ──────────────────────────────────────────────────────────
-  fs.writeFileSync(OUT_FILE, JSON.stringify(result, null, 2), 'utf8');
-  const kb = Math.round(fs.statSync(OUT_FILE).size / 1024);
-
-  deleteCheckpoint();
-  console.log(`\n╔══════════════════════════════════════════════════╗`);
-  console.log(`║   Complete                                       ║`);
-  console.log(`╠══════════════════════════════════════════════════╣`);
-  console.log(`  Companies : ${totalCo} across ${Object.keys(result).length} cities`);
-  console.log(`  Skipped   : ${skipped}/${total} batches`);
-  console.log(`  File      : ${OUT_FILE} (${kb} KB)`);
-  console.log(`  Checkpoint: deleted (clean finish)`);
-  console.log(`╚══════════════════════════════════════════════════╝`);
+// Serialize Maps and Sets for JSON storage
+function serializeState({ citiesDone, coToCities, partialMap, refQids, labelMap }) {
+  return {
+    citiesDone:  citiesDone ? [...citiesDone]  : undefined,
+    coToCities:  coToCities ? [...coToCities.entries()].map(([co, cs]) => [co, [...cs]]) : undefined,
+    partials:    partialMap ? [...partialMap.entries()] : undefined,
+    refQids:     refQids    ? [...refQids]    : undefined,
+    labelMap:    labelMap   ? [...labelMap.entries()] : undefined,
+  };
 }
 
-main().catch(e => { console.error('\nFatal:', e.message); process.exit(1); });
+// ── Main ──────────────────────────────────────────────────────────────────────
+async function main() {
+  const FRESH = process.argv.includes('--fresh');
+  const cities = JSON.parse(fs.readFileSync(CITIES_FILE, 'utf8'));
+  const allCityQids = [...new Set(cities.map(c => c.qid).filter(Boolean))];
+
+  console.log(`\n╔════════════════════════════════════════════════════════╗`);
+  console.log(`║  fetch-companies v2 — two-phase pipeline               ║`);
+  console.log(`╚════════════════════════════════════════════════════════╝`);
+  console.log(`Cities : ${allCityQids.length.toLocaleString()}`);
+  console.log(`Output : ${OUT_FILE}\n`);
+
+  if (FRESH) { deleteCheckpoint(); console.log('Mode: --fresh\n'); }
+
+  const cp = FRESH ? null : loadCheckpoint();
+
+  // Restore state from checkpoint
+  const coToCities = new Map(
+    (cp?.coToCities || []).map(([co, cs]) => [co, new Set(cs)])
+  );
+  const citiesDone = new Set(cp?.citiesDone || []);
+  const partialMap = new Map(cp?.partials   || []);
+  const refQids    = new Set(cp?.refQids    || []);
+  const labelMap   = new Map(cp?.labelMap   || []);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Phase 1 — Discovery
+  // ─────────────────────────────────────────────────────────────────────────
+  const todoCity   = allCityQids.filter(q => !citiesDone.has(q));
+  const totalDiscB = Math.ceil(allCityQids.length / DISC_BATCH);
+
+  console.log(`── Phase 1: Discovery ───────────────────────────────────`);
+  if (todoCity.length === 0) {
+    console.log(`  Complete — ${coToCities.size.toLocaleString()} companies found\n`);
+  } else {
+    console.log(`  ${citiesDone.size}/${allCityQids.length} cities done · ${todoCity.length} remaining\n`);
+    let bNum = Math.floor(citiesDone.size / DISC_BATCH);
+
+    for (let i = 0; i < todoCity.length; i += DISC_BATCH) {
+      bNum++;
+      const batch = todoCity.slice(i, i + DISC_BATCH);
+      process.stdout.write(`  [${bNum}/${totalDiscB}] ${batch.length} cities… `);
+      const t0 = Date.now();
+
+      let rows;
+      try {
+        rows = await sparql(discoveryQuery(batch));
+      } catch (e) {
+        process.stdout.write(`✗ ${e.status || e.message} — skipping batch\n`);
+        batch.forEach(q => citiesDone.add(q));
+        await delay(SPARQL_DELAY);
+        continue;
+      }
+
+      let newCos = 0;
+      for (const r of rows) {
+        const co   = r.co?.value?.split('/').pop();
+        const city = r.hq?.value?.split('/').pop();
+        if (!co || !city) continue;
+        if (!coToCities.has(co)) { coToCities.set(co, new Set()); newCos++; }
+        coToCities.get(co).add(city);
+      }
+      batch.forEach(q => citiesDone.add(q));
+
+      console.log(`${rows.length} pairs · +${newCos} new cos (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
+
+      saveCheckpoint({ phase: 'discovery', ...serializeState({ citiesDone, coToCities }) });
+
+      if (i + DISC_BATCH < todoCity.length) await delay(SPARQL_DELAY);
+    }
+    console.log();
+  }
+
+  const allCoQids = [...coToCities.keys()];
+  console.log(`Discovery complete: ${allCoQids.length.toLocaleString()} companies\n`);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Phase 2 — Enrichment
+  // ─────────────────────────────────────────────────────────────────────────
+  const todoEnr   = allCoQids.filter(q => !partialMap.has(q));
+  const totalEnrB = Math.ceil(allCoQids.length / ENR_BATCH);
+
+  console.log(`── Phase 2: Enrichment ──────────────────────────────────`);
+  if (todoEnr.length === 0) {
+    console.log(`  Complete — ${partialMap.size.toLocaleString()} companies enriched\n`);
+  } else {
+    console.log(`  ${partialMap.size}/${allCoQids.length} done · ${todoEnr.length} remaining\n`);
+    let bNum = Math.floor(partialMap.size / ENR_BATCH);
+
+    for (let i = 0; i < todoEnr.length; i += ENR_BATCH) {
+      bNum++;
+      const batch = todoEnr.slice(i, i + ENR_BATCH);
+      process.stdout.write(`  [${bNum}/${totalEnrB}] ${batch.length} cos… `);
+      const t0 = Date.now();
+
+      let entities;
+      try {
+        entities = await wbGetEntities(batch);
+      } catch (e) {
+        process.stdout.write(`✗ ${e.status || e.message} — skipping\n`);
+        await delay(API_DELAY);
+        continue;
+      }
+
+      let parsed = 0;
+      for (const [qid, entity] of Object.entries(entities)) {
+        if (entity.missing) {
+          partialMap.set(qid, null);  // mark as processed so we don't retry
+          continue;
+        }
+        const partial = parsePartial(entity);
+        // Collect all entity QID refs for label resolution
+        partial._exchangeQids.forEach(q => refQids.add(q));
+        partial._founderQids.forEach(q  => refQids.add(q));
+        partial._ceoQids.forEach(q      => refQids.add(q));
+        if (partial._industryQid) refQids.add(partial._industryQid);
+        if (partial._parentQid)   refQids.add(partial._parentQid);
+        partialMap.set(qid, partial);
+        parsed++;
+      }
+
+      console.log(`${parsed} parsed (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
+
+      // Save checkpoint every N batches and at the final batch
+      const isLastBatch = (i + ENR_BATCH >= todoEnr.length);
+      if (bNum % CHECKPOINT_EVERY === 0 || isLastBatch) {
+        saveCheckpoint({
+          phase: 'enrichment',
+          ...serializeState({ citiesDone, coToCities, partialMap, refQids }),
+        });
+      }
+
+      if (!isLastBatch) await delay(API_DELAY);
+    }
+    console.log();
+  }
+
+  console.log(`Enrichment complete: ${partialMap.size.toLocaleString()} companies\n`);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Phase 3 — Label resolution
+  // ─────────────────────────────────────────────────────────────────────────
+  const todoLabel  = [...refQids].filter(q => !labelMap.has(q));
+  const totalLblB  = Math.ceil(todoLabel.length / ENR_BATCH);
+
+  console.log(`── Phase 3: Label resolution ────────────────────────────`);
+  if (todoLabel.length === 0) {
+    console.log(`  Complete — ${labelMap.size.toLocaleString()} labels resolved\n`);
+  } else {
+    console.log(`  ${[...refQids].length} unique refs · ${todoLabel.length} to resolve\n`);
+    let bNum = 0;
+
+    for (let i = 0; i < todoLabel.length; i += ENR_BATCH) {
+      bNum++;
+      const batch = todoLabel.slice(i, i + ENR_BATCH);
+      process.stdout.write(`  [${bNum}/${totalLblB}] ${batch.length} QIDs… `);
+
+      let entities;
+      try {
+        entities = await wbGetEntities(batch, ['labels']);
+      } catch (e) {
+        process.stdout.write(`✗ ${e.status || e.message} — skipping\n`);
+        await delay(API_DELAY);
+        continue;
+      }
+
+      let resolved = 0;
+      for (const [qid, entity] of Object.entries(entities)) {
+        if (entity.missing) continue;
+        const lbl = entity.labels?.en?.value;
+        if (lbl) { labelMap.set(qid, lbl); resolved++; }
+      }
+      console.log(`${resolved} labels`);
+
+      if (i + ENR_BATCH < todoLabel.length) await delay(API_DELAY);
+    }
+    console.log();
+  }
+
+  // Save final state before assembly (all phases complete)
+  saveCheckpoint({
+    phase: 'assembly',
+    ...serializeState({ citiesDone, coToCities, partialMap, refQids, labelMap }),
+  });
+
+  console.log(`Labels complete: ${labelMap.size.toLocaleString()} entries\n`);
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Phase 4 — Assembly
+  // ─────────────────────────────────────────────────────────────────────────
+  console.log(`── Phase 4: Assembly ────────────────────────────────────`);
+
+  const byCity = {};
+  let coCount  = 0;
+
+  for (const [coQid, partial] of partialMap.entries()) {
+    if (!partial) continue;  // missing/deleted entity
+    const citySet = coToCities.get(coQid);
+    if (!citySet?.size) continue;
+
+    const co = finalizeCompany(partial, labelMap);
+
+    for (const cityQid of citySet) {
+      if (!byCity[cityQid]) byCity[cityQid] = {};
+      byCity[cityQid][coQid] = co;
+    }
+    coCount++;
+  }
+
+  // Sort each city's companies: revenue desc, then name asc
+  const result = {};
+  let cityCount = 0;
+  for (const [cityQid, cosMap] of Object.entries(byCity)) {
+    result[cityQid] = Object.values(cosMap).sort((a, b) => {
+      const ar = a.revenue || 0, br = b.revenue || 0;
+      if (br !== ar) return br - ar;
+      return (a.name || '').localeCompare(b.name || '');
+    });
+    cityCount++;
+  }
+
+  console.log(`  Cities with companies : ${cityCount.toLocaleString()}`);
+  console.log(`  Total companies       : ${coCount.toLocaleString()}`);
+
+  fs.writeFileSync(OUT_FILE, JSON.stringify(result), 'utf8');
+  const mb = (fs.statSync(OUT_FILE).size / 1e6).toFixed(1);
+  console.log(`\n  Wrote ${OUT_FILE} (${mb} MB)\n`);
+
+  deleteCheckpoint();
+  console.log(`✓ Done\n`);
+}
+
+main().catch(e => {
+  console.error('\nFatal:', e.message || e);
+  process.exit(1);
+});
