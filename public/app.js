@@ -1307,24 +1307,9 @@ async function init() {
   // Rebuild economic layer clusters whenever zoom changes
   map.on('zoomend', () => { if (econOn) buildEconLayer(); });
 
-  // Close trade panel when clicking bare map; in draw mode, add vertex instead.
-  // Use a 220ms debounce so the two click events that fire before dblclick are
-  // suppressed — without this, double-clicking to close adds 2 stray vertices.
-  let _drawClickTimer = null;
-  map.on('click', e => {
-    if (_drawActive) {
-      _drawClickTimer = setTimeout(() => { _drawClickTimer = null; _drawAddVertex(e.latlng); }, 220);
-      return;
-    }
-    closeTradePanelFn();
-  });
-  map.on('dblclick', e => {
-    if (_drawActive) {
-      if (_drawClickTimer) { clearTimeout(_drawClickTimer); _drawClickTimer = null; }
-      L.DomEvent.preventDefault(e);
-      _drawFinish();
-    }
-  });
+  // Normal map click → close trade panel
+  map.on('click', () => { if (!_drawActive) closeTradePanelFn(); });
+
   // Escape key cancels draw mode
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && (_drawActive || _drawPolygon)) _drawClear();
@@ -2451,31 +2436,57 @@ function closeCorpPanel() {
 }
 
 // ── Draw boundary feature ─────────────────────────────────────────────────────
-let _drawActive   = false;   // currently adding vertices
-let _drawVertices = [];      // [[lat,lng], ...]
-let _drawPolyline = null;    // live dashed outline while drawing
-let _drawPolygon  = null;    // closed polygon layer
-let _drawDots     = [];      // vertex circle markers
+let _drawActive      = false;  // currently adding vertices
+let _drawVertices    = [];     // [[lat,lng], ...]
+let _drawPolyline    = null;   // live dashed outline while drawing
+let _drawPolygon     = null;   // closed polygon layer
+let _drawDots        = [];     // vertex circle markers
+let _drawClickTimer  = null;   // debounce: suppress the 2 clicks that precede dblclick
+
+// Capture-phase handlers — attached to the map container so they fire BEFORE
+// any Leaflet layer handlers (city dots, country polygons) can stopPropagation.
+function _onDrawContainerClick(e) {
+  if (!_drawActive) return;
+  e.stopPropagation();   // block country popups, city panels etc while drawing
+  if (_drawClickTimer) { clearTimeout(_drawClickTimer); _drawClickTimer = null; }
+  const latlng = map.containerPointToLatLng(map.mouseEventToContainerPoint(e));
+  _drawClickTimer = setTimeout(() => { _drawClickTimer = null; _drawAddVertex(latlng); }, 220);
+}
+function _onDrawContainerDblClick(e) {
+  if (!_drawActive) return;
+  e.stopPropagation();
+  e.preventDefault();
+  if (_drawClickTimer) { clearTimeout(_drawClickTimer); _drawClickTimer = null; }
+  _drawFinish();
+}
 
 function toggleDrawMode() {
   if (_drawPolygon) { _drawClear(); return; }   // polygon exists → clear it
-  if (_drawActive)  { _drawFinish(); return; }  // drawing → finish
+  if (_drawActive)  { _drawFinish(); return; }  // drawing in progress → finish
   // Start drawing
   _drawActive = true;
   _drawVertices = [];
-  map.doubleClickZoom.disable();                // prevent map zoom on double-click
+  map.dragging.disable();        // prevent accidental panning while placing vertices
+  map.doubleClickZoom.disable(); // prevent zoom on double-click finish
+  // Capture phase: fires before any layer click/stopPropagation
+  map.getContainer().addEventListener('click',    _onDrawContainerClick,    true);
+  map.getContainer().addEventListener('dblclick', _onDrawContainerDblClick, true);
   const btn = document.getElementById('draw-fab');
   if (btn) { btn.textContent = '✓ Done'; btn.title = 'Click to add points · Double-click or Done to close · Esc to cancel'; btn.classList.add('active'); }
   map.getContainer().style.cursor = 'crosshair';
 }
 
 function _drawClear() {
+  if (_drawClickTimer) { clearTimeout(_drawClickTimer); _drawClickTimer = null; }
   _drawActive = false;
   _drawVertices = [];
   [_drawPolyline, _drawPolygon, ..._drawDots].forEach(l => { try { if(l) map.removeLayer(l); } catch(_){} });
   _drawPolyline = _drawPolygon = null;
   _drawDots = [];
+  map.dragging.enable();
   map.doubleClickZoom.enable();
+  map.getContainer().removeEventListener('click',    _onDrawContainerClick,    true);
+  map.getContainer().removeEventListener('dblclick', _onDrawContainerDblClick, true);
   const btn = document.getElementById('draw-fab');
   if (btn) { btn.textContent = '⬡ Draw'; btn.title = 'Draw a region to explore'; btn.classList.remove('active'); }
   map.getContainer().style.cursor = '';
@@ -2510,7 +2521,10 @@ function _drawFinish() {
     dashArray: '6 4', pane: 'econPane', interactive: false,
   }).addTo(map);
   _drawActive = false;
+  map.dragging.enable();
   map.doubleClickZoom.enable();
+  map.getContainer().removeEventListener('click',    _onDrawContainerClick,    true);
+  map.getContainer().removeEventListener('dblclick', _onDrawContainerDblClick, true);
   map.getContainer().style.cursor = '';
   const btn = document.getElementById('draw-fab');
   if (btn) { btn.textContent = '✕ Clear'; btn.title = 'Clear drawn region'; btn.classList.add('active'); }
