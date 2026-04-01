@@ -14,7 +14,8 @@ const fs   = require('fs');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '../public/bea-trade.json');
-const API_KEY     = 'YOUR_BEA_API_KEY_HERE';
+// Get a free BEA API key at https://apps.bea.gov/api/signup/
+const API_KEY     = process.env.BEA_API_KEY || 'YOUR_BEA_API_KEY_HERE';
 const FRESH       = process.argv.includes('--fresh');
 const DELAY_MS    = 400;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
