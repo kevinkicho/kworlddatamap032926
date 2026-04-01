@@ -481,6 +481,17 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 .es-trend-range { font-size: 0.62rem; color: #484f58; text-align: right; white-space: nowrap; }
 .stats-rank-sub { font-size: 0.67rem; color: #6e7681; margin-left: 3px; }
 
+/* GaWC world city tier chip */
+.gawc-tier-chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+
 /* ── Choropleth control bar ── */
 #choropleth-bar {
   width: 100%; max-width: 1000px; margin-bottom: 12px;

@@ -836,12 +836,14 @@ function _renderStatsPanel() {
   const cityDef      = CITY_STAT_DEFS[metric];
   const wbDef        = WB_STAT_DEFS[metric];
   const eurostatDef  = EUROSTAT_STAT_DEFS[metric];
-  const def = censusDef || cityDef || wbDef || eurostatDef;
+  const japanDef     = JAPAN_PREF_STAT_DEFS[metric];
+  const def = censusDef || cityDef || wbDef || eurostatDef || japanDef;
   if (!def) return;
 
-  const isCityStat    = !!cityDef;
-  const isWbStat      = !!wbDef;
+  const isCityStat     = !!cityDef;
+  const isWbStat       = !!wbDef;
   const isEurostatStat = !!eurostatDef;
+  const isJapanPrefStat = !!japanDef;
 
   // Highlight the clicked cell
   document.querySelectorAll('.census-stat-clickable.stats-active, .info-chip-clickable.stats-active, .wb-chip-clickable.stats-active')
@@ -875,6 +877,24 @@ function _renderStatsPanel() {
       if (val == null || isNaN(val)) continue;
       points.push({ qid: c.qid, val, name: c.name, state: c.admin || '', iso: c.iso || '', country: c.country || '' });
     }
+  } else if (isJapanPrefStat) {
+    // Japan Cabinet Office — 47 prefectures, each mapped to highest-pop JP city
+    const jpCities = allCities.filter(c => c.iso === 'JP');
+    // Build prefecture → best representative city
+    const prefRepCity = {};
+    for (const c of jpCities) {
+      const match = _lookupJapanPref(c);
+      if (!match) continue;
+      const existing = prefRepCity[match.name];
+      if (!existing || (c.pop || 0) > (existing.pop || 0)) prefRepCity[match.name] = c;
+    }
+    for (const [prefName, data] of Object.entries(japanPrefData)) {
+      const val = data[japanDef.key];
+      if (val == null || isNaN(val)) continue;
+      const repCity = prefRepCity[prefName];
+      if (!repCity) continue;
+      points.push({ qid: repCity.qid, val, name: prefName, state: 'Japan', iso: 'JP', country: 'Japan', prefName });
+    }
   } else if (isEurostatStat) {
     // Eurostat Urban Audit — European cities
     for (const [cqid, data] of Object.entries(eurostatCities)) {
@@ -904,8 +924,12 @@ function _renderStatsPanel() {
   points.sort((a, b) => ascending ? a.val - b.val : b.val - a.val);
   points.forEach((p, i) => { p.rank = i + 1; });
 
+  // For Japan pref stats, self-identify by prefecture name
+  const selfJapanPref = isJapanPrefStat ? _lookupJapanPref(selfCity)?.name : null;
   const entityIdx = isWbStat
     ? points.findIndex(p => p.qid === selfIso)
+    : isJapanPrefStat
+    ? points.findIndex(p => p.prefName === selfJapanPref)
     : points.findIndex(p => p.qid === qid);  // works for census, city, eurostat
   if (entityIdx < 0) { closeStatsPanel(); return; }
   const cp = points[entityIdx];
@@ -971,6 +995,7 @@ function _renderStatsPanel() {
 
   // ── Scope toggle (city stats only) ──
   const primaryLabel = isWbStat ? 'countries worldwide'
+    : isJapanPrefStat ? 'Japanese prefectures'
     : isEurostatStat ? 'European cities (Eurostat)'
     : isCityStat ? (_statsScope === 'world' ? 'worldwide' : escHtml(selfCountry))
     : 'US cities with Census data';
@@ -981,9 +1006,37 @@ function _renderStatsPanel() {
         >📍 ${escHtml(selfCountry)}</button>
     </div>` : '';
 
+  // ── Japan prefecture time-series chart ──────────────────────────────────
   // ── Eurostat time-series chart for clicked city ──────────────────────────
   let trendChartHtml = '';
-  if (isEurostatStat && eurostatDef.histKey) {
+  if (isJapanPrefStat && selfCity) {
+    const jpMatch = _lookupJapanPref(selfCity);
+    const histKey = metric === 'japan_perCapitaIncome' ? 'perCapitaIncomeHistory' : 'gdpHistory';
+    const history = jpMatch?.data?.[histKey];
+    if (history && history.length >= 2) {
+      const TW = 262, TH = 54, TPAD = 4;
+      const xs = history.map(([y]) => y);
+      const vs = history.map(([, v]) => v);
+      const minX = Math.min(...xs), maxX = Math.max(...xs);
+      const minVt = Math.min(...vs), maxVt = Math.max(...vs);
+      const rangeV = maxVt - minVt || 1;
+      const toX = x => TPAD + (x - minX) / (maxX - minX || 1) * (TW - TPAD * 2);
+      const toY = v => TH - TPAD - (v - minVt) / rangeV * (TH - TPAD * 2);
+      const pts = history.map(([x, v]) => `${toX(x).toFixed(1)},${toY(v).toFixed(1)}`).join(' ');
+      const dots = history.map(([x, v]) =>
+        `<circle cx="${toX(x).toFixed(1)}" cy="${toY(v).toFixed(1)}" r="1.8" fill="#f0a500" opacity="0.7"/>`).join('');
+      const firstLbl = `${xs[0]}: ${def.fmt(vs[0])}`;
+      const lastLbl  = `${xs[xs.length-1]}: ${def.fmt(vs[vs.length-1])}`;
+      trendChartHtml = `<div class="stats-trend-wrap">
+        <svg viewBox="0 0 ${TW} ${TH+16}" width="${TW}" height="${TH+16}" style="display:block">
+          <polyline points="${pts}" fill="none" stroke="#58a6ff" stroke-width="1.8" stroke-linejoin="round" opacity="0.85"/>
+          ${dots}
+          <text x="${TPAD}" y="${TH+13}" font-size="7" fill="#6e7681">${escHtml(firstLbl)}</text>
+          <text x="${TW-TPAD}" y="${TH+13}" font-size="7" fill="#f0a500" text-anchor="end">${escHtml(lastLbl)}</text>
+        </svg>
+      </div>`;
+    }
+  } else if (isEurostatStat && eurostatDef.histKey) {
     const esRecord = eurostatCities[qid];
     const history  = esRecord?.[eurostatDef.histKey];
     if (history && history.length >= 2) {
@@ -1032,7 +1085,7 @@ function _renderStatsPanel() {
     </div>
     ${note ? `<div class="stats-note">${note}</div>` : ''}
     <div id="stats-rank-list-wrap" class="stats-rank-list"></div>
-    <div class="stats-source">${points.length} ${primaryLabel} · ${isWbStat ? 'click a country to navigate' : 'click a city to navigate'} · click another stat to compare</div>
+    <div class="stats-source">${points.length} ${primaryLabel} · click to navigate · click another stat to compare</div>
   `;
   document.getElementById('stats-panel').classList.add('open');
   _updateStatsListHtml();
@@ -1040,16 +1093,20 @@ function _renderStatsPanel() {
 
 function _updateStatsListHtml() {
   const metric = _statsCurrent?.metric;
-  const def = STAT_DEFS[metric] || CITY_STAT_DEFS[metric] || WB_STAT_DEFS[metric] || EUROSTAT_STAT_DEFS[metric];
+  const def = STAT_DEFS[metric] || CITY_STAT_DEFS[metric] || WB_STAT_DEFS[metric] || EUROSTAT_STAT_DEFS[metric] || JAPAN_PREF_STAT_DEFS[metric];
   const listEl = document.getElementById('stats-rank-list-wrap');
   if (!listEl || !def || !_statsPoints.length) return;
   const { qid } = _statsCurrent;
   const isWbStat = !!WB_STAT_DEFS[metric];
+  const isJapanPrefStat = !!JAPAN_PREF_STAT_DEFS[metric];
   const curId = isWbStat ? (_statsCurrent.qid) : qid;
   const aboveCount = _statsWinStart;
   const belowCount = _statsPoints.length - 1 - _statsWinEnd;
+  // For Japan pref stats, current row matches by prefName
+  const jpSelfCity = isJapanPrefStat ? allCities.find(c => c.qid === qid) : null;
+  const jpSelfPref = isJapanPrefStat ? _lookupJapanPref(jpSelfCity)?.name : null;
   const rows = _statsPoints.slice(_statsWinStart, _statsWinEnd + 1).map(p => {
-    const isCur = p.qid === curId;
+    const isCur = isJapanPrefStat ? (p.prefName === jpSelfPref) : (p.qid === curId);
     const navFn = isWbStat ? `statsGoToCountry('${p.qid}')` : `statsGoToCity('${p.qid}')`;
     const sub = isWbStat ? '' : (p.state ? ` · ${escHtml(p.state)}` : '');
     return `<div class="stats-rank-row${isCur?' stats-rank-current':''}" onclick="${navFn}">
@@ -1234,6 +1291,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     ${nicknamesHtml ? infoChip('Known as', nicknamesHtml, true, true) : ''}
     ${gdpHtml      ? infoChip('City GDP', gdpHtml, true): ''}
     ${hdi          ? infoChip('HDI', hdi)               : ''}
+    ${(() => { const g = gawcByQid[city.qid]; if (!g) return ''; const col = GAWC_TIER_COLOR[g.tier] || '#8b949e'; return infoChip('World City', `<span class="gawc-tier-chip" style="background:${col}22;color:${col};border:1px solid ${col}55">${escHtml(g.tier)}</span>`, true, false, 'gawc_score'); })()}
   </div>`;
 
   const govSec = leadersHtml
@@ -1439,14 +1497,17 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   const censusData    = city.iso === 'US' ? getCensusData(city) : null;
   const businessData  = city.iso === 'US' ? (censusBusiness[city.qid] || null) : null;
   const eurostatData  = eurostatCities[city.qid] || null;
+  // Japan prefecture lookup: match city.admin to a prefecture name
+  const japanPref     = city.iso === 'JP' ? _lookupJapanPref(city) : null;
   const hasCensus     = !!(censusData || businessData);
   const hasEurostat   = !!eurostatData;
-  const hasEconomy    = hasCensus || hasEurostat;
+  const hasJapan      = !!japanPref;
+  const hasEconomy    = hasCensus || hasEurostat || hasJapan;
 
   const econBtnEl = document.getElementById('wiki-tab-economy-btn');
   if (econBtnEl) {
     econBtnEl.style.display = hasEconomy ? '' : 'none';
-    econBtnEl.textContent   = hasCensus ? 'Census' : 'Eurostat';
+    econBtnEl.textContent   = hasCensus ? 'Census' : hasEurostat ? 'Eurostat' : 'Prefecture';
   }
 
   // Fall back to Info if active tab is invalid or has no data for this city
@@ -1468,6 +1529,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   `;
   if (economyEl)  economyEl.innerHTML  = hasCensus   ? buildEconomyHtml(censusData, businessData, city.qid)
                                        : hasEurostat ? buildEurostatHtml(eurostatData, city.qid)
+                                       : hasJapan    ? buildJapanPrefHtml(japanPref.data, japanPref.name, city.qid)
                                        : '';
   if (overviewEl) overviewEl.innerHTML = `${climateHtml}${extractHtml}`;
 
@@ -1510,7 +1572,47 @@ let censusCities   = {};   // QID → ACS indicators (from census-cities.json)
 let censusBusiness = {};   // QID → business/pop data (from census-business.json)
 let beaTradeData   = {};   // ISO2 → [{year,expGds,impGds,expSvc,impSvc}] (from bea-trade.json)
 let eurostatCities = {};   // QID → Eurostat Urban Audit indicators (from eurostat-cities.json)
+let gawcCities     = {};   // city name → {tier, score, iso} (GaWC 2024 world city network)
+let gawcByQid      = {};   // QID → {tier, score, name} (built at init from gawcCities)
+let japanPrefData  = {};   // prefecture English name → {perCapitaIncomeJpy, gdpJpy, ...}
 let censusColorMetric = null;  // null = off, or key like 'medianIncome'
+
+// GaWC tier → numeric score (Alpha++=12 … Sufficiency=1)
+const GAWC_TIER_SCORE = {
+  'Alpha++': 12, 'Alpha+': 11, 'Alpha': 10, 'Alpha-': 9,
+  'Beta+': 8, 'Beta': 7, 'Beta-': 6,
+  'Gamma+': 5, 'Gamma': 4, 'Gamma-': 3,
+  'High sufficiency': 2, 'Sufficiency': 1,
+};
+const GAWC_TIER_COLOR = {
+  'Alpha++': '#f0a500', 'Alpha+': '#f0a500', 'Alpha': '#58a6ff', 'Alpha-': '#58a6ff',
+  'Beta+': '#3fb950', 'Beta': '#3fb950', 'Beta-': '#3fb950',
+  'Gamma+': '#8b949e', 'Gamma': '#8b949e', 'Gamma-': '#8b949e',
+  'High sufficiency': '#484f58', 'Sufficiency': '#484f58',
+};
+
+function _buildGawcByQid() {
+  if (!Object.keys(gawcCities).length || !allCities.length) return;
+  const normalize = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+  // Build name index from allCities: normalized name → city objects
+  const nameIdx = {};
+  for (const c of allCities) {
+    const n = normalize(c.name);
+    if (!nameIdx[n]) nameIdx[n] = [];
+    nameIdx[n].push(c);
+  }
+  let matched = 0;
+  for (const [name, info] of Object.entries(gawcCities)) {
+    const n = normalize(name);
+    const candidates = nameIdx[n] || [];
+    // Prefer same iso2, then any
+    let city = candidates.find(c => c.iso === info.iso) || candidates[0];
+    if (!city) continue;
+    gawcByQid[city.qid] = { tier: info.tier, score: info.score, name };
+    matched++;
+  }
+  console.log(`[GaWC] Matched ${matched}/${Object.keys(gawcCities).length} cities to QIDs`);
+}
 
 // Color scale config per metric: { lo, hi, stops: [[r,g,b],…] }
 const CENSUS_METRICS = {
@@ -1607,12 +1709,15 @@ const STAT_DEFS = {
 
 // City-level stats from allCities — support world/national scope toggle
 const CITY_STAT_DEFS = {
-  pop:       { label:'City Population',    key: c=>c.pop,                                                         fmt: v=>fmtNum(v),                     higherBetter:null },
-  pop_metro: { label:'Metro Population',   key: c=>c.pop_metro,                                                   fmt: v=>fmtNum(v),                     higherBetter:null },
-  area_km2:  { label:'City Area',          key: c=>c.area_km2,                                                    fmt: v=>fmtNum(Math.round(v))+' km²',  higherBetter:null },
-  density:   { label:'Pop. Density',       key: c=>c.pop&&c.area_km2?Math.round(c.pop/c.area_km2):null,           fmt: v=>fmtNum(v)+'/km²',             higherBetter:null },
-  elev_m:    { label:'Elevation',          key: c=>c.elev_m,                                                      fmt: v=>fmtNum(Math.round(v))+' m',   higherBetter:null },
-  founded:   { label:'Year Founded',       key: c=>c.founded,                                                     fmt: v=>v<0?Math.abs(v)+' BC':String(v), higherBetter:false },
+  pop:        { label:'City Population',    key: c=>c.pop,                                                         fmt: v=>fmtNum(v),                     higherBetter:null },
+  pop_metro:  { label:'Metro Population',   key: c=>c.pop_metro,                                                   fmt: v=>fmtNum(v),                     higherBetter:null },
+  area_km2:   { label:'City Area',          key: c=>c.area_km2,                                                    fmt: v=>fmtNum(Math.round(v))+' km²',  higherBetter:null },
+  density:    { label:'Pop. Density',       key: c=>c.pop&&c.area_km2?Math.round(c.pop/c.area_km2):null,           fmt: v=>fmtNum(v)+'/km²',             higherBetter:null },
+  elev_m:     { label:'Elevation',          key: c=>c.elev_m,                                                      fmt: v=>fmtNum(Math.round(v))+' m',   higherBetter:null },
+  founded:    { label:'Year Founded',       key: c=>c.founded,                                                     fmt: v=>v<0?Math.abs(v)+' BC':String(v), higherBetter:false },
+  gawc_score: { label:'GaWC World City Rank', key: c=>gawcByQid[c.qid]?.score ?? null,
+                fmt: v => { const tier = Object.entries(GAWC_TIER_SCORE).find(([,s])=>s===v)?.[0]||''; return tier; },
+                higherBetter:true },
 };
 
 // Country-level World Bank stats — iso2 used as identifier (not city qid)
@@ -1636,6 +1741,22 @@ const EUROSTAT_STAT_DEFS = {
   eurostat_homeownershipPct: { label:'Homeownership Rate', key:'homeownershipPct', histKey:'homeownershipHistory', fmt: v=>v.toFixed(1)+'%',                  higherBetter:null  },
   eurostat_rentPerSqm:       { label:'Avg Rent / m²',      key:'rentPerSqm',       histKey:'rentHistory',          fmt: v=>'€'+v.toFixed(1),                  higherBetter:null  },
   eurostat_totalCompanies:   { label:'Total Companies',    key:'totalCompanies',   histKey:'companiesHistory',     fmt: v=>fmtNum(Math.round(v)),             higherBetter:null  },
+};
+
+// Japan Cabinet Office prefecture-level stats (47 prefectures)
+const JAPAN_PREF_STAT_DEFS = {
+  japan_perCapitaIncome: {
+    label: 'Per-Capita Prefecture Income',
+    key:   'perCapitaIncomeJpy',
+    fmt:   v => '¥' + fmtNum(Math.round(v)),
+    higherBetter: true,
+  },
+  japan_gdp: {
+    label: 'Prefectural GDP',
+    key:   'gdpJpy',
+    fmt:   v => '¥' + fmtRevenue(v),
+    higherBetter: true,
+  },
 };
 
 // Combined Census ACS + Business tab
@@ -1813,6 +1934,115 @@ function _eurostatSparkline(history, color, W, H) {
   </svg>`;
   const range = `${minX}–${maxX}`;
   return { svg, range };
+}
+
+// ── Japan Prefecture data helpers ─────────────────────────────────────────────
+
+// Match a Japanese city's admin field to a prefecture in japanPrefData
+function _lookupJapanPref(city) {
+  if (!city || !Object.keys(japanPrefData).length) return null;
+  const stripDiac = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const clean = s => stripDiac(s || '')
+    .replace(/\s*(Prefecture|Metropolis|Metro|Subprefecture|府|県|都|道)\s*/gi, '')
+    .trim().toLowerCase();
+
+  // Special cases by city name
+  const cityName = city.name || '';
+  if (/^Tokyo/i.test(cityName) && japanPrefData['Tokyo'])
+    return { name: 'Tokyo', data: japanPrefData['Tokyo'] };
+  if (/^Osaka/i.test(cityName) && japanPrefData['Osaka'])
+    return { name: 'Osaka', data: japanPrefData['Osaka'] };
+  if (/^Sapporo/i.test(cityName) && japanPrefData['Hokkaido'])
+    return { name: 'Hokkaido', data: japanPrefData['Hokkaido'] };
+  if (/^Naha/i.test(cityName) && japanPrefData['Okinawa'])
+    return { name: 'Okinawa', data: japanPrefData['Okinawa'] };
+
+  const adminClean = clean(city.admin || '');
+  if (!adminClean || adminClean === 'japan') return null;
+
+  // Direct match against normalized pref names
+  for (const [pref, data] of Object.entries(japanPrefData)) {
+    const prefClean = clean(pref);
+    if (adminClean === prefClean || adminClean.includes(prefClean) || prefClean.includes(adminClean)) {
+      return { name: pref, data };
+    }
+  }
+  return null;
+}
+
+function buildJapanPrefHtml(pref, prefName, qid) {
+  if (!pref) return '';
+
+  const fmtJpy  = v => v == null ? '—' : '¥' + fmtNum(Math.round(v));
+  const fmtBill = v => v == null ? '—' : '¥' + fmtRevenue(v);
+
+  // Sparkline helper (reuse from Eurostat approach)
+  function jpSparkline(history, color) {
+    if (!history || history.length < 2) return '';
+    const W = 110, H = 28;
+    const xs = history.map(h=>h[0]), ys = history.map(h=>h[1]);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const rangeY = maxY - minY || 1;
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const rangeX = maxX - minX || 1;
+    const pts = history.map(([x,y]) =>
+      `${(((x-minX)/rangeX)*(W-4)+2).toFixed(1)},${(H-2-(((y-minY)/rangeY)*(H-4))).toFixed(1)}`
+    ).join(' ');
+    return `<svg width="${W}" height="${H}" style="display:block;overflow:visible">
+      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>
+      <circle cx="${pts.split(' ').at(-1).split(',')[0]}" cy="${pts.split(' ').at(-1).split(',')[1]}" r="2.5" fill="${color}"/>
+    </svg>`;
+  }
+
+  const incomeHistory = pref.perCapitaIncomeHistory;
+  const gdpHistory    = pref.gdpHistory;
+  const incYear       = pref.perCapitaIncomeYear || '';
+  const gdpYear       = pref.gdpYear || '';
+
+  const incomeRange = incomeHistory && incomeHistory.length >= 2
+    ? `${incomeHistory[0][0]}–${incomeHistory[incomeHistory.length-1][0]}` : '';
+  const gdpRange = gdpHistory && gdpHistory.length >= 2
+    ? `${gdpHistory[0][0]}–${gdpHistory[gdpHistory.length-1][0]}` : '';
+
+  const click = (metric) => `census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="Click to see Japan prefecture ranking"`;
+
+  return `<div class="census-wrap">
+    <div class="census-head">Prefecture · Cabinet Office${incYear ? ' · ' + incYear : ''}</div>
+    <div style="margin-bottom:6px;font-size:0.7rem;color:#8b949e">${escHtml(prefName)} Prefecture</div>
+
+    <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:12px">
+      <div class="census-stat ${click('japan_perCapitaIncome')}>
+        <div class="census-stat-label">Per-Capita Income</div>
+        <div class="census-stat-value">${fmtJpy(pref.perCapitaIncomeJpy)}</div>
+      </div>
+      <div class="census-stat ${click('japan_gdp')}>
+        <div class="census-stat-label">Prefectural GDP</div>
+        <div class="census-stat-value">${fmtBill(pref.gdpJpy)}</div>
+      </div>
+    </div>
+
+    ${(incomeHistory && incomeHistory.length >= 2) ? `
+    <div class="es-trends">
+      <div class="es-trend-row" onclick="openStatsPanel('japan_perCapitaIncome','${escHtml(qid)}')" title="Click to see prefecture ranking">
+        <span class="es-trend-label">Per-Capita Income</span>
+        <span>${jpSparkline(incomeHistory, '#f0a500')}</span>
+        <span class="es-trend-val" style="color:#f0a500">${fmtJpy(pref.perCapitaIncomeJpy)}</span>
+        <span class="es-trend-range">${incomeRange}</span>
+      </div>
+    </div>` : ''}
+
+    ${(gdpHistory && gdpHistory.length >= 2) ? `
+    <div class="es-trends" style="margin-top:6px">
+      <div class="es-trend-row" onclick="openStatsPanel('japan_gdp','${escHtml(qid)}')" title="Click to see prefecture ranking">
+        <span class="es-trend-label">Prefectural GDP</span>
+        <span>${jpSparkline(gdpHistory, '#3fb950')}</span>
+        <span class="es-trend-val" style="color:#3fb950">${fmtBill(pref.gdpJpy)}</span>
+        <span class="es-trend-range">${gdpRange}</span>
+      </div>
+    </div>` : ''}
+
+    <div id="trade-source" style="margin-top:10px">Source: Japan Cabinet Office · Prefectural Accounts</div>
+  </div>`;
 }
 
 function buildEurostatHtml(es, qid) {
@@ -2124,7 +2354,7 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
@@ -2133,6 +2363,8 @@ async function init() {
       fetch('/census-business.json').catch(() => null),
       fetch('/bea-trade.json').catch(() => null),
       fetch('/eurostat-cities.json').catch(() => null),
+      fetch('/gawc-cities.json').catch(() => null),
+      fetch('/japan-prefectures.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -2208,6 +2440,19 @@ async function init() {
       }
     }
 
+    if (gawcRes && gawcRes.ok) {
+      try {
+        gawcCities = await gawcRes.json();
+        console.log(`[init] GaWC world city network loaded (${Object.keys(gawcCities).length} cities)`);
+      } catch { console.warn('[init] gawc-cities.json is malformed'); }
+    }
+    if (japanRes && japanRes.ok) {
+      try {
+        japanPrefData = await japanRes.json();
+        console.log(`[init] Japan prefecture data loaded (${Object.keys(japanPrefData).length} prefectures)`);
+      } catch { console.warn('[init] japan-prefectures.json is malformed'); }
+    }
+
     // ── Phase 5c: load world country borders GeoJSON (optional, for choropleth) ──
     if (geoRes && geoRes.ok) {
       try {
@@ -2223,6 +2468,7 @@ async function init() {
 
     // ── Phase 6: apply overrides + build UI ──
     applyOverrides();
+    _buildGawcByQid();
     rebuildMapLayer();
     if (worldGeo && Object.keys(countryData).length) {
       buildChoropleth();
