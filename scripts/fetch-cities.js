@@ -110,6 +110,14 @@ const SETTLEMENT_TYPES = [
   // Q1093829 (city in the US) already in list — covers 2,433 cities
   'wd:Q62049',    // county seat ~724 (most major US cities qualify)
   'wd:Q15127012', // town in the United States ~419
+
+  // ── Southeast Asia ────────────────────────────────────────────────────────
+  // Indonesian kota and Philippine chartered cities use country-specific P31 types.
+  // Without these, only Jakarta/Manila (tagged megacity/metropolis) appear —
+  // Surabaya, Bandung, Bekasi, Cebu, Davao, and ~90 others are invisible.
+  // Note: kabupaten (Indonesian regencies/rural districts) are intentionally excluded.
+  'wd:Q3111899',  // city of Indonesia (kota) — all 95 chartered cities
+  'wd:Q24764',    // city in the Philippines (chartered city) — Cebu, Davao, Quezon…
 ].join(' ');
 
 const TIERS = [
@@ -128,7 +136,7 @@ const TIERS = [
 
 function saveCheckpoint(byQid, phase, tierIndex, tierOffset, enrichBatch, sisterBatch) {
   const data = {
-    version:     5,
+    version:     6,
     phase,
     tierIndex,
     tierOffset,
@@ -144,7 +152,7 @@ function loadCheckpoint() {
   if (!fs.existsSync(CHECKPOINT_FILE)) return null;
   try {
     const data = JSON.parse(fs.readFileSync(CHECKPOINT_FILE, 'utf8'));
-    if (data.version !== 5) return null;   // incompatible older format — start fresh
+    if (data.version !== 6) return null;   // incompatible older format — start fresh
     return data;
   } catch {
     return null;
@@ -365,7 +373,6 @@ async function runPhase1(byQid, startTierIndex, startOffset) {
     let   page   = Math.floor(offset / CORE_BATCH) + 1;
     let   tierNew = 0;
     let   consecutiveFails = 0;
-    const MAX_CONSECUTIVE_FAILS = 5;
 
     while (true) {
       process.stdout.write(`  [${label}] p${page} offset=${offset} … `);
@@ -385,7 +392,6 @@ async function runPhase1(byQid, startTierIndex, startOffset) {
         process.stdout.write(`(full-batch failed: ${fetchError.message}) `);
         process.stdout.write(`retrying half-batch (${halfBatch} rows) … `);
         try {
-          // Temporarily override limit in query by passing halfBatch
           const halfQuery = buildCoreQuery(min, max, offset).replace(
             `LIMIT  ${CORE_BATCH}`,
             `LIMIT  ${halfBatch}`,
@@ -394,17 +400,15 @@ async function runPhase1(byQid, startTierIndex, startOffset) {
           fetchError = null;   // half-batch succeeded
           process.stdout.write('ok  ');
         } catch (e2) {
-          // Both full and half failed — count as one consecutive failure
+          // Both full and half failed — escalating cooldown, then skip page and continue.
+          // Never abandon the tier — Wikidata load spikes are temporary.
           consecutiveFails++;
-          console.log(`SKIP (${e2.message}) [consecutive fails: ${consecutiveFails}/${MAX_CONSECUTIVE_FAILS}]`);
-          if (consecutiveFails >= MAX_CONSECUTIVE_FAILS) {
-            console.log(`  Too many consecutive failures — abandoning tier [${label}]`);
-            break;
-          }
-          // Skip this page and advance to the next one
+          // Cooldown: 2min, 4min, 6min, 8min, 10min — gives Wikidata time to recover
+          const cooldown = Math.min(consecutiveFails * 120_000, 600_000);
+          console.log(`SKIP (${e2.message}) [consecutive fails: ${consecutiveFails}] — cooldown ${cooldown / 60000}min`);
           offset += CORE_BATCH;
           page++;
-          await sleep(DELAY_MS * 2);
+          await sleep(cooldown);
           continue;
         }
       }

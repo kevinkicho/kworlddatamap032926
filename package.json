@@ -9,6 +9,8 @@
     "fetch-country": "node scripts/fetch-country-data.js",
     "fetch-world-geo": "node scripts/fetch-world-geo.js",
     "fetch-companies": "node scripts/fetch-companies.js",
+    "fetch-infoboxes": "node scripts/fetch-infoboxes.js",
+    "fetch-city-infoboxes": "node scripts/fetch-city-infoboxes.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -14,6 +14,8 @@ Click any city dot to open a sidebar with:
 
 The choropleth layer colors entire countries by any of 8 World Bank indicators. Corporate data covers stock-exchange-listed companies and large private firms (revenue ≥ 1 billion) worldwide.
 
+**Dynamic Economic Clusters:** The map features a zoom-specific economic center grouping. As you zoom out, nearby cities dynamically merge into larger regional economic hubs, with their centerpoints organically floating to the geographic midpoint of the constituent cities, colored by combined market cap or revenue.
+
 ## Running locally
 
 ```bash

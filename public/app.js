@@ -1,59 +1,59 @@
 // ── Module state ──────────────────────────────────────────────────────────────
 let map;
-let wikiLayer        = null;
-let rawCities        = [];      // validated data from server, never mutated
-let allCities        = [];      // rawCities with overrides applied
-let countryData      = {};      // World Bank data keyed by ISO-2 code
-let filtered         = [];
-let visibleCount     = 100;
-const PAGE_SIZE      = 100;
-let sortCol          = 'pop';
-let sortDir          = 'desc';
-let editingKey       = null;    // _key of the city currently open in the modal
+let wikiLayer = null;
+let rawCities = [];      // validated data from server, never mutated
+let allCities = [];      // rawCities with overrides applied
+let countryData = {};      // World Bank data keyed by ISO-2 code
+let filtered = [];
+let visibleCount = 100;
+const PAGE_SIZE = 100;
+let sortCol = 'pop';
+let sortDir = 'desc';
+let editingKey = null;    // _key of the city currently open in the modal
 
 // Companies data keyed by city QID
-let companiesData    = {};
+let companiesData = {};
 
 // Map ISO-2 country code → Wikipedia language subdomain
 // Used to prefer the local-language Wikipedia article over English
 const ISO_TO_WIKI_LANG = {
-  JP:'ja', CN:'zh', KR:'ko', TW:'zh', HK:'zh',
-  DE:'de', AT:'de', CH:'de',
-  FR:'fr', BE:'fr',
-  ES:'es', MX:'es', AR:'es', CO:'es', CL:'es', PE:'es', VE:'es',
-  PT:'pt', BR:'pt',
-  IT:'it',
-  RU:'ru', BY:'be', UA:'uk',
-  NL:'nl',
-  PL:'pl', CZ:'cs', SK:'sk', HU:'hu', RO:'ro', BG:'bg', HR:'hr',
-  SE:'sv', NO:'no', DK:'da', FI:'fi',
-  TR:'tr', GR:'el', IL:'he', SA:'ar', AE:'ar', EG:'ar',
-  IN:'hi', ID:'id', TH:'th', VN:'vi', MY:'ms',
+  JP: 'ja', CN: 'zh', KR: 'ko', TW: 'zh', HK: 'zh',
+  DE: 'de', AT: 'de', CH: 'de',
+  FR: 'fr', BE: 'fr',
+  ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es', VE: 'es',
+  PT: 'pt', BR: 'pt',
+  IT: 'it',
+  RU: 'ru', BY: 'be', UA: 'uk',
+  NL: 'nl',
+  PL: 'pl', CZ: 'cs', SK: 'sk', HU: 'hu', RO: 'ro', BG: 'bg', HR: 'hr',
+  SE: 'sv', NO: 'no', DK: 'da', FI: 'fi',
+  TR: 'tr', GR: 'el', IL: 'he', SA: 'ar', AE: 'ar', EG: 'ar',
+  IN: 'hi', ID: 'id', TH: 'th', VN: 'vi', MY: 'ms',
 };
 
 // Choropleth state
-let choroplethLayer  = null;
-let worldGeo         = null;    // GeoJSON FeatureCollection for country borders
-let choroOn          = false;   // choropleth is off by default
-let activeChoroKey   = 'gdp_per_capita';
+let choroplethLayer = null;
+let worldGeo = null;    // GeoJSON FeatureCollection for country borders
+let choroOn = false;   // choropleth is off by default
+let activeChoroKey = 'gdp_per_capita';
 
 // Economic centers layer state
 let econLayer = null;
-let econOn    = false;
+let econOn = false;
 
 // Approximate 2026 FX rates to USD (used only for relative dot sizing, not financial reporting)
 const FX_TO_USD = {
-  USD:1,    EUR:1.08,  GBP:1.27,  JPY:0.0067, CNY:0.138, KRW:0.00075,
-  INR:0.012, BRL:0.196, CAD:0.737, AUD:0.648, CHF:1.13,  SEK:0.096,
-  NOK:0.092, DKK:0.145, PLN:0.249, HKD:0.128, SGD:0.740, TWD:0.031,
-  MXN:0.052, ZAR:0.055, TRY:0.029, RUB:0.011, IDR:6.3e-5, MYR:0.224,
-  PHP:0.0173, THB:0.028, NGN:0.00063, AED:0.272, SAR:0.267, EGP:0.020,
-  QAR:0.274, KWD:3.25,  BHD:2.65,  OMR:2.60,  CZK:0.044, HUF:0.0028,
-  RON:0.218, BGN:0.555, HRK:0.145, RSD:0.0093, UAH:0.024, KZT:0.0021,
-  DZD:0.0075, MAD:0.10, TND:0.32, GHS:0.067, KES:0.0077, ETB:0.0083,
-  COP:0.00024, PEN:0.27, CLP:0.00107, ARS:0.00098, ILS:0.27, JOD:1.41,
-  PKR:0.0036, BDT:0.0091, LKR:0.0034, VND:0.000039, MNT:0.00029,
-  NZD:0.613, OMR:2.60,
+  USD: 1, EUR: 1.08, GBP: 1.27, JPY: 0.0067, CNY: 0.138, KRW: 0.00075,
+  INR: 0.012, BRL: 0.196, CAD: 0.737, AUD: 0.648, CHF: 1.13, SEK: 0.096,
+  NOK: 0.092, DKK: 0.145, PLN: 0.249, HKD: 0.128, SGD: 0.740, TWD: 0.031,
+  MXN: 0.052, ZAR: 0.055, TRY: 0.029, RUB: 0.011, IDR: 6.3e-5, MYR: 0.224,
+  PHP: 0.0173, THB: 0.028, NGN: 0.00063, AED: 0.272, SAR: 0.267, EGP: 0.020,
+  QAR: 0.274, KWD: 3.25, BHD: 2.65, OMR: 2.60, CZK: 0.044, HUF: 0.0028,
+  RON: 0.218, BGN: 0.555, HRK: 0.145, RSD: 0.0093, UAH: 0.024, KZT: 0.0021,
+  DZD: 0.0075, MAD: 0.10, TND: 0.32, GHS: 0.067, KES: 0.0077, ETB: 0.0083,
+  COP: 0.00024, PEN: 0.27, CLP: 0.00107, ARS: 0.00098, ILS: 0.27, JOD: 1.41,
+  PKR: 0.0036, BDT: 0.0091, LKR: 0.0034, VND: 0.000039, MNT: 0.00029,
+  NZD: 0.613, OMR: 2.60,
 };
 function toUSD(value, currency) {
   if (!value || !currency) return 0;   // unknown currency → skip rather than assume USD
@@ -66,27 +66,27 @@ function toUSD(value, currency) {
 // e.g. "China" → china, "United States" → united-states
 const WB_SLUG_OVERRIDES = {
   // WB API names that don't convert cleanly to the portal slug
-  'Bahamas, The':                    'bahamas',
-  'Gambia, The':                     'gambia',
-  "Cote d'Ivoire":                   'cote-divoire',
-  'Congo, Dem. Rep.':                'congo-democratic-republic',
-  'Congo, Rep.':                     'congo-republic',
-  'Egypt, Arab Rep.':                'egypt-arab-republic',
-  'Iran, Islamic Rep.':              'iran-islamic-republic',
-  'Korea, Rep.':                     'korea-republic',
-  "Korea, Dem. People's Rep.":       'korea-democratic-peoples-republic',
-  'Lao PDR':                         'lao-pdr',
-  'Micronesia, Fed. Sts.':           'micronesia',
-  'Syrian Arab Republic':            'syrian-arab-republic',
-  'Venezuela, RB':                   'venezuela',
-  'Yemen, Rep.':                     'yemen-republic',
-  'Hong Kong SAR, China':            'hong-kong-sar-china',
-  'Macao SAR, China':                'macao-sar-china',
-  'St. Kitts and Nevis':             'st-kitts-and-nevis',
-  'St. Lucia':                       'st-lucia',
-  'St. Vincent and the Grenadines':  'st-vincent-and-the-grenadines',
-  'Puerto Rico (US)':                'puerto-rico',
-  'Somalia, Fed. Rep.':              'somalia',
+  'Bahamas, The': 'bahamas',
+  'Gambia, The': 'gambia',
+  "Cote d'Ivoire": 'cote-divoire',
+  'Congo, Dem. Rep.': 'congo-democratic-republic',
+  'Congo, Rep.': 'congo-republic',
+  'Egypt, Arab Rep.': 'egypt-arab-republic',
+  'Iran, Islamic Rep.': 'iran-islamic-republic',
+  'Korea, Rep.': 'korea-republic',
+  "Korea, Dem. People's Rep.": 'korea-democratic-peoples-republic',
+  'Lao PDR': 'lao-pdr',
+  'Micronesia, Fed. Sts.': 'micronesia',
+  'Syrian Arab Republic': 'syrian-arab-republic',
+  'Venezuela, RB': 'venezuela',
+  'Yemen, Rep.': 'yemen-republic',
+  'Hong Kong SAR, China': 'hong-kong-sar-china',
+  'Macao SAR, China': 'macao-sar-china',
+  'St. Kitts and Nevis': 'st-kitts-and-nevis',
+  'St. Lucia': 'st-lucia',
+  'St. Vincent and the Grenadines': 'st-vincent-and-the-grenadines',
+  'Puerto Rico (US)': 'puerto-rico',
+  'Somalia, Fed. Rep.': 'somalia',
 };
 
 function wbCountryUrl(iso2) {
@@ -96,42 +96,58 @@ function wbCountryUrl(iso2) {
   if (c.region === 'Aggregates' || c.income_level === 'Aggregates') return null;
   const slug = WB_SLUG_OVERRIDES[c.name] ||
     c.name.toLowerCase()
-          .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // strip accents é→e
-          .replace(/[',\.]/g, '')                           // remove punctuation
-          .replace(/\s+/g, '-')                             // spaces → hyphens
-          .replace(/-+/g, '-').replace(/^-|-$/g, '');       // clean up
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // strip accents é→e
+      .replace(/[',\.]/g, '')                           // remove punctuation
+      .replace(/\s+/g, '-')                             // spaces → hyphens
+      .replace(/-+/g, '-').replace(/^-|-$/g, '');       // clean up
   return `https://data.worldbank.org/country/${slug}`;
 }
 
 // ── Choropleth indicator definitions ────────────────────────────────────────
 const CHORO_INDICATORS = [
-  { key:'gdp_per_capita',  label:'GDP per capita (USD)',       fmt: v => '$' + Math.round(v).toLocaleString(),
-    c0:[40,30,100],  c1:[60,210,100] },
-  { key:'life_expectancy', label:'Life expectancy (years)',    fmt: v => v.toFixed(1) + ' yrs',
-    c0:[210,50,50],  c1:[50,185,110] },
-  { key:'internet_pct',    label:'Internet users (%)',         fmt: v => v.toFixed(1) + '%',
-    c0:[35,35,80],   c1:[20,200,240] },
-  { key:'urban_pct',       label:'Urban population (%)',       fmt: v => v.toFixed(1) + '%',
-    c0:[150,130,70], c1:[30,120,210] },
-  { key:'literacy_rate',   label:'Literacy rate (%)',          fmt: v => v.toFixed(1) + '%',
-    c0:[200,80,40],  c1:[50,100,220] },
-  { key:'electricity_pct', label:'Electricity access (%)',     fmt: v => v.toFixed(1) + '%',
-    c0:[60,40,20],   c1:[240,200,50] },
-  { key:'gini',            label:'Income inequality (Gini)',   fmt: v => v.toFixed(1) + ' / 100',
-    c0:[50,180,100], c1:[220,50,50]  },   // low Gini = more equal = good (green)
-  { key:'child_mortality', label:'Child mortality (/ 1k births)', fmt: v => v.toFixed(1) + ' / 1k',
-    c0:[50,180,100], c1:[220,50,50]  },   // low mortality = good (green)
+  {
+    key: 'gdp_per_capita', label: 'GDP per capita (USD)', fmt: v => '$' + Math.round(v).toLocaleString(),
+    c0: [40, 30, 100], c1: [60, 210, 100]
+  },
+  {
+    key: 'life_expectancy', label: 'Life expectancy (years)', fmt: v => v.toFixed(1) + ' yrs',
+    c0: [210, 50, 50], c1: [50, 185, 110]
+  },
+  {
+    key: 'internet_pct', label: 'Internet users (%)', fmt: v => v.toFixed(1) + '%',
+    c0: [35, 35, 80], c1: [20, 200, 240]
+  },
+  {
+    key: 'urban_pct', label: 'Urban population (%)', fmt: v => v.toFixed(1) + '%',
+    c0: [150, 130, 70], c1: [30, 120, 210]
+  },
+  {
+    key: 'literacy_rate', label: 'Literacy rate (%)', fmt: v => v.toFixed(1) + '%',
+    c0: [200, 80, 40], c1: [50, 100, 220]
+  },
+  {
+    key: 'electricity_pct', label: 'Electricity access (%)', fmt: v => v.toFixed(1) + '%',
+    c0: [60, 40, 20], c1: [240, 200, 50]
+  },
+  {
+    key: 'gini', label: 'Income inequality (Gini)', fmt: v => v.toFixed(1) + ' / 100',
+    c0: [50, 180, 100], c1: [220, 50, 50]
+  },   // low Gini = more equal = good (green)
+  {
+    key: 'child_mortality', label: 'Child mortality (/ 1k births)', fmt: v => v.toFixed(1) + ' / 1k',
+    c0: [50, 180, 100], c1: [220, 50, 50]
+  },   // low mortality = good (green)
 ];
 
 // ── localStorage persistence ──────────────────────────────────────────────────
-const LS_EDITS   = 'wcm_edits';
+const LS_EDITS = 'wcm_edits';
 const LS_DELETED = 'wcm_deleted';
 
-function loadEdits()   { try { return JSON.parse(localStorage.getItem(LS_EDITS)   || '{}'); } catch { return {}; } }
+function loadEdits() { try { return JSON.parse(localStorage.getItem(LS_EDITS) || '{}'); } catch { return {}; } }
 function loadDeleted() { try { return new Set(JSON.parse(localStorage.getItem(LS_DELETED) || '[]')); } catch { return new Set(); } }
 
-function saveEditsStore(edits)   { localStorage.setItem(LS_EDITS,   JSON.stringify(edits)); }
-function saveDeletedStore(del)   { localStorage.setItem(LS_DELETED,  JSON.stringify([...del])); }
+function saveEditsStore(edits) { localStorage.setItem(LS_EDITS, JSON.stringify(edits)); }
+function saveDeletedStore(del) { localStorage.setItem(LS_DELETED, JSON.stringify([...del])); }
 
 // ── Schema validation ─────────────────────────────────────────────────────────
 // Ensures cities-full.json is well-formed before touching the DOM.
@@ -141,7 +157,7 @@ function validateCities(data) {
   const valid = [], bad = [];
   for (const c of data) {
     if (typeof c.name === 'string' && c.name &&
-        typeof c.lat  === 'number' && typeof c.lng === 'number') {
+      typeof c.lat === 'number' && typeof c.lng === 'number') {
       valid.push(c);
     } else {
       bad.push(c);
@@ -169,7 +185,7 @@ function migrateEditKeys(cities) {
   }
 
   // Edits
-  const edits    = loadEdits();
+  const edits = loadEdits();
   const editKeys = Object.keys(edits);
   const oldEditKeys = editKeys.filter(k => /^-?\d/.test(k) && k.includes(','));
   if (oldEditKeys.length > 0) {
@@ -184,7 +200,7 @@ function migrateEditKeys(cities) {
   }
 
   // Deletions
-  const deleted    = loadDeleted();
+  const deleted = loadDeleted();
   const oldDelKeys = [...deleted].filter(k => /^-?\d/.test(k) && k.includes(','));
   if (oldDelKeys.length > 0) {
     const migrated = new Set();
@@ -199,7 +215,7 @@ function migrateEditKeys(cities) {
 
 // ── Apply stored edits/deletions on top of rawCities ─────────────────────────
 function applyOverrides() {
-  const edits   = loadEdits();
+  const edits = loadEdits();
   const deleted = loadDeleted();
   allCities = rawCities
     .filter(c => !deleted.has(c._key))
@@ -216,13 +232,13 @@ function applyOverrides() {
 // Population is mapped logarithmically to a 0–1 intensity value,
 // then interpolated through a 6-stop color ramp (cool dim → hot bright).
 const COLOR_STOPS = [
-  [0.00, [80,  50, 200]],   // dim indigo   — ~10k
+  [0.00, [80, 50, 200]],   // dim indigo   — ~10k
   [0.28, [40, 120, 255]],   // blue          — ~100k
   [0.50, [20, 200, 210]],   // cyan/teal     — ~600k
-  [0.68, [80, 220,  80]],   // green         — ~2M
+  [0.68, [80, 220, 80]],   // green         — ~2M
   [0.82, [250, 210, 30]],   // amber         — ~7M
   [0.92, [250, 120, 20]],   // orange        — ~18M
-  [1.00, [240,  30, 30]],   // red           — 40M+
+  [1.00, [240, 30, 30]],   // red           — 40M+
 ];
 
 function popToT(pop) {
@@ -261,8 +277,8 @@ function wikiCityRadius(pop) { return Math.max(2, Math.min(12, Math.sqrt(pop / 1
 
 function fmtPop(pop) {
   if (pop == null) return '—';
-  if (pop >= 1e6)  return (pop / 1e6).toFixed(1) + 'M';
-  if (pop >= 1e3)  return (pop / 1e3).toFixed(0) + 'k';
+  if (pop >= 1e6) return (pop / 1e6).toFixed(1) + 'M';
+  if (pop >= 1e3) return (pop / 1e3).toFixed(0) + 'k';
   return String(pop);
 }
 function fmtNum(n) { return n == null ? '—' : n.toLocaleString(); }
@@ -271,8 +287,8 @@ function fmtNum(n) { return n == null ? '—' : n.toLocaleString(); }
 function rebuildMapLayer() {
   if (wikiLayer) map.removeLayer(wikiLayer);
   wikiLayer = L.layerGroup();
-  allCities.forEach(function(city) {
-    const color  = wikiCityColor(city.pop);
+  allCities.forEach(function (city) {
+    const color = wikiCityColor(city.pop);
     const radius = wikiCityRadius(city.pop);
     const location = [city.admin, city.country].filter(Boolean).join(', ');
     let tip = `<strong>${escHtml(city.name)}</strong>`;
@@ -300,28 +316,28 @@ function rebuildMapLayer() {
 // ── Stats ─────────────────────────────────────────────────────────────────────
 function updateStats() {
   const cities = allCities;
-  const total  = cities.reduce((s, c) => s + (c.pop || 0), 0);
-  document.getElementById('stat-count').textContent   = cities.length.toLocaleString();
+  const total = cities.reduce((s, c) => s + (c.pop || 0), 0);
+  document.getElementById('stat-count').textContent = cities.length.toLocaleString();
   document.getElementById('stat-largest').textContent =
     cities[0] ? cities[0].name + ' (' + (cities[0].pop / 1e6).toFixed(1) + 'M)' : '—';
-  document.getElementById('stat-total').textContent   = (total / 1e9).toFixed(2) + 'B';
+  document.getElementById('stat-total').textContent = (total / 1e9).toFixed(2) + 'B';
   document.getElementById('wiki-legend-title').textContent =
     cities.length.toLocaleString() + ' cities on map · circle size and color = population';
 }
 
 // ── Filter + sort ─────────────────────────────────────────────────────────────
 function applyFilters() {
-  const search  = document.getElementById('f-search').value.trim().toLowerCase();
+  const search = document.getElementById('f-search').value.trim().toLowerCase();
   const country = document.getElementById('f-country').value;
-  const minPop  = parseInt(document.getElementById('f-minpop').value) || 0;
+  const minPop = parseInt(document.getElementById('f-minpop').value) || 0;
   const [col, dir] = document.getElementById('f-sort').value.split('-');
   sortCol = col; sortDir = dir;
   updateSortHeaders();
 
   filtered = allCities.filter(c => {
-    if (search  && !(c.name    || '').toLowerCase().includes(search)) return false;
-    if (country && c.country !== country)                              return false;
-    if (minPop  && (c.pop || 0) < minPop)                             return false;
+    if (search && !(c.name || '').toLowerCase().includes(search)) return false;
+    if (country && c.country !== country) return false;
+    if (minPop && (c.pop || 0) < minPop) return false;
     return true;
   });
   sortFiltered();
@@ -333,11 +349,13 @@ function sortFiltered() {
   const edits = loadEdits();
   filtered.sort((a, b) => {
     let av, bv;
-    if      (sortCol === 'pop')     { av = a.pop ?? -Infinity; bv = b.pop ?? -Infinity; }
-    else if (sortCol === 'name')    { av = a.name    ?? '';        bv = b.name    ?? ''; }
-    else if (sortCol === 'country') { av = a.country ?? '';        bv = b.country ?? ''; }
-    else if (sortCol === 'founded') { av = a.founded ?? (sortDir === 'asc' ? Infinity : -Infinity);
-                                      bv = b.founded ?? (sortDir === 'asc' ? Infinity : -Infinity); }
+    if (sortCol === 'pop') { av = a.pop ?? -Infinity; bv = b.pop ?? -Infinity; }
+    else if (sortCol === 'name') { av = a.name ?? ''; bv = b.name ?? ''; }
+    else if (sortCol === 'country') { av = a.country ?? ''; bv = b.country ?? ''; }
+    else if (sortCol === 'founded') {
+      av = a.founded ?? (sortDir === 'asc' ? Infinity : -Infinity);
+      bv = b.founded ?? (sortDir === 'asc' ? Infinity : -Infinity);
+    }
     else return 0;
     if (typeof av === 'string') return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
     return sortDir === 'asc' ? av - bv : bv - av;
@@ -353,13 +371,13 @@ function updateSortHeaders() {
 
 // ── Render list rows ──────────────────────────────────────────────────────────
 function renderRows() {
-  const edits   = loadEdits();
-  const tbody   = document.getElementById('list-body');
-  const slice   = filtered.slice(0, visibleCount);
+  const edits = loadEdits();
+  const tbody = document.getElementById('list-body');
+  const slice = filtered.slice(0, visibleCount);
   const hasMore = filtered.length > visibleCount;
 
   tbody.innerHTML = slice.map(city => {
-    const color   = wikiCityColor(city.pop);
+    const color = wikiCityColor(city.pop);
     const isEdited = !!edits[city._key];
     const rowClass = isEdited ? 'edited-row' : '';
     const key = escAttr(city._key);
@@ -370,7 +388,7 @@ function renderRows() {
       </td>
       <td class="city-name">${escHtml(city.name)}${isEdited ? ' <span style="color:#f97316;font-size:0.75em" title="Locally edited">✎</span>' : ''}</td>
       <td>${escHtml(city.country || '—')}</td>
-      <td>${escHtml(city.admin   || '—')}</td>
+      <td>${escHtml(city.admin || '—')}</td>
       <td class="city-pop">${fmtPop(city.pop)}</td>
       <td>${fmtNum(city.area_km2)}</td>
       <td>${city.founded != null ? city.founded : '—'}</td>
@@ -392,7 +410,7 @@ function renderRows() {
 
 function escHtml(str) {
   return String(str ?? '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 function escAttr(str) {
   return String(str ?? '').replace(/'/g, '&#39;');
@@ -411,15 +429,15 @@ function openModal(key) {
   editingKey = key;
 
   document.getElementById('modal-title').textContent = `Edit — ${city.name}`;
-  document.getElementById('e-name').value    = city.name    ?? '';
-  document.getElementById('e-pop').value     = city.pop     ?? '';
+  document.getElementById('e-name').value = city.name ?? '';
+  document.getElementById('e-pop').value = city.pop ?? '';
   document.getElementById('e-country').value = city.country ?? '';
-  document.getElementById('e-admin').value   = city.admin   ?? '';
-  document.getElementById('e-desc').value    = city.desc    ?? '';
-  document.getElementById('e-area').value    = city.area_km2 ?? '';
-  document.getElementById('e-founded').value = city.founded  ?? '';
-  document.getElementById('e-lat').value     = city.lat;
-  document.getElementById('e-lng').value     = city.lng;
+  document.getElementById('e-admin').value = city.admin ?? '';
+  document.getElementById('e-desc').value = city.desc ?? '';
+  document.getElementById('e-area').value = city.area_km2 ?? '';
+  document.getElementById('e-founded').value = city.founded ?? '';
+  document.getElementById('e-lat').value = city.lat;
+  document.getElementById('e-lng').value = city.lng;
   document.getElementById('e-timezone').value = city.timezone ?? '';
 
   document.getElementById('edit-modal').classList.add('open');
@@ -436,15 +454,15 @@ function saveEdit() {
   const numOrNull = v => v === '' ? null : Number(v);
 
   edits[editingKey] = {
-    name:     document.getElementById('e-name').value.trim()    || undefined,
-    pop:      numOrNull(document.getElementById('e-pop').value),
-    country:  document.getElementById('e-country').value.trim() || null,
-    admin:    document.getElementById('e-admin').value.trim()   || null,
-    desc:     document.getElementById('e-desc').value.trim()    || null,
+    name: document.getElementById('e-name').value.trim() || undefined,
+    pop: numOrNull(document.getElementById('e-pop').value),
+    country: document.getElementById('e-country').value.trim() || null,
+    admin: document.getElementById('e-admin').value.trim() || null,
+    desc: document.getElementById('e-desc').value.trim() || null,
     area_km2: numOrNull(document.getElementById('e-area').value),
-    founded:  numOrNull(document.getElementById('e-founded').value),
-    lat:      Number(document.getElementById('e-lat').value),
-    lng:      Number(document.getElementById('e-lng').value),
+    founded: numOrNull(document.getElementById('e-founded').value),
+    lat: Number(document.getElementById('e-lat').value),
+    lng: Number(document.getElementById('e-lng').value),
     timezone: document.getElementById('e-timezone').value.trim() || null,
   };
   // strip undefined keys
@@ -492,7 +510,7 @@ function refresh() {
 // ── Header-click sort ─────────────────────────────────────────────────────────
 function initHeaderSort() {
   document.querySelectorAll('thead th[data-col]').forEach(th => {
-    th.addEventListener('click', function() {
+    th.addEventListener('click', function () {
       const col = this.dataset.col;
       if (sortCol === col) { sortDir = sortDir === 'asc' ? 'desc' : 'asc'; }
       else { sortCol = col; sortDir = (col === 'name' || col === 'country') ? 'asc' : 'desc'; }
@@ -509,10 +527,10 @@ function initHeaderSort() {
 
 // ── Country dropdown ──────────────────────────────────────────────────────────
 function populateCountryFilter() {
-  const sel      = document.getElementById('f-country');
-  const current  = sel.value;
+  const sel = document.getElementById('f-country');
+  const current = sel.value;
   const countries = [...new Set(allCities.map(c => c.country).filter(Boolean))].sort();
-  sel.innerHTML  = '<option value="">All countries</option>';
+  sel.innerHTML = '<option value="">All countries</option>';
   countries.forEach(c => {
     const opt = document.createElement('option');
     opt.value = c; opt.textContent = c;
@@ -522,17 +540,17 @@ function populateCountryFilter() {
 }
 
 // ── Close modal on backdrop click ─────────────────────────────────────────────
-document.getElementById('edit-modal').addEventListener('click', function(e) {
+document.getElementById('edit-modal').addEventListener('click', function (e) {
   if (e.target === this) closeModal();
 });
 
 // ── Lightbox ──────────────────────────────────────────────────────────────────
 let lightboxImages = [];
-let lightboxIdx    = 0;
+let lightboxIdx = 0;
 
 function openLightbox(images, idx) {
   lightboxImages = images;
-  lightboxIdx    = idx;
+  lightboxIdx = idx;
   document.getElementById('wiki-lightbox').classList.add('open');
   renderLightboxFrame();
 }
@@ -550,15 +568,15 @@ function renderLightboxFrame() {
   document.getElementById('lightbox-prev').style.display = lightboxImages.length > 1 ? '' : 'none';
   document.getElementById('lightbox-next').style.display = lightboxImages.length > 1 ? '' : 'none';
 }
-document.getElementById('wiki-lightbox').addEventListener('click', function(e) {
+document.getElementById('wiki-lightbox').addEventListener('click', function (e) {
   if (e.target === this) closeLightbox();
 });
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
   const lb = document.getElementById('wiki-lightbox');
   if (!lb.classList.contains('open')) return;
-  if (e.key === 'ArrowLeft')  lightboxNav(-1);
+  if (e.key === 'ArrowLeft') lightboxNav(-1);
   if (e.key === 'ArrowRight') lightboxNav(1);
-  if (e.key === 'Escape')     closeLightbox();
+  if (e.key === 'Escape') closeLightbox();
 });
 
 // ── Wikipedia image fetching ──────────────────────────────────────────────────
@@ -568,16 +586,16 @@ const IMG_EXCLUDE = /flag|coat|coa_|locator|location_map|location map|icon|emble
 
 // ── Carousel state ────────────────────────────────────────────────────────────
 let carImages = [];
-let carIdx    = 0;
-let carTimer  = null;
+let carIdx = 0;
+let carTimer = null;
 
 function carStart(images) {
   carImages = images;
-  carIdx    = 0;
+  carIdx = 0;
   clearInterval(carTimer);
   if (images.length > 1) carTimer = setInterval(() => carGo(1), 4500);
 }
-function carStop()  { clearInterval(carTimer); carTimer = null; }
+function carStop() { clearInterval(carTimer); carTimer = null; }
 function carGo(dir) {
   carIdx = (carIdx + dir + carImages.length) % carImages.length;
   carRender();
@@ -588,7 +606,7 @@ function carJump(i) {
   if (carImages.length > 1) carTimer = setInterval(() => carGo(1), 4500);
 }
 function carRender() {
-  const img     = document.getElementById('wiki-car-img');
+  const img = document.getElementById('wiki-car-img');
   const counter = document.getElementById('wiki-car-counter');
   if (!img) return;
   img.classList.add('fade');
@@ -610,7 +628,7 @@ function closeWikiSidebar() {
 
 // Render the infobox using city Wikidata fields + optional Wikipedia API data
 function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
-  const body   = document.getElementById('wiki-sidebar-body');
+  const body = document.getElementById('wiki-sidebar-body');
   const footer = document.getElementById('wiki-sidebar-footer');
 
   // ── Carousel ──
@@ -660,15 +678,15 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     : null;
   const sistersHtml = city.sister_cities && city.sister_cities.length
     ? escHtml(city.sister_cities.slice(0, 8).join(', '))
-      + (city.sister_cities.length > 8 ? ` <span style="color:#6e7681">+${city.sister_cities.length - 8} more</span>` : '')
+    + (city.sister_cities.length > 8 ? ` <span style="color:#6e7681">+${city.sister_cities.length - 8} more</span>` : '')
     : null;
   const coordsFmt = city.lat != null
     ? `${Math.abs(city.lat).toFixed(4)}\u00b0${city.lat >= 0 ? 'N' : 'S'}, ${Math.abs(city.lng).toFixed(4)}\u00b0${city.lng >= 0 ? 'E' : 'W'}`
     : null;
-  const gdpHtml  = wpExtra && wpExtra.gdp
+  const gdpHtml = wpExtra && wpExtra.gdp
     ? `${wpExtra.gdp} <span style="color:#6e7681;font-size:0.75em">(local currency)</span>`
     : null;
-  const hdi      = wpExtra && wpExtra.hdi ? wpExtra.hdi.toFixed(3) : null;
+  const hdi = wpExtra && wpExtra.hdi ? wpExtra.hdi.toFixed(3) : null;
   // Nicknames: prefer array from infobox supplement, fall back to Wikidata P1449
   const nicknamesArr = city.nicknames && city.nicknames.length ? city.nicknames
     : (wpExtra && wpExtra.nickname ? [wpExtra.nickname] : null);
@@ -679,14 +697,14 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   // Leaders from infobox supplement
   const leadersHtml = city.leaders && city.leaders.length
     ? city.leaders.map(l =>
-        `<tr><td class="wiki-info-label">${escHtml(l.title)}</td><td class="wiki-info-val">${escHtml(l.name)}</td></tr>`
-      ).join('')
+      `<tr><td class="wiki-info-label">${escHtml(l.title)}</td><td class="wiki-info-val">${escHtml(l.name)}</td></tr>`
+    ).join('')
     : '';
 
   // Population notes
   const popMetroFmt = city.pop_metro != null ? fmtNum(city.pop_metro) : null;
   const popUrbanFmt = city.pop_urban != null ? fmtNum(city.pop_urban) : null;
-  const popAsOf     = city.pop_as_of ? ` <span style="color:#484f58;font-size:0.72em">${city.pop_as_of}</span>` : '';
+  const popAsOf = city.pop_as_of ? ` <span style="color:#484f58;font-size:0.72em">${city.pop_as_of}</span>` : '';
 
   // ── Section builder ──
   function section(title, rowArr) {
@@ -704,13 +722,13 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     : (city.utc_offset ? escHtml(city.utc_offset) : null);
 
   const locationSec = section('Location', [
-    row('Country',         city.country  || ''),
-    row('Region',          city.admin    || ''),
+    row('Country', city.country || ''),
+    row('Region', city.admin || ''),
     city.settlement_type ? row('Type', city.settlement_type) : '',
-    row('ISO code',        city.iso      || ''),
+    row('ISO code', city.iso || ''),
     tzFmt ? `<tr><td class="wiki-info-label">Timezone</td><td class="wiki-info-val">${tzFmt}</td></tr>` : '',
-    row('Coordinates',     coordsFmt),
-    row('Elevation',       city.elev_m != null ? fmtNum(city.elev_m) + ' m' : null),
+    row('Coordinates', coordsFmt),
+    row('Elevation', city.elev_m != null ? fmtNum(city.elev_m) + ' m' : null),
   ]);
   const govSec = leadersHtml
     ? `<tr><td colspan="2" class="wiki-info-section-head">Government</td></tr>${leadersHtml}`
@@ -719,23 +737,23 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     city.pop != null
       ? `<tr><td class="wiki-info-label">Population</td><td class="wiki-info-val">${escHtml(fmtNum(city.pop))}${popAsOf}</td></tr>`
       : '',
-    popMetroFmt ? row('Metro area',   popMetroFmt) : '',
-    popUrbanFmt ? row('Urban area',   popUrbanFmt) : '',
-    row('Density',     density),
-    row('Area',        city.area_km2 != null ? fmtNum(city.area_km2) + ' km\u00b2' : null),
+    popMetroFmt ? row('Metro area', popMetroFmt) : '',
+    popUrbanFmt ? row('Urban area', popUrbanFmt) : '',
+    row('Density', density),
+    row('Area', city.area_km2 != null ? fmtNum(city.area_km2) + ' km\u00b2' : null),
   ]);
   const historySec = section('History', [
-    row('Founded',   foundedFmt),
+    row('Founded', foundedFmt),
     nicknamesHtml ? `<tr><td class="wiki-info-label">Known as</td><td class="wiki-info-val">${nicknamesHtml}</td></tr>` : '',
   ]);
   const economySec = section('Economy', [
-    row('GDP',       gdpHtml,  !!gdpHtml),
-    row('HDI',       hdi),
+    row('GDP', gdpHtml, !!gdpHtml),
+    row('HDI', hdi),
   ]);
   const linksSec = section('Links', [
-    row('Website',      websiteHtml,  !!websiteHtml),
+    row('Website', websiteHtml, !!websiteHtml),
     row('Sister cities', sistersHtml, !!sistersHtml),
-    row('GeoNames',     geonamesHtml, !!geonamesHtml),
+    row('GeoNames', geonamesHtml, !!geonamesHtml),
   ]);
 
   // ── World Bank country context (bound via city.iso) ──
@@ -746,15 +764,15 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     return row(label, escHtml(fmt(wb[key])) + year, true);
   }
   const wbSec = wb ? section('Country context · ' + escHtml(wb.name || city.country || city.iso) + ' <span style="color:#484f58;font-size:0.75em">(World Bank)</span>', [
-    wbRow('GDP / capita',    'gdp_per_capita',  v => '$' + Math.round(v).toLocaleString()),
+    wbRow('GDP / capita', 'gdp_per_capita', v => '$' + Math.round(v).toLocaleString()),
     wbRow('Life expectancy', 'life_expectancy', v => v.toFixed(1) + ' yrs'),
-    wbRow('Urban pop.',      'urban_pct',       v => v.toFixed(1) + '%'),
-    wbRow('Internet users',  'internet_pct',    v => v.toFixed(1) + '%'),
-    wbRow('Gini index',      'gini',            v => v.toFixed(1) + ' / 100'),
-    wbRow('Literacy rate',   'literacy_rate',   v => v.toFixed(1) + '%'),
+    wbRow('Urban pop.', 'urban_pct', v => v.toFixed(1) + '%'),
+    wbRow('Internet users', 'internet_pct', v => v.toFixed(1) + '%'),
+    wbRow('Gini index', 'gini', v => v.toFixed(1) + ' / 100'),
+    wbRow('Literacy rate', 'literacy_rate', v => v.toFixed(1) + '%'),
     wbRow('Child mortality', 'child_mortality', v => v.toFixed(1) + ' / 1k'),
     wbRow('Electricity access', 'electricity_pct', v => v.toFixed(1) + '%'),
-    wbRow('Income level',    'income_level',    v => v),
+    wbRow('Income level', 'income_level', v => v),
   ]) : '';
 
   // ── Climate chart ──
@@ -764,12 +782,12 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
 
     const mons = cl.months;  // array of 12 month objects
     // Determine what data is available
-    const hasTemp  = mons.some(m => m.high_c != null || m.low_c != null);
-    const hasPrec  = mons.some(m => m.precipitation_mm != null);
-    const hasSun   = mons.some(m => m.sun != null);
+    const hasTemp = mons.some(m => m.high_c != null || m.low_c != null);
+    const hasPrec = mons.some(m => m.precipitation_mm != null);
+    const hasSun = mons.some(m => m.sun != null);
     if (!hasTemp && !hasPrec) return '';
 
-    const MON_LABELS = ['J','F','M','A','M','J','J','A','S','O','N','D'];
+    const MON_LABELS = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
     // Temperature range sparkline (SVG bar chart, high=top, low=bottom)
     const CHART_W = 220, CHART_H = 70;
@@ -777,7 +795,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
 
     // Find temp range for scaling
     const allTemps = mons.flatMap(m => [m.high_c, m.low_c, m.mean_c].filter(v => v != null));
-    const allPrec  = mons.map(m => m.precipitation_mm || 0);
+    const allPrec = mons.map(m => m.precipitation_mm || 0);
     const tMin = allTemps.length ? Math.min(...allTemps) : 0;
     const tMax = allTemps.length ? Math.max(...allTemps) : 30;
     const tRange = tMax - tMin || 1;
@@ -823,9 +841,9 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
 
     // Legend
     const legend = [
-      hasTemp  ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:8px;background:#f78166;border-radius:1px"></span> High/low</span>` : '',
+      hasTemp ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:8px;background:#f78166;border-radius:1px"></span> High/low</span>` : '',
       mons.some(m => m.mean_c != null) ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:2px;background:#ffa657;"></span> Mean</span>` : '',
-      hasPrec  ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:8px;background:#1f6feb;opacity:0.6;border-radius:1px"></span> Precip.</span>` : '',
+      hasPrec ? `<span style="display:inline-flex;align-items:center;gap:3px"><span style="display:inline-block;width:10px;height:8px;background:#1f6feb;opacity:0.6;border-radius:1px"></span> Precip.</span>` : '',
     ].filter(Boolean).join(' ');
 
     return `
@@ -890,7 +908,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
 }
 
 function toggleExtract() {
-  const el  = document.getElementById('wiki-extract-text');
+  const el = document.getElementById('wiki-extract-text');
   const btn = document.getElementById('wiki-expand-btn');
   if (!el) return;
   const collapsed = el.classList.toggle('collapsed');
@@ -899,13 +917,13 @@ function toggleExtract() {
 
 async function openWikiSidebar(qid, cityName) {
   const sidebar = document.getElementById('wiki-sidebar');
-  const body    = document.getElementById('wiki-sidebar-body');
-  const footer  = document.getElementById('wiki-sidebar-footer');
+  const body = document.getElementById('wiki-sidebar-body');
+  const footer = document.getElementById('wiki-sidebar-footer');
   const titleEl = document.getElementById('wiki-sidebar-title');
 
-  titleEl.textContent  = cityName;
-  footer.innerHTML     = '';
-  sidebar.dataset.qid  = qid;
+  titleEl.textContent = cityName;
+  footer.innerHTML = '';
+  sidebar.dataset.qid = qid;
   sidebar.classList.add('open');
 
   // Find full city object
@@ -942,7 +960,7 @@ async function openWikiSidebar(qid, cityName) {
       `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${encodeURIComponent(qid)}&props=sitelinks&sitefilter=enwiki&format=json&origin=*`
     );
     if (!wdRes.ok) throw new Error(`Wikidata API returned ${wdRes.status}`);
-    const wdJson   = await wdRes.json();
+    const wdJson = await wdRes.json();
     const sitelink = wdJson.entities?.[qid]?.sitelinks?.enwiki?.title;
     if (!sitelink) throw new Error('No English Wikipedia article found for this city.');
 
@@ -962,23 +980,23 @@ async function openWikiSidebar(qid, cityName) {
     const wpJson = await wpRes.json();
 
     const fallbackThumb = wpJson.originalimage?.source ?? wpJson.thumbnail?.source ?? null;
-    const wpExtract     = wpJson.extract ?? null;
-    const wpUrl         = wpJson.content_urls?.desktop?.page
+    const wpExtract = wpJson.extract ?? null;
+    const wpUrl = wpJson.content_urls?.desktop?.page
       ?? `https://en.wikipedia.org/wiki/${encodeURIComponent(sitelink)}`;
 
     // Parse extra Wikidata claims
     let wpExtra = { extract: wpExtract };
     try {
       const wdClaims = await wdClaimsRes.json();
-      const claims   = wdClaims.entities?.[qid]?.claims ?? {};
+      const claims = wdClaims.entities?.[qid]?.claims ?? {};
       // GDP (P2131)
       const gdpVal = claims.P2131?.[0]?.mainsnak?.datavalue?.value?.amount;
       if (gdpVal) {
         const n = Math.abs(parseFloat(gdpVal));
         wpExtra.gdp = n >= 1e12 ? (n / 1e12).toFixed(2) + ' trillion'
-                    : n >= 1e9  ? (n / 1e9).toFixed(1)  + ' billion'
-                    : n >= 1e6  ? (n / 1e6).toFixed(1)  + ' million'
-                    : fmtNum(Math.round(n));
+          : n >= 1e9 ? (n / 1e9).toFixed(1) + ' billion'
+            : n >= 1e6 ? (n / 1e6).toFixed(1) + ' million'
+              : fmtNum(Math.round(n));
       }
       // HDI (P1081)
       const hdiVal = claims.P1081?.[0]?.mainsnak?.datavalue?.value?.amount;
@@ -993,8 +1011,8 @@ async function openWikiSidebar(qid, cityName) {
     let images = [];
     try {
       const imgListJson = await imgListRes.json();
-      const pageKey     = Object.keys(imgListJson.query?.pages ?? {})[0];
-      const rawImgs     = imgListJson.query?.pages?.[pageKey]?.images ?? [];
+      const pageKey = Object.keys(imgListJson.query?.pages ?? {})[0];
+      const rawImgs = imgListJson.query?.pages?.[pageKey]?.images ?? [];
 
       const candidates = rawImgs
         .filter(img => /\.(jpe?g|png|webp)$/i.test(img.title))
@@ -1036,14 +1054,14 @@ async function openWikiSidebar(qid, cityName) {
     // Step 4: persist to server (fire-and-forget) — future opens load instantly
     if (images.length || wpExtract) {
       fetch('/api/enrich', {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ qid, wiki_thumb: images[0] ?? null, wiki_extract: wpExtract, wiki_images: images }),
+        body: JSON.stringify({ qid, wiki_thumb: images[0] ?? null, wiki_extract: wpExtract, wiki_images: images }),
       }).then(r => r.json()).then(json => {
         if (json.changed && city) {
           if (images.length) city.wiki_images = images;
-          if (images[0])     city.wiki_thumb  = images[0];
-          if (wpExtract)     city.wiki_extract = wpExtract;
+          if (images[0]) city.wiki_thumb = images[0];
+          if (wpExtract) city.wiki_extract = wpExtract;
         }
       }).catch(() => { /* non-critical */ });
     }
@@ -1065,7 +1083,7 @@ async function openWikiSidebar(qid, cityName) {
 }
 
 // Close sidebar on Escape (not lightbox — lightbox has its own handler)
-document.addEventListener('keydown', function(e) {
+document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape' && !document.getElementById('wiki-lightbox').classList.contains('open'))
     closeWikiSidebar();
 });
@@ -1174,11 +1192,11 @@ async function init() {
     showLoading(false);
 
     populateCountryFilter();
-    document.getElementById('f-search') .addEventListener('input',  applyFilters);
+    document.getElementById('f-search').addEventListener('input', applyFilters);
     document.getElementById('f-country').addEventListener('change', applyFilters);
-    document.getElementById('f-minpop') .addEventListener('change', applyFilters);
-    document.getElementById('f-sort')   .addEventListener('change', applyFilters);
-    document.getElementById('load-more-btn').addEventListener('click', function() {
+    document.getElementById('f-minpop').addEventListener('change', applyFilters);
+    document.getElementById('f-sort').addEventListener('change', applyFilters);
+    document.getElementById('load-more-btn').addEventListener('click', function () {
       visibleCount += PAGE_SIZE;
       renderRows();
     });
@@ -1202,9 +1220,9 @@ async function init() {
 
 function choroLerpRGB(c0, c1, t) {
   return [
-    Math.round(c0[0] + (c1[0]-c0[0])*t),
-    Math.round(c0[1] + (c1[1]-c0[1])*t),
-    Math.round(c0[2] + (c1[2]-c0[2])*t),
+    Math.round(c0[0] + (c1[0] - c0[0]) * t),
+    Math.round(c0[1] + (c1[1] - c0[1]) * t),
+    Math.round(c0[2] + (c1[2] - c0[2]) * t),
   ];
 }
 
@@ -1233,33 +1251,33 @@ function buildChoropleth() {
   if (!worldGeo || !choroOn) return;
   if (choroplethLayer) { map.removeLayer(choroplethLayer); choroplethLayer = null; }
 
-  const ind   = CHORO_INDICATORS.find(i => i.key === activeChoroKey) || CHORO_INDICATORS[0];
+  const ind = CHORO_INDICATORS.find(i => i.key === activeChoroKey) || CHORO_INDICATORS[0];
   const range = choroRange(ind.key);
   let covered = 0;
 
   choroplethLayer = L.geoJSON(worldGeo, {
     pane: 'choroplethPane',
-    style: function(feature) {
+    style: function (feature) {
       const iso2 = feature.properties && feature.properties.iso2;
       const hasData = iso2 && countryData[iso2] && countryData[iso2][ind.key] != null;
       if (hasData) covered++;
       return {
-        fillColor:   choroColor(iso2, ind, range),
+        fillColor: choroColor(iso2, ind, range),
         fillOpacity: hasData ? 0.70 : 0.12,
-        color:       '#30363d',
-        weight:      0.6,
-        opacity:     0.8,
+        color: '#30363d',
+        weight: 0.6,
+        opacity: 0.8,
       };
     },
-    onEachFeature: function(feature, layer) {
+    onEachFeature: function (feature, layer) {
       const iso2 = feature.properties && feature.properties.iso2;
       layer.on({
-        mouseover: function(e) {
+        mouseover: function (e) {
           e.target.setStyle({ weight: 1.5, color: '#58a6ff', fillOpacity: e.target.options.fillOpacity + 0.15 });
           e.target.bringToFront();
         },
-        mouseout:  function(e) { choroplethLayer.resetStyle(e.target); },
-        click:     function(e) { showCountryPopup(iso2, e.latlng); },
+        mouseout: function (e) { choroplethLayer.resetStyle(e.target); },
+        click: function (e) { showCountryPopup(iso2, e.latlng); },
       });
     },
   }).addTo(map);
@@ -1305,20 +1323,20 @@ function showCountryPopup(iso2, latlng) {
 
   const ind = CHORO_INDICATORS.find(i => i.key === activeChoroKey);
   const rows = [
-    ['GDP per capita',     c.gdp_per_capita  != null ? '$'+Math.round(c.gdp_per_capita).toLocaleString() + (c.gdp_per_capita_year ? ` <small style="color:#484f58">${c.gdp_per_capita_year}</small>` : '') : null],
-    ['Life expectancy',    c.life_expectancy != null ? c.life_expectancy.toFixed(1)+' yrs' : null],
-    ['Internet users',     c.internet_pct    != null ? c.internet_pct.toFixed(1)+'%' : null],
-    ['Urban population',   c.urban_pct       != null ? c.urban_pct.toFixed(1)+'%' : null],
-    ['Literacy rate',      c.literacy_rate   != null ? c.literacy_rate.toFixed(1)+'%' : null],
-    ['Electricity access', c.electricity_pct != null ? c.electricity_pct.toFixed(1)+'%' : null],
-    ['Income inequality (Gini)', c.gini      != null ? c.gini.toFixed(1)+' / 100' : null],
-    ['Child mortality',    c.child_mortality != null ? c.child_mortality.toFixed(1)+' / 1k' : null],
-    ['Income level',       c.income_level || null],
+    ['GDP per capita', c.gdp_per_capita != null ? '$' + Math.round(c.gdp_per_capita).toLocaleString() + (c.gdp_per_capita_year ? ` <small style="color:#484f58">${c.gdp_per_capita_year}</small>` : '') : null],
+    ['Life expectancy', c.life_expectancy != null ? c.life_expectancy.toFixed(1) + ' yrs' : null],
+    ['Internet users', c.internet_pct != null ? c.internet_pct.toFixed(1) + '%' : null],
+    ['Urban population', c.urban_pct != null ? c.urban_pct.toFixed(1) + '%' : null],
+    ['Literacy rate', c.literacy_rate != null ? c.literacy_rate.toFixed(1) + '%' : null],
+    ['Electricity access', c.electricity_pct != null ? c.electricity_pct.toFixed(1) + '%' : null],
+    ['Income inequality (Gini)', c.gini != null ? c.gini.toFixed(1) + ' / 100' : null],
+    ['Child mortality', c.child_mortality != null ? c.child_mortality.toFixed(1) + ' / 1k' : null],
+    ['Income level', c.income_level || null],
   ].filter(([, v]) => v != null);
 
   const tableRows = rows.map(([label, val]) => {
     const isActive = ind && CHORO_INDICATORS.find(i => i.key === activeChoroKey) &&
-                     label.toLowerCase().includes(activeChoroKey.replace(/_/g,' ').slice(0,6));
+      label.toLowerCase().includes(activeChoroKey.replace(/_/g, ' ').slice(0, 6));
     return `<tr><td>${escHtml(label)}</td><td class="${isActive ? 'choro-popup-highlight' : ''}">${val}</td></tr>`;
   }).join('');
 
@@ -1337,9 +1355,9 @@ function showCountryPopup(iso2, latlng) {
     </a>` : ''}`;
 
   L.popup({ maxWidth: 280, className: '' })
-   .setLatLng(latlng)
-   .setContent(html)
-   .openOn(map);
+    .setLatLng(latlng)
+    .setContent(html)
+    .openOn(map);
 }
 
 function toggleChoropleth() {
@@ -1365,7 +1383,7 @@ function initChoroControls() {
     if (ind.key === activeChoroKey) opt.selected = true;
     sel.appendChild(opt);
   });
-  sel.addEventListener('change', function() {
+  sel.addEventListener('change', function () {
     activeChoroKey = this.value;
     buildChoropleth();
   });
@@ -1376,7 +1394,7 @@ function initChoroControls() {
 function setCityDotMode(mode) {
   const pane = map && map.getPane('cityPane');
   if (!pane) return;
-  pane.style.opacity       = mode === 'hide' ? '0' : mode === 'dim' ? '0.2' : '1';
+  pane.style.opacity = mode === 'hide' ? '0' : mode === 'dim' ? '0.2' : '1';
   pane.style.pointerEvents = mode === 'hide' ? 'none' : '';
   document.querySelectorAll('.city-vis-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
 }
@@ -1411,13 +1429,13 @@ function toggleEconLayer() {
 }
 
 // ── Econ cluster expansion ────────────────────────────────────────────────────
-let _expandedLayers  = null;
+let _expandedLayers = null;
 let _collapseOnClick = null;   // reference kept so we can remove the map listener cleanly
 
 function collapseEconCluster() {
   if (_collapseOnClick) { map.off('click', _collapseOnClick); _collapseOnClick = null; }
   if (!_expandedLayers) return;
-  _expandedLayers.forEach(l => { try { map.removeLayer(l); } catch (_) {} });
+  _expandedLayers.forEach(l => { try { map.removeLayer(l); } catch (_) { } });
   _expandedLayers = null;
 }
 
@@ -1425,7 +1443,7 @@ function collapseEconCluster() {
 function _convexHull(pts) {
   const n = pts.length;
   if (n < 3) return [...pts];
-  const d2 = (a, b) => (b[0]-a[0])**2 + (b[1]-a[1])**2;
+  const d2 = (a, b) => (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2;
   let l = 0;
   for (let i = 1; i < n; i++) if (pts[i][1] < pts[l][1]) l = i;
   const hull = []; let p = l, q;
@@ -1433,9 +1451,9 @@ function _convexHull(pts) {
     hull.push(pts[p]); q = 0;
     for (let i = 1; i < n; i++) {
       if (q === p) { q = i; continue; }
-      const cross = (pts[q][1]-pts[p][1])*(pts[i][0]-pts[p][0])
-                  - (pts[q][0]-pts[p][0])*(pts[i][1]-pts[p][1]);
-      if (cross < 0 || (cross === 0 && d2(pts[p],pts[i]) > d2(pts[p],pts[q]))) q = i;
+      const cross = (pts[q][1] - pts[p][1]) * (pts[i][0] - pts[p][0])
+        - (pts[q][0] - pts[p][0]) * (pts[i][1] - pts[p][1]);
+      if (cross < 0 || (cross === 0 && d2(pts[p], pts[i]) > d2(pts[p], pts[q]))) q = i;
     }
     p = q;
   } while (p !== l && hull.length <= n);
@@ -1444,33 +1462,33 @@ function _convexHull(pts) {
 
 // Quadratic Bezier arc as polyline (curvature scales with perpendicular offset)
 function _arcLine(p1, p2, curve = 0.22) {
-  const mid  = [(p1[0]+p2[0])/2, (p1[1]+p2[1])/2];
-  const dl   = p2[0]-p1[0], dn = p2[1]-p1[1];
-  const ctrl = [mid[0] - dn*curve, mid[1] + dl*curve];
-  const pts  = [];
+  const mid = [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
+  const dl = p2[0] - p1[0], dn = p2[1] - p1[1];
+  const ctrl = [mid[0] - dn * curve, mid[1] + dl * curve];
+  const pts = [];
   for (let i = 0; i <= 24; i++) {
-    const t = i/24, u = 1-t;
-    pts.push([u*u*p1[0]+2*u*t*ctrl[0]+t*t*p2[0],
-              u*u*p1[1]+2*u*t*ctrl[1]+t*t*p2[1]]);
+    const t = i / 24, u = 1 - t;
+    pts.push([u * u * p1[0] + 2 * u * t * ctrl[0] + t * t * p2[0],
+    u * u * p1[1] + 2 * u * t * ctrl[1] + t * t * p2[1]]);
   }
   return pts;
 }
 
 function expandEconCluster(group, clusterUSD, cLat, cLng) {
   collapseEconCluster();
-  const layers  = [];
-  const col     = econDotColor(clusterUSD);
+  const layers = [];
+  const col = econDotColor(clusterUSD);
   const MAX_USD = 2e12;
   const positions = group.map(p => [p.city.lat, p.city.lng]);
 
   // 1. Cloud boundary — convex hull padded outward from centroid, dashed stroke
   if (positions.length >= 3) {
-    const hull   = _convexHull(positions);
+    const hull = _convexHull(positions);
     const padded = hull.map(([lat, lng]) => {
-      const dlat = lat-cLat, dlng = lng-cLng;
-      const len  = Math.sqrt(dlat*dlat+dlng*dlng) || 0.001;
-      const pad  = Math.max(1.8, len * 0.22);
-      return [lat + dlat/len*pad, lng + dlng/len*pad];
+      const dlat = lat - cLat, dlng = lng - cLng;
+      const len = Math.sqrt(dlat * dlat + dlng * dlng) || 0.001;
+      const pad = Math.max(1.8, len * 0.22);
+      return [lat + dlat / len * pad, lng + dlng / len * pad];
     });
     layers.push(L.polygon(padded, {
       fillColor: col, fillOpacity: 0.07,
@@ -1494,14 +1512,14 @@ function expandEconCluster(group, clusterUSD, cLat, cLng) {
 
   // 3. Individual city circles, colored + sized by their own USD value
   for (const p of group) {
-    const cityCol  = econDotColor(p.totalUSD);
-    const logVal   = Math.log10(Math.max(p.totalUSD, 1e8));
-    const r        = Math.max(6, Math.min(22, 5 + 17*(logVal-8)/(13-8)));
-    const topCos   = (p.validCos||[]).slice().sort((a,b)=>b.usd-a.usd).slice(0,3);
-    const tipHtml  =
+    const cityCol = econDotColor(p.totalUSD);
+    const logVal = Math.log10(Math.max(p.totalUSD, 1e8));
+    const r = Math.max(6, Math.min(22, 5 + 17 * (logVal - 8) / (13 - 8)));
+    const topCos = (p.validCos || []).slice().sort((a, b) => b.usd - a.usd).slice(0, 3);
+    const tipHtml =
       `<div style="font-weight:600;color:${cityCol};margin-bottom:2px">${escHtml(p.city.name)}</div>` +
       `<div style="color:#8b949e;font-size:0.78rem;margin-bottom:4px">≈ <span style="color:${cityCol};font-weight:600">$${fmtRevenue(p.totalUSD)}</span> USD</div>` +
-      topCos.map(({co,usd}) =>
+      topCos.map(({ co, usd }) =>
         `<div style="color:#c9d1d9;font-size:0.79rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(co.name)} <span style="color:${cityCol}">$${fmtRevenue(usd)}</span></div>`
       ).join('');
 
@@ -1512,8 +1530,8 @@ function expandEconCluster(group, clusterUSD, cLat, cLng) {
     });
     dot.on('mouseover', e => _econTipShow(tipHtml, e.originalEvent.clientX, e.originalEvent.clientY));
     dot.on('mousemove', e => _econTipMove(e.originalEvent.clientX, e.originalEvent.clientY));
-    dot.on('mouseout',  () => _econTipHide());
-    dot.on('click',     () => { _econTipHide(); collapseEconCluster(); openCorpPanel(p.qid, p.city.name); });
+    dot.on('mouseout', () => _econTipHide());
+    dot.on('click', () => { _econTipHide(); collapseEconCluster(); openCorpPanel(p.qid, p.city.name); });
     dot.addTo(map);
     layers.push(dot);
   }
@@ -1548,7 +1566,7 @@ function _econTipMove(clientX, clientY) {
   const el = _econTipEl;
   if (!el || el.style.display === 'none') return;
   const tw = el.offsetWidth, th = el.offsetHeight;
-  const vw = window.innerWidth,  vh = window.innerHeight;
+  const vw = window.innerWidth, vh = window.innerHeight;
   const pad = 12;
   // Default: above-right of cursor
   let x = clientX + pad;
@@ -1558,7 +1576,7 @@ function _econTipMove(clientX, clientY) {
   // Flip below if overflows top edge
   if (y < 8) y = clientY + pad;
   el.style.left = x + 'px';
-  el.style.top  = y + 'px';
+  el.style.top = y + 'px';
 }
 function _econTipHide() {
   if (_econTipEl) _econTipEl.style.display = 'none';
@@ -1571,9 +1589,9 @@ function econDotColor(totalUSD) {
   const logMin = Math.log10(5e8);   // $500M
   const logMax = Math.log10(5e12);  // $5T
   const t = Math.max(0, Math.min(1, (Math.log10(Math.max(totalUSD, 5e8)) - logMin) / (logMax - logMin)));
-  const hue = Math.round(45  + t * 143);  // 45° gold → 188° cyan-teal
-  const sat = Math.round(85  + t * 15);   // 85% → 100% (gets more vivid)
-  const lit = Math.round(62  - t * 10);   // 62% → 52% (deepens slightly for impact)
+  const hue = Math.round(45 + t * 143);  // 45° gold → 188° cyan-teal
+  const sat = Math.round(85 + t * 15);   // 85% → 100% (gets more vivid)
+  const lit = Math.round(62 - t * 10);   // 62% → 52% (deepens slightly for impact)
   return `hsl(${hue},${sat}%,${lit}%)`;
 }
 
@@ -1610,8 +1628,8 @@ function buildEconLayer() {
     for (const co of companies) {
       // Primary: selected metric; fallback: the other metric
       const hasPrimary = !!(co[metric] && co[metric + '_currency']);
-      const val  = hasPrimary ? co[metric]              : (co.revenue          || co.market_cap);
-      const cur  = hasPrimary ? co[metric + '_currency'] : (co.revenue_currency || co.market_cap_currency);
+      const val = hasPrimary ? co[metric] : (co.revenue || co.market_cap);
+      const cur = hasPrimary ? co[metric + '_currency'] : (co.revenue_currency || co.market_cap_currency);
       if (!val || !cur) continue;
       const usd = toUSD(val, cur);
       if (usd > 0 && usd <= MAX_PLAUSIBLE_USD) {
@@ -1624,7 +1642,7 @@ function buildEconLayer() {
     cityPoints.push({ qid, city, totalUSD, validCos });
   }
 
-  // Cluster city points into grid cells based on current zoom
+  // Cluster city points based on current zoom radius
   const cellDeg = _econCellDeg(map.getZoom());
   const clusters = [];
 
@@ -1632,22 +1650,33 @@ function buildEconLayer() {
     // No clustering — one cluster per city
     for (const p of cityPoints) clusters.push([p]);
   } else {
-    const cells = new Map();
+    // Greedy clustering anchored by the largest economic hubs.
+    // Sort points by USD descending so hubs form the centers, and absorb nearby smaller cities.
+    cityPoints.sort((a, b) => b.totalUSD - a.totalUSD);
+    const enforceBorders = map.getZoom() > 3;
     for (const p of cityPoints) {
-      const key = `${Math.floor(p.city.lng / cellDeg)},${Math.floor(p.city.lat / cellDeg)}`;
-      if (!cells.has(key)) cells.set(key, []);
-      cells.get(key).push(p);
+      let merged = false;
+      for (const group of clusters) {
+        const center = group[0];
+        const dist = Math.sqrt(Math.pow(p.city.lng - center.city.lng, 2) + Math.pow(p.city.lat - center.city.lat, 2));
+        // Use cellDeg as the search radius; strictly enforce national borders unless maximally zoomed out
+        if (dist <= cellDeg && (!enforceBorders || p.city.country === center.city.country)) {
+          group.push(p);
+          merged = true;
+          break;
+        }
+      }
+      if (!merged) clusters.push([p]);
     }
-    for (const group of cells.values()) clusters.push(group);
   }
 
   // Build one marker per cluster
   const markers = [];
   for (const group of clusters) {
     const clusterUSD = group.reduce((s, p) => s + p.totalUSD, 0);
-    // Revenue-weighted centroid
-    const lat = group.reduce((s, p) => s + p.city.lat * p.totalUSD, 0) / clusterUSD;
-    const lng = group.reduce((s, p) => s + p.city.lng * p.totalUSD, 0) / clusterUSD;
+    // Anchor marker at the midpoint (geographic center) of the cluster
+    const lat = group.reduce((s, p) => s + p.city.lat, 0) / group.length;
+    const lng = group.reduce((s, p) => s + p.city.lng, 0) / group.length;
 
     // Log-scale radius: $100M → 4px, $10T → 32px
     const logVal = Math.log10(Math.max(clusterUSD, 1e8));
@@ -1685,17 +1714,17 @@ function buildEconLayer() {
     const dotColor = econDotColor(clusterUSD);
     const m = L.circleMarker([lat, lng], {
       radius: Math.max(radius, 6),
-      color:       dotColor,
-      fillColor:   dotColor,
+      color: dotColor,
+      fillColor: dotColor,
       fillOpacity: isMerged ? 0.28 : 0.18,
-      weight:      isMerged ? 2 : 1.5,
-      opacity:     0.9,
-      pane:        'econPane',
+      weight: isMerged ? 2 : 1.5,
+      opacity: 0.9,
+      pane: 'econPane',
       bubblingMouseEvents: false,    // prevent click from bubbling to map collapse handler
     });
     m.on('mouseover', e => _econTipShow(tip, e.originalEvent.clientX, e.originalEvent.clientY));
     m.on('mousemove', e => _econTipMove(e.originalEvent.clientX, e.originalEvent.clientY));
-    m.on('mouseout',  () => _econTipHide());
+    m.on('mouseout', () => _econTipHide());
     // Click: open corp panel (single city or merged cluster)
     if (!isMerged) {
       m.on('click', () => { _econTipHide(); openCorpPanel(group[0].qid, group[0].city.name); });
@@ -1720,33 +1749,33 @@ function buildEconLayer() {
 }
 
 // ── Corporations panel ───────────────────────────────────────────────────────
-let corpCityQid      = null;
-let corpCityName     = null;
+let corpCityQid = null;
+let corpCityName = null;
 let corpOverrideList = null;  // non-null when the panel shows a merged multi-city cluster
 
 function fmtEmployees(n) {
   if (!n) return null;
-  if (n >= 1e6)  return (n/1e6).toFixed(1)+'M';
-  if (n >= 1000) return Math.round(n/1000)+'k';
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1000) return Math.round(n / 1000) + 'k';
   return n.toLocaleString();
 }
 // Revenue values from Wikidata are in the company's reported currency (not USD-normalized).
 // We show magnitudes only (no $ sign) to avoid implying USD.
 function fmtRevenue(n) {
   if (!n) return null;
-  if (Math.abs(n) >= 1e12) return (n/1e12).toFixed(1)+'T';
-  if (Math.abs(n) >= 1e9)  return (n/1e9).toFixed(1)+'B';
-  if (Math.abs(n) >= 1e6)  return (n/1e6).toFixed(0)+'M';
+  if (Math.abs(n) >= 1e12) return (n / 1e12).toFixed(1) + 'T';
+  if (Math.abs(n) >= 1e9) return (n / 1e9).toFixed(1) + 'B';
+  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(0) + 'M';
   return n.toLocaleString();
 }
 
 function openCorpPanel(qid, cityName) {
-  corpCityQid      = qid;
-  corpCityName     = cityName;
+  corpCityQid = qid;
+  corpCityName = cityName;
   corpOverrideList = null;
   document.getElementById('corp-panel-title').textContent = cityName + ' · Corporations';
   document.getElementById('corp-search').value = '';
-  document.getElementById('corp-sort').value   = 'revenue';
+  document.getElementById('corp-sort').value = 'revenue';
   renderCorpList();
   document.getElementById('corp-panel').classList.add('open');
   document.getElementById('wiki-sidebar').classList.add('corp-open');
@@ -1756,12 +1785,12 @@ function openCorpPanelCluster(cityPoints, title) {
   // cityPoints: [{qid, city, totalUSD, validCos}, ...]  — same structure from buildEconLayer
   // Use the dominant city (highest revenue) for language/locale detection
   const dominant = cityPoints.reduce((best, p) => p.totalUSD > best.totalUSD ? p : best, cityPoints[0]);
-  corpCityQid      = dominant.qid;
-  corpCityName     = title;
+  corpCityQid = dominant.qid;
+  corpCityName = title;
   corpOverrideList = cityPoints.flatMap(p => companiesData[p.qid] || []);
   document.getElementById('corp-panel-title').textContent = title + ' · Corporations';
   document.getElementById('corp-search').value = '';
-  document.getElementById('corp-sort').value   = 'revenue';
+  document.getElementById('corp-sort').value = 'revenue';
   renderCorpList();
   document.getElementById('corp-panel').classList.add('open');
   document.getElementById('wiki-sidebar').classList.add('corp-open');
@@ -1774,11 +1803,11 @@ function closeCorpPanel() {
 }
 
 function renderCorpList() {
-  const tbody   = document.getElementById('corp-tbody');
+  const tbody = document.getElementById('corp-tbody');
   const countEl = document.getElementById('corp-count');
   if ((!corpCityQid && !corpOverrideList) || !tbody) return;
 
-  const query  = document.getElementById('corp-search').value.toLowerCase().trim();
+  const query = document.getElementById('corp-search').value.toLowerCase().trim();
   const sortBy = document.getElementById('corp-sort').value;
   let companies = (corpOverrideList || companiesData[corpCityQid] || []).slice();
 
@@ -1790,9 +1819,9 @@ function renderCorpList() {
   }
 
   companies.sort((a, b) => {
-    if (sortBy === 'revenue')    return (b.revenue    || 0) - (a.revenue    || 0);
+    if (sortBy === 'revenue') return (b.revenue || 0) - (a.revenue || 0);
     if (sortBy === 'net_income') return (b.net_income || 0) - (a.net_income || 0);
-    if (sortBy === 'founded')    return (a.founded    || 9999) - (b.founded || 9999);
+    if (sortBy === 'founded') return (a.founded || 9999) - (b.founded || 9999);
     return a.name.localeCompare(b.name);
   });
 
@@ -1807,7 +1836,7 @@ function renderCorpList() {
     const wikiAttr = co.wikipedia
       ? ` data-wiki="${escAttr(co.wikipedia)}" data-name="${escAttr(co.name)}"`
       : '';
-    const finJson  = escHtml(JSON.stringify({
+    const finJson = escHtml(JSON.stringify({
       description: co.description || null,
       industry: co.industry || null, exchange: co.exchange || null,
       ticker: co.ticker || null, traded_as: co.traded_as || null,
@@ -1816,15 +1845,15 @@ function renderCorpList() {
       ceo: co.ceo || null, key_people: co.key_people || null,
       founders: co.founders || null, parent_org: co.parent_org || null,
       products: co.products || null, subsidiaries: co.subsidiaries || null,
-      employees: co.employees || null,      employees_history:        co.employees_history        || [],
-      revenue:   co.revenue   || null,      revenue_year: co.revenue_year || null,
-      revenue_currency: co.revenue_currency || null,    revenue_history: co.revenue_history || [],
-      net_income:       co.net_income       || null, net_income_currency:       co.net_income_currency       || null, net_income_history:       co.net_income_history       || [],
+      employees: co.employees || null, employees_history: co.employees_history || [],
+      revenue: co.revenue || null, revenue_year: co.revenue_year || null,
+      revenue_currency: co.revenue_currency || null, revenue_history: co.revenue_history || [],
+      net_income: co.net_income || null, net_income_currency: co.net_income_currency || null, net_income_history: co.net_income_history || [],
       operating_income: co.operating_income || null, operating_income_currency: co.operating_income_currency || null, operating_income_history: co.operating_income_history || [],
-      total_assets:     co.total_assets     || null, total_assets_currency:     co.total_assets_currency     || null, total_assets_history:     co.total_assets_history     || [],
-      total_equity:     co.total_equity     || null, total_equity_currency:     co.total_equity_currency     || null, total_equity_history:     co.total_equity_history     || [],
+      total_assets: co.total_assets || null, total_assets_currency: co.total_assets_currency || null, total_assets_history: co.total_assets_history || [],
+      total_equity: co.total_equity || null, total_equity_currency: co.total_equity_currency || null, total_equity_history: co.total_equity_history || [],
     }));
-    const wdUrl  = `https://www.wikidata.org/wiki/${escHtml(co.qid)}`;
+    const wdUrl = `https://www.wikidata.org/wiki/${escHtml(co.qid)}`;
     const linkHtml = co.wikipedia
       ? `<a href="${escAttr(co.wikipedia)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Wikipedia">W↗</a>`
       : `<a href="${escHtml(wdUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Wikidata">D↗</a>`;
@@ -1845,7 +1874,7 @@ function renderCorpList() {
 
 function corpRowClick(row) {
   const wikiUrl = row.dataset.wiki;
-  const name    = row.dataset.name;
+  const name = row.dataset.name;
   if (!wikiUrl) return;
   const finData = row.dataset.fin ? JSON.parse(row.dataset.fin) : {};
   const titleMatch = wikiUrl.match(/\/wiki\/([^#?]+)/);
@@ -1855,12 +1884,12 @@ function corpRowClick(row) {
 
 // ── Global corporations list ──────────────────────────────────────────────────
 let globalCorpList = [];
-let globalCorpVis  = 100;
-const GCORP_PAGE   = 100;
-let gcorpQuery     = '';
-let gcorpCountry   = '';
-let gcorpIndustry  = '';
-let gcorpSort      = 'revenue_usd';
+let globalCorpVis = 100;
+const GCORP_PAGE = 100;
+let gcorpQuery = '';
+let gcorpCountry = '';
+let gcorpIndustry = '';
+let gcorpSort = 'revenue_usd';
 
 function buildGlobalCorpList() {
   const cityByQid = {};
@@ -1868,9 +1897,9 @@ function buildGlobalCorpList() {
 
   globalCorpList = [];
   for (const [qid, companies] of Object.entries(companiesData)) {
-    const city    = cityByQid[qid];
-    const cityName = city ? city.name    : '—';
-    const country  = city ? (city.country || '') : '';
+    const city = cityByQid[qid];
+    const cityName = city ? city.name : '—';
+    const country = city ? (city.country || '') : '';
     for (const co of companies) {
       const revenueUSD = (co.revenue && co.revenue_currency) ? toUSD(co.revenue, co.revenue_currency) : 0;
       globalCorpList.push({ co, cityName, country, cityQid: qid, revenueUSD });
@@ -1921,19 +1950,19 @@ function renderGlobalCorpList() {
   const q = gcorpQuery.toLowerCase();
   let list = globalCorpList.filter(e => {
     if (q && !e.co.name.toLowerCase().includes(q) && !e.cityName.toLowerCase().includes(q) && !e.country.toLowerCase().includes(q)) return false;
-    if (gcorpCountry  && e.country !== gcorpCountry) return false;
+    if (gcorpCountry && e.country !== gcorpCountry) return false;
     if (gcorpIndustry && e.co.industry !== gcorpIndustry) return false;
     return true;
   });
 
   list.sort((a, b) => {
     if (gcorpSort === 'revenue_usd') return (b.revenueUSD || 0) - (a.revenueUSD || 0);
-    if (gcorpSort === 'employees')   return (b.co.employees || 0) - (a.co.employees || 0);
-    if (gcorpSort === 'country')     return (a.country || '').localeCompare(b.country || '');
+    if (gcorpSort === 'employees') return (b.co.employees || 0) - (a.co.employees || 0);
+    if (gcorpSort === 'country') return (a.country || '').localeCompare(b.country || '');
     return a.co.name.localeCompare(b.co.name);
   });
 
-  const total   = list.length;
+  const total = list.length;
   const visible = list.slice(0, globalCorpVis);
 
   document.getElementById('gcorp-count').textContent =
@@ -1947,9 +1976,9 @@ function renderGlobalCorpList() {
     const revDisp = revenueUSD > 0
       ? `$${fmtRevenue(revenueUSD)}`
       : (co.revenue
-          ? fmtRevenue(co.revenue) + (co.revenue_currency && co.revenue_currency !== 'USD'
-              ? ` <span style="color:#484f58;font-size:0.7rem">${escHtml(co.revenue_currency)}</span>` : '')
-          : '—');
+        ? fmtRevenue(co.revenue) + (co.revenue_currency && co.revenue_currency !== 'USD'
+          ? ` <span style="color:#484f58;font-size:0.7rem">${escHtml(co.revenue_currency)}</span>` : '')
+        : '—');
     return `<tr${wikiAttrs} data-fin="${_gcorpFinJson(co)}" data-qid="${escAttr(cityQid)}" data-city="${escAttr(cityName)}" onclick="gcorpRowClick(this)" title="${escAttr(co.name)}">
       <td class="gcorp-name-cell">${escHtml(co.name)}</td>
       <td class="gcorp-city-cell">${escHtml(cityName)}</td>
@@ -1975,16 +2004,16 @@ function gcorpShowMore() {
   renderGlobalCorpList();
 }
 
-function gcorpQueryChanged(v)   { gcorpQuery    = v; globalCorpVis = GCORP_PAGE; renderGlobalCorpList(); }
-function gcorpCountryChanged(v) { gcorpCountry  = v; globalCorpVis = GCORP_PAGE; renderGlobalCorpList(); }
-function gcorpIndustryChanged(v){ gcorpIndustry = v; globalCorpVis = GCORP_PAGE; renderGlobalCorpList(); }
-function gcorpSortChanged(v)    { gcorpSort     = v; globalCorpVis = GCORP_PAGE; renderGlobalCorpList(); }
+function gcorpQueryChanged(v) { gcorpQuery = v; globalCorpVis = GCORP_PAGE; renderGlobalCorpList(); }
+function gcorpCountryChanged(v) { gcorpCountry = v; globalCorpVis = GCORP_PAGE; renderGlobalCorpList(); }
+function gcorpIndustryChanged(v) { gcorpIndustry = v; globalCorpVis = GCORP_PAGE; renderGlobalCorpList(); }
+function gcorpSortChanged(v) { gcorpSort = v; globalCorpVis = GCORP_PAGE; renderGlobalCorpList(); }
 
 function gcorpRowClick(row) {
   const wikiUrl = row.dataset.wiki;
-  const name    = row.dataset.name;
-  const qid     = row.dataset.qid;
-  const city    = row.dataset.city;
+  const name = row.dataset.name;
+  const qid = row.dataset.qid;
+  const city = row.dataset.city;
   if (qid && city) { corpCityQid = qid; corpCityName = city; }
   if (!wikiUrl || !name) return;
   const finData = row.dataset.fin ? JSON.parse(row.dataset.fin) : {};
@@ -1994,50 +2023,50 @@ function gcorpRowClick(row) {
 }
 
 async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
-  const sidebar  = document.getElementById('wiki-sidebar');
-  const body     = document.getElementById('wiki-sidebar-body');
-  const footer   = document.getElementById('wiki-sidebar-footer');
-  const titleEl  = document.getElementById('wiki-sidebar-title');
+  const sidebar = document.getElementById('wiki-sidebar');
+  const body = document.getElementById('wiki-sidebar-body');
+  const footer = document.getElementById('wiki-sidebar-footer');
+  const titleEl = document.getElementById('wiki-sidebar-title');
 
   titleEl.textContent = name;
-  footer.innerHTML    = '';
-  body.innerHTML      = '<div class="wiki-loading"><div class="spinner"></div><span>Loading…</span></div>';
+  footer.innerHTML = '';
+  body.innerHTML = '<div class="wiki-loading"><div class="spinner"></div><span>Loading…</span></div>';
   sidebar.classList.add('open');
 
   // Determine local language from the city whose corp panel is open
-  const corpCity   = allCities.find(c => c.qid === corpCityQid);
-  const localLang  = corpCity ? (ISO_TO_WIKI_LANG[corpCity.iso] || null) : null;
-  const tryLocal   = localLang && localLang !== 'en';
+  const corpCity = allCities.find(c => c.qid === corpCityQid);
+  const localLang = corpCity ? (ISO_TO_WIKI_LANG[corpCity.iso] || null) : null;
+  const tryLocal = localLang && localLang !== 'en';
 
   try {
     // Always fetch English first (guaranteed to exist, gives us wikibase_item)
     const enApiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(articleTitle)}`;
-    const enRaw    = await fetch(enApiUrl);
+    const enRaw = await fetch(enApiUrl);
     if (!enRaw.ok) throw new Error('HTTP ' + enRaw.status);
-    const enData   = await enRaw.json();
+    const enData = await enRaw.json();
 
     // Try local-language article via Wikidata sitelink lookup
-    let displayData  = enData;
-    let displayLang  = 'en';
+    let displayData = enData;
+    let displayLang = 'en';
     let localWikiUrl = null;
 
     if (tryLocal && enData.wikibase_item) {
       try {
-        const wdUrl  = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${encodeURIComponent(enData.wikibase_item)}&props=sitelinks&sitefilter=${localLang}wiki&format=json&origin=*`;
-        const wdRaw  = await fetch(wdUrl);
+        const wdUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${encodeURIComponent(enData.wikibase_item)}&props=sitelinks&sitefilter=${localLang}wiki&format=json&origin=*`;
+        const wdRaw = await fetch(wdUrl);
         const wdJson = await wdRaw.json();
         const localTitle = wdJson.entities?.[enData.wikibase_item]?.sitelinks?.[`${localLang}wiki`]?.title;
 
         if (localTitle) {
-          const localApiUrl  = `https://${localLang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(localTitle)}`;
-          localWikiUrl       = `https://${localLang}.wikipedia.org/wiki/${encodeURIComponent(localTitle)}`;
-          const localRaw     = await fetch(localApiUrl);
+          const localApiUrl = `https://${localLang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(localTitle)}`;
+          localWikiUrl = `https://${localLang}.wikipedia.org/wiki/${encodeURIComponent(localTitle)}`;
+          const localRaw = await fetch(localApiUrl);
           if (localRaw.ok) {
-            const localJson  = await localRaw.json();
+            const localJson = await localRaw.json();
             if (localJson.extract) { displayData = localJson; displayLang = localLang; }
           }
         }
-      } catch(_) { /* local fetch failed — stay with English */ }
+      } catch (_) { /* local fetch failed — stay with English */ }
     }
 
     const imgHtml = displayData.thumbnail?.source
@@ -2082,23 +2111,23 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
     })();
 
     const profileRows = [
-      finData.company_type ? _td('Type',       escHtml(finData.company_type), false) : '',
-      finData.industry     ? _td('Industry',   escHtml(finData.industry), false) : '',
+      finData.company_type ? _td('Type', escHtml(finData.company_type), false) : '',
+      finData.industry ? _td('Industry', escHtml(finData.industry), false) : '',
       (finData.exchange || finData.traded_as) ? _td('Exchange',
         escHtml(finData.exchange || finData.traded_as) +
         (finData.ticker ? ` <span style="color:#58a6ff;font-size:0.78em">${escHtml(finData.ticker)}</span>` : ''), false) : '',
-      finData.founded      ? _td('Founded',    finData.founded, false) : '',
+      finData.founded ? _td('Founded', finData.founded, false) : '',
       keyPeopleHtml,
       finData.founders?.length ? _td('Founders', finData.founders.map(escHtml).join(', '), false) : '',
-      finData.parent_org   ? _td('Parent',     escHtml(finData.parent_org), false) : '',
+      finData.parent_org ? _td('Parent', escHtml(finData.parent_org), false) : '',
       finData.products?.length ? `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem;vertical-align:top">Products</td>` +
         `<td style="color:#c9d1d9;font-size:0.75rem;text-align:right">${finData.products.map(escHtml).join('<br>')}</td></tr>` : '',
       finData.subsidiaries?.length ? `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem;vertical-align:top">Subsidiaries</td>` +
-        `<td style="color:#c9d1d9;font-size:0.75rem;text-align:right">${finData.subsidiaries.slice(0,8).map(escHtml).join('<br>')}${finData.subsidiaries.length>8?'<br><span style="color:#6e7681">…</span>':''}</td></tr>` : '',
-      finData.website      ? `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem">Website</td>` +
-        `<td style="text-align:right;font-size:0.8rem"><a href="${escAttr(finData.website)}" target="_blank" rel="noopener" style="color:#58a6ff;text-decoration:none" onclick="event.stopPropagation()">${escHtml(finData.website.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))}</a></td></tr>` : '',
-      finData.employees    ? _td('Employees',  fmtEmployees(finData.employees) + _yr((finData.employees_history||[]).filter(h=>h.year).slice(-1)[0]?.year), false) : '',
-      _pills(finData.employees_history, (finData.employees_history||[]).filter(h=>h.year).slice(-1)[0]?.year, fmtEmployees),
+        `<td style="color:#c9d1d9;font-size:0.75rem;text-align:right">${finData.subsidiaries.slice(0, 8).map(escHtml).join('<br>')}${finData.subsidiaries.length > 8 ? '<br><span style="color:#6e7681">…</span>' : ''}</td></tr>` : '',
+      finData.website ? `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem">Website</td>` +
+        `<td style="text-align:right;font-size:0.8rem"><a href="${escAttr(finData.website)}" target="_blank" rel="noopener" style="color:#58a6ff;text-decoration:none" onclick="event.stopPropagation()">${escHtml(finData.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''))}</a></td></tr>` : '',
+      finData.employees ? _td('Employees', fmtEmployees(finData.employees) + _yr((finData.employees_history || []).filter(h => h.year).slice(-1)[0]?.year), false) : '',
+      _pills(finData.employees_history, (finData.employees_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtEmployees),
     ].filter(r => r).join('');
 
     // Currency badge shown when a known non-USD currency is on file
@@ -2106,22 +2135,22 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
       ? ` <span style="color:#484f58;font-size:0.7rem">${escHtml(c)}</span>` : '';
 
     const financialRows = [
-      finData.revenue          ? _td('Revenue',        fmtRevenue(finData.revenue)          + _yr(finData.revenue_year)                                                                                    + _cur(finData.revenue_currency),          true) : '',
-      _pills(finData.revenue_history,          finData.revenue_year,          fmtRevenue),
-      finData.operating_income ? _td('Operating Inc.', fmtRevenue(finData.operating_income) + _yr((finData.operating_income_history||[]).filter(h=>h.year).slice(-1)[0]?.year) + _cur(finData.operating_income_currency), true) : '',
-      _pills(finData.operating_income_history, (finData.operating_income_history||[]).filter(h=>h.year).slice(-1)[0]?.year, fmtRevenue),
-      finData.net_income       ? _td('Net Income',     fmtRevenue(finData.net_income)       + _yr((finData.net_income_history||[]).filter(h=>h.year).slice(-1)[0]?.year)       + _cur(finData.net_income_currency),       true) : '',
-      _pills(finData.net_income_history,       (finData.net_income_history||[]).filter(h=>h.year).slice(-1)[0]?.year,       fmtRevenue),
-      finData.total_assets     ? _td('Total Assets',   fmtRevenue(finData.total_assets)     + _yr((finData.total_assets_history||[]).filter(h=>h.year).slice(-1)[0]?.year)     + _cur(finData.total_assets_currency),     true) : '',
-      _pills(finData.total_assets_history,     (finData.total_assets_history||[]).filter(h=>h.year).slice(-1)[0]?.year,     fmtRevenue),
-      finData.total_equity     ? _td('Total Equity',   fmtRevenue(finData.total_equity)     + _yr((finData.total_equity_history||[]).filter(h=>h.year).slice(-1)[0]?.year)     + _cur(finData.total_equity_currency),     true) : '',
-      _pills(finData.total_equity_history,     (finData.total_equity_history||[]).filter(h=>h.year).slice(-1)[0]?.year,     fmtRevenue),
+      finData.revenue ? _td('Revenue', fmtRevenue(finData.revenue) + _yr(finData.revenue_year) + _cur(finData.revenue_currency), true) : '',
+      _pills(finData.revenue_history, finData.revenue_year, fmtRevenue),
+      finData.operating_income ? _td('Operating Inc.', fmtRevenue(finData.operating_income) + _yr((finData.operating_income_history || []).filter(h => h.year).slice(-1)[0]?.year) + _cur(finData.operating_income_currency), true) : '',
+      _pills(finData.operating_income_history, (finData.operating_income_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtRevenue),
+      finData.net_income ? _td('Net Income', fmtRevenue(finData.net_income) + _yr((finData.net_income_history || []).filter(h => h.year).slice(-1)[0]?.year) + _cur(finData.net_income_currency), true) : '',
+      _pills(finData.net_income_history, (finData.net_income_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtRevenue),
+      finData.total_assets ? _td('Total Assets', fmtRevenue(finData.total_assets) + _yr((finData.total_assets_history || []).filter(h => h.year).slice(-1)[0]?.year) + _cur(finData.total_assets_currency), true) : '',
+      _pills(finData.total_assets_history, (finData.total_assets_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtRevenue),
+      finData.total_equity ? _td('Total Equity', fmtRevenue(finData.total_equity) + _yr((finData.total_equity_history || []).filter(h => h.year).slice(-1)[0]?.year) + _cur(finData.total_equity_currency), true) : '',
+      _pills(finData.total_equity_history, (finData.total_equity_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtRevenue),
     ].filter(r => r).join('');
 
     const _section = (heading, rows) => rows
       ? `<div style="padding:10px 16px 4px;border-bottom:1px solid #21262d">` +
-        `<div style="font-size:0.7rem;font-weight:600;color:#6e7681;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px">${heading}</div>` +
-        `<table style="width:100%;border-collapse:collapse">${rows}</table></div>`
+      `<div style="font-size:0.7rem;font-weight:600;color:#6e7681;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px">${heading}</div>` +
+      `<table style="width:100%;border-collapse:collapse">${rows}</table></div>`
       : '';
     const finHtml = _section('Profile', profileRows) + _section('Financials', financialRows);
 
@@ -2135,8 +2164,8 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
       <div class="wiki-city-header">
         <div class="wiki-city-name">${escHtml(displayData.title || name)}${langBadge}</div>
         ${(displayData.description || finData.description)
-          ? `<div class="wiki-city-desc">${escHtml(displayData.description || finData.description)}</div>`
-          : ''}
+        ? `<div class="wiki-city-desc">${escHtml(displayData.description || finData.description)}</div>`
+        : ''}
       </div>
       ${finHtml}
       ${extract ? `
@@ -2149,7 +2178,7 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
 
     // Footer: show local link first if used, then English
     const svgIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
-    const enLink  = `<a class="wiki-footer-link" href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">${svgIcon} Wikipedia (EN)</a>`;
+    const enLink = `<a class="wiki-footer-link" href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">${svgIcon} Wikipedia (EN)</a>`;
     const locLink = localWikiUrl && displayLang !== 'en'
       ? `<a class="wiki-footer-link" href="${escAttr(localWikiUrl)}" target="_blank" rel="noopener" style="margin-right:12px">${svgIcon} Wikipedia (${displayLang.toUpperCase()})</a>`
       : '';
@@ -2157,14 +2186,14 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
       ? `<div style="display:flex;gap:4px;flex-wrap:wrap">${locLink}${enLink}</div>`
       : enLink;
 
-  } catch(e) {
+  } catch (e) {
     body.innerHTML = `<div class="wiki-error">Could not load Wikipedia article.<br/><a href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">Open Wikipedia directly ↗</a></div>`;
   }
 }
 
 function showLoading(visible, msg) {
   const overlay = document.getElementById('loading-overlay');
-  const text    = document.getElementById('loading-text');
+  const text = document.getElementById('loading-text');
   overlay.classList.toggle('visible', visible);
   if (visible && msg) text.textContent = msg;
   document.getElementById('loading-error').style.display = 'none';
@@ -2172,9 +2201,9 @@ function showLoading(visible, msg) {
 }
 
 function showLoadingError(msg) {
-  document.getElementById('loading-error').textContent   = 'Error: ' + msg;
+  document.getElementById('loading-error').textContent = 'Error: ' + msg;
   document.getElementById('loading-error').style.display = 'block';
-  document.getElementById('loading-text').style.display  = 'none';
+  document.getElementById('loading-text').style.display = 'none';
 }
 
 init();
