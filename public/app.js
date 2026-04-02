@@ -809,7 +809,8 @@ let _statsWinEnd   = 0;       // last index shown in list
 const STATS_WIN = 12;         // cities loaded per expand click
 
 function closeStatsPanel() {
-  document.getElementById('stats-panel')?.classList.remove('open');
+  const _sp = document.getElementById('stats-panel');
+  if (_sp) { _sp.classList.remove('open'); _sp.style.right = ''; }
   document.querySelectorAll('.census-stat-clickable.stats-active, .info-chip-clickable.stats-active')
     .forEach(el => el.classList.remove('stats-active'));
   _activeStatMetric = null;
@@ -837,13 +838,15 @@ function _renderStatsPanel() {
   const wbDef        = WB_STAT_DEFS[metric];
   const eurostatDef  = EUROSTAT_STAT_DEFS[metric];
   const japanDef     = JAPAN_PREF_STAT_DEFS[metric];
-  const def = censusDef || cityDef || wbDef || eurostatDef || japanDef;
+  const corpDef      = CORP_STAT_DEFS[metric];
+  const def = censusDef || cityDef || wbDef || eurostatDef || japanDef || corpDef;
   if (!def) return;
 
   const isCityStat     = !!cityDef;
   const isWbStat       = !!wbDef;
   const isEurostatStat = !!eurostatDef;
   const isJapanPrefStat = !!japanDef;
+  const isCorpStat     = !!corpDef;
 
   // Highlight the clicked cell
   document.querySelectorAll('.census-stat-clickable.stats-active, .info-chip-clickable.stats-active, .wb-chip-clickable.stats-active')
@@ -904,6 +907,16 @@ function _renderStatsPanel() {
       const city = allCities.find(c => c.qid === cqid);
       if (!city) continue;
       points.push({ qid: cqid, val, name: city.name, state: data.country || city.iso || '', iso: city.iso || '', country: city.country || city.iso || '' });
+    }
+  } else if (isCorpStat) {
+    // Company-level — all companies across all cities
+    for (const arr of Object.values(companiesData)) {
+      for (const co of arr) {
+        if (!co.qid) continue;
+        const val = corpDef.key(co);
+        if (val == null || isNaN(val) || val <= 0) continue;
+        points.push({ qid: co.qid, val, name: co.name, state: co.industry || '', iso: '', country: co.exchange || '' });
+      }
     }
   } else {
     // Census ACS/BIZ — US cities only
@@ -998,6 +1011,7 @@ function _renderStatsPanel() {
     : isJapanPrefStat ? 'Japanese prefectures'
     : isEurostatStat ? 'European cities (Eurostat)'
     : isCityStat ? (_statsScope === 'world' ? 'worldwide' : escHtml(selfCountry))
+    : isCorpStat ? 'companies worldwide'
     : 'US cities with Census data';
   const scopeToggle = isCityStat ? `
     <div id="stats-scope-row">
@@ -1087,7 +1101,11 @@ function _renderStatsPanel() {
     <div id="stats-rank-list-wrap" class="stats-rank-list"></div>
     <div class="stats-source">${points.length} ${primaryLabel} · click to navigate · click another stat to compare</div>
   `;
-  document.getElementById('stats-panel').classList.add('open');
+  const _sp = document.getElementById('stats-panel');
+  const _wikiOpen = document.getElementById('wiki-sidebar')?.classList.contains('open');
+  const _corpOpen = document.getElementById('corp-panel')?.classList.contains('open');
+  _sp.style.right = ((_wikiOpen && _corpOpen) ? 880 : _corpOpen ? 460 : 420) + 'px';
+  _sp.classList.add('open');
   _updateStatsListHtml();
 }
 
@@ -1154,13 +1172,13 @@ function statsGoToCountry(iso2) {
 // ── Sidebar tab state ─────────────────────────────────────────────────────────
 let _sidebarTab = 'info';   // persists across city clicks
 
-const VALID_SIDEBAR_TABS = new Set(['info','economy','overview']);
+const VALID_SIDEBAR_TABS = new Set(['info','economy','finance','overview']);
 
 function switchWikiTab(tab) {
   // Guard: if tab name is invalid (e.g. stale 'census'/'business' from old session), fall back to info
   if (!VALID_SIDEBAR_TABS.has(tab)) tab = 'info';
   _sidebarTab = tab;
-  ['info','economy','overview'].forEach(t => {
+  ['info','economy','finance','overview'].forEach(t => {
     const el = document.getElementById(`wiki-tab-${t}`);
     if (el) el.style.display = t === tab ? '' : 'none';
   });
@@ -1169,6 +1187,11 @@ function switchWikiTab(tab) {
   });
   const body = document.getElementById('wiki-sidebar-body');
   if (body) body.scrollTop = 0;
+  // Redraw Finance tab IYCharts — mounted while display:none, need a forced redraw
+  if (tab === 'finance') {
+    const finEl = document.getElementById('wiki-tab-finance');
+    if (finEl?._iycRedraw) requestAnimationFrame(finEl._iycRedraw);
+  }
 }
 
 // Render the infobox using city Wikidata fields + optional Wikipedia API data
@@ -1292,6 +1315,20 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     ${gdpHtml      ? infoChip('City GDP', gdpHtml, true): ''}
     ${hdi          ? infoChip('HDI', hdi)               : ''}
     ${(() => { const g = gawcByQid[city.qid]; if (!g) return ''; const col = GAWC_TIER_COLOR[g.tier] || '#8b949e'; return infoChip('World City', `<span class="gawc-tier-chip" style="background:${col}22;color:${col};border:1px solid ${col}55">${escHtml(g.tier)}</span>`, true, false, 'gawc_score'); })()}
+    ${(() => { const a = airportData[city.qid]; if (!a) return ''; return infoChip('Airport', `<span style="color:#58a6ff;font-weight:600">✈ ${fmtNum(a.directDestinations)}</span> <span style="color:#8b949e;font-size:0.78em">direct routes · ${escHtml(a.iata)}</span>`, true, false, 'directDestinations'); })()}
+    ${(() => {
+      const ca = climateAnnual(getCityClimate(city));
+      if (!ca) return '';
+      const tempCol = ca.avgTemp > 25 ? '#ffa657' : ca.avgTemp > 15 ? '#3fb950' : ca.avgTemp > 5 ? '#58a6ff' : '#a5d6ff';
+      const hotCl  = ca.hottestTemp > 30 ? '#f85149' : ca.hottestTemp > 22 ? '#ffa657' : '#f0a500';
+      const coldCl = ca.coldestTemp < 0 ? '#a5d6ff' : ca.coldestTemp < 8 ? '#79c0ff' : '#58a6ff';
+      let out = '';
+      out += infoChip('Avg Temp',   `<span style="color:${tempCol};font-weight:600">${ca.avgTemp.toFixed(1)}°C</span>`, true, false, 'annualAvgTemp');
+      out += infoChip('Hot/Cold',   `<span style="color:${hotCl};font-weight:600">${ca.hottestTemp.toFixed(1)}°C</span> <span style="color:#6e7681">/</span> <span style="color:${coldCl};font-weight:600">${ca.coldestTemp.toFixed(1)}°C</span>`, true, false, 'hottestMonthTemp');
+      out += infoChip('Rainfall',   `<span style="color:#79c0ff;font-weight:600">${fmtNum(Math.round(ca.precipMm))}</span><span style="color:#8b949e;font-size:0.78em"> mm/yr</span>`, true, false, 'annualPrecipMm');
+      if (ca.sunHours != null) out += infoChip('Sunshine', `<span style="color:#f0a500;font-weight:600">${fmtNum(Math.round(ca.sunHours))}</span><span style="color:#8b949e;font-size:0.78em"> hrs/yr</span>`, true, false, 'annualSunHours');
+      return out;
+    })()}
   </div>`;
 
   const govSec = leadersHtml
@@ -1324,13 +1361,17 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
         ${wbChip('Literacy',   'literacy_rate',   v => v.toFixed(1)+'%',                  'wb_literacy_rate')}
         ${wbChip('Child mort.','child_mortality', v => v.toFixed(1)+'/1k',               'wb_child_mortality')}
         ${wbChip('Electric.',  'electricity_pct', v => v.toFixed(1)+'%',                  'wb_electricity_pct')}
+        ${wbChip('PM2.5',      'pm25',            v => v.toFixed(1)+' μg/m³',             'wb_pm25')}
+        ${wbChip('Forest',     'forest_pct',      v => v.toFixed(1)+'%',                  'wb_forest_pct')}
+        ${wbChip('Air deaths', 'air_death_rate',  v => v.toFixed(1)+'/100k',             'wb_air_death_rate')}
+        ${wbChip('Road deaths','road_death_rate', v => v.toFixed(1)+'/100k',             'wb_road_death_rate')}
         ${wb.income_level ? `<div class="wb-chip wb-chip-full"><div class="wb-chip-lbl">Income level</div><div class="wb-chip-val">${escHtml(wb.income_level)}</div></div>` : ''}
       </div>
     </td></tr>` : '';
 
   // ── Climate chart ──
   const climateHtml = (() => {
-    const cl = city.climate;
+    const cl = getCityClimate(city);
     if (!cl || !cl.months || !cl.months.length) return '';
     const mons = cl.months;
     const hasTemp = mons.some(m => m.high_c != null || m.low_c != null);
@@ -1425,9 +1466,10 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
         const y1 = tY(m.high_c);
         const y2 = m.low_c != null ? tY(m.low_c) : y1 + 4;
         bars += `<rect x="${x+1}" y="${y1}" width="${barW-2}" height="${Math.max(y2-y1,2)}" fill="#f78166" opacity="0.82" rx="1"/>`;
-        // High temp value above bar
-        const hSign = m.high_c > 0 ? '+' : '';
-        bars += `<text x="${cx}" y="${y1-3}" text-anchor="middle" font-size="7" fill="#ffa07a" font-weight="600">${hSign}${m.high_c}°</text>`;
+        // Mean temp value above bar (fall back to high_c if mean unavailable)
+        const labelVal = m.mean_c ?? m.high_c;
+        const lSign = labelVal > 0 ? '+' : '';
+        bars += `<text x="${cx}" y="${y1-3}" text-anchor="middle" font-size="7" fill="#ffa07a" font-weight="600">${lSign}${labelVal}°</text>`;
       }
 
       // Tooltip
@@ -1575,6 +1617,9 @@ let eurostatCities = {};   // QID → Eurostat Urban Audit indicators (from euro
 let gawcCities     = {};   // city name → {tier, score, iso} (GaWC 2024 world city network)
 let gawcByQid      = {};   // QID → {tier, score, name} (built at init from gawcCities)
 let japanPrefData  = {};   // prefecture English name → {perCapitaIncomeJpy, gdpJpy, ...}
+let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
+let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
+let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
 let censusColorMetric = null;  // null = off, or key like 'medianIncome'
 
 // GaWC tier → numeric score (Alpha++=12 … Sufficiency=1)
@@ -1707,6 +1752,33 @@ const STAT_DEFS = {
   selfEmplPct:     { label:'Self-Employment Rate', src:'biz', key: d=>{const p=d.selfEmpl?.selfEmplPct;return p!=null&&p<35?p:null;}, fmt:v=>v.toFixed(1)+'%', higherBetter:null },
 };
 
+/** Return the best available climate record for a city (Wikipedia months or Open-Meteo extra). */
+function getCityClimate(city) {
+  if (city.climate?.months?.length === 12) return city.climate;
+  const ex = climateExtra[city.qid];
+  if (ex?.months?.length === 12) return ex;
+  return null;
+}
+
+/** Compute annual summary from a climate record with months[]. Returns null if insufficient data. */
+function climateAnnual(clim) {
+  if (!clim?.months?.length) return null;
+  const m = clim.months;
+  // Use stored annualAvgTemp/etc if present (from climate-extra); otherwise compute from months
+  const avgTemp    = clim.annualAvgTemp      ?? +(m.reduce((s, mo) => s + (mo.mean_c ?? (mo.high_c + mo.low_c) / 2), 0) / m.length).toFixed(1);
+  const precipMm   = clim.annualPrecipMm     ?? +m.reduce((s, mo) => s + (mo.precipitation_mm ?? 0), 0).toFixed(0);
+  const sunHours   = clim.annualSunHours     ?? (m.some(mo => mo.sun != null) ? +m.reduce((s, mo) => s + (mo.sun ?? 0), 0).toFixed(0) : null);
+  const hottest    = m.reduce((a, b) => (b.mean_c ?? (b.high_c + b.low_c)/2) > (a.mean_c ?? (a.high_c + a.low_c)/2) ? b : a);
+  const coldest    = m.reduce((a, b) => (b.mean_c ?? (b.high_c + b.low_c)/2) < (a.mean_c ?? (a.high_c + a.low_c)/2) ? b : a);
+  return {
+    avgTemp,
+    precipMm,
+    sunHours,
+    hottestTemp: hottest.mean_c ?? (hottest.high_c + hottest.low_c) / 2,
+    coldestTemp: coldest.mean_c ?? (coldest.high_c + coldest.low_c) / 2,
+  };
+}
+
 // City-level stats from allCities — support world/national scope toggle
 const CITY_STAT_DEFS = {
   pop:        { label:'City Population',    key: c=>c.pop,                                                         fmt: v=>fmtNum(v),                     higherBetter:null },
@@ -1718,29 +1790,80 @@ const CITY_STAT_DEFS = {
   gawc_score: { label:'GaWC World City Rank', key: c=>gawcByQid[c.qid]?.score ?? null,
                 fmt: v => { const tier = Object.entries(GAWC_TIER_SCORE).find(([,s])=>s===v)?.[0]||''; return tier; },
                 higherBetter:true },
+  directDestinations: { label:'Direct Air Destinations', key: c=>airportData[c.qid]?.directDestinations ?? null,
+                fmt: v => fmtNum(v) + ' airports', higherBetter:true },
+  zhvi: { label:'Home Value (Zillow ZHVI)',  key: c=>zillowData[c.qid]?.zhvi  ?? null,
+          fmt: v => '$' + fmtNum(Math.round(v)), higherBetter:null },
+  zori: { label:'Rent Index (Zillow ZORI)',  key: c=>zillowData[c.qid]?.zori  ?? null,
+          fmt: v => '$' + fmtNum(Math.round(v)) + '/mo', higherBetter:null },
+  annualAvgTemp:  { label:'Annual Avg Temperature', key: c => { const a = climateAnnual(getCityClimate(c)); return a ? a.avgTemp : null; },
+                    fmt: v => v.toFixed(1) + '°C', higherBetter:null },
+  annualPrecipMm: { label:'Annual Precipitation',   key: c => { const a = climateAnnual(getCityClimate(c)); return a ? a.precipMm : null; },
+                    fmt: v => fmtNum(Math.round(v)) + ' mm', higherBetter:null },
+  annualSunHours: { label:'Annual Sunshine Hours',  key: c => { const a = climateAnnual(getCityClimate(c)); return a?.sunHours ?? null; },
+                    fmt: v => fmtNum(Math.round(v)) + ' hrs', higherBetter:null },
+  hottestMonthTemp: { label:'Hottest Month Avg °C', key: c => { const a = climateAnnual(getCityClimate(c)); return a ? a.hottestTemp : null; },
+                      fmt: v => v.toFixed(1) + '°C', higherBetter:null },
+  coldestMonthTemp: { label:'Coldest Month Avg °C', key: c => { const a = climateAnnual(getCityClimate(c)); return a ? a.coldestTemp : null; },
+                      fmt: v => v.toFixed(1) + '°C', higherBetter:null },
 };
 
 // Country-level World Bank stats — iso2 used as identifier (not city qid)
 const WB_STAT_DEFS = {
-  wb_gdp_per_capita:  { label:'GDP per Capita',      key:'gdp_per_capita',  fmt: v=>'$'+Math.round(v).toLocaleString(), higherBetter:true  },
-  wb_life_expectancy: { label:'Life Expectancy',      key:'life_expectancy', fmt: v=>v.toFixed(1)+' yrs',               higherBetter:true  },
-  wb_urban_pct:       { label:'Urban Population',     key:'urban_pct',       fmt: v=>v.toFixed(1)+'%',                  higherBetter:null  },
-  wb_internet_pct:    { label:'Internet Access',      key:'internet_pct',    fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
-  wb_gini:            { label:'Gini Coefficient',     key:'gini',            fmt: v=>v.toFixed(1),                      higherBetter:false },
-  wb_literacy_rate:   { label:'Literacy Rate',        key:'literacy_rate',   fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
-  wb_child_mortality: { label:'Child Mortality',      key:'child_mortality', fmt: v=>v.toFixed(1)+'/1k',                higherBetter:false },
-  wb_electricity_pct: { label:'Electricity Access',   key:'electricity_pct', fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
+  wb_gdp_per_capita:  { label:'GDP per Capita',              key:'gdp_per_capita',  fmt: v=>'$'+Math.round(v).toLocaleString(), higherBetter:true  },
+  wb_life_expectancy: { label:'Life Expectancy',             key:'life_expectancy', fmt: v=>v.toFixed(1)+' yrs',                higherBetter:true  },
+  wb_urban_pct:       { label:'Urban Population',            key:'urban_pct',       fmt: v=>v.toFixed(1)+'%',                   higherBetter:null  },
+  wb_internet_pct:    { label:'Internet Access',             key:'internet_pct',    fmt: v=>v.toFixed(1)+'%',                   higherBetter:true  },
+  wb_gini:            { label:'Gini Coefficient',            key:'gini',            fmt: v=>v.toFixed(1),                       higherBetter:false },
+  wb_literacy_rate:   { label:'Literacy Rate',               key:'literacy_rate',   fmt: v=>v.toFixed(1)+'%',                   higherBetter:true  },
+  wb_child_mortality: { label:'Child Mortality',             key:'child_mortality', fmt: v=>v.toFixed(1)+'/1k',                 higherBetter:false },
+  wb_electricity_pct: { label:'Electricity Access',          key:'electricity_pct', fmt: v=>v.toFixed(1)+'%',                   higherBetter:true  },
+  wb_pm25:            { label:'PM2.5 Air Pollution',         key:'pm25',            fmt: v=>v.toFixed(1)+' μg/m³',              higherBetter:false },
+  wb_forest_pct:      { label:'Forest Cover',                key:'forest_pct',      fmt: v=>v.toFixed(1)+'%',                   higherBetter:null  },
+  wb_air_death_rate:  { label:'Air Pollution Mortality',     key:'air_death_rate',  fmt: v=>v.toFixed(1)+'/100k',               higherBetter:false },
+  wb_road_death_rate: { label:'Road Traffic Mortality',      key:'road_death_rate', fmt: v=>v.toFixed(1)+'/100k',               higherBetter:false },
+};
+
+// Company-level stats — company QID used as identifier; values converted to USD for fair ranking
+const CORP_STAT_DEFS = {
+  corp_revenue:    { label:'Revenue (USD equiv.)',    fmt: v => '$' + fmtRevenue(v), higherBetter:true,
+    key: co => { const v = toUSD(co.revenue,    co.revenue_currency);    return v > 0 ? v : null; } },
+  corp_market_cap: { label:'Market Cap (USD equiv.)', fmt: v => '$' + fmtRevenue(v), higherBetter:true,
+    key: co => { const v = toUSD(co.market_cap, co.market_cap_currency); return v > 0 ? v : null; } },
+  corp_net_income: { label:'Net Income (USD equiv.)', fmt: v => '$' + fmtRevenue(v), higherBetter:true,
+    key: co => { const v = toUSD(co.net_income, co.net_income_currency); return v > 0 ? v : null; } },
+  corp_employees:  { label:'Employees',               fmt: v => fmtEmployees(v),     higherBetter:true,
+    key: co => (co.employees > 0 ? co.employees : null) },
 };
 
 // Eurostat Urban Audit city-level stats — qid used as identifier
 const EUROSTAT_STAT_DEFS = {
-  eurostat_unemploymentPct:  { label:'Unemployment Rate',  key:'unemploymentPct',  histKey:'unemploymentHistory',  fmt: v=>v.toFixed(1)+'%',                  higherBetter:false },
-  eurostat_activityRate:     { label:'Activity Rate',      key:'activityRate',     histKey:'activityHistory',      fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
-  eurostat_medianIncome:     { label:'Median Income (€)',  key:'medianIncome',     histKey:'medianIncomeHistory',  fmt: v=>'€'+Math.round(v).toLocaleString(), higherBetter:true  },
-  eurostat_povertyPct:       { label:'At-Risk Poverty',    key:'povertyPct',       histKey:'povertyHistory',       fmt: v=>v.toFixed(1)+'%',                  higherBetter:false },
-  eurostat_homeownershipPct: { label:'Homeownership Rate', key:'homeownershipPct', histKey:'homeownershipHistory', fmt: v=>v.toFixed(1)+'%',                  higherBetter:null  },
-  eurostat_rentPerSqm:       { label:'Avg Rent / m²',      key:'rentPerSqm',       histKey:'rentHistory',          fmt: v=>'€'+v.toFixed(1),                  higherBetter:null  },
-  eurostat_totalCompanies:   { label:'Total Companies',    key:'totalCompanies',   histKey:'companiesHistory',     fmt: v=>fmtNum(Math.round(v)),             higherBetter:null  },
+  // Labour market & living conditions (original 7)
+  eurostat_unemploymentPct:  { label:'Unemployment Rate',      key:'unemploymentPct',  histKey:'unemploymentHistory',  fmt: v=>v.toFixed(1)+'%',                  higherBetter:false },
+  eurostat_activityRate:     { label:'Activity Rate',          key:'activityRate',     histKey:'activityHistory',      fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
+  eurostat_medianIncome:     { label:'Median Income (€)',      key:'medianIncome',     histKey:'medianIncomeHistory',  fmt: v=>'€'+Math.round(v).toLocaleString(), higherBetter:true  },
+  eurostat_povertyPct:       { label:'At-Risk Poverty',        key:'povertyPct',       histKey:'povertyHistory',       fmt: v=>v.toFixed(1)+'%',                  higherBetter:false },
+  eurostat_homeownershipPct: { label:'Homeownership Rate',     key:'homeownershipPct', histKey:'homeownershipHistory', fmt: v=>v.toFixed(1)+'%',                  higherBetter:null  },
+  eurostat_rentPerSqm:       { label:'Avg Rent / m²',          key:'rentPerSqm',       histKey:'rentHistory',          fmt: v=>'€'+v.toFixed(1),                  higherBetter:null  },
+  eurostat_totalCompanies:   { label:'Total Companies',        key:'totalCompanies',   histKey:'companiesHistory',     fmt: v=>fmtNum(Math.round(v)),             higherBetter:null  },
+  // Air quality & environment (new from urb_cenv)
+  eurostat_pm10:             { label:'PM10 Air Pollution',     key:'pm10',             histKey:'pm10History',          fmt: v=>v.toFixed(1)+' μg/m³',             higherBetter:false },
+  eurostat_no2:              { label:'NO₂ Concentration',      key:'no2',              histKey:'no2History',           fmt: v=>v.toFixed(1)+' μg/m³',             higherBetter:false },
+  eurostat_greenSpacePct:    { label:'Green Space %',          key:'greenSpacePct',    histKey:'greenSpacePctHistory', fmt: v=>v.toFixed(1)+'%',                  higherBetter:true  },
+  eurostat_roadNoisePct:     { label:'Road Noise >65dB',       key:'roadNoisePct',     histKey:'roadNoisePctHistory',  fmt: v=>v.toFixed(1)+'%',                  higherBetter:false },
+  // Climate (new from urb_cenv)
+  eurostat_tempWarmest:      { label:'Warmest Month Avg °C',   key:'tempWarmest',      histKey:'tempWarmestHistory',   fmt: v=>v.toFixed(1)+'°C',                 higherBetter:null  },
+  eurostat_tempColdest:      { label:'Coldest Month Avg °C',   key:'tempColdest',      histKey:'tempColdestHistory',   fmt: v=>v.toFixed(1)+'°C',                 higherBetter:null  },
+  eurostat_rainfallMm:       { label:'Annual Rainfall (mm)',   key:'rainfallMm',       histKey:'rainfallMmHistory',    fmt: v=>fmtNum(Math.round(v))+' mm',       higherBetter:null  },
+  eurostat_sunshineHours:    { label:'Sunshine (hrs/day)',     key:'sunshineHours',    histKey:'sunshineHoursHistory', fmt: v=>v.toFixed(1)+' hr/day',            higherBetter:null  },
+  // Tourism & culture (new from urb_ctour)
+  eurostat_touristNights:    { label:'Tourist Overnight Stays',key:'touristNights',    histKey:'touristNightsHistory', fmt: v=>fmtNum(Math.round(v)),             higherBetter:null  },
+  eurostat_museumVisitors:   { label:'Museum Visitors/yr',     key:'museumVisitors',   histKey:'museumVisitorsHistory',fmt: v=>fmtNum(Math.round(v)),             higherBetter:null  },
+  eurostat_libraries:        { label:'Public Libraries',       key:'libraries',        histKey:'librariesHistory',     fmt: v=>fmtNum(Math.round(v)),             higherBetter:null  },
+  // Demographics (new from urb_cpopstr)
+  eurostat_medianAge:        { label:'Median Age',             key:'medianAge',        histKey:'medianAgeHistory',     fmt: v=>v.toFixed(1)+' yrs',               higherBetter:null  },
+  eurostat_popChangePct:     { label:'Population Change/yr',   key:'popChangePct',     histKey:'popChangePctHistory',  fmt: v=>(v>=0?'+':'')+v.toFixed(2)+'%',    higherBetter:null  },
+  eurostat_ageDependency:    { label:'Age Dependency Ratio',   key:'ageDependency',    histKey:'ageDependencyHistory', fmt: v=>v.toFixed(1)+'%',                  higherBetter:null  },
 };
 
 // Japan Cabinet Office prefecture-level stats (47 prefectures)
@@ -1909,7 +2032,34 @@ function buildEconomyHtml(acs, biz, qid) {
       </div>`;
   }
 
-  html += `<div class="census-source" style="margin-top:8px">US Census Bureau · ACS 2023 · CBP 2022 · Decennial 2020</div></div>`;
+  // ── Zillow housing trends block ───────────────────────────────────────────
+  const zw = zillowData[qid];
+  if (zw) {
+    const fmtDollar = v => '$' + fmtNum(Math.round(v));
+    html += `<div class="census-section-title" style="margin-top:10px">Housing Market · Zillow</div>
+    <div class="es-trends">`;
+    if (zw.zhviHistory?.length >= 2) {
+      const { svg, range } = _eurostatSparkline(zw.zhviHistory, '#58a6ff', 110, 28);
+      html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('zhvi','${escHtml(qid)}')" title="Click to see ranking">
+        <span class="es-trend-label">Home Value</span>
+        <span class="es-trend-spark">${svg}</span>
+        <span class="es-trend-val" style="color:#58a6ff">${zw.zhvi ? fmtDollar(zw.zhvi) : '—'}</span>
+        <span class="es-trend-range">${range}</span>
+      </div>`;
+    }
+    if (zw.zoriHistory?.length >= 2) {
+      const { svg, range } = _eurostatSparkline(zw.zoriHistory, '#f0a500', 110, 28);
+      html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('zori','${escHtml(qid)}')" title="Click to see ranking">
+        <span class="es-trend-label">Rent Index</span>
+        <span class="es-trend-spark">${svg}</span>
+        <span class="es-trend-val" style="color:#f0a500">${zw.zori ? fmtDollar(zw.zori) + '/mo' : '—'}</span>
+        <span class="es-trend-range">${range}</span>
+      </div>`;
+    }
+    html += `</div>`;
+  }
+
+  html += `<div class="census-source" style="margin-top:8px">US Census Bureau · ACS 2023 · CBP 2022 · Decennial 2020${zw ? ' · Zillow Research' : ''}</div></div>`;
   return html;
 }
 
@@ -2060,6 +2210,8 @@ function buildEurostatHtml(es, qid) {
   const yr = es.year ? ` · ${es.year}` : '';
   const unempCls = es.unemploymentPct > 12 ? 'census-red' : es.unemploymentPct > 7 ? 'census-amber' : '';
   const povCls   = es.povertyPct > 25 ? 'census-red' : es.povertyPct > 15 ? 'census-amber' : '';
+  const pm10Cls  = es.pm10 != null ? (es.pm10 > 45 ? 'census-red' : es.pm10 > 25 ? 'census-amber' : 'census-green') : '';
+  const no2Cls   = es.no2  != null ? (es.no2  > 40 ? 'census-red' : es.no2  > 25 ? 'census-amber' : 'census-green') : '';
 
   let html = `<div class="census-wrap">
     <div class="census-head">Urban Audit · Eurostat${yr}</div>
@@ -2079,15 +2231,67 @@ function buildEurostatHtml(es, qid) {
     </div>`;
   }
 
+  // ── Environment & Air Quality ──────────────────────────────────────────────
+  if (es.pm10 != null || es.no2 != null || es.greenSpacePct != null || es.roadNoisePct != null) {
+    html += `<div class="census-section-title" style="margin-top:6px">Environment & Air Quality</div>
+    <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
+      ${es.pm10 != null          ? statCell('PM10', es.pm10.toFixed(1) + ' μg/m³', pm10Cls, 'eurostat_pm10') : ''}
+      ${es.no2  != null          ? statCell('NO₂',  es.no2.toFixed(1)  + ' μg/m³', no2Cls,  'eurostat_no2')  : ''}
+      ${es.greenSpacePct != null ? statCell('Green Space', es.greenSpacePct.toFixed(1) + '%', '', 'eurostat_greenSpacePct') : ''}
+      ${es.roadNoisePct  != null ? statCell('Road Noise >65dB', es.roadNoisePct.toFixed(1) + '%', '', 'eurostat_roadNoisePct') : ''}
+    </div>`;
+  }
+
+  // ── Climate ───────────────────────────────────────────────────────────────
+  if (es.tempWarmest != null || es.tempColdest != null || es.rainfallMm != null || es.sunshineHours != null) {
+    html += `<div class="census-section-title" style="margin-top:6px">Climate</div>
+    <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
+      ${es.tempWarmest   != null ? statCell('Warmest Month', es.tempWarmest.toFixed(1) + '°C', '', 'eurostat_tempWarmest') : ''}
+      ${es.tempColdest   != null ? statCell('Coldest Month', es.tempColdest.toFixed(1) + '°C', '', 'eurostat_tempColdest') : ''}
+      ${es.rainfallMm    != null ? statCell('Rainfall/yr', fmtNum(Math.round(es.rainfallMm)) + ' mm', '', 'eurostat_rainfallMm') : ''}
+      ${es.sunshineHours != null ? statCell('Sunshine', es.sunshineHours.toFixed(1) + ' hr/day', '', 'eurostat_sunshineHours') : ''}
+    </div>`;
+  }
+
+  // ── Tourism & Culture ─────────────────────────────────────────────────────
+  if (es.touristNights != null || es.museumVisitors != null || es.libraries != null || es.cinemaSeatsPer1k != null) {
+    html += `<div class="census-section-title" style="margin-top:6px">Tourism & Culture</div>
+    <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
+      ${es.touristNights    != null ? statCell('Tourist Nights', fmtN(es.touristNights), '', 'eurostat_touristNights') : ''}
+      ${es.museumVisitors   != null ? statCell('Museum Visitors', fmtN(es.museumVisitors), '', 'eurostat_museumVisitors') : ''}
+      ${es.libraries        != null ? statCell('Public Libraries', fmtN(es.libraries), '', 'eurostat_libraries') : ''}
+      ${es.cinemaSeatsPer1k != null ? statCell('Cinema Seats/1k', es.cinemaSeatsPer1k.toFixed(1), '', '') : ''}
+    </div>`;
+  }
+
+  // ── Demographics ──────────────────────────────────────────────────────────
+  if (es.medianAge != null || es.popChangePct != null || es.ageDependency != null) {
+    const popChangeFmt = v => v != null ? (v >= 0 ? '+' : '') + v.toFixed(2) + '%' : '—';
+    const popChangeCls = es.popChangePct != null ? (es.popChangePct > 0 ? 'census-green' : 'census-red') : '';
+    html += `<div class="census-section-title" style="margin-top:6px">Demographics</div>
+    <div class="census-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-top:4px">
+      ${es.medianAge     != null ? statCell('Median Age', es.medianAge.toFixed(1) + ' yrs', '', 'eurostat_medianAge') : ''}
+      ${es.popChangePct  != null ? statCell('Pop Change/yr', popChangeFmt(es.popChangePct), popChangeCls, 'eurostat_popChangePct') : ''}
+      ${es.ageDependency != null ? statCell('Age Dependency', es.ageDependency.toFixed(1) + '%', '', 'eurostat_ageDependency') : ''}
+    </div>`;
+  }
+
   // ── Trend sparklines ───────────────────────────────────────────────────────
   const TREND_ROWS = [
-    { key:'unemploymentHistory',  label:'Unemployment',  valKey:'unemploymentPct',  fmt:fmtPct, color:'#f85149', metric:'eurostat_unemploymentPct'  },
-    { key:'medianIncomeHistory',  label:'Median Income', valKey:'medianIncome',     fmt:fmtEur, color:'#f0a500', metric:'eurostat_medianIncome'     },
-    { key:'povertyHistory',       label:'At-Risk Poverty', valKey:'povertyPct',     fmt:fmtPct, color:'#ffa657', metric:'eurostat_povertyPct'       },
-    { key:'activityHistory',      label:'Activity Rate', valKey:'activityRate',     fmt:fmtPct, color:'#3fb950', metric:'eurostat_activityRate'     },
-    { key:'homeownershipHistory', label:'Homeownership', valKey:'homeownershipPct', fmt:fmtPct, color:'#58a6ff', metric:'eurostat_homeownershipPct' },
-    { key:'rentHistory',          label:'Rent / m²',     valKey:'rentPerSqm',       fmt:v=>'€'+v.toFixed(1), color:'#a371f7', metric:'eurostat_rentPerSqm' },
-    { key:'companiesHistory',     label:'Companies',     valKey:'totalCompanies',   fmt:fmtN,   color:'#79c0ff', metric:'eurostat_totalCompanies'   },
+    { key:'unemploymentHistory',   label:'Unemployment',      valKey:'unemploymentPct',  fmt:fmtPct, color:'#f85149', metric:'eurostat_unemploymentPct'  },
+    { key:'medianIncomeHistory',   label:'Median Income',     valKey:'medianIncome',     fmt:fmtEur, color:'#f0a500', metric:'eurostat_medianIncome'     },
+    { key:'povertyHistory',        label:'At-Risk Poverty',   valKey:'povertyPct',       fmt:fmtPct, color:'#ffa657', metric:'eurostat_povertyPct'       },
+    { key:'activityHistory',       label:'Activity Rate',     valKey:'activityRate',     fmt:fmtPct, color:'#3fb950', metric:'eurostat_activityRate'     },
+    { key:'homeownershipHistory',  label:'Homeownership',     valKey:'homeownershipPct', fmt:fmtPct, color:'#58a6ff', metric:'eurostat_homeownershipPct' },
+    { key:'rentHistory',           label:'Rent / m²',         valKey:'rentPerSqm',       fmt:v=>'€'+v.toFixed(1), color:'#a371f7', metric:'eurostat_rentPerSqm' },
+    { key:'companiesHistory',      label:'Companies',         valKey:'totalCompanies',   fmt:fmtN,   color:'#79c0ff', metric:'eurostat_totalCompanies'   },
+    { key:'pm10History',           label:'PM10',              valKey:'pm10',             fmt:v=>v.toFixed(1)+' μg/m³', color:'#ff7b72', metric:'eurostat_pm10'          },
+    { key:'no2History',            label:'NO₂',               valKey:'no2',              fmt:v=>v.toFixed(1)+' μg/m³', color:'#ffa657', metric:'eurostat_no2'           },
+    { key:'greenSpacePctHistory',  label:'Green Space %',     valKey:'greenSpacePct',    fmt:v=>v.toFixed(1)+'%',  color:'#3fb950', metric:'eurostat_greenSpacePct'  },
+    { key:'touristNightsHistory',  label:'Tourist Nights',    valKey:'touristNights',    fmt:fmtN,   color:'#e3b341', metric:'eurostat_touristNights'    },
+    { key:'museumVisitorsHistory', label:'Museum Visitors',   valKey:'museumVisitors',   fmt:fmtN,   color:'#d2a8ff', metric:'eurostat_museumVisitors'   },
+    { key:'medianAgeHistory',      label:'Median Age',        valKey:'medianAge',        fmt:v=>v.toFixed(1)+' yrs', color:'#79c0ff', metric:'eurostat_medianAge'      },
+    { key:'popChangePctHistory',   label:'Pop Change/yr',     valKey:'popChangePct',     fmt:v=>(v>=0?'+':'')+v.toFixed(2)+'%', color:'#56d364', metric:'eurostat_popChangePct'   },
   ].filter(r => es[r.key] && es[r.key].length >= 2);
 
   if (TREND_ROWS.length > 0) {
@@ -2106,7 +2310,7 @@ function buildEurostatHtml(es, qid) {
     html += `</div>`;
   }
 
-  html += `<div class="census-source" style="margin-top:8px">Eurostat Urban Audit · urb_clma · urb_clivcon · urb_cecfi</div></div>`;
+  html += `<div class="census-source" style="margin-top:8px">Eurostat Urban Audit · urb_clma · urb_clivcon · urb_cecfi · urb_cenv · urb_ctour · urb_cpopstr</div></div>`;
   return html;
 }
 
@@ -2124,20 +2328,18 @@ async function openWikiSidebar(qid, cityName) {
   // Find full city object
   const city = allCities.find(c => c.qid === qid);
 
-  // If we already stored Wikipedia data in the city object (from a previous click),
-  // render immediately — no API call needed
-  if (city?.wiki_images?.length || city?.wiki_thumb || city?.wiki_extract) {
-    // Prefer stored Wikipedia title (added by fetch-city-infoboxes); fall back to
-    // Special:GoToLinkedPage/wikidata/{qid} which redirects via the Wikidata sitelink.
+  // If we already stored Wikipedia data (from a previous click or pre-fetch script),
+  // render immediately — no API call needed.
+  // Exception: if the cache pre-dates Wikidata P18 support (no Special:FilePath URL),
+  // fall through once to upgrade the photo, then cache the P18 result.
+  const hasP18 = city?.wiki_images?.some(u => u.includes('Special:FilePath'));
+  if (hasP18 && (city?.wiki_images?.length || city?.wiki_extract)) {
     const wpUrl = city.wikipedia
       ? `https://en.wikipedia.org/wiki/${encodeURIComponent(city.wikipedia).replace(/%20/g, '_')}`
       : city.qid
         ? `https://en.wikipedia.org/wiki/Special:GoToLinkedPage/wikidata/${city.qid}`
         : null;
-    const cachedImages = city.wiki_images?.length
-      ? city.wiki_images
-      : (city.wiki_thumb ? [city.wiki_thumb] : []);
-    renderInfobox(city, cachedImages, { extract: city.wiki_extract ?? null }, wpUrl, true);
+    renderInfobox(city, city.wiki_images, { extract: city.wiki_extract ?? null }, wpUrl, true);
     return;
   }
 
@@ -2148,11 +2350,13 @@ async function openWikiSidebar(qid, cityName) {
   if (_infoEl) _infoEl.innerHTML = `<div class="wiki-loading"><div class="spinner"></div><span>Loading Wikipedia article…</span></div>`;
   if (_economyEl) _economyEl.innerHTML = '';
   if (_overviewEl) _overviewEl.innerHTML = '';
-  // Hide economy tab while loading (may not have US census data yet)
+  // Hide economy + finance tabs while loading city (finance is company-only)
   const _econBtnEl = document.getElementById('wiki-tab-economy-btn');
+  const _finBtnEl  = document.getElementById('wiki-tab-finance-btn');
   if (_econBtnEl) _econBtnEl.style.display = 'none';
-  // Guard against stale tab names or economy-only tabs during load
-  const _safeTab = (!VALID_SIDEBAR_TABS.has(_sidebarTab) || _sidebarTab === 'economy') ? 'info' : _sidebarTab;
+  if (_finBtnEl)  _finBtnEl.style.display  = 'none';
+  // Guard against stale tab names
+  const _safeTab = (!VALID_SIDEBAR_TABS.has(_sidebarTab) || _sidebarTab === 'economy' || _sidebarTab === 'finance') ? 'info' : _sidebarTab;
   switchWikiTab(_safeTab);
 
   try {
@@ -2206,6 +2410,12 @@ async function openWikiSidebar(qid, cityName) {
       const nickClaims = claims.P1449 ?? [];
       const nickEn = nickClaims.find(c => c.mainsnak?.datavalue?.value?.language === 'en');
       if (nickEn) wpExtra.nickname = nickEn.mainsnak.datavalue.value.text;
+      // P18 — main image (curated representative photo, usually a cityscape/panorama)
+      const p18file = claims.P18?.[0]?.mainsnak?.datavalue?.value;
+      if (p18file) {
+        const fname = p18file.replace(/ /g, '_');
+        wpExtra.p18Image = `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(fname)}?width=900`;
+      }
     } catch { /* claims fetch is non-critical */ }
 
     // Step 3: resolve image URLs (filter icons/flags/maps, keep real photos)
@@ -2237,8 +2447,14 @@ async function openWikiSidebar(qid, cityName) {
       }
     } catch { /* image fetching is non-critical */ }
 
-    // Ensure the main Wikipedia thumbnail leads the gallery
-    if (fallbackThumb && !images.includes(fallbackThumb)) images.unshift(fallbackThumb);
+    // Wikidata P18 = deliberately chosen representative city photo (cityscape, skyline, etc.)
+    // Prioritise it above all Wikipedia article images; fall back to Wikipedia thumbnail
+    if (wpExtra.p18Image) {
+      images = images.filter(u => u !== wpExtra.p18Image && u !== fallbackThumb);
+      images.unshift(wpExtra.p18Image);
+    } else if (fallbackThumb && !images.includes(fallbackThumb)) {
+      images.unshift(fallbackThumb);
+    }
 
     // Render the full infobox
     if (city) {
@@ -2354,7 +2570,7 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
@@ -2365,6 +2581,9 @@ async function init() {
       fetch('/eurostat-cities.json').catch(() => null),
       fetch('/gawc-cities.json').catch(() => null),
       fetch('/japan-prefectures.json').catch(() => null),
+      fetch('/airport-connectivity.json').catch(() => null),
+      fetch('/zillow-cities.json').catch(() => null),
+      fetch('/climate-extra.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -2451,6 +2670,24 @@ async function init() {
         japanPrefData = await japanRes.json();
         console.log(`[init] Japan prefecture data loaded (${Object.keys(japanPrefData).length} prefectures)`);
       } catch { console.warn('[init] japan-prefectures.json is malformed'); }
+    }
+    if (airportRes && airportRes.ok) {
+      try {
+        airportData = await airportRes.json();
+        console.log(`[init] Airport connectivity loaded (${Object.keys(airportData).length} cities)`);
+      } catch { console.warn('[init] airport-connectivity.json is malformed'); }
+    }
+    if (zillowRes && zillowRes.ok) {
+      try {
+        zillowData = await zillowRes.json();
+        console.log(`[init] Zillow housing data loaded (${Object.keys(zillowData).length} cities)`);
+      } catch { console.warn('[init] zillow-cities.json is malformed'); }
+    }
+    if (climateExtraRes && climateExtraRes.ok) {
+      try {
+        climateExtra = await climateExtraRes.json();
+        console.log(`[init] Climate extra data loaded (${Object.keys(climateExtra).length} cities)`);
+      } catch { console.warn('[init] climate-extra.json is malformed'); }
     }
 
     // ── Phase 5c: load world country borders GeoJSON (optional, for choropleth) ──
@@ -3719,6 +3956,13 @@ function renderCorpList() {
   const displayCur = document.getElementById('corp-display-currency')?.value || '';
   let companies = (corpOverrideList || companiesData[corpCityQid] || []).slice();
 
+  // Deduplicate by company QID — same company can appear under multiple nearby cities in Wikidata
+  const _seenQids = new Set();
+  companies = companies.filter(co => {
+    if (!co.qid || !_seenQids.has(co.qid)) { if (co.qid) _seenQids.add(co.qid); return true; }
+    return false;
+  });
+
   // Populate currency options dynamically from what's in this list
   const curSel = document.getElementById('corp-display-currency');
   if (curSel) {
@@ -3785,6 +4029,7 @@ function renderCorpList() {
       ? ` data-wiki="${escAttr(co.wikipedia)}" data-name="${escAttr(co.name)}"`
       : '';
     const finJson = escHtml(JSON.stringify({
+      qid: co.qid || null,
       description: co.description || null,
       industry: co.industry || null, exchange: co.exchange || null,
       ticker: co.ticker || null, traded_as: co.traded_as || null,
@@ -3800,6 +4045,7 @@ function renderCorpList() {
       operating_income: co.operating_income || null, operating_income_currency: co.operating_income_currency || null, operating_income_history: co.operating_income_history || [],
       total_assets: co.total_assets || null, total_assets_currency: co.total_assets_currency || null, total_assets_history: co.total_assets_history || [],
       total_equity: co.total_equity || null, total_equity_currency: co.total_equity_currency || null, total_equity_history: co.total_equity_history || [],
+      market_cap: co.market_cap || null, market_cap_year: co.market_cap_year || null, market_cap_currency: co.market_cap_currency || null,
     }));
     const wdUrl = `https://www.wikidata.org/wiki/${escHtml(co.qid)}`;
     const linkHtml = co.wikipedia
@@ -3848,11 +4094,15 @@ function buildGlobalCorpList() {
   for (const c of allCities) cityByQid[c.qid] = c;
 
   globalCorpList = [];
+  const _globalSeenQids = new Set();
   for (const [qid, companies] of Object.entries(companiesData)) {
     const city = cityByQid[qid];
     const cityName = city ? city.name : '—';
     const country = city ? (city.country || '') : '';
     for (const co of companies) {
+      // Deduplicate by company QID — same company can appear under multiple nearby cities
+      if (co.qid && _globalSeenQids.has(co.qid)) continue;
+      if (co.qid) _globalSeenQids.add(co.qid);
       const fallbackCur = city ? (ISO2_TO_CURRENCY[city.iso] || null) : null;
       const revenueUSD = co.revenue ? toUSD(co.revenue, co.revenue_currency || fallbackCur) : 0;
       globalCorpList.push({ co, cityName, country, cityQid: qid, revenueUSD });
@@ -3881,6 +4131,7 @@ function buildGlobalCorpList() {
 
 function _gcorpFinJson(co) {
   return escHtml(JSON.stringify({
+    qid: co.qid || null,
     description: co.description || null,
     industry: co.industry || null, exchange: co.exchange || null,
     ticker: co.ticker || null, traded_as: co.traded_as || null,
@@ -3896,6 +4147,7 @@ function _gcorpFinJson(co) {
     operating_income: co.operating_income || null, operating_income_currency: co.operating_income_currency || null, operating_income_history: co.operating_income_history || [],
     total_assets: co.total_assets || null, total_assets_currency: co.total_assets_currency || null, total_assets_history: co.total_assets_history || [],
     total_equity: co.total_equity || null, total_equity_currency: co.total_equity_currency || null, total_equity_history: co.total_equity_history || [],
+    market_cap: co.market_cap || null, market_cap_year: co.market_cap_year || null, market_cap_currency: co.market_cap_currency || null,
   }));
 }
 
@@ -3975,6 +4227,585 @@ function gcorpRowClick(row) {
   openCompanyWikiPanel(decodeURIComponent(titleMatch[1]), name, wikiUrl, finData);
 }
 
+// ── Reusable interactive canvas chart (_IYChart) ─────────────────────────────
+// points : [{t, v}]  where t = unix timestamp (isTimestamp=true) or year integer
+// opts   : { color, height, isTimestamp, autoColor, yFmt, xFmt,
+//            showXLabels, showYLabels, ranges:[{label,days}], defaultDays }
+// Returns { draw, destroy } — call destroy() to release the ResizeObserver.
+function _IYChart(containerEl, points, opts = {}) {
+  const {
+    color       = '#58a6ff',
+    height      = 80,
+    isTimestamp = true,
+    autoColor   = true,
+    yFmt        = v => v.toLocaleString(),
+    xFmt        = isTimestamp
+      ? t => new Date(t * 1000).toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
+      : t => String(t),
+    showXLabels = false,
+    showYLabels = false,
+    ranges      = null,
+    defaultDays = 0,
+  } = opts;
+
+  containerEl.innerHTML = '';
+  containerEl.style.userSelect = 'none';
+  let activeDays = defaultDays;
+  let btnRow = null;
+
+  // ── Range buttons ──
+  if (ranges?.length) {
+    btnRow = document.createElement('div');
+    btnRow.className = 'iyc-range-row';
+    ranges.forEach(r => {
+      const btn = document.createElement('button');
+      btn.className = 'iyc-range' + (r.days === activeDays ? ' active' : '');
+      btn.textContent = r.label;
+      btn.dataset.days = r.days;
+      btn.onclick = () => {
+        activeDays = r.days;
+        btnRow.querySelectorAll('.iyc-range').forEach(b =>
+          b.classList.toggle('active', +b.dataset.days === activeDays)
+        );
+        draw();
+      };
+      btnRow.appendChild(btn);
+    });
+    containerEl.appendChild(btnRow);
+  }
+
+  // ── Canvas wrapper + tooltip ──
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:relative;overflow:hidden';
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = `width:100%;height:${height}px;display:block;cursor:crosshair`;
+  const tt = document.createElement('div');
+  tt.className = 'iyc-tooltip';
+  tt.style.display = 'none';
+  wrap.appendChild(canvas);
+  wrap.appendChild(tt);
+  containerEl.appendChild(wrap);
+
+  const DPR = window.devicePixelRatio || 1;
+  let _L = null; // cached layout
+
+  function getVisible() {
+    if (!activeDays) return points;
+    if (isTimestamp) {
+      const last = points[points.length - 1]?.t || 0;
+      return points.filter(p => p.t >= last - activeDays * 86400);
+    }
+    return points.slice(-Math.max(2, Math.round(activeDays / 365)));
+  }
+
+  function draw() {
+    const W = wrap.offsetWidth || containerEl.offsetWidth || 280;
+    const H = height;
+    canvas.width  = W * DPR;
+    canvas.height = H * DPR;
+
+    const vis = getVisible();
+    if (vis.length < 2) { _L = null; return; }
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const PT = 6 * DPR, PB = (showXLabels ? 16 : 4) * DPR;
+    const PL = 2 * DPR, PR = (showYLabels ? 48 : 2) * DPR;
+    const pW = canvas.width - PL - PR, pH = canvas.height - PT - PB;
+
+    const tMin = vis[0].t, tMax = vis[vis.length - 1].t;
+    const vals  = vis.map(p => p.v);
+    const vMin  = Math.min(...vals), vMax = Math.max(...vals);
+    const vPad  = (vMax - vMin) * 0.1 || Math.abs(vMax) * 0.05 || 1;
+    const vLo   = vMin - vPad, vHi = vMax + vPad;
+
+    const xOf = t => PL + (tMax === tMin ? pW / 2 : (t - tMin) / (tMax - tMin) * pW);
+    const yOf = v => PT + pH - (vHi === vLo ? pH / 2 : (v - vLo) / (vHi - vLo) * pH);
+    const lineClr = autoColor
+      ? (vis[vis.length - 1].v >= vis[0].v ? '#3fb950' : '#f85149')
+      : color;
+
+    // Horizontal grid lines
+    ctx.strokeStyle = 'rgba(48,54,61,0.5)';
+    ctx.lineWidth = DPR * 0.5;
+    for (let i = 1; i <= 3; i++) {
+      const y = PT + pH * i / 4;
+      ctx.beginPath(); ctx.moveTo(PL, y); ctx.lineTo(PL + pW, y); ctx.stroke();
+    }
+
+    // Y-axis labels (right)
+    if (showYLabels) {
+      ctx.fillStyle = '#484f58';
+      ctx.font = `${9 * DPR}px system-ui,sans-serif`;
+      ctx.textAlign = 'right';
+      [0, 0.5, 1].forEach(f => {
+        const v = vLo + (vHi - vLo) * f;
+        ctx.fillText(yFmt(v), canvas.width - DPR, PT + pH * (1 - f) + 3 * DPR);
+      });
+    }
+
+    // Area gradient
+    const grad = ctx.createLinearGradient(0, PT, 0, canvas.height - PB);
+    grad.addColorStop(0, lineClr + '33'); grad.addColorStop(1, lineClr + '00');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(xOf(tMin), canvas.height - PB);
+    vis.forEach(p => ctx.lineTo(xOf(p.t), yOf(p.v)));
+    ctx.lineTo(xOf(tMax), canvas.height - PB);
+    ctx.closePath(); ctx.fill();
+
+    // Line
+    ctx.strokeStyle = lineClr; ctx.lineWidth = 1.5 * DPR;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.setLineDash([]);
+    ctx.beginPath();
+    vis.forEach((p, i) => i === 0 ? ctx.moveTo(xOf(p.t), yOf(p.v)) : ctx.lineTo(xOf(p.t), yOf(p.v)));
+    ctx.stroke();
+
+    // X-axis labels
+    if (showXLabels) {
+      ctx.fillStyle = '#484f58'; ctx.textAlign = 'center';
+      ctx.font = `${8 * DPR}px system-ui,sans-serif`;
+      const n = Math.min(vis.length - 1, Math.max(2, Math.floor(W / 80)));
+      for (let i = 0; i <= n; i++) {
+        const idx = Math.round(i / n * (vis.length - 1));
+        ctx.fillText(xFmt(vis[idx].t), xOf(vis[idx].t), canvas.height - 2 * DPR);
+      }
+    }
+
+    _L = { vis, xOf, yOf, tMin, tMax, pW, pH, PT, PB, PL, PR, lineClr, DPR, cW: canvas.width, cH: canvas.height, W };
+  }
+
+  // Crosshair
+  function _crosshair(pt) {
+    if (!_L) return;
+    const { xOf, yOf, PT, PB, PL, PR, lineClr, DPR, cW, cH } = _L;
+    const ctx = canvas.getContext('2d');
+    const cx = xOf(pt.t), cy = yOf(pt.v);
+    ctx.setLineDash([3 * DPR, 3 * DPR]);
+    ctx.strokeStyle = 'rgba(180,180,180,0.22)'; ctx.lineWidth = DPR;
+    ctx.beginPath(); ctx.moveTo(cx, PT); ctx.lineTo(cx, cH - PB); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(PL, cy); ctx.lineTo(cW - PR, cy); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = lineClr; ctx.strokeStyle = '#0d1117'; ctx.lineWidth = 2 * DPR;
+    ctx.beginPath(); ctx.arc(cx, cy, 3.5 * DPR, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+  }
+
+  function _nearest(mx) {
+    if (!_L) return null;
+    const { vis, tMin, tMax, pW, PL, DPR } = _L;
+    const tAt = tMin + (mx * DPR - PL) / pW * (tMax - tMin);
+    let best = null, bestD = Infinity;
+    vis.forEach(p => { const d = Math.abs(p.t - tAt); if (d < bestD) { bestD = d; best = p; } });
+    return best;
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    const pt = _nearest(mx);
+    if (!pt || !_L) return;
+    draw(); _crosshair(pt);
+    // Tooltip
+    const vis = _L.vis;
+    const pct = vis.length > 1 ? ((pt.v - vis[0].v) / vis[0].v * 100).toFixed(1) : null;
+    const pctHtml = pct != null
+      ? ` <span class="iyc-tt-p" style="color:${parseFloat(pct)>=0?'#3fb950':'#f85149'}">${parseFloat(pct)>=0?'+':''}${pct}%</span>`
+      : '';
+    tt.innerHTML = `<span class="iyc-tt-x">${xFmt(pt.t)}</span> <span class="iyc-tt-v">${yFmt(pt.v)}</span>${pctHtml}`;
+    tt.style.display = 'block';
+    const tw = tt.offsetWidth, th = tt.offsetHeight;
+    let tx = mx - tw / 2; if (tx < 0) tx = 0; if (tx + tw > rect.width) tx = rect.width - tw;
+    tt.style.left = tx + 'px';
+    tt.style.top  = (my < rect.height / 2 ? my + 12 : my - th - 6) + 'px';
+  });
+
+  canvas.addEventListener('mouseleave', () => { tt.style.display = 'none'; draw(); });
+
+  // Scroll wheel → cycle range buttons
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    if (!ranges?.length || !btnRow) return;
+    const btns = [...btnRow.querySelectorAll('.iyc-range')];
+    const cur  = btns.findIndex(b => +b.dataset.days === activeDays);
+    const next = Math.max(0, Math.min(btns.length - 1, cur + (e.deltaY > 0 ? 1 : -1)));
+    if (next !== cur) btns[next].click();
+  }, { passive: false });
+
+  const ro = new ResizeObserver(() => draw());
+  ro.observe(containerEl);
+  draw();
+
+  return { draw, destroy: () => ro.disconnect() };
+}
+
+// ── Wikipedia image gallery ───────────────────────────────────────────────────
+// Fetches all images from a Wikipedia article via the REST media-list endpoint.
+// Filters out SVGs, flags, icons, maps — returns up to 20 photo URLs.
+async function _fetchWikiImages(articleTitle) {
+  try {
+    const res = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/media-list/${encodeURIComponent(articleTitle)}`
+    );
+    if (!res.ok) return [];
+    const j = await res.json();
+    return (j.items || [])
+      .filter(item => {
+        if (item.type !== 'image') return false;
+        const t = (item.title || '').toLowerCase();
+        if (t.endsWith('.svg')) return false;
+        if (/\b(flag|seal|coat_of_arms|icon|blank|map|chart|graph|signature|commons-logo|edit-clear|question_book)\b/.test(t)) return false;
+        return (item.srcset?.length || 0) > 0;
+      })
+      .map(item => {
+        // Use the largest available srcset size; prefix with https: if protocol-relative
+        const raw = item.srcset[item.srcset.length - 1]?.src || item.srcset[0]?.src || '';
+        return raw.startsWith('//') ? 'https:' + raw : raw;
+      })
+      .filter(Boolean)
+      .slice(0, 20);
+  } catch { return []; }
+}
+
+// ── Company stock price section ───────────────────────────────────────────────
+// Fetches /prices/{ticker}.json and renders a 5-year price chart + stats
+// into the placeholder div already inserted in the info tab.
+async function _renderCompanyPriceSection(ticker, containerEl) {
+  if (!ticker || !containerEl) return;
+  const phId = 'co-price-' + ticker.replace(/[^a-z0-9]/gi, '_');
+  const ph   = containerEl.querySelector('#' + phId);
+  if (!ph) return;
+
+  try {
+    const res = await fetch('/prices/' + encodeURIComponent(ticker) + '.json');
+    if (!res.ok) { ph.remove(); return; }
+    const data = await res.json();
+
+    const rawPrices = (data.a || data.c || []);
+    const points    = (data.t || []).map((ts, i) => ({ t: ts, v: rawPrices[i] })).filter(p => p.v != null);
+    if (points.length < 10) { ph.remove(); return; }
+
+    const latest  = points[points.length - 1];
+    const now     = latest.v;
+    const fmtPx   = v => v >= 100 ? v.toFixed(2) : v >= 1 ? v.toFixed(2) : v.toFixed(4);
+    const currSym = { USD:'$', EUR:'€', GBP:'£', JPY:'¥' }[data.currency] || '';
+
+    // Performance stats (computed once; shown above chart)
+    const priceAgo = days => {
+      const target = latest.t - days * 86400;
+      const idx    = points.findIndex(p => p.t >= target);
+      return idx > 0 ? points[idx].v : null;
+    };
+    const pct    = (o, n) => o ? +((n - o) / o * 100).toFixed(1) : null;
+    const fmtPct = v => v == null ? '' : (v >= 0 ? '+' : '') + v + '%';
+    const pClr   = v => v == null ? '#8b949e' : v >= 0 ? '#3fb950' : '#f85149';
+
+    const chg1m = pct(priceAgo(30), now);
+    const chg1y = pct(priceAgo(365), now);
+    const chg5y = pct(points[0].v, now);
+
+    // 52-week range bar
+    const yr1Ts = latest.t - 365 * 86400;
+    const yrPts = points.filter(p => p.t >= yr1Ts);
+    const w52lo = Math.min(...yrPts.map(p => p.v));
+    const w52hi = Math.max(...yrPts.map(p => p.v));
+    const w52p  = w52hi > w52lo ? ((now - w52lo) / (w52hi - w52lo) * 100).toFixed(0) : 50;
+
+    // Dividends (past 12 months)
+    const recentDivs = (data.dividends || []).filter(d => d.t >= yr1Ts);
+    const divHtml    = recentDivs.length
+      ? `<div style="font-size:0.67rem;color:#8b949e;padding:0 14px;margin-bottom:4px">Div (12mo): ${recentDivs.map(d => currSym + d.amount).join(' · ')}</div>`
+      : '';
+
+    const perfSpans = [
+      chg1m != null ? `<span style="color:${pClr(chg1m)};font-size:0.7rem">${fmtPct(chg1m)} 1M</span>` : '',
+      chg1y != null ? `<span style="color:${pClr(chg1y)};font-size:0.7rem">${fmtPct(chg1y)} 1Y</span>` : '',
+      chg5y != null ? `<span style="color:${pClr(chg5y)};font-size:0.7rem">${fmtPct(chg5y)} 5Y</span>` : '',
+    ].filter(Boolean).join('<span style="color:#30363d;margin:0 3px">·</span>');
+
+    // Build the Finance tab layout
+    ph.innerHTML = `
+      <div style="padding:8px 14px 4px;display:flex;align-items:baseline;justify-content:space-between">
+        <span style="font-size:0.95rem;font-weight:700;color:#e6edf3">${currSym}${fmtPx(now)}<span style="font-size:0.68rem;font-weight:400;color:#6e7681"> ${data.currency||''}</span></span>
+        <span>${perfSpans}</span>
+      </div>
+      <div id="${phId}-chart" style="padding:0 14px"></div>
+      <div style="display:flex;align-items:center;gap:5px;padding:4px 14px">
+        <span style="font-size:0.64rem;color:#6e7681;flex-shrink:0">52W</span>
+        <span style="font-size:0.64rem;color:#8b949e;flex-shrink:0">${fmtPx(w52lo)}</span>
+        <div style="flex:1;height:3px;background:#21262d;border-radius:2px;overflow:hidden">
+          <div style="width:${w52p}%;height:100%;background:#58a6ff;border-radius:2px"></div>
+        </div>
+        <span style="font-size:0.64rem;color:#8b949e;flex-shrink:0">${fmtPx(w52hi)}</span>
+      </div>
+      ${divHtml}
+      <div style="font-size:0.6rem;color:#484f58;padding:0 14px 8px">${ticker} · ${data.exchange||''} · 5Y daily · ${data.updated||''}</div>
+    `;
+
+    // Mount interactive chart
+    const chartEl = ph.querySelector(`#${phId}-chart`);
+    if (chartEl) {
+      _IYChart(chartEl, points, {
+        height: 140, isTimestamp: true, autoColor: true,
+        showXLabels: true, showYLabels: true,
+        yFmt: v => currSym + fmtPx(v),
+        xFmt: t => new Date(t * 1000).toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+        ranges: [
+          { label: '1M', days: 30  },
+          { label: '3M', days: 90  },
+          { label: '6M', days: 180 },
+          { label: '1Y', days: 365 },
+          { label: '3Y', days: 1095 },
+          { label: '5Y', days: 1825 },
+          { label: 'Max', days: 0  },
+        ],
+        defaultDays: 365,
+      });
+    }
+  } catch (_) {
+    if (ph) ph.remove();
+  }
+}
+
+// ── Full Finance tab renderer ─────────────────────────────────────────────────
+// Builds the complete Finance tab for a company: price chart + key stats +
+// margins + financial health + historical charts + ownership.
+// co = the company object from companies.json (finData).
+function _renderFinanceTab(co, containerEl) {
+  if (!co || !containerEl) return;
+
+  const ticker = co.ticker || '';
+  const cur = co.revenue_currency || co.net_income_currency || '';
+  const curSym = { USD:'$', EUR:'€', GBP:'£', JPY:'¥', CNY:'¥', KRW:'₩', INR:'₹' }[cur] || '';
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  const pct   = v => v == null ? null : (v * 100).toFixed(1) + '%';
+  const fmtV  = v => v == null ? null : fmtRevenue(v);           // currency magnitudes
+  const fmtP  = v => v == null ? null : (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%';
+  const fmtX  = v => v == null ? null : v.toFixed(2) + '×';
+  const fmtR  = v => v == null ? null : v.toFixed(2);
+  const clr   = v => v == null ? '#8b949e' : v >= 0 ? '#3fb950' : '#f85149';
+
+  // Section header helper
+  const sec = label =>
+    `<div style="padding:8px 14px 4px;font-size:0.65rem;font-weight:600;color:#6e7681;text-transform:uppercase;letter-spacing:0.06em;border-top:1px solid #21262d">${label}</div>`;
+
+  // Stat chip: label + value in a card
+  const chip = (label, val, color = '#c9d1d9') => {
+    if (val == null || val === '') return '';
+    return `<div style="background:#21262d;border-radius:6px;padding:5px 9px;min-width:0">
+      <div style="font-size:0.6rem;color:#6e7681;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(label)}</div>
+      <div style="font-size:0.78rem;color:${color};font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(String(val))}</div>
+    </div>`;
+  };
+  const grid = (...chips) => {
+    const cells = chips.filter(Boolean).join('');
+    return cells ? `<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:6px 14px">${cells}</div>` : '';
+  };
+
+  // Margin bar row
+  const bar = (label, val, color = '#58a6ff') => {
+    if (val == null) return '';
+    const w = Math.min(100, Math.abs(val * 100)).toFixed(1);
+    const c = val >= 0 ? color : '#f85149';
+    return `<div style="padding:3px 14px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+        <span style="font-size:0.68rem;color:#8b949e">${escHtml(label)}</span>
+        <span style="font-size:0.68rem;font-weight:600;color:${c}">${(val*100).toFixed(1)}%</span>
+      </div>
+      <div style="height:4px;background:#21262d;border-radius:2px">
+        <div style="width:${w}%;height:100%;background:${c};border-radius:2px"></div>
+      </div>
+    </div>`;
+  };
+
+  // IYChart placeholder
+  let _fn = 0;
+  const chartPh = (pts, color, fmt, height = 80) => {
+    if (!pts || pts.length < 2) return '';
+    const id = `fin-iyc-${++_fn}`;
+    return `<div id="${id}" data-fin-pts="${escHtml(JSON.stringify(pts))}" data-fin-color="${escHtml(color)}" data-fin-fmt="${fmt}" style="padding:0 8px 4px;height:${height}px"></div>`;
+  };
+
+  // ── Collect data ───────────────────────────────────────────────────────────
+  const mcap     = co.market_cap;
+  const ev       = co.enterprise_value;
+  const shares   = co.shares_outstanding;
+  const eps      = co.eps ?? co.eps_trailing;
+  const pe       = co.pe_trailing;
+  const peFwd    = co.pe_forward;
+  const pb       = co.price_to_book;
+  const beta     = co.beta;
+  const w52chg   = co.week52_change;
+  const divYield = co.dividend_yield;
+  const divRate  = co.dividend_rate;
+  const sector   = co.sector;
+  const industry = co.industry;
+
+  const opMargin  = co.operating_margin;
+  const prMargin  = co.profit_margin;
+  const grMargin  = co.gross_margin;
+  const ebMargin  = co.ebitda_margin;
+  const roe       = co.return_on_equity;
+  const roa       = co.return_on_assets;
+  const revGrowth = co.revenue_growth_yoy;
+  const earnGrowth= co.earnings_growth_yoy;
+
+  const totalCash = co.total_cash;
+  const totalDebt = co.total_debt;
+  const ebitda    = co.ebitda;
+  const fcf       = co.free_cashflow;
+  const ocf       = co.operating_cashflow;
+  const de        = co.debt_to_equity;
+  const cr        = co.current_ratio;
+  const qr        = co.quick_ratio;
+
+  const pctInsider = co.pct_insider;
+  const pctInst    = co.pct_institutional;
+
+  // ── Historical chart data ──────────────────────────────────────────────────
+  // Prefer Yahoo's richer history, fall back to Wikidata history
+  const revHistory = (() => {
+    const yh = (co.revenue_history_yahoo || []).filter(r => r.revenue > 0).map(r => ({ t: r.year, v: r.revenue }));
+    if (yh.length >= 2) return yh;
+    return (co.revenue_history || []).filter(r => r.value > 0).map(r => ({ t: r.year, v: r.value }));
+  })();
+  const niHistory = (() => {
+    const yh = (co.revenue_history_yahoo || []).filter(r => r.net_income != null).map(r => ({ t: r.year, v: r.net_income }));
+    if (yh.length >= 2) return yh;
+    return (co.net_income_history || []).filter(r => r.value != null).map(r => ({ t: r.year, v: r.value }));
+  })();
+  const cfHistory = (co.cashflow_history_yahoo || [])
+    .filter(r => r.free_cash_flow != null)
+    .map(r => ({ t: r.year, v: r.free_cash_flow }));
+  const assetHistory = (co.total_assets_history || []).filter(r => r.value > 0).map(r => ({ t: r.year, v: r.value }));
+  const equityHistory = (co.total_equity_history || []).filter(r => r.value != null && r.value !== 0).map(r => ({ t: r.year, v: r.value }));
+
+  // ── Build HTML ─────────────────────────────────────────────────────────────
+  const phId = 'co-price-' + ticker.replace(/[^a-z0-9]/gi, '_');
+
+  let html = `<div id="${phId}"><div style="padding:14px;font-size:0.72rem;color:#484f58"><div class="spinner" style="display:inline-block;margin-right:6px"></div>Loading price data…</div></div>`;
+
+  // Key Stats
+  const hasKeyStats = mcap || ev || eps != null || pe != null || pb != null || beta != null || divYield != null;
+  if (hasKeyStats) {
+    html += sec('Key Statistics');
+    html += grid(
+      chip('Market Cap', mcap ? fmtV(mcap) : null),
+      chip('Enterprise Val', ev  ? fmtV(ev)  : null),
+      chip('Shares Out.', shares ? fmtV(shares) : null),
+      chip('EPS (TTM)', eps != null ? (curSym || '$') + eps.toFixed(2) : null),
+      chip('P/E (TTM)', pe != null ? fmtX(pe) : null),
+      chip('P/E (Fwd)', peFwd != null ? fmtX(peFwd) : null),
+      chip('Price/Book', pb != null ? fmtX(pb) : null),
+      chip('Beta', beta != null ? fmtR(beta) : null, beta != null ? (beta > 1.2 ? '#f0a500' : beta < 0.8 ? '#58a6ff' : '#c9d1d9') : '#c9d1d9'),
+      chip('52W Change', w52chg != null ? fmtP(w52chg) : null, clr(w52chg)),
+      chip('Div Yield', divYield != null ? pct(divYield) : null, '#3fb950'),
+      chip('Div Rate', divRate != null ? (curSym || '$') + divRate.toFixed(2) : null),
+    );
+  }
+
+  // Profitability & Growth
+  const hasMargins = opMargin != null || prMargin != null || grMargin != null || ebMargin != null || roe != null || roa != null;
+  if (hasMargins) {
+    html += sec('Profitability');
+    if (grMargin != null) html += bar('Gross Margin', grMargin, '#58a6ff');
+    if (opMargin != null) html += bar('Operating Margin', opMargin, '#3fb950');
+    if (ebMargin != null) html += bar('EBITDA Margin', ebMargin, '#f0a500');
+    if (prMargin != null) html += bar('Net Profit Margin', prMargin, '#bc8cff');
+    html += grid(
+      chip('Return on Equity', roe != null ? pct(roe) : null, clr(roe)),
+      chip('Return on Assets', roa != null ? pct(roa) : null, clr(roa)),
+      chip('Revenue Growth', revGrowth != null ? fmtP(revGrowth) : null, clr(revGrowth)),
+      chip('Earnings Growth', earnGrowth != null ? fmtP(earnGrowth) : null, clr(earnGrowth)),
+    );
+  }
+
+  // Financial Health
+  const hasHealth = totalCash != null || totalDebt != null || de != null || cr != null;
+  if (hasHealth) {
+    html += sec('Financial Health');
+    html += grid(
+      chip('Cash & Equiv', totalCash ? fmtV(totalCash) : null, '#3fb950'),
+      chip('Total Debt',   totalDebt ? fmtV(totalDebt) : null, '#f85149'),
+      chip('EBITDA',       ebitda    ? fmtV(ebitda)    : null),
+      chip('Free Cash Flow', fcf     ? fmtV(fcf)       : null, clr(fcf)),
+      chip('Oper. Cash Flow', ocf    ? fmtV(ocf)       : null, clr(ocf)),
+      chip('D/E Ratio',   de != null ? fmtR(de)        : null, de != null ? (de > 2 ? '#f85149' : de > 1 ? '#f0a500' : '#3fb950') : '#c9d1d9'),
+      chip('Current Ratio', cr != null ? fmtR(cr)      : null, cr != null ? (cr >= 1.5 ? '#3fb950' : cr >= 1 ? '#f0a500' : '#f85149') : '#c9d1d9'),
+      chip('Quick Ratio',  qr != null ? fmtR(qr)       : null),
+    );
+  }
+
+  // Ownership
+  if (pctInsider != null || pctInst != null) {
+    html += sec('Ownership');
+    html += grid(
+      chip('Insider Held', pctInsider != null ? pct(pctInsider) : null),
+      chip('Institutional', pctInst != null ? pct(pctInst) : null),
+    );
+  }
+
+  // Sector / Industry tags
+  if (sector || industry) {
+    html += `<div style="padding:6px 14px 4px;display:flex;gap:6px;flex-wrap:wrap">
+      ${sector   ? `<span style="background:#21262d;border-radius:12px;padding:2px 10px;font-size:0.68rem;color:#58a6ff">${escHtml(sector)}</span>` : ''}
+      ${industry ? `<span style="background:#21262d;border-radius:12px;padding:2px 10px;font-size:0.68rem;color:#8b949e">${escHtml(industry)}</span>` : ''}
+    </div>`;
+  }
+
+  // Historical charts
+  const hasCharts = revHistory.length >= 2 || niHistory.length >= 2 || cfHistory.length >= 2 || assetHistory.length >= 2;
+  if (hasCharts) {
+    html += sec('Historical Trends');
+    if (revHistory.length >= 2) {
+      html += `<div style="padding:0 14px 2px;font-size:0.67rem;color:#8b949e">Revenue${cur ? ' (' + cur + ')' : ''}</div>`;
+      html += chartPh(revHistory, '#58a6ff', 'rev', 80);
+    }
+    if (niHistory.length >= 2) {
+      html += `<div style="padding:4px 14px 2px;font-size:0.67rem;color:#8b949e">Net Income${cur ? ' (' + cur + ')' : ''}</div>`;
+      html += chartPh(niHistory, '#3fb950', 'rev', 70);
+    }
+    if (cfHistory.length >= 2) {
+      html += `<div style="padding:4px 14px 2px;font-size:0.67rem;color:#8b949e">Free Cash Flow${cur ? ' (' + cur + ')' : ''}</div>`;
+      html += chartPh(cfHistory, '#bc8cff', 'rev', 70);
+    }
+    if (assetHistory.length >= 2) {
+      html += `<div style="padding:4px 14px 2px;font-size:0.67rem;color:#8b949e">Total Assets${cur ? ' (' + cur + ')' : ''}</div>`;
+      html += chartPh(assetHistory, '#f0a500', 'rev', 70);
+    }
+    if (equityHistory.length >= 2) {
+      html += `<div style="padding:4px 14px 2px;font-size:0.67rem;color:#8b949e">Total Equity${cur ? ' (' + cur + ')' : ''}</div>`;
+      html += chartPh(equityHistory, '#e07b54', 'rev', 70);
+    }
+  }
+
+  html += `<div style="height:16px"></div>`;
+
+  containerEl.innerHTML = html;
+
+  // Mount IYChart on all chart placeholders.
+  // Store draw fns so switchWikiTab can force a redraw when the Finance tab
+  // becomes visible (ResizeObserver won't fire on display:none → visible).
+  const _finDrawFns = [];
+  containerEl.querySelectorAll('[data-fin-pts]').forEach(el => {
+    try {
+      const pts = JSON.parse(el.dataset.finPts);
+      const color = el.dataset.finColor;
+      const inst = _IYChart(el, pts, {
+        color, height: parseInt(el.style.height), isTimestamp: false,
+        autoColor: false, yFmt: fmtRevenue, xFmt: t => String(t),
+      });
+      if (inst?.draw) _finDrawFns.push(inst.draw);
+    } catch (_) {}
+  });
+  // Store so switchWikiTab can redraw after tab becomes visible
+  containerEl._iycRedraw = () => _finDrawFns.forEach(fn => { try { fn(); } catch (_) {} });
+
+  // Kick off price chart async (replaces the loading spinner)
+  if (ticker) _renderCompanyPriceSection(ticker, containerEl);
+}
+
 async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
   const sidebar = document.getElementById('wiki-sidebar');
   const body = document.getElementById('wiki-sidebar-body');
@@ -3983,7 +4814,20 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
 
   titleEl.textContent = name;
   footer.innerHTML = '';
-  body.innerHTML = '<div class="wiki-loading"><div class="spinner"></div><span>Loading…</span></div>';
+  // Use tab structure (same as cities): loading spinner in Info tab, Overview cleared
+  const _coInfoEl = document.getElementById('wiki-tab-info');
+  const _coOverEl  = document.getElementById('wiki-tab-overview');
+  const _coEconEl  = document.getElementById('wiki-tab-economy');
+  const _coFinEl   = document.getElementById('wiki-tab-finance');
+  const _coEconBtn = document.getElementById('wiki-tab-economy-btn');
+  const _coFinBtn  = document.getElementById('wiki-tab-finance-btn');
+  if (_coInfoEl) _coInfoEl.innerHTML = '<div class="wiki-loading"><div class="spinner"></div><span>Loading…</span></div>';
+  if (_coOverEl) _coOverEl.innerHTML = '';
+  if (_coEconEl) _coEconEl.innerHTML = '';
+  if (_coFinEl)  _coFinEl.innerHTML  = '';
+  if (_coEconBtn) _coEconBtn.style.display = 'none';
+  if (_coFinBtn)  _coFinBtn.style.display  = 'none';
+  switchWikiTab('info');
   sidebar.classList.add('open');
 
   // Determine local language from the city whose corp panel is open
@@ -3993,10 +4837,13 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
 
   try {
     // Always fetch English first (guaranteed to exist, gives us wikibase_item)
-    const enApiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(articleTitle)}`;
+    // Fire media-list in parallel so it arrives with no extra wait.
+    const enApiUrl    = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(articleTitle)}`;
+    const mediaPromise = _fetchWikiImages(articleTitle);
     const enRaw = await fetch(enApiUrl);
     if (!enRaw.ok) throw new Error('HTTP ' + enRaw.status);
     const enData = await enRaw.json();
+    const extraImages = await mediaPromise;
 
     // Try local-language article via Wikidata sitelink lookup
     let displayData = enData;
@@ -4022,125 +4869,207 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
       } catch (_) { /* local fetch failed — stay with English */ }
     }
 
-    const imgHtml = displayData.thumbnail?.source
-      ? `<img class="wiki-img" src="${escAttr(displayData.thumbnail.source)}" alt="${escAttr(name)}" />`
-      : '';
+    // Build photo carousel — same UI as city panel
+    const _thumb = displayData.thumbnail?.source || null;
+    const _allImgs = [_thumb, ...extraImages]
+      .filter(Boolean)
+      .filter((src, i, arr) => arr.indexOf(src) === i);  // dedupe
+
+    let imgHtml = '';
+    if (_allImgs.length > 0) {
+      window._lbImgs = _allImgs;
+      carImages = _allImgs;
+      carIdx = 0;
+      carStop();
+      const dots = _allImgs.map((_, i) =>
+        `<button class="wiki-car-dot${i === 0 ? ' active' : ''}" onclick="carJump(${i})"></button>`
+      ).join('');
+      imgHtml = `
+        <div class="wiki-carousel"
+             onmouseenter="carStop()"
+             onmouseleave="if(carImages.length>1) carTimer=setInterval(()=>carGo(1),4500)">
+          <img id="wiki-car-img" class="wiki-carousel-img"
+               src="${escAttr(_allImgs[0])}"
+               onclick="openLightbox(window._lbImgs, carIdx)" alt="${escAttr(name)}" />
+          ${_allImgs.length > 1 ? `
+            <div class="wiki-car-overlay">
+              <button class="wiki-car-btn" onclick="carGo(-1)">&#8249;</button>
+              <div class="wiki-car-dots">${dots}</div>
+              <button class="wiki-car-btn" onclick="carGo(1)">&#8250;</button>
+            </div>
+            <div class="wiki-car-counter" id="wiki-car-counter">1 / ${_allImgs.length}</div>
+          ` : ''}
+        </div>`;
+      if (_allImgs.length > 1) {
+        carTimer = setInterval(() => carGo(1), 4500);
+      }
+    }
     const extract = displayData.extract || '';
 
-    // Build company data section from companies.json fields
-    const _td = (label, val, isGreen) =>
-      `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem">${label}</td>` +
-      `<td style="${isGreen ? 'color:#3fb950;' : 'color:#c9d1d9;'}font-variant-numeric:tabular-nums;text-align:right;font-size:0.8rem">${val}</td></tr>`;
-
-    // History pills row — shows year-labelled mini badges for a financial time-series
-    const _pills = (hist, latestYear, fmtFn) => {
-      const rows = (hist || []).filter(h => h.year && h.value);
-      if (rows.length < 2) return '';
-      return `<tr><td colspan="2" style="padding:2px 0 6px">` +
-        `<div style="display:flex;gap:4px;flex-wrap:wrap">` +
-        rows.map(h =>
-          `<span style="font-size:0.7rem;background:#21262d;border-radius:3px;padding:1px 5px;` +
-          `color:${h.year === latestYear ? '#3fb950' : '#8b949e'}">${h.year}: ${fmtFn(h.value)}</span>`
-        ).join('') + `</div></td></tr>`;
+    // ── Chip helper (label + value box) ───────────────────────────────────────
+    const _chip = (label, val, color = '#c9d1d9', isHtml = false, span2 = false) => {
+      if (val == null || val === '') return '';
+      const v = isHtml ? val : escHtml(String(val));
+      return `<div style="background:#21262d;border-radius:6px;padding:5px 9px;min-width:0;overflow:hidden;${span2 ? 'grid-column:span 2;' : ''}">
+        <div style="font-size:0.62rem;color:#6e7681;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(label)}</div>
+        <div style="font-size:0.79rem;color:${color};font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v}</div>
+      </div>`;
     };
 
-    // Year badge next to a scalar value
-    const _yr = yr => yr ? ` <span style="color:#484f58;font-size:0.78em">${yr}</span>` : '';
+    // ── Sparkline row helper → IYChart placeholder ────────────────────────────
+    // Returns a placeholder div; IYChart is mounted after innerHTML is inserted.
+    let _iycN = 0;
+    const _sparkline = (hist, label, color, fmtFn) => {
+      const rows = (hist || []).filter(h => h.year && h.value > 0);
+      if (rows.length < 2) return '';
+      const minV = Math.min(...rows.map(h => h.value));
+      const maxV = Math.max(...rows.map(h => h.value));
+      const pts  = JSON.stringify(rows.map(h => [h.year, h.value]));
+      const fmt  = fmtFn === fmtEmployees ? 'emp' : 'rev';
+      const id   = `iyc-${++_iycN}`;
+      return `<div style="border-top:1px solid #21262d">
+        <div style="display:flex;justify-content:space-between;padding:4px 14px 0">
+          <span style="font-size:0.7rem;color:#8b949e">${escHtml(label)}</span>
+          <span style="font-size:0.62rem;color:#484f58">${fmtFn(minV)} – ${fmtFn(maxV)}</span>
+        </div>
+        <div id="${id}" data-iyc-pts="${escHtml(pts)}" data-iyc-color="${escHtml(color)}" data-iyc-fmt="${fmt}" style="height:52px;padding:0 8px 4px"></div>
+      </div>`;
+    };
 
-    // Key people: use key_people array (from infobox) if available, fall back to ceo string
-    const keyPeopleHtml = (() => {
-      if (finData.key_people?.length) {
-        const rows = finData.key_people.map(p =>
-          `<div style="display:flex;justify-content:space-between;gap:8px;padding:1px 0;min-width:0">` +
-          `<span style="color:#c9d1d9;font-size:0.78rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(p.name)}</span>` +
-          (p.role ? `<span style="color:#8b949e;font-size:0.73rem;text-align:right;min-width:0;flex-shrink:0;max-width:55%">${escHtml(p.role)}</span>` : '') +
-          `</div>`
-        ).join('');
-        return `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem;vertical-align:top">People</td>` +
-          `<td style="font-size:0.78rem;text-align:right">${rows}</td></tr>`;
-      }
-      if (finData.ceo) return _td('CEO', escHtml(finData.ceo), false);
-      return '';
+    // ── Currency suffix ────────────────────────────────────────────────────────
+    const _cur = c => (c && c !== 'USD') ? ` ${c}` : '';
+    const _yr2 = yr => yr ? `'${String(yr).slice(-2)}` : '';
+
+    // ── Clickable chip helper (adds rank onclick when corpQid available) ──────
+    const coQid = finData.qid || '';
+    const _rankChip = (label, val, color, metric) => {
+      if (!val && val !== 0) return '';
+      const v = escHtml(String(val));
+      const hasClick = !!(coQid && metric);
+      const onclick = hasClick ? `onclick="openStatsPanel('${metric}','${escHtml(coQid)}')"` : '';
+      const title   = hasClick ? `title="Click to see global ranking"` : '';
+      const cursor  = hasClick ? 'cursor:pointer;' : '';
+      return `<div ${onclick} ${title} style="${cursor}background:#21262d;border-radius:6px;padding:5px 9px;min-width:0;overflow:hidden;">
+        <div style="font-size:0.62rem;color:#6e7681;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(label)}</div>
+        <div style="font-size:0.79rem;color:${color};font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v}</div>
+      </div>`;
+    };
+
+    // ── Key numbers chip grid (top) ────────────────────────────────────────────
+    const keyChips = [
+      finData.revenue   ? _rankChip('Revenue',    fmtRevenue(finData.revenue)    + _cur(finData.revenue_currency)    + ' ' + _yr2(finData.revenue_year),   '#58a6ff', 'corp_revenue')    : '',
+      finData.market_cap? _rankChip('Market Cap', fmtRevenue(finData.market_cap) + _cur(finData.market_cap_currency) + ' ' + _yr2(finData.market_cap_year), '#f0a500', 'corp_market_cap') : '',
+      finData.net_income? _rankChip('Net Income', fmtRevenue(finData.net_income) + _cur(finData.net_income_currency),                                        '#3fb950', 'corp_net_income') : '',
+      finData.employees ? _rankChip('Employees',  fmtEmployees(finData.employees),                                                                           '#79c0ff', 'corp_employees')  : '',
+    ].filter(Boolean).join('');
+
+    // ── Profile chip grid ──────────────────────────────────────────────────────
+    const ceoDisplay = (() => {
+      if (finData.key_people?.length) return finData.key_people.map(p => p.name + (p.role ? ` (${p.role})` : '')).join(' · ');
+      return finData.ceo || null;
+    })();
+    const exchangeVal = (() => {
+      const ex = finData.exchange || finData.traded_as || '';
+      return ex + (finData.ticker ? ` · ${finData.ticker}` : '');
     })();
 
-    const profileRows = [
-      finData.company_type ? _td('Type', escHtml(finData.company_type), false) : '',
-      finData.industry ? _td('Industry', escHtml(finData.industry), false) : '',
-      (finData.exchange || finData.traded_as) ? _td('Exchange',
-        escHtml(finData.exchange || finData.traded_as) +
-        (finData.ticker ? ` <span style="color:#58a6ff;font-size:0.78em">${escHtml(finData.ticker)}</span>` : ''), false) : '',
-      finData.founded ? _td('Founded', finData.founded, false) : '',
-      keyPeopleHtml,
-      finData.founders?.length ? _td('Founders', finData.founders.map(escHtml).join(', '), false) : '',
-      finData.parent_org ? _td('Parent', escHtml(finData.parent_org), false) : '',
-      finData.products?.length ? `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem;vertical-align:top">Products</td>` +
-        `<td style="color:#c9d1d9;font-size:0.75rem;text-align:right">${finData.products.map(escHtml).join('<br>')}</td></tr>` : '',
-      finData.subsidiaries?.length ? `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem;vertical-align:top">Subsidiaries</td>` +
-        `<td style="color:#c9d1d9;font-size:0.75rem;text-align:right">${finData.subsidiaries.slice(0, 8).map(escHtml).join('<br>')}${finData.subsidiaries.length > 8 ? '<br><span style="color:#6e7681">…</span>' : ''}</td></tr>` : '',
-      finData.website ? `<tr><td style="color:#8b949e;padding:4px 8px 4px 0;white-space:nowrap;font-size:0.8rem">Website</td>` +
-        `<td style="text-align:right;font-size:0.8rem"><a href="${escAttr(finData.website)}" target="_blank" rel="noopener" style="color:#58a6ff;text-decoration:none" onclick="event.stopPropagation()">${escHtml(finData.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''))}</a></td></tr>` : '',
-      finData.employees ? _td('Employees', fmtEmployees(finData.employees) + _yr((finData.employees_history || []).filter(h => h.year).slice(-1)[0]?.year), false) : '',
-      _pills(finData.employees_history, (finData.employees_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtEmployees),
-    ].filter(r => r).join('');
+    const profileChips = [
+      finData.founded      ? _chip('Founded',   finData.founded)              : '',
+      finData.company_type ? _chip('Type',      finData.company_type)         : '',
+      finData.industry     ? _chip('Industry',  finData.industry,  '#c9d1d9', false, true) : '',
+      exchangeVal          ? _chip('Exchange',  exchangeVal,       '#c9d1d9', false, true) : '',
+      ceoDisplay           ? _chip('CEO',       ceoDisplay,        '#c9d1d9', false, ceoDisplay.length > 22) : '',
+      finData.parent_org   ? _chip('Parent',    finData.parent_org,'#c9d1d9', false, true) : '',
+      finData.founders?.length ? _chip('Founders', finData.founders.join(', '), '#c9d1d9', false, true) : '',
+      finData.website      ? _chip('Website',
+        `<a href="${escAttr(finData.website)}" target="_blank" rel="noopener" style="color:#58a6ff;text-decoration:none" onclick="event.stopPropagation()">${escHtml(finData.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''))}</a>`,
+        '#58a6ff', true, true) : '',
+      finData.products?.length  ? _chip('Products',    finData.products.slice(0,6).join(', '),          '#c9d1d9', false, true) : '',
+      finData.subsidiaries?.length ? _chip('Subsidiaries', finData.subsidiaries.slice(0,5).join(', ') + (finData.subsidiaries.length > 5 ? '…' : ''), '#c9d1d9', false, true) : '',
+    ].filter(Boolean).join('');
 
-    // Currency badge shown when a known non-USD currency is on file
-    const _cur = c => c && c !== 'USD'
-      ? ` <span style="color:#484f58;font-size:0.7rem">${escHtml(c)}</span>` : '';
+    // ── Trend sparklines ───────────────────────────────────────────────────────
+    const trendRows = [
+      _sparkline(finData.revenue_history,          'Revenue',       '#58a6ff', fmtRevenue),
+      _sparkline(finData.operating_income_history, 'Operating Inc.','#3fb950', fmtRevenue),
+      _sparkline(finData.net_income_history,       'Net Income',    '#3fb950', fmtRevenue),
+      _sparkline(finData.total_assets_history,     'Total Assets',  '#bc8cff', fmtRevenue),
+      _sparkline(finData.total_equity_history,     'Total Equity',  '#f0a500', fmtRevenue),
+      _sparkline(finData.employees_history,        'Employees',     '#79c0ff', fmtEmployees),
+    ].filter(Boolean).join('');
 
-    const financialRows = [
-      finData.revenue ? _td('Revenue', fmtRevenue(finData.revenue) + _yr(finData.revenue_year) + _cur(finData.revenue_currency), true) : '',
-      _pills(finData.revenue_history, finData.revenue_year, fmtRevenue),
-      finData.operating_income ? _td('Operating Inc.', fmtRevenue(finData.operating_income) + _yr((finData.operating_income_history || []).filter(h => h.year).slice(-1)[0]?.year) + _cur(finData.operating_income_currency), true) : '',
-      _pills(finData.operating_income_history, (finData.operating_income_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtRevenue),
-      finData.net_income ? _td('Net Income', fmtRevenue(finData.net_income) + _yr((finData.net_income_history || []).filter(h => h.year).slice(-1)[0]?.year) + _cur(finData.net_income_currency), true) : '',
-      _pills(finData.net_income_history, (finData.net_income_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtRevenue),
-      finData.total_assets ? _td('Total Assets', fmtRevenue(finData.total_assets) + _yr((finData.total_assets_history || []).filter(h => h.year).slice(-1)[0]?.year) + _cur(finData.total_assets_currency), true) : '',
-      _pills(finData.total_assets_history, (finData.total_assets_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtRevenue),
-      finData.total_equity ? _td('Total Equity', fmtRevenue(finData.total_equity) + _yr((finData.total_equity_history || []).filter(h => h.year).slice(-1)[0]?.year) + _cur(finData.total_equity_currency), true) : '',
-      _pills(finData.total_equity_history, (finData.total_equity_history || []).filter(h => h.year).slice(-1)[0]?.year, fmtRevenue),
-    ].filter(r => r).join('');
-
-    const _section = (heading, rows) => rows
-      ? `<div style="padding:10px 16px 4px;border-bottom:1px solid #21262d">` +
-      `<div style="font-size:0.7rem;font-weight:600;color:#6e7681;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:6px">${heading}</div>` +
-      `<table style="width:100%;border-collapse:collapse">${rows}</table></div>`
+    // ── Assemble ───────────────────────────────────────────────────────────────
+    const _chipGrid = chips => chips
+      ? `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:5px;padding:10px 14px 8px;border-bottom:1px solid #21262d">${chips}</div>`
       : '';
-    const finHtml = _section('Profile', profileRows) + _section('Financials', financialRows);
+    const finHtml =
+      _chipGrid(keyChips) +
+      _chipGrid(profileChips) +
+      (trendRows ? `<div style="padding-bottom:6px;border-bottom:1px solid #21262d">${trendRows}</div>` : '');
 
     // Language badge shown when displaying non-English content
     const langBadge = displayLang !== 'en'
       ? `<span style="font-size:0.68rem;background:#21262d;color:#8b949e;border-radius:4px;padding:2px 6px;margin-left:8px;vertical-align:middle">${displayLang}</span>`
       : '';
 
-    body.innerHTML = `
-      ${imgHtml}
-      <div class="wiki-city-header">
-        <div class="wiki-city-name">${escHtml(displayData.title || name)}${langBadge}</div>
-        ${(displayData.description || finData.description)
-        ? `<div class="wiki-city-desc">${escHtml(displayData.description || finData.description)}</div>`
-        : ''}
-      </div>
-      ${finHtml}
-      ${extract ? `
-        <div class="wiki-extract-wrap">
-          <div class="wiki-extract-head">Overview</div>
-          <div class="wiki-extract collapsed" id="wiki-extract-text">${escHtml(extract)}</div>
-          <button class="wiki-expand-btn" id="wiki-expand-btn" onclick="toggleExtract()">Show more</button>
-        </div>` : ''}
-    `;
+    // ── Populate Info tab: image + header + chips + sparklines ────────────────
+    const infoTabEl = document.getElementById('wiki-tab-info');
+    if (infoTabEl) {
+      infoTabEl.innerHTML = `
+        ${imgHtml}
+        <div class="wiki-city-header">
+          <div class="wiki-city-name">${escHtml(displayData.title || name)}${langBadge}</div>
+          ${(displayData.description || finData.description)
+          ? `<div class="wiki-city-desc">${escHtml(displayData.description || finData.description)}</div>`
+          : ''}
+        </div>
+        ${finHtml}
+      `;
+      // Mount interactive financial trend charts into their placeholders
+      infoTabEl.querySelectorAll('[data-iyc-pts]').forEach(el => {
+        try {
+          const pts   = JSON.parse(el.dataset.iycPts).map(([t, v]) => ({ t, v }));
+          const color = el.dataset.iycColor || '#58a6ff';
+          const fmt   = el.dataset.iycFmt === 'emp' ? fmtEmployees : fmtRevenue;
+          _IYChart(el, pts, {
+            color, height: 52, isTimestamp: false, autoColor: false,
+            yFmt: fmt, xFmt: t => String(t),
+          });
+        } catch (_) {}
+      });
+    }
+
+    // ── Finance tab: full Yahoo Finance data ──────────────────────────────────
+    const _finTabEl  = document.getElementById('wiki-tab-finance');
+    const _finBtnEl2 = document.getElementById('wiki-tab-finance-btn');
+    if (finData.ticker && _finTabEl && _finBtnEl2) {
+      _finBtnEl2.style.display = '';
+      _renderFinanceTab(finData, _finTabEl);
+    }
+
+    // ── Populate Overview tab: Wikipedia extract ───────────────────────────────
+    const overTabEl = document.getElementById('wiki-tab-overview');
+    if (overTabEl) overTabEl.innerHTML = extract ? `
+      <div class="wiki-extract-wrap">
+        <div class="wiki-extract-head">Overview</div>
+        <div class="wiki-extract collapsed" id="wiki-extract-text">${escHtml(extract)}</div>
+        <button class="wiki-expand-btn" id="wiki-expand-btn" onclick="toggleExtract()">Show more</button>
+      </div>` : '<div style="padding:16px;color:#6e7681;font-size:0.82rem">No Wikipedia overview available.</div>';
 
     // Footer: show local link first if used, then English
     const svgIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
-    const enLink = `<a class="wiki-footer-link" href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">${svgIcon} Wikipedia (EN)</a>`;
+    const enLink  = `<a class="wiki-footer-link" href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">${svgIcon} Wikipedia (EN)</a>`;
     const locLink = localWikiUrl && displayLang !== 'en'
-      ? `<a class="wiki-footer-link" href="${escAttr(localWikiUrl)}" target="_blank" rel="noopener" style="margin-right:12px">${svgIcon} Wikipedia (${displayLang.toUpperCase()})</a>`
+      ? `<a class="wiki-footer-link" href="${escAttr(localWikiUrl)}" target="_blank" rel="noopener">${svgIcon} Wikipedia (${displayLang.toUpperCase()})</a>`
       : '';
-    footer.innerHTML = locLink
-      ? `<div style="display:flex;gap:4px;flex-wrap:wrap">${locLink}${enLink}</div>`
-      : enLink;
+    const yfLink  = finData.ticker
+      ? `<a class="wiki-footer-link" href="https://finance.yahoo.com/quote/${encodeURIComponent(finData.ticker)}" target="_blank" rel="noopener">${svgIcon} Yahoo Finance (${escHtml(finData.ticker)})</a>`
+      : '';
+    footer.innerHTML = `<div style="display:flex;gap:4px;flex-wrap:wrap">${locLink}${enLink}${yfLink}</div>`;
 
   } catch (e) {
-    body.innerHTML = `<div class="wiki-error">Could not load Wikipedia article.<br/><a href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">Open Wikipedia directly ↗</a></div>`;
+    const _errEl = document.getElementById('wiki-tab-info');
+    if (_errEl) _errEl.innerHTML = `<div class="wiki-error">Could not load Wikipedia article.<br/><a href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">Open Wikipedia directly ↗</a></div>`;
   }
 }
 

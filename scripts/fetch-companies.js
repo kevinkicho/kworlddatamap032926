@@ -52,17 +52,24 @@ const UA = 'kworlddatamap/2.0 (educational; github.com/kworlddatamap)';
 // Each Wikidata quantity value has a `unit` field pointing to a currency entity.
 // We map the most common ones here; anything unmapped is left null.
 const WIKIDATA_CURRENCY = {
+  // QIDs verified via Wikidata SPARQL (wdt:P31 wd:Q8142 / wdt:P498)
   Q4917:'USD',   Q4916:'EUR',   Q25224:'GBP',  Q8146:'JPY',
-  Q47026:'KRW',  Q25239:'SGD',  Q1104069:'CNY',Q80973:'INR',
-  Q7362:'BRL',   Q1043616:'AUD',Q42585:'CAD',  Q25517:'CHF',
-  Q62613:'HKD',  Q192152:'TWD', Q170494:'IDR', Q208856:'MXN',
-  Q3028:'NOK',   Q41801:'SEK',  Q13114:'DKK',  Q80474:'PLN',
-  Q125861:'RUB', Q25255:'ZAR',  Q34735:'MYR',  Q4714:'TRY',
-  Q171015:'AED', Q37150:'SAR',  Q174924:'THB', Q193778:'PHP',
-  Q213014:'NGN', Q179241:'EGP', Q5185:'CZK',   Q47494:'HUF',
-  Q1104676:'RON',Q1464125:'CLP',Q47073:'COP',  Q200185:'ILS',
-  Q134144:'PKR', Q131316:'BDT', Q214400:'VND', Q181619:'KWD',
-  Q202040:'QAR', Q25343:'DZD',  Q173977:'MAD', Q111490:'TND',
+  Q202040:'KRW', Q190951:'SGD', Q39099:'CNY',  Q80524:'INR',
+  Q173117:'BRL', Q259502:'AUD', Q1104069:'CAD',Q25344:'CHF',
+  Q31015:'HKD',  Q208526:'TWD', Q41588:'IDR',  Q4730:'MXN',
+  Q132643:'NOK', Q122922:'SEK', Q25417:'DKK',  Q123213:'PLN',
+  Q41044:'RUB',  Q181907:'ZAR', Q163712:'MYR', Q172872:'TRY',
+  Q200294:'AED', Q199857:'SAR', Q177882:'THB', Q17193:'PHP',
+  Q203567:'NGN', Q199462:'EGP', Q131016:'CZK', Q47190:'HUF',
+  Q131645:'RON', Q200050:'CLP', Q244819:'COP', Q131309:'ILS',
+  Q188289:'PKR', Q194453:'BDT', Q192090:'VND', Q193098:'KWD',
+  Q206386:'QAR', Q199674:'DZD', Q200192:'MAD', Q4602:'TND',
+  Q1472704:'NZD',Q242915:'CRC', Q81893:'UAH',  Q173751:'KZT',
+  Q4608:'GEL',   Q130498:'AMD', Q487888:'UZS', Q201875:'MMK',
+  Q206243:'ETB', Q183530:'GHS', Q4589:'TZS',   Q4598:'UGX',
+  Q200337:'AOA', Q73408:'ZMW',  Q200753:'MZN', Q202462:'NAD',
+  Q212967:'MUR', Q242922:'DOP', Q207396:'GTQ', Q4719:'HNL',
+  Q207312:'NIO', Q275112:'BZD', Q209792:'JMD', Q242890:'TTD',
 };
 
 function unitToCurrency(unitUrl) {
@@ -275,6 +282,19 @@ function itemRefs(claims, prop) {
   ];
 }
 
+// Like itemRefs but skips statements with a P582 (end time) qualifier —
+// used for CEO to return only current holder, not historical ones.
+function currentItemRefs(claims, prop) {
+  return [
+    ...new Set(
+      stmts(claims, prop)
+        .filter(s => !s.qualifiers?.P582)
+        .map(s => s.mainsnak.datavalue?.value?.id)
+        .filter(Boolean)
+    ),
+  ];
+}
+
 // First non-deprecated string value
 function strVal(claims, prop) {
   for (const s of stmts(claims, prop)) {
@@ -361,7 +381,7 @@ function parsePartial(entity) {
     // Entity-valued: QID refs resolved in Phase 3
     _exchangeQids: itemRefs(claims, 'P414'),
     _industryQid:  itemRefs(claims, 'P452')[0] || null,
-    _ceoQids:      itemRefs(claims, 'P169'),
+    _ceoQids:      currentItemRefs(claims, 'P169'),
     _founderQids:  itemRefs(claims, 'P112'),
     _parentQid:    itemRefs(claims, 'P749')[0] || null,
   };

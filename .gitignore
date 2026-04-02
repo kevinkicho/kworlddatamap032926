@@ -5,3 +5,6 @@ node_modules/
 *.log
 scripts/.checkpoint.json
 scripts/.companies-checkpoint.json
+scripts/.yahoo-checkpoint.json
+scripts/.tickers-checkpoint.json
+public/prices/

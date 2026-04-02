@@ -30,6 +30,8 @@ header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
 .leaflet-control-attribution { background: rgba(13,17,23,0.8) !important; color: #6e7681 !important; font-size: 0.68rem !important; z-index: 400 !important; }
 .leaflet-control-attribution a { color: #58a6ff !important; }
 .leaflet-bottom { z-index: 400 !important; }
+/* Keep zoom control behind left sidebars */
+.leaflet-top.leaflet-left { z-index: 990 !important; }
 .leaflet-tooltip {
   background: #1f2937 !important; border: 1px solid #374151 !important;
   border-radius: 6px !important; color: #f9fafb !important;
@@ -110,11 +112,48 @@ header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
 }
 .wiki-error a { color: #58a6ff; }
 
-/* Infobox image */
+/* Infobox image — single photo fallback */
 .wiki-img {
-  width: 100%; max-height: 240px; object-fit: cover;
+  width: 100%; max-height: 220px; object-fit: cover;
   display: block;
 }
+
+/* Scrollable photo strip — multiple images */
+.wiki-img-strip {
+  display: flex;
+  overflow-x: auto;
+  gap: 3px;
+  height: 200px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  background: #0d1117;
+}
+.wiki-img-strip img {
+  height: 100%;
+  width: auto;
+  min-width: 80px;
+  max-width: 320px;
+  object-fit: cover;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  cursor: zoom-in;
+  display: block;
+}
+.wiki-img-strip img:hover { opacity: 0.88; }
+.wiki-img-strip::-webkit-scrollbar { height: 3px; }
+.wiki-img-strip::-webkit-scrollbar-track { background: #0d1117; }
+.wiki-img-strip::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+
+/* ── IYChart interactive chart components ── */
+.iyc-range-row { display:flex; gap:4px; padding:6px 14px 2px; flex-wrap:wrap; }
+.iyc-range { background:none; border:1px solid #30363d; color:#8b949e; font-size:0.68rem; padding:2px 7px; border-radius:4px; cursor:pointer; transition:border-color 0.15s, color 0.15s; }
+.iyc-range:hover { border-color:#58a6ff; color:#c9d1d9; }
+.iyc-range.active { background:#21262d; border-color:#58a6ff; color:#58a6ff; font-weight:600; }
+.iyc-tooltip { position:absolute; pointer-events:none; z-index:10; background:#161b22; border:1px solid #30363d; border-radius:5px; padding:4px 8px; font-size:0.72rem; white-space:nowrap; box-shadow:0 2px 8px rgba(0,0,0,.5); }
+.iyc-tt-x { color:#8b949e; }
+.iyc-tt-v { color:#e6edf3; font-weight:600; margin-left:4px; }
+.iyc-tt-p { margin-left:4px; }
+
 /* City title block */
 .wiki-city-header { padding: 10px 14px 0; }
 .wiki-city-name { font-size: 1.25rem; font-weight: 700; color: #e6edf3; line-height: 1.2; }
@@ -262,6 +301,7 @@ header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
 .census-stat-value.census-gold { color: #f0a500; }
 .census-stat-value.census-amber { color: #ffa657; }
 .census-stat-value.census-red { color: #f85149; }
+.census-stat-value.census-green { color: #3fb950; }
 .census-source {
   margin-top: 10px; font-size: 0.67rem; color: #484f58; line-height: 1.5;
 }

@@ -11,6 +11,15 @@
     "fetch-companies": "node scripts/fetch-companies.js",
     "fetch-infoboxes": "node scripts/fetch-infoboxes.js",
     "fetch-city-infoboxes": "node scripts/fetch-city-infoboxes.js",
+    "fetch-openflights": "node scripts/fetch-openflights.js",
+    "fetch-zillow": "node scripts/fetch-zillow.js",
+    "fetch-climate": "node scripts/fetch-climate.js",
+    "fetch-company-enrichment": "node scripts/fetch-company-enrichment.js",
+    "fetch-tickers": "node scripts/fetch-tickers.js",
+    "fetch-prices": "node scripts/fetch-prices.js",
+    "fetch-yahoo": "node scripts/fetch-yahoo.js",
+    "fetch-yahoo-tickers": "node scripts/fetch-yahoo.js --tickers",
+    "fetch-yahoo-financials": "node scripts/fetch-yahoo.js --financials",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,6 +27,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "dotenv": "^17.4.0",
     "express": "^5.2.1"
   },
   "devDependencies": {
