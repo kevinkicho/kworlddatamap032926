@@ -294,61 +294,60 @@
     </div>
   </div>
 
+  <!-- ── Country popup (fixed overlay, not Leaflet popup) ── -->
+  <div id="country-popup">
+    <button id="country-popup-close" onclick="closeCountryPopup()" title="Close">×</button>
+    <div id="country-popup-content"></div>
+  </div>
+
   <!-- ── Trade flow panel (left side, BEA data) ── -->
   <div id="trade-panel">
     <div id="trade-panel-header">
-      <span id="trade-panel-flag">🌐</span>
-      <span id="trade-panel-title">Trade Flows</span>
+      <span id="trade-panel-flag"></span>
+      <div id="trade-panel-titles">
+        <span id="trade-panel-title">Trade Flows</span>
+        <span id="trade-panel-sub">US Bilateral Trade</span>
+      </div>
       <button id="trade-panel-close" onclick="closeTradePanelFn()" title="Close">×</button>
     </div>
-
-    <div id="trade-country-row">
-      <select id="trade-country-select"></select>
-    </div>
-
     <div id="trade-panel-body">
-
-      <!-- Year slider -->
       <div id="trade-year-row">
-        <span class="trade-dim">Year</span>
         <input type="range" id="trade-year-slider" min="1999" max="2025" value="2024" />
         <span id="trade-year-label">2024</span>
       </div>
-
-      <!-- Goods / Services breakdown grid -->
-      <div id="trade-grid">
-        <div class="tg-corner"></div>
-        <div class="tg-head">Goods</div>
-        <div class="tg-head">Services</div>
-
-        <div class="tg-label"><span class="trade-dot export-dot"></span> Exports</div>
-        <div class="tg-val" id="tg-exp-gds">—</div>
-        <div class="tg-val" id="tg-exp-svcs">—</div>
-
-        <div class="tg-label"><span class="trade-dot import-dot"></span> Imports</div>
-        <div class="tg-val" id="tg-imp-gds">—</div>
-        <div class="tg-val" id="tg-imp-svcs">—</div>
+      <div id="trade-flows">
+        <div class="tf-flow-row">
+          <span class="tf-arrow tf-arrow-exp">↗</span>
+          <div class="tf-flow-info">
+            <span class="tf-flow-label">US Exports</span>
+            <span class="tf-flow-detail" id="tf-exp-detail"></span>
+          </div>
+          <span class="tf-flow-total" id="tf-exp-total">—</span>
+        </div>
+        <div class="tf-bar-wrap"><div id="tf-exp-bar" class="tf-bar tf-bar-exp"></div></div>
+        <div class="tf-flow-row">
+          <span class="tf-arrow tf-arrow-imp">↙</span>
+          <div class="tf-flow-info">
+            <span class="tf-flow-label">US Imports</span>
+            <span class="tf-flow-detail" id="tf-imp-detail"></span>
+          </div>
+          <span class="tf-flow-total" id="tf-imp-total">—</span>
+        </div>
+        <div class="tf-bar-wrap"><div id="tf-imp-bar" class="tf-bar tf-bar-imp"></div></div>
       </div>
-
-      <!-- Balance -->
       <div id="trade-balance-row">
-        <span id="trade-balance-label" class="trade-dim">Balance</span>
-        <span id="trade-balance-val" class="trade-amount">—</span>
+        <span id="trade-balance-label">Balance</span>
+        <span id="trade-balance-val">—</span>
       </div>
-
-      <!-- Sparkline: goods trade balance history -->
-      <div id="trade-spark-wrap">
-        <div class="trade-section-head">Goods balance history <span class="tsh-sub">(green = US surplus)</span></div>
-        <div id="trade-spark"></div>
+      <div id="trade-chart-wrap">
+        <div class="trade-section-head">Balance history</div>
+        <div id="trade-chart"></div>
       </div>
-
-      <!-- Top companies from our companies data -->
       <div id="trade-companies-wrap">
         <div class="trade-section-head">Top companies</div>
         <div id="trade-companies-list"></div>
       </div>
-
-      <div id="trade-source">BEA International Transactions · Goods + Services</div>
+      <div id="trade-source">Source: BEA International Transactions · Goods + Services</div>
     </div>
   </div>
 

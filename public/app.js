@@ -2553,12 +2553,15 @@ async function init() {
   // Rebuild economic layer clusters whenever zoom changes
   map.on('zoomend', () => { if (econOn) buildEconLayer(); });
 
-  // Normal map click → close trade panel
-  map.on('click', () => { if (!_drawActive) closeTradePanelFn(); });
+  // Normal map click → close trade panel + country popup
+  map.on('click', () => { if (!_drawActive) { closeTradePanelFn(); closeCountryPopup(); } });
 
-  // Escape key cancels draw mode
+  // Escape key cancels draw mode / closes country popup
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && (_drawActive || _drawPolygon)) _drawClear();
+    if (e.key === 'Escape') {
+      if (_drawActive || _drawPolygon) _drawClear();
+      closeCountryPopup();
+    }
   });
 
   const terminator = L.terminator({
@@ -2714,7 +2717,7 @@ async function init() {
     updateStats();
     showLoading(false);
 
-    // Trade year slider + country dropdown
+    // Trade year slider
     document.getElementById('trade-year-slider').addEventListener('input', function () {
       const iso2 = this.dataset.iso2;
       const data = tradeCache[iso2];
@@ -2723,7 +2726,6 @@ async function init() {
       _updateTradePanelNumbers(iso2, data, yr);
       drawTradeArrows(iso2, data, yr);
     });
-    _populateTradeCountryDropdown();
 
     // ── FX rates: load from localStorage or auto-fetch latest ECB rates ──
     if (!_fxLoadFromLS()) {
@@ -2894,19 +2896,30 @@ function showCountryPopup(iso2, latlng) {
       View on World Bank
     </a>` : ''}`;
 
-  // Smart offset: keep popup within map bounds (no top-cutoff, no right-cutoff)
+  // Position as fixed overlay so it's never clipped by the map container
   const containerPt = map.latLngToContainerPoint(latlng);
-  const mapH = map.getContainer().clientHeight;
-  const mapW = map.getContainer().clientWidth;
-  const POPUP_H = 280;
-  let oy = 0, ox = 0;
-  if (containerPt.y - POPUP_H < 10) oy = POPUP_H - containerPt.y + 20;
-  if (containerPt.x > mapW - 160) ox = -(containerPt.x - (mapW - 170));
+  const mapRect     = map.getContainer().getBoundingClientRect();
+  const popup       = document.getElementById('country-popup');
+  const content     = document.getElementById('country-popup-content');
+  content.innerHTML = html;
 
-  L.popup({ maxWidth: 280, className: '', autoPan: false, offset: L.point(ox, oy) })
-    .setLatLng(latlng)
-    .setContent(html)
-    .openOn(map);
+  // Show off-screen first to measure real size
+  popup.style.left = '-9999px'; popup.style.top = '-9999px';
+  popup.classList.add('visible');
+  const pw = popup.offsetWidth  || 290;
+  const ph = popup.offsetHeight || 320;
+
+  const vw = window.innerWidth, vh = window.innerHeight;
+  let left = mapRect.left + containerPt.x + 14;
+  let top  = mapRect.top  + containerPt.y - 20;
+  if (left + pw + 10 > vw) left = mapRect.left + containerPt.x - pw - 14;
+  if (top  + ph + 10 > vh) top  = vh - ph - 10;
+  if (top  < 10)           top  = 10;
+  if (left < 10)           left = 10;
+
+  popup.style.left = left + 'px';
+  popup.style.top  = top  + 'px';
+  map.closePopup();
 
   // Trigger trade flow arrows (async, non-blocking)
   _loadAndShowTrade(iso2, c.name || iso2);
@@ -3160,31 +3173,6 @@ function clearTradeArrows() {
   if (tradeArrowLayer) { map.removeLayer(tradeArrowLayer); tradeArrowLayer = null; }
 }
 
-// Render a trade-balance sparkline as inline SVG (goods balance, last 16 years)
-function _renderTradeSparkline(data) {
-  if (!data || data.length < 2) return '';
-  const recent   = data.slice(-16);
-  const balances = recent.map(d => (d.expGds || 0) - (d.impGds || 0));
-  const maxAbs   = Math.max(...balances.map(Math.abs), 1);
-  const W = 258, H = 34, gap = 2;
-  const barW = Math.max(1, Math.floor((W - gap * (recent.length - 1)) / recent.length));
-  const bars = recent.map((d, i) => {
-    const bal  = (d.expGds || 0) - (d.impGds || 0);
-    const norm = bal / maxAbs;
-    const barH = Math.max(2, Math.abs(norm) * (H / 2 - 2));
-    const y    = norm >= 0 ? H / 2 - barH : H / 2;
-    const fill = norm >= 0 ? '#3fb950' : '#f85149';
-    return `<rect x="${i * (barW + gap)}" y="${y.toFixed(1)}" width="${barW}" height="${barH.toFixed(1)}" fill="${fill}" rx="1" opacity="0.8"/>`;
-  }).join('');
-  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block">
-    <line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="#30363d" stroke-width="1"/>
-    ${bars}
-  </svg>
-  <div class="trade-spark-labels">
-    <span>${recent[0].year}</span><span>${recent[recent.length - 1].year}</span>
-  </div>`;
-}
-
 // Pull top companies for a country from our existing companiesData
 function _getTopCompaniesByIso(iso2, limit = 6) {
   const cos = [];
@@ -3199,43 +3187,35 @@ function _getTopCompaniesByIso(iso2, limit = 6) {
   return cos.slice(0, limit);
 }
 
-// Populate country dropdown once — called after init
-function _populateTradeCountryDropdown() {
-  const sel = document.getElementById('trade-country-select');
-  if (!sel) return;
-  const entries = Object.entries(ISO2_TO_BEA).sort((a, b) => a[1].localeCompare(b[1]));
-  sel.innerHTML = '<option value="">— pick a country —</option>' +
-    entries.map(([iso2, name]) =>
-      `<option value="${iso2}">${isoToFlag(iso2)} ${escHtml(name)}</option>`
-    ).join('');
-  sel.addEventListener('change', function () {
-    const iso2 = this.value;
-    if (iso2) _loadAndShowTrade(iso2, ISO2_TO_BEA[iso2]);
-  });
-}
-
 function openTradePanel(iso2, countryName, data) {
   const latestYear = data[data.length - 1]?.year || 2024;
 
-  // Header
   document.getElementById('trade-panel-flag').textContent  = isoToFlag(iso2);
-  document.getElementById('trade-panel-title').textContent = `${countryName} ↔ US`;
+  document.getElementById('trade-panel-title').textContent = `${countryName} ↔ United States`;
 
-  // Sync dropdown
-  const sel = document.getElementById('trade-country-select');
-  if (sel) sel.value = iso2;
-
-  // Year slider
   const slider = document.getElementById('trade-year-slider');
   slider.min   = data[0]?.year || 1999;
   slider.max   = latestYear;
   slider.value = latestYear;
   slider.dataset.iso2 = iso2;
 
-  // Sparkline (static — same regardless of selected year)
-  document.getElementById('trade-spark').innerHTML = _renderTradeSparkline(data);
+  // Balance history chart via IYChart
+  const chartEl = document.getElementById('trade-chart');
+  chartEl.innerHTML = '';
+  if (window._tradChartDestroy) { window._tradChartDestroy(); window._tradChartDestroy = null; }
+  const balPts = data
+    .filter(d => d.expGds != null || d.expSvcs != null)
+    .map(d => ({
+      t: d.year,
+      v: ((d.expGds || 0) + (d.expSvcs || 0)) - ((d.impGds || 0) + (d.impSvcs || 0)),
+    }));
+  if (balPts.length >= 2) {
+    const { draw, destroy } = _IYChart(chartEl, balPts, { fmt: 'rev', autoColor: true });
+    window._tradChartDestroy = destroy;
+    requestAnimationFrame(draw);
+  }
 
-  // Top companies from our existing data
+  // Top companies
   const topCos = _getTopCompaniesByIso(iso2, 6);
   document.getElementById('trade-companies-list').innerHTML = topCos.length
     ? topCos.map(co => {
@@ -3243,7 +3223,7 @@ function openTradePanel(iso2, countryName, data) {
         const ind = co.industry ? `<span class="tco-ind">${escHtml(co.industry)}</span>` : '';
         return `<div class="tco-row"><span class="tco-name">${escHtml(co.name)}</span>${ind}${rev}</div>`;
       }).join('')
-    : '<div class="tco-empty">No company data available</div>';
+    : '<div class="tco-empty">No company data for this country</div>';
 
   _updateTradePanelNumbers(iso2, data, latestYear);
   drawTradeArrows(iso2, data, latestYear);
@@ -3255,24 +3235,38 @@ function _updateTradePanelNumbers(iso2, data, year) {
   if (!row) return;
   document.getElementById('trade-year-label').textContent = year;
 
-  const fmt = v => v ? '$' + fmtRevenue(v) : '—';
-  document.getElementById('tg-exp-gds').textContent  = fmt(row.expGds);
-  document.getElementById('tg-imp-gds').textContent  = fmt(row.impGds);
-  document.getElementById('tg-exp-svcs').textContent = fmt(row.expSvcs);
-  document.getElementById('tg-imp-svcs').textContent = fmt(row.impSvcs);
+  const fmt = v => v ? '$' + fmtRevenue(v) : null;
+  const expGds = row.expGds || 0, expSvc = row.expSvcs || 0;
+  const impGds = row.impGds || 0, impSvc = row.impSvcs || 0;
+  const expTotal = expGds + expSvc, impTotal = impGds + impSvc;
 
-  const totalExp = (row.expGds || 0) + (row.expSvcs || 0);
-  const totalImp = (row.impGds || 0) + (row.impSvcs || 0);
-  const balance  = totalExp - totalImp;
-  const balEl    = document.getElementById('trade-balance-val');
-  balEl.textContent  = (balance >= 0 ? '+' : '\u2212') + '$' + fmtRevenue(Math.abs(balance));
-  balEl.style.color  = balance >= 0 ? '#3fb950' : '#f85149';
-  document.getElementById('trade-balance-label').textContent = balance >= 0 ? 'US surplus' : 'US deficit';
+  document.getElementById('tf-exp-total').textContent = fmt(expTotal) || '—';
+  document.getElementById('tf-imp-total').textContent = fmt(impTotal) || '—';
+
+  const expParts = [expGds && `Goods ${fmt(expGds)}`, expSvc && `Svc ${fmt(expSvc)}`].filter(Boolean);
+  const impParts = [impGds && `Goods ${fmt(impGds)}`, impSvc && `Svc ${fmt(impSvc)}`].filter(Boolean);
+  document.getElementById('tf-exp-detail').textContent = expParts.join(' · ');
+  document.getElementById('tf-imp-detail').textContent = impParts.join(' · ');
+
+  const maxFlow = Math.max(expTotal, impTotal, 1);
+  document.getElementById('tf-exp-bar').style.width = `${(expTotal / maxFlow * 100).toFixed(1)}%`;
+  document.getElementById('tf-imp-bar').style.width = `${(impTotal / maxFlow * 100).toFixed(1)}%`;
+
+  const balance = expTotal - impTotal;
+  const balEl = document.getElementById('trade-balance-val');
+  balEl.textContent = (balance >= 0 ? '+' : '−') + '$' + fmtRevenue(Math.abs(balance));
+  balEl.style.color = balance >= 0 ? '#3fb950' : '#f85149';
+  document.getElementById('trade-balance-label').textContent = balance >= 0 ? 'US Surplus' : 'US Deficit';
+}
+
+function closeCountryPopup() {
+  document.getElementById('country-popup').classList.remove('visible');
 }
 
 function closeTradePanelFn() {
   document.getElementById('trade-panel').classList.remove('open');
   clearTradeArrows();
+  if (window._tradChartDestroy) { window._tradChartDestroy(); window._tradChartDestroy = null; }
 }
 
 async function _loadAndShowTrade(iso2, countryName) {
