@@ -2964,12 +2964,39 @@ function _cpFmt(val, decimals) {
 }
 
 function _cpWorldMax(key) {
-  var max = 0;
+  var max = 0, v;
   for (var k in countryData) {
-    var v = countryData[k][key];
+    v = countryData[k][key];
     if (Number.isFinite(v) && v > max) max = v;
   }
+  // IMF indicators
+  if (typeof imfFiscal !== 'undefined' && imfFiscal) {
+    for (var k in imfFiscal) {
+      v = imfFiscal[k][key];
+      if (Number.isFinite(v) && v > max) max = v;
+    }
+  }
+  // FRED bond yield
+  if (key === 'bond_yield_10y' && typeof fredYields !== 'undefined' && fredYields) {
+    for (var k in fredYields) {
+      v = fredYields[k].yield_10y;
+      if (Number.isFinite(v) && v > max) max = v;
+    }
+  }
   return max || 1;
+}
+
+function _cpMerged(iso2) {
+  var wb  = countryData[iso2]  || {};
+  var imf = imfFiscal[iso2]    || {};
+  var cd  = Object.assign({}, wb, imf);
+  // FRED bond yield — field names differ from the panel key names
+  var fred = fredYields && fredYields[iso2];
+  if (fred) {
+    cd.bond_yield_10y         = fred.yield_10y;
+    cd.bond_yield_10y_history = fred.yield_history;
+  }
+  return cd;
 }
 
 function _cpFlagEmoji(iso2) {
@@ -2995,8 +3022,8 @@ function _cpGaugeRow(label, val, max, suffix, cls) {
 
 // ── _renderCountryPanel ───────────────────────────────────────────────
 function _renderCountryPanel(iso2) {
-  var cd = countryData[iso2];
-  if (!cd) return;
+  if (!countryData[iso2]) return;
+  var cd = _cpMerged(iso2);
 
   // ── header ────────────────────────────────────────────────────────
   var metaParts = [];
@@ -3081,8 +3108,8 @@ function _renderCountryPanel(iso2) {
 
 // ── _buildRadar ───────────────────────────────────────────────────────
 function _buildRadar(iso2) {
-  var cd = countryData[iso2];
-  if (!cd) return "";
+  if (!countryData[iso2]) return "";
+  var cd = _cpMerged(iso2);
 
   // 6 axes: key, label, whether lower-is-better (inverted)
   var axes = [
@@ -3118,7 +3145,8 @@ function _buildRadar(iso2) {
   function avgScore(axis) {
     var sum = 0, count = 0;
     for (var k in countryData) {
-      var v = countryData[k][axis.key];
+      var merged = _cpMerged(k);
+      var v = merged[axis.key];
       if (Number.isFinite(v)) { sum += score(axis.key, axis.inv, v); count++; }
     }
     return count ? sum / count : 0;
@@ -3178,19 +3206,20 @@ function _buildRadar(iso2) {
 
 // ── _buildRankChips ───────────────────────────────────────────────────
 function _buildRankChips(iso2) {
-  var cd = countryData[iso2];
-  if (!cd || !cd.region) return "";
+  var wbData = countryData[iso2];
+  if (!wbData || !wbData.region) return "";
 
-  var region = cd.region;
+  var region = wbData.region;
+  var cd = _cpMerged(iso2);
 
   // rank iso2 among peers in the same region for a given indicator
   function rankIn(key, lowerIsBetter) {
     var peers = [];
     for (var k in countryData) {
-      var v = countryData[k][key];
-      if (Number.isFinite(v) && countryData[k].region === region) {
-        peers.push({ iso: k, val: v });
-      }
+      if (countryData[k].region !== region) continue;
+      var merged = _cpMerged(k);
+      var v = merged[key];
+      if (Number.isFinite(v)) peers.push({ iso: k, val: v });
     }
     if (peers.length < 2) return null;
     peers.sort(function(a, b) {
@@ -3232,8 +3261,8 @@ function _buildRankChips(iso2) {
 
 // ── _switchTrendTab ───────────────────────────────────────────────────
 function _switchTrendTab(iso2, key) {
-  var cd = countryData[iso2];
-  if (!cd) return;
+  if (!countryData[iso2]) return;
+  var cd = _cpMerged(iso2);
 
   // update active tab UI
   document.querySelectorAll("#cp-trend .cp-tab").forEach(function(btn) {
