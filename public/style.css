@@ -1006,7 +1006,7 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
   transition: right 0.3s cubic-bezier(.4,0,.2,1);
   box-shadow: -6px 0 24px rgba(0,0,0,0.5); overflow: hidden;
 }
-#stats-panel.open { right: 420px; }
+#stats-panel.open { right: 420px; } /* overridden by JS when country-panel is open */
 #stats-panel-header {
   display: flex; align-items: center; gap: 8px;
   padding: 10px 12px; border-bottom: 1px solid #30363d;
@@ -1248,16 +1248,20 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 /* rank chips */
 .cp-rank-hdr { font-size: 0.65rem; color: #484f58; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
 .cp-rank-chip {
-  font-size: 0.72rem; color: #8b949e; background: #161b22;
-  border: 1px solid #21262d; border-radius: 3px; padding: 4px 8px;
-  display: flex; align-items: center; gap: 5px;
+  display: block; width: 100%; text-align: left;
+  background: #161b22; border: 1px solid #21262d; border-radius: 5px;
+  padding: 6px 8px; cursor: pointer; font-family: inherit;
+  transition: border-color 0.15s, background 0.15s;
 }
-.cp-chip-medal { font-size: 0.85rem; }
-.cp-chip-lbl { flex: 1; color: #c9d1d9; }
-.cp-chip-count { color: #484f58; font-size: 0.68rem; }
+.cp-rank-chip:hover { border-color: #58a6ff; background: #1c2333; }
+.cp-chip-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.cp-chip-lbl { font-size: 0.73rem; color: #c9d1d9; font-weight: 500; }
+.cp-chip-rank { font-size: 0.78rem; color: #58a6ff; font-weight: 700; white-space: nowrap; }
+.cp-chip-sub { font-size: 0.62rem; color: #484f58; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cp-rank-chips { display: flex; flex-direction: column; gap: 5px; }
 
-/* trend tabs */
-#cp-trend { border-top: 1px solid #21262d; flex-shrink: 0; background: #0d1117; }
+/* trend tabs (hidden — indicators already shown in gauge section) */
+#cp-trend { display: none; }
 .cp-tab-strip {
   display: flex; gap: 2px; padding: 6px 10px 0; overflow-x: auto;
   background: #161b22; border-bottom: 1px solid #21262d;

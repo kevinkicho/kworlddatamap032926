@@ -1104,7 +1104,9 @@ function _renderStatsPanel() {
   const _sp = document.getElementById('stats-panel');
   const _wikiOpen = document.getElementById('wiki-sidebar')?.classList.contains('open');
   const _corpOpen = document.getElementById('corp-panel')?.classList.contains('open');
-  _sp.style.right = ((_wikiOpen && _corpOpen) ? 880 : _corpOpen ? 460 : 420) + 'px';
+  const _cpOpen   = document.getElementById('country-panel')?.classList.contains('open');
+  const _baseRight = _cpOpen ? 600 : (_wikiOpen && _corpOpen) ? 880 : _corpOpen ? 460 : 420;
+  _sp.style.right = _baseRight + 'px';
   _sp.classList.add('open');
   _updateStatsListHtml();
 }
@@ -2883,6 +2885,10 @@ function openCountryPanel(iso2) {
   // slide panel in
   document.getElementById("country-panel").classList.add("open");
 
+  // if stats panel is already open, push it left to clear the country panel
+  const _spEl = document.getElementById('stats-panel');
+  if (_spEl && _spEl.classList.contains('open')) _spEl.style.right = '600px';
+
   // highlight selected country border on choropleth
   if (choroplethLayer) {
     choroplethLayer.eachLayer(function(layer) {
@@ -2914,6 +2920,13 @@ function closeCountryPanel() {
   }
   if (choroplethLayer) {
     choroplethLayer.eachLayer(function(l) { choroplethLayer.resetStyle(l); });
+  }
+  // restore stats panel to default position (next to wiki-sidebar)
+  const _spEl2 = document.getElementById('stats-panel');
+  if (_spEl2 && _spEl2.classList.contains('open')) {
+    const _wikiOpen2 = document.getElementById('wiki-sidebar')?.classList.contains('open');
+    const _corpOpen2 = document.getElementById('corp-panel')?.classList.contains('open');
+    _spEl2.style.right = ((_wikiOpen2 && _corpOpen2) ? 880 : _corpOpen2 ? 460 : 420) + 'px';
   }
 }
 
