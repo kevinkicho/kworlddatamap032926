@@ -1624,6 +1624,7 @@ let fredYields     = {};   // ISO2 → {yield_10y, yield_10y_date, yield_history
 let imfFiscal      = {};   // ISO2 → {govt_debt_gdp, fiscal_balance_gdp, ...} (from imf-fiscal.json)
 let _cpCurrentIso2 = null;
 let _cpEscListener = null;
+function _cpMapClickHandler() { if (_cpCurrentIso2) closeCountryPanel(); }
 
 const ISO2_TO_ISO3 = { US:"USA", GB:"GBR", DE:"DEU", FR:"FRA", JP:"JPN",
   CN:"CHN", IN:"IND", BR:"BRA", CA:"CAN", AU:"AUS", KR:"KOR", MX:"MEX",
@@ -2740,7 +2741,8 @@ async function init() {
     rebuildMapLayer();
     if (worldGeo && Object.keys(countryData).length) {
       buildChoropleth();
-      map.on("click", function() { if (_cpCurrentIso2) closeCountryPanel(); });
+      map.off("click", _cpMapClickHandler);
+      map.on("click", _cpMapClickHandler);
       initChoroControls();
     }
     updateStats();
@@ -2847,7 +2849,12 @@ function buildChoropleth() {
           e.target.setStyle({ weight: 1.5, color: '#58a6ff', fillOpacity: e.target.options.fillOpacity + 0.15 });
           e.target.bringToFront();
         },
-        mouseout: function (e) { choroplethLayer.resetStyle(e.target); },
+        mouseout: function (e) {
+          var liso = e.target.feature && e.target.feature.properties && e.target.feature.properties.iso2;
+          if (liso !== _cpCurrentIso2) {
+            choroplethLayer.resetStyle(e.target);
+          }
+        },
         click: function(e) {
           L.DomEvent.stopPropagation(e);
           openCountryPanel(iso2);
