@@ -471,6 +471,7 @@ describe('_gaugeWidth', () => {
   test('above worldMax clamps to 100', () => assert.equal(_gaugeWidth(150, 100), 100));
   test('half worldMax returns 50', () => assert.equal(_gaugeWidth(50, 100), 50));
   test('result is integer', () => assert.equal(_gaugeWidth(33, 100), 33));
+  test('NaN value returns 0', () => assert.equal(_gaugeWidth(NaN, 100), 0));
 });
 
 // ── _radarScore ───────────────────────────────────────────────────────────────
@@ -487,4 +488,12 @@ describe('_radarScore', () => {
     assert.ok(_radarScore('gdp_per_capita', 200, 100) <= 1);
     assert.ok(_radarScore('gdp_per_capita', -10, 100) >= 0);
   });
+  test('fiscal_balance_gdp: -15 → 0 (worst)', () =>
+    assert.equal(_radarScore('fiscal_balance_gdp', -15, 100), 0));
+  test('fiscal_balance_gdp: 0 → 0.5 (balanced)', () =>
+    assert.equal(_radarScore('fiscal_balance_gdp', 0, 100), 0.5));
+  test('fiscal_balance_gdp: +15 → 1 (best)', () =>
+    assert.equal(_radarScore('fiscal_balance_gdp', 15, 100), 1));
+  test('NaN value returns 0', () =>
+    assert.equal(_radarScore('gdp_per_capita', NaN, 100), 0));
 });
