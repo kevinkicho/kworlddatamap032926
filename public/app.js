@@ -1809,8 +1809,13 @@ const WB_STAT_DEFS = {
   wb_electricity_pct: { label:'Electricity Access',          key:'electricity_pct', fmt: v=>v.toFixed(1)+'%',                   higherBetter:true  },
   wb_pm25:            { label:'PM2.5 Air Pollution',         key:'pm25',            fmt: v=>v.toFixed(1)+' μg/m³',              higherBetter:false },
   wb_forest_pct:      { label:'Forest Cover',                key:'forest_pct',      fmt: v=>v.toFixed(1)+'%',                   higherBetter:null  },
-  wb_air_death_rate:  { label:'Air Pollution Mortality',     key:'air_death_rate',  fmt: v=>v.toFixed(1)+'/100k',               higherBetter:false },
-  wb_road_death_rate: { label:'Road Traffic Mortality',      key:'road_death_rate', fmt: v=>v.toFixed(1)+'/100k',               higherBetter:false },
+  wb_air_death_rate:      { label:'Air Pollution Mortality',  key:'air_death_rate',      fmt: v=>v.toFixed(1)+'/100k',   higherBetter:false },
+  wb_road_death_rate:     { label:'Road Traffic Mortality',  key:'road_death_rate',     fmt: v=>v.toFixed(1)+'/100k',   higherBetter:false },
+  wb_govt_debt_gdp:       { label:'Govt Debt (% GDP)',       key:'govt_debt_gdp',       fmt: v=>v.toFixed(1)+'%',       higherBetter:false },
+  wb_fiscal_balance_gdp:  { label:'Fiscal Balance (% GDP)',  key:'fiscal_balance_gdp',  fmt: v=>v.toFixed(1)+'%',       higherBetter:true  },
+  wb_cpi_inflation:       { label:'CPI Inflation',           key:'cpi_inflation',       fmt: v=>v.toFixed(1)+'%',       higherBetter:false },
+  wb_unemployment_rate:   { label:'Unemployment Rate',       key:'unemployment_rate',   fmt: v=>v.toFixed(1)+'%',       higherBetter:false },
+  wb_bond_yield_10y:      { label:'10-Year Bond Yield',      key:'bond_yield_10y',      fmt: v=>v.toFixed(2)+'%',       higherBetter:null  },
 };
 
 // Company-level stats — company QID used as identifier; values converted to USD for fair ranking
@@ -3016,26 +3021,7 @@ function _renderCountryPanel(iso2) {
       (typeof _buildRankChips === "function" ? _buildRankChips(iso2) : "") +
     "</div>";
 
-  // ── trend tab strip ───────────────────────────────────────────────
-  var tabs = [
-    { key: "gdp_per_capita",    label: "GDP/cap"      },
-    { key: "govt_debt_gdp",     label: "Debt"         },
-    { key: "cpi_inflation",     label: "Inflation"    },
-    { key: "life_expectancy",   label: "Life exp"     },
-    { key: "unemployment_rate", label: "Unemployment" },
-    { key: "bond_yield_10y",    label: "Bond yield"   }
-  ];
-  var tabHtml = tabs.map(function(t) {
-    return "<button class=\"cp-tab" + (t.key === "gdp_per_capita" ? " active" : "") + "\" " +
-           "onclick=\"_switchTrendTab(" + JSON.stringify(iso2) + "," + JSON.stringify(t.key) + ")\">" +
-           escHtml(t.label) + "</button>";
-  }).join("");
-  document.getElementById("cp-trend").innerHTML =
-    "<div class=\"cp-tab-strip\">" + tabHtml + "</div>" +
-    "<div id=\"cp-chart-area\"></div>";
-
-  // render default tab
-  if (typeof _switchTrendTab === "function") _switchTrendTab(iso2, "gdp_per_capita");
+  document.getElementById("cp-trend").textContent = "";
 }
 
 // ── _buildRadar ───────────────────────────────────────────────────────
@@ -3162,25 +3148,25 @@ function _buildRankChips(iso2) {
   }
 
   var indicators = [
-    { key: "gdp_per_capita",    label: "GDP/cap",     inv: false },
-    { key: "life_expectancy",   label: "Life exp",    inv: false },
-    { key: "govt_debt_gdp",     label: "Debt/GDP",    inv: true  },
-    { key: "cpi_inflation",     label: "Inflation",   inv: true  },
-    { key: "unemployment_rate", label: "Unemployment",inv: true  }
+    { key: "gdp_per_capita",    label: "GDP/cap",      inv: false, wbKey: "wb_gdp_per_capita"    },
+    { key: "life_expectancy",   label: "Life exp",     inv: false, wbKey: "wb_life_expectancy"   },
+    { key: "govt_debt_gdp",     label: "Debt/GDP",     inv: true,  wbKey: "wb_govt_debt_gdp"     },
+    { key: "cpi_inflation",     label: "Inflation",    inv: true,  wbKey: "wb_cpi_inflation"     },
+    { key: "unemployment_rate", label: "Unemployment", inv: true,  wbKey: "wb_unemployment_rate" }
   ];
 
   var chips = indicators.map(function(ind) {
     var r = rankIn(ind.key, ind.inv);
     if (!r) return "";
-    var medal = r.rank === 1 ? "\uD83E\uDD47" :   // 🥇
-                r.rank === 2 ? "\uD83E\uDD48" :   // 🥈
-                r.rank === 3 ? "\uD83E\uDD49" :   // 🥉
-                "#" + r.rank;
-    return "<div class=\"cp-rank-chip\">" +
-      "<span class=\"cp-chip-medal\">" + medal + "</span>" +
-      "<span class=\"cp-chip-lbl\">"   + escHtml(ind.label)  + "</span>" +
-      "<span class=\"cp-chip-count\">/ " + r.total + " " + escHtml(region) + "</span>" +
-    "</div>";
+    var rankLabel = "#" + r.rank;
+    var onclick = "openStatsPanel(" + JSON.stringify(ind.wbKey) + "," + JSON.stringify(iso2) + ")";
+    return "<button class=\"cp-rank-chip\" onclick=\"" + escHtml(onclick) + "\" title=\"Click to see global ranking\">" +
+      "<div class=\"cp-chip-top\">" +
+        "<span class=\"cp-chip-lbl\">" + escHtml(ind.label) + "</span>" +
+        "<span class=\"cp-chip-rank\">" + rankLabel + "</span>" +
+      "</div>" +
+      "<div class=\"cp-chip-sub\">of " + r.total + " · " + escHtml(region) + "</div>" +
+    "</button>";
   }).filter(function(s) { return s !== ""; }).join("");
 
   if (!chips) return "";
@@ -4963,6 +4949,11 @@ function _renderFinanceTab(co, containerEl) {
   const sector   = co.sector;
   const industry = co.industry;
 
+  const analystRating = co.analyst_rating || null;
+  const analystTarget = co.analyst_target_price || null;
+  const analystCount  = co.analyst_count  || null;
+  const lastPrice     = co.last_price_yahoo || null;
+
   const opMargin  = co.operating_margin;
   const prMargin  = co.profit_margin;
   const grMargin  = co.gross_margin;
@@ -5064,6 +5055,30 @@ function _renderFinanceTab(co, containerEl) {
     html += grid(
       chip('Insider Held', pctInsider != null ? pct(pctInsider) : null),
       chip('Institutional', pctInst != null ? pct(pctInst) : null),
+    );
+  }
+
+  // Analyst Consensus
+  if (analystRating || analystTarget != null) {
+    const RATING_LABELS = {
+      strongBuy: 'Strong Buy', buy: 'Buy', hold: 'Hold',
+      underperform: 'Underperform', sell: 'Sell',
+    };
+    const RATING_COLORS = {
+      strongBuy: '#3fb950', buy: '#58a6ff', hold: '#f0a500',
+      underperform: '#f85149', sell: '#f85149',
+    };
+    const ratingLabel = RATING_LABELS[analystRating] || analystRating;
+    const ratingColor = RATING_COLORS[analystRating] || '#8b949e';
+    let uptside = null;
+    if (analystTarget != null && lastPrice != null && lastPrice > 0) {
+      uptside = (analystTarget - lastPrice) / lastPrice;
+    }
+    html += sec('Analyst Consensus' + (analystCount ? ' · ' + analystCount + ' analysts' : ''));
+    html += grid(
+      analystRating ? chip('Rating', ratingLabel, ratingColor) : '',
+      analystTarget != null ? chip('Price Target', (curSym || '$') + analystTarget.toFixed(2)) : '',
+      uptside != null ? chip('Upside', fmtP(uptside), clr(uptside)) : '',
     );
   }
 
