@@ -3011,7 +3011,18 @@ function _renderCountryPanel(iso2) {
     _cpGaugeRow("CPI Inflation", inf,  maxInf, "%", infCls) +
     _cpGaugeRow("Unemployment", cd.unemployment_rate,              maxUnemp, "%") +
     "<div class=\"cp-gauge-section-hdr\">FRED</div>" +
-    _cpGaugeRow("Bond yield",   cd.bond_yield_10y,                 maxYld,   "%");
+    _cpGaugeRow("Bond yield",   cd.bond_yield_10y,                 maxYld,   "%") +
+    (Number.isFinite(cd.cb_rate)
+      ? "<div class=\"cp-gauge-section-hdr\">" + escHtml(cd.cb_bank || "Central Bank") + "</div>" +
+        "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">" + escHtml(cd.cb_rate_label || "Policy Rate") + "</span>" +
+        "<span class=\"cp-gauge-info\">" + cd.cb_rate.toFixed(2) + "%</span></div>"
+      : "") +
+    (cd.credit_sp || cd.credit_moodys || cd.credit_fitch
+      ? "<div class=\"cp-gauge-section-hdr\">Credit Ratings</div>" +
+        (cd.credit_sp     ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">S&amp;P</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_sp)     + "</span></div>" : "") +
+        (cd.credit_moodys ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Moody's</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_moodys) + "</span></div>" : "") +
+        (cd.credit_fitch  ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Fitch</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_fitch)  + "</span></div>" : "")
+      : "");
 
   // ── body: two-column ──────────────────────────────────────────────
   document.getElementById("cp-body").innerHTML =

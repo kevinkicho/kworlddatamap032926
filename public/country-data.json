@@ -6662,7 +6662,13 @@
         "2026-02",
         4.77
       ]
-    ]
+    ],
+    "cb_rate": 4.35,
+    "cb_bank": "RBA",
+    "cb_rate_label": "Cash Rate",
+    "credit_sp": "AAA",
+    "credit_moodys": "Aaa",
+    "credit_fitch": "AAA"
   },
   "AT": {
     "name": "Austria",
@@ -7709,7 +7715,10 @@
         "2026-02",
         3.065
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "AZ": {
     "name": "Azerbaijan",
@@ -10014,7 +10023,10 @@
         "2026-02",
         3.3
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "BJ": {
     "name": "Benin",
@@ -17239,7 +17251,10 @@
         2026,
         7.3
       ]
-    ]
+    ],
+    "credit_sp": "BB",
+    "credit_moodys": "Ba1",
+    "credit_fitch": "BB"
   },
   "BB": {
     "name": "Barbados",
@@ -21633,7 +21648,13 @@
         "2026-02",
         3.288
       ]
-    ]
+    ],
+    "cb_rate": 5,
+    "cb_bank": "Bank of Canada",
+    "cb_rate_label": "Overnight Rate",
+    "credit_sp": "AAA",
+    "credit_moodys": "Aaa",
+    "credit_fitch": "AA+"
   },
   "C4": {
     "name": "East Asia and the Pacific (IFC classification)",
@@ -22803,7 +22824,10 @@
         "2026-02",
         0.25
       ]
-    ]
+    ],
+    "cb_rate": 1.75,
+    "cb_bank": "SNB",
+    "cb_rate_label": "Policy Rate"
   },
   "JG": {
     "name": "Channel Islands",
@@ -24338,7 +24362,13 @@
         2026,
         5.1
       ]
-    ]
+    ],
+    "cb_rate": 3.45,
+    "cb_bank": "PBOC",
+    "cb_rate_label": "1-Year LPR",
+    "credit_sp": "A+",
+    "credit_moodys": "A1",
+    "credit_fitch": "A+"
   },
   "CI": {
     "name": "Cote d'Ivoire",
@@ -30656,7 +30686,10 @@
         2026,
         4.7
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "CZ": {
     "name": "Czechia",
@@ -32552,7 +32585,13 @@
         "2026-01",
         2.807
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate",
+    "credit_sp": "AAA",
+    "credit_moodys": "Aaa",
+    "credit_fitch": "AAA"
   },
   "DJ": {
     "name": "Djibouti",
@@ -39627,7 +39666,10 @@
         "2026-02",
         3.18
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "EE": {
     "name": "Estonia",
@@ -40270,7 +40312,10 @@
         2026,
         7.4
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "ET": {
     "name": "Ethiopia",
@@ -42216,7 +42261,10 @@
         "2026-02",
         3.16
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "FJ": {
     "name": "Fiji",
@@ -44078,7 +44126,13 @@
         "2026-02",
         3.4
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate",
+    "credit_sp": "AA-",
+    "credit_moodys": "Aa2",
+    "credit_fitch": "AA-"
   },
   "FO": {
     "name": "Faroe Islands",
@@ -46387,7 +46441,13 @@
         "2026-02",
         4.432
       ]
-    ]
+    ],
+    "cb_rate": 5.25,
+    "cb_bank": "Bank of England",
+    "cb_rate_label": "Bank Rate",
+    "credit_sp": "AA",
+    "credit_moodys": "Aa3",
+    "credit_fitch": "AA-"
   },
   "GE": {
     "name": "Georgia",
@@ -51165,7 +51225,10 @@
         "2026-02",
         3.39
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "GD": {
     "name": "Grenada",
@@ -59938,7 +60001,10 @@
         "2026-02",
         3.034
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "IR": {
     "name": "Iran, Islamic Rep.",
@@ -63679,7 +63745,13 @@
         "2026-02",
         3.388
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate",
+    "credit_sp": "BBB",
+    "credit_moodys": "Baa3",
+    "credit_fitch": "BBB"
   },
   "JM": {
     "name": "Jamaica",
@@ -66328,7 +66400,13 @@
         "2026-02",
         2.11
       ]
-    ]
+    ],
+    "cb_rate": 0.1,
+    "cb_bank": "Bank of Japan",
+    "cb_rate_label": "Policy Rate",
+    "credit_sp": "A+",
+    "credit_moodys": "A1",
+    "credit_fitch": "A"
   },
   "KZ": {
     "name": "Kazakhstan",
@@ -77194,7 +77272,10 @@
         2026,
         6.1
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "LU": {
     "name": "Luxembourg",
@@ -77945,7 +78026,10 @@
         2026,
         6.2
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "LV": {
     "name": "Latvia",
@@ -78572,7 +78656,10 @@
         2026,
         6.6
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "MO": {
     "name": "Macao SAR, China",
@@ -84907,7 +84994,10 @@
         2026,
         2.5
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "MM": {
     "name": "Myanmar",
@@ -93371,7 +93461,13 @@
         "2026-02",
         2.849
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate",
+    "credit_sp": "AAA",
+    "credit_moodys": "Aaa",
+    "credit_fitch": "AAA"
   },
   "NO": {
     "name": "Norway",
@@ -94482,7 +94578,10 @@
         "2026-02",
         4.162
       ]
-    ]
+    ],
+    "cb_rate": 4.5,
+    "cb_bank": "Norges Bank",
+    "cb_rate_label": "Policy Rate"
   },
   "NP": {
     "name": "Nepal",
@@ -96429,7 +96528,10 @@
         "2026-02",
         4.45
       ]
-    ]
+    ],
+    "cb_rate": 5.5,
+    "cb_bank": "RBNZ",
+    "cb_rate_label": "OCR"
   },
   "OE": {
     "name": "OECD members",
@@ -103517,7 +103619,10 @@
         "2026-02",
         3.13
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "PY": {
     "name": "Paraguay",
@@ -116043,7 +116148,10 @@
         2026,
         5.6
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "SI": {
     "name": "Slovenia",
@@ -116694,7 +116802,10 @@
         2026,
         4
       ]
-    ]
+    ],
+    "cb_rate": 4,
+    "cb_bank": "ECB",
+    "cb_rate_label": "Main Refi Rate"
   },
   "SE": {
     "name": "Sweden",
@@ -117753,7 +117864,13 @@
         "2026-02",
         2.64
       ]
-    ]
+    ],
+    "cb_rate": 3.75,
+    "cb_bank": "Riksbank",
+    "cb_rate_label": "Policy Rate",
+    "credit_sp": "AAA",
+    "credit_moodys": "Aaa",
+    "credit_fitch": "AAA"
   },
   "SZ": {
     "name": "Eswatini",
@@ -130290,7 +130407,13 @@
         "2026-02",
         4.13
       ]
-    ]
+    ],
+    "cb_rate": 5.25,
+    "cb_bank": "Federal Reserve",
+    "cb_rate_label": "Fed Funds Rate",
+    "credit_sp": "AA+",
+    "credit_moodys": "Aaa",
+    "credit_fitch": "AA+"
   },
   "UZ": {
     "name": "Uzbekistan",
