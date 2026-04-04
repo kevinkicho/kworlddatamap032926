@@ -2986,7 +2986,7 @@ function _cpGaugeRow(label, val, max, suffix, cls) {
     return "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">" + escHtml(label) +
            "</span><span class=\"cp-gauge-nil\">--</span></div>";
   }
-  var pct = Math.min(100, (val / max) * 100).toFixed(1);
+  var pct = Math.min(100, (Math.abs(val) / max) * 100).toFixed(1);
   return "<div class=\"cp-gauge-row " + cls + "\">" +
     "<span class=\"cp-gauge-lbl\">" + escHtml(label) + "</span>" +
     "<div class=\"cp-gauge-bar\"><div class=\"cp-gauge-fill\" style=\"width:" + pct + "%\"></div></div>" +
@@ -3043,8 +3043,8 @@ function _renderCountryPanel(iso2) {
       : "") +
     "<div class=\"cp-gauge-section-hdr\">IMF</div>" +
     _cpGaugeRow("Debt/GDP",     debt,                              maxDebt,  "%") +
-    _cpGaugeRow("Fiscal bal",   Number.isFinite(fisc) ? Math.abs(fisc) : null, 20, "%", fiscCls) +
-    _cpGaugeRow("CPI Inflation",Number.isFinite(inf)  ? Math.abs(inf)  : null, maxInf, "%", infCls) +
+    _cpGaugeRow("Fiscal bal",    fisc, 20,     "%", fiscCls) +
+    _cpGaugeRow("CPI Inflation", inf,  maxInf, "%", infCls) +
     _cpGaugeRow("Unemployment", cd.unemployment_rate,              maxUnemp, "%") +
     "<div class=\"cp-gauge-section-hdr\">FRED</div>" +
     _cpGaugeRow("Bond yield",   cd.bond_yield_10y,                 maxYld,   "%");
