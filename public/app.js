@@ -2975,7 +2975,7 @@ function _cpFlagEmoji(iso2) {
 // wbKey + iso2: if provided, the row becomes clickable (opens stats panel).
 function _cpWgiRow(label, val, wbKey, iso2) {
   var clickable = wbKey && iso2;
-  var onc = clickable ? " onclick=\"openStatsPanel(" + JSON.stringify(wbKey) + "," + JSON.stringify(iso2) + ")\"" : "";
+  var onc = clickable ? " onclick=\"" + escHtml("openStatsPanel(" + JSON.stringify(wbKey) + "," + JSON.stringify(iso2) + ")") + "\"" : "";
   var clickCls = clickable ? " cp-gauge-row-clickable" : "";
   if (!Number.isFinite(val)) {
     return "<div class=\"cp-gauge-row" + clickCls + "\"" + onc + "><span class=\"cp-gauge-lbl\">" + escHtml(label) +
@@ -2995,7 +2995,7 @@ function _cpGaugeRow(label, val, max, suffix, cls, wbKey, iso2) {
   suffix = suffix || "";
   cls    = cls    || "";
   var clickable = wbKey && iso2;
-  var onc = clickable ? " onclick=\"openStatsPanel(" + JSON.stringify(wbKey) + "," + JSON.stringify(iso2) + ")\"" : "";
+  var onc = clickable ? " onclick=\"" + escHtml("openStatsPanel(" + JSON.stringify(wbKey) + "," + JSON.stringify(iso2) + ")") + "\"" : "";
   var clickCls = clickable ? " cp-gauge-row-clickable" : "";
   if (!Number.isFinite(val)) {
     return "<div class=\"cp-gauge-row" + clickCls + "\"" + onc + "><span class=\"cp-gauge-lbl\">" + escHtml(label) +
