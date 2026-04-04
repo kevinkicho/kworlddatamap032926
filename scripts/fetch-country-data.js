@@ -79,6 +79,7 @@ async function fetchIndicator(indicator, validIso2, out) {
 
   // Track the best (most recent) value per country across pages/years
   const best = {};   // iso2 → { value, date }
+  const all  = {};   // iso2 → [{ value, date }]  (all years)
 
   let page = 1, totalPages = 1;
   try {
@@ -97,6 +98,9 @@ async function fetchIndicator(indicator, validIso2, out) {
         if (!best[iso2] || row.date > best[iso2].date) {
           best[iso2] = { value: row.value, date: row.date };
         }
+        // Accumulate all years for history arrays
+        if (!all[iso2]) all[iso2] = [];
+        all[iso2].push({ value: row.value, date: row.date });
       }
 
       page++;
@@ -113,6 +117,16 @@ async function fetchIndicator(indicator, validIso2, out) {
     out[iso2][indicator.key]            = parseFloat(value.toFixed(2));
     out[iso2][indicator.key + '_year']  = date;
     filled++;
+  }
+
+  if (indicator.key === 'gdp_per_capita' || indicator.key === 'life_expectancy') {
+    for (const [iso2, entries] of Object.entries(all)) {
+      if (!out[iso2]) out[iso2] = {};
+      out[iso2][indicator.key + '_history'] = entries
+        .filter(e => e.value != null && isFinite(Number(e.value)))
+        .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+        .map(e => [parseInt(String(e.date)), parseFloat(Number(e.value).toFixed(2))]);
+    }
   }
 
   console.log(`${filled} countries`);
