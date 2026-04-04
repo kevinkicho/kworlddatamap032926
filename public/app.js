@@ -1314,7 +1314,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     ${nicknamesHtml ? infoChip('Known as', nicknamesHtml, true, true) : ''}
     ${gdpHtml      ? infoChip('City GDP', gdpHtml, true): ''}
     ${hdi          ? infoChip('HDI', hdi)               : ''}
-    ${(() => { const g = gawcByQid[city.qid]; if (!g) return ''; const col = GAWC_TIER_COLOR[g.tier] || '#8b949e'; return infoChip('World City', `<span class="gawc-tier-chip" style="background:${col}22;color:${col};border:1px solid ${col}55">${escHtml(g.tier)}</span>`, true, false, 'gawc_score'); })()}
+    ${(() => { const g = gawcCities[city.qid]; if (!g) return ''; const col = GAWC_TIER_COLOR[g.tier] || '#8b949e'; return infoChip('World City', `<span class="gawc-tier-chip" style="background:${col}22;color:${col};border:1px solid ${col}55">${escHtml(g.tier)}</span>`, true, false, 'gawc_score'); })()}
     ${(() => { const a = airportData[city.qid]; if (!a) return ''; return infoChip('Airport', `<span style="color:#58a6ff;font-weight:600">✈ ${fmtNum(a.directDestinations)}</span> <span style="color:#8b949e;font-size:0.78em">direct routes · ${escHtml(a.iata)}</span>`, true, false, 'directDestinations'); })()}
     ${(() => {
       const ca = climateAnnual(getCityClimate(city));
@@ -1614,8 +1614,7 @@ let censusCities   = {};   // QID → ACS indicators (from census-cities.json)
 let censusBusiness = {};   // QID → business/pop data (from census-business.json)
 let beaTradeData   = {};   // ISO2 → [{year,expGds,impGds,expSvc,impSvc}] (from bea-trade.json)
 let eurostatCities = {};   // QID → Eurostat Urban Audit indicators (from eurostat-cities.json)
-let gawcCities     = {};   // city name → {tier, score, iso} (GaWC 2024 world city network)
-let gawcByQid      = {};   // QID → {tier, score, name} (built at init from gawcCities)
+let gawcCities     = {};   // QID → {tier, score} (GaWC 2024 world city network)
 let japanPrefData  = {};   // prefecture English name → {perCapitaIncomeJpy, gdpJpy, ...}
 let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
@@ -1648,28 +1647,6 @@ const GAWC_TIER_COLOR = {
   'High sufficiency': '#484f58', 'Sufficiency': '#484f58',
 };
 
-function _buildGawcByQid() {
-  if (!Object.keys(gawcCities).length || !allCities.length) return;
-  const normalize = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
-  // Build name index from allCities: normalized name → city objects
-  const nameIdx = {};
-  for (const c of allCities) {
-    const n = normalize(c.name);
-    if (!nameIdx[n]) nameIdx[n] = [];
-    nameIdx[n].push(c);
-  }
-  let matched = 0;
-  for (const [name, info] of Object.entries(gawcCities)) {
-    const n = normalize(name);
-    const candidates = nameIdx[n] || [];
-    // Prefer same iso2, then any
-    let city = candidates.find(c => c.iso === info.iso) || candidates[0];
-    if (!city) continue;
-    gawcByQid[city.qid] = { tier: info.tier, score: info.score, name };
-    matched++;
-  }
-  console.log(`[GaWC] Matched ${matched}/${Object.keys(gawcCities).length} cities to QIDs`);
-}
 
 // Color scale config per metric: { lo, hi, stops: [[r,g,b],…] }
 const CENSUS_METRICS = {
@@ -1799,7 +1776,7 @@ const CITY_STAT_DEFS = {
   density:    { label:'Pop. Density',       key: c=>c.pop&&c.area_km2?Math.round(c.pop/c.area_km2):null,           fmt: v=>fmtNum(v)+'/km²',             higherBetter:null },
   elev_m:     { label:'Elevation',          key: c=>c.elev_m,                                                      fmt: v=>fmtNum(Math.round(v))+' m',   higherBetter:null },
   founded:    { label:'Year Founded',       key: c=>c.founded,                                                     fmt: v=>v<0?Math.abs(v)+' BC':String(v), higherBetter:false },
-  gawc_score: { label:'GaWC World City Rank', key: c=>gawcByQid[c.qid]?.score ?? null,
+  gawc_score: { label:'GaWC World City Rank', key: c=>gawcCities[c.qid]?.score ?? null,
                 fmt: v => { const tier = Object.entries(GAWC_TIER_SCORE).find(([,s])=>s===v)?.[0]||''; return tier; },
                 higherBetter:true },
   directDestinations: { label:'Direct Air Destinations', key: c=>airportData[c.qid]?.directDestinations ?? null,
@@ -2720,7 +2697,6 @@ async function init() {
 
     // ── Phase 6: apply overrides + build UI ──
     applyOverrides();
-    _buildGawcByQid();
     rebuildMapLayer();
     if (worldGeo && Object.keys(countryData).length) {
       buildChoropleth();
