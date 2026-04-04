@@ -2971,30 +2971,38 @@ function _cpFlagEmoji(iso2) {
          String.fromCodePoint(base + iso2.toUpperCase().charCodeAt(1));
 }
 
-// WGI rows: raw -2.5 to +2.5; bar fill normalised to 0-5 range so negatives show correctly
-function _cpWgiRow(label, val) {
+// WGI rows: raw -2.5 to +2.5; bar fill normalised to 0-5 range so negatives show correctly.
+// wbKey + iso2: if provided, the row becomes clickable (opens stats panel).
+function _cpWgiRow(label, val, wbKey, iso2) {
+  var clickable = wbKey && iso2;
+  var onc = clickable ? " onclick=\"openStatsPanel(" + JSON.stringify(wbKey) + "," + JSON.stringify(iso2) + ")\"" : "";
+  var clickCls = clickable ? " cp-gauge-row-clickable" : "";
   if (!Number.isFinite(val)) {
-    return "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">" + escHtml(label) +
+    return "<div class=\"cp-gauge-row" + clickCls + "\"" + onc + "><span class=\"cp-gauge-lbl\">" + escHtml(label) +
            "</span><span class=\"cp-gauge-nil\">--</span></div>";
   }
   var pct = Math.min(100, ((val + 2.5) / 5) * 100).toFixed(1);
   var cls = val >= 1.0 ? "cp-green" : val >= 0 ? "" : val >= -1.0 ? "cp-amber" : "cp-red";
   var sign = val >= 0 ? "+" : "";
-  return "<div class=\"cp-gauge-row " + cls + "\">" +
+  return "<div class=\"cp-gauge-row " + cls + clickCls + "\"" + onc + ">" +
     "<span class=\"cp-gauge-lbl\">" + escHtml(label) + "</span>" +
     "<div class=\"cp-gauge-bar\"><div class=\"cp-gauge-fill\" style=\"width:" + pct + "%\"></div></div>" +
     "<span class=\"cp-gauge-val\">" + sign + val.toFixed(2) + "</span></div>";
 }
 
-function _cpGaugeRow(label, val, max, suffix, cls) {
+// wbKey + iso2: if provided, the row becomes clickable.
+function _cpGaugeRow(label, val, max, suffix, cls, wbKey, iso2) {
   suffix = suffix || "";
   cls    = cls    || "";
+  var clickable = wbKey && iso2;
+  var onc = clickable ? " onclick=\"openStatsPanel(" + JSON.stringify(wbKey) + "," + JSON.stringify(iso2) + ")\"" : "";
+  var clickCls = clickable ? " cp-gauge-row-clickable" : "";
   if (!Number.isFinite(val)) {
-    return "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">" + escHtml(label) +
+    return "<div class=\"cp-gauge-row" + clickCls + "\"" + onc + "><span class=\"cp-gauge-lbl\">" + escHtml(label) +
            "</span><span class=\"cp-gauge-nil\">--</span></div>";
   }
   var pct = Math.min(100, (Math.abs(val) / max) * 100).toFixed(1);
-  return "<div class=\"cp-gauge-row " + cls + "\">" +
+  return "<div class=\"cp-gauge-row " + cls + clickCls + "\"" + onc + ">" +
     "<span class=\"cp-gauge-lbl\">" + escHtml(label) + "</span>" +
     "<div class=\"cp-gauge-bar\"><div class=\"cp-gauge-fill\" style=\"width:" + pct + "%\"></div></div>" +
     "<span class=\"cp-gauge-val\">" + val.toFixed(1) + suffix + "</span></div>";
@@ -3043,18 +3051,18 @@ function _renderCountryPanel(iso2) {
 
   var gaugeHtml =
     "<div class=\"cp-gauge-section-hdr\">World Bank</div>" +
-    _cpGaugeRow("GDP/cap",      gdp,                   maxGdp,   "",    "cp-blue") +
-    _cpGaugeRow("Life exp",     cd.life_expectancy,    maxLife,  " yrs") +
+    _cpGaugeRow("GDP/cap",      gdp,                   maxGdp,   "",    "cp-blue", "wb_gdp_per_capita",  iso2) +
+    _cpGaugeRow("Life exp",     cd.life_expectancy,    maxLife,  " yrs","",        "wb_life_expectancy", iso2) +
     (Number.isFinite(cd.population)
       ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Population</span><span class=\"cp-gauge-info\">" + _cpFmt(cd.population, 1) + "</span></div>"
       : "") +
     "<div class=\"cp-gauge-section-hdr\">IMF</div>" +
-    _cpGaugeRow("Debt/GDP",     debt,                              maxDebt,  "%") +
-    _cpGaugeRow("Fiscal bal",    fisc, 20,     "%", fiscCls) +
-    _cpGaugeRow("CPI Inflation", inf,  maxInf, "%", infCls) +
-    _cpGaugeRow("Unemployment", cd.unemployment_rate,              maxUnemp, "%") +
+    _cpGaugeRow("Debt/GDP",     debt,    maxDebt, "%", debtCls, "wb_govt_debt_gdp",      iso2) +
+    _cpGaugeRow("Fiscal bal",   fisc,    20,      "%", fiscCls, "wb_fiscal_balance_gdp", iso2) +
+    _cpGaugeRow("CPI Inflation",inf,     maxInf,  "%", infCls,  "wb_cpi_inflation",      iso2) +
+    _cpGaugeRow("Unemployment", cd.unemployment_rate, maxUnemp, "%", "", "wb_unemployment_rate", iso2) +
     "<div class=\"cp-gauge-section-hdr\">FRED</div>" +
-    _cpGaugeRow("Bond yield",   cd.bond_yield_10y,                 maxYld,   "%") +
+    _cpGaugeRow("Bond yield",   cd.bond_yield_10y,    maxYld,   "%",  "", "wb_bond_yield_10y", iso2) +
     (Number.isFinite(cd.cb_rate)
       ? "<div class=\"cp-gauge-section-hdr\">" + escHtml(cd.cb_bank || "Central Bank") + "</div>" +
         "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">" + escHtml(cd.cb_rate_label || "Policy Rate") + "</span>" +
@@ -3069,33 +3077,35 @@ function _renderCountryPanel(iso2) {
     // ── Governance (WGI) ─────────────────────────────────────────────
     (Number.isFinite(cd.wgi_rule_of_law)
       ? "<div class=\"cp-gauge-section-hdr\">Governance (WGI)</div>" +
-        _cpWgiRow("Rule of Law",     cd.wgi_rule_of_law) +
-        _cpWgiRow("Anti-Corruption", cd.wgi_corruption) +
-        _cpWgiRow("Govt Effective.", cd.wgi_govt_effectiveness) +
-        _cpWgiRow("Voice & Acct",   cd.wgi_voice_accountability) +
-        _cpWgiRow("Pol. Stability",  cd.wgi_political_stability) +
-        _cpWgiRow("Regulatory",      cd.wgi_regulatory_quality)
+        _cpWgiRow("Rule of Law",     cd.wgi_rule_of_law,          "wb_wgi_rule_of_law",          iso2) +
+        _cpWgiRow("Anti-Corruption", cd.wgi_corruption,           "wb_wgi_corruption",           iso2) +
+        _cpWgiRow("Govt Effective.", cd.wgi_govt_effectiveness,   "wb_wgi_govt_effectiveness",   iso2) +
+        _cpWgiRow("Voice & Acct",    cd.wgi_voice_accountability, "wb_wgi_voice_accountability", iso2) +
+        _cpWgiRow("Pol. Stability",  cd.wgi_political_stability,  "wb_wgi_political_stability",  iso2) +
+        _cpWgiRow("Regulatory",      cd.wgi_regulatory_quality,   "wb_wgi_regulatory_quality",   iso2)
       : "") +
     // ── Human Development ─────────────────────────────────────────────
     (Number.isFinite(cd.hdi)
       ? "<div class=\"cp-gauge-section-hdr\">Human Development (UNDP)</div>" +
-        _cpGaugeRow("HDI",             cd.hdi,                  1.0,  "", "cp-blue") +
+        _cpGaugeRow("HDI",             cd.hdi,                  1.0, "",       "cp-blue", "wb_hdi",                  iso2) +
         (Number.isFinite(cd.hdi_rank) ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">HDI Rank</span><span class=\"cp-gauge-info\">#" + cd.hdi_rank + " of 193</span></div>" : "") +
-        _cpGaugeRow("Renewable energy",cd.renewable_energy_pct, 100,  "%") +
-        _cpGaugeRow("Health spending", cd.health_spend_gdp,     20,   "% GDP") +
-        _cpGaugeRow("Edu spending",    cd.education_spend_gdp,  15,   "% GDP")
+        _cpGaugeRow("Renewable energy",cd.renewable_energy_pct, 100, "%",     "",        "wb_renewable_energy_pct", iso2) +
+        _cpGaugeRow("Health spending", cd.health_spend_gdp,     20,  "% GDP", "",        "wb_health_spend_gdp",     iso2) +
+        _cpGaugeRow("Edu spending",    cd.education_spend_gdp,  15,  "% GDP", "",        "wb_education_spend_gdp",  iso2)
       : "") +
     // ── Transparency & Freedom ────────────────────────────────────────
     (Number.isFinite(cd.ti_cpi_score) || Number.isFinite(cd.fh_score)
       ? "<div class=\"cp-gauge-section-hdr\">Transparency &amp; Freedom</div>" +
         (Number.isFinite(cd.ti_cpi_score)
           ? _cpGaugeRow("Corruption (TI)", cd.ti_cpi_score, 100, "/100",
-              cd.ti_cpi_score >= 70 ? "cp-green" : cd.ti_cpi_score >= 45 ? "" : "cp-red") +
+              cd.ti_cpi_score >= 70 ? "cp-green" : cd.ti_cpi_score >= 45 ? "" : "cp-red",
+              "wb_ti_cpi", iso2) +
             (cd.ti_cpi_rank ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">TI Rank</span><span class=\"cp-gauge-info\">#" + cd.ti_cpi_rank + "</span></div>" : "")
           : "") +
         (Number.isFinite(cd.fh_score)
           ? _cpGaugeRow("Freedom (FH)", cd.fh_score, 100, "/100",
-              cd.fh_score >= 70 ? "cp-green" : cd.fh_score >= 36 ? "" : "cp-red") +
+              cd.fh_score >= 70 ? "cp-green" : cd.fh_score >= 36 ? "" : "cp-red",
+              "wb_fh_score", iso2) +
             (cd.fh_status ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Status</span><span class=\"cp-gauge-info cp-gauge-badge " +
               (cd.fh_status === 'Free' ? 'cp-badge-green' : cd.fh_status === 'Partly Free' ? 'cp-badge-amber' : 'cp-badge-red') + "\">" +
               escHtml(cd.fh_status) + "</span></div>" : "")

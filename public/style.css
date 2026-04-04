@@ -1234,6 +1234,9 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 .cp-gauge-val { font-size: 0.72rem; font-variant-numeric: tabular-nums; width: 52px; text-align: right; flex-shrink: 0; color: #8b949e; }
 .cp-gauge-nil { font-size: 0.72rem; color: #484f58; margin-left: auto; }
 .cp-gauge-info { font-size: 0.72rem; color: #8b949e; margin-left: auto; }
+.cp-gauge-row-clickable { cursor: pointer; border-radius: 4px; transition: background 0.12s; }
+.cp-gauge-row-clickable:hover { background: rgba(88,166,255,0.08); }
+.cp-gauge-row-clickable:hover .cp-gauge-lbl { color: #58a6ff; }
 
 /* color modifiers for gauge fills */
 .cp-green .cp-gauge-fill { background: #3fb950; }
