@@ -1622,6 +1622,17 @@ let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
 let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
 let fredYields     = {};   // ISO2 → {yield_10y, yield_10y_date, yield_history} (from fred-yields.json)
 let imfFiscal      = {};   // ISO2 → {govt_debt_gdp, fiscal_balance_gdp, ...} (from imf-fiscal.json)
+let _cpCurrentIso2 = null;
+let _cpEscListener = null;
+
+const ISO2_TO_ISO3 = { US:"USA", GB:"GBR", DE:"DEU", FR:"FRA", JP:"JPN",
+  CN:"CHN", IN:"IND", BR:"BRA", CA:"CAN", AU:"AUS", KR:"KOR", MX:"MEX",
+  ID:"IDN", TR:"TUR", SA:"SAU", RU:"RUS", ZA:"ZAF", AR:"ARG", NG:"NGA",
+  IT:"ITA", ES:"ESP", PL:"POL", NL:"NLD", CH:"CHE", SE:"SWE", NO:"NOR",
+  DK:"DNK", FI:"FIN", BE:"BEL", AT:"AUT", PT:"PRT", GR:"GRC", CZ:"CZE",
+  HU:"HUN", RO:"ROU", UA:"UKR", IL:"ISR", AE:"ARE", SG:"SGP",
+  MY:"MYS", TH:"THA", VN:"VNM", PH:"PHL", PK:"PAK", BD:"BGD" };
+
 let censusColorMetric = null;  // null = off, or key like 'medianIncome'
 
 // GaWC tier → numeric score (Alpha++=12 … Sufficiency=1)
@@ -2317,6 +2328,7 @@ function buildEurostatHtml(es, qid) {
 }
 
 async function openWikiSidebar(qid, cityName) {
+  closeCountryPanel();
   const sidebar = document.getElementById('wiki-sidebar');
   const body = document.getElementById('wiki-sidebar-body');
   const footer = document.getElementById('wiki-sidebar-footer');
@@ -2728,6 +2740,7 @@ async function init() {
     rebuildMapLayer();
     if (worldGeo && Object.keys(countryData).length) {
       buildChoropleth();
+      map.on("click", function() { if (_cpCurrentIso2) closeCountryPanel(); });
       initChoroControls();
     }
     updateStats();
@@ -2835,7 +2848,10 @@ function buildChoropleth() {
           e.target.bringToFront();
         },
         mouseout: function (e) { choroplethLayer.resetStyle(e.target); },
-        click: function (e) { L.DomEvent.stopPropagation(e); showCountryPopup(iso2, e.latlng); },
+        click: function(e) {
+          L.DomEvent.stopPropagation(e);
+          openCountryPanel(iso2);
+        },
       });
     },
   }).addTo(map);
@@ -2874,121 +2890,60 @@ function updateChoroLegend(ind, range, covered) {
   ctx.fillRect(0, 0, 120, 8);
 }
 
-function showCountryPopup(iso2, latlng) {
+// ── shim (keep callers working) ───────────────────────────────────────
+function showCountryPopup(iso2) { openCountryPanel(iso2); }
+
+// ── country panel lifecycle ───────────────────────────────────────────
+function openCountryPanel(iso2) {
   if (!iso2) return;
   const c = countryData[iso2];
   if (!c) return;
 
-  const ind = CHORO_INDICATORS.find(i => i.key === activeChoroKey);
-  const fi  = imfFiscal[iso2]  || {};
-  const fy  = fredYields[iso2] || {};
+  // close any previously open panel first (no slide-out animation)
+  if (_cpCurrentIso2) {
+    document.getElementById("country-panel").classList.remove("open");
+  }
 
-  // ── World Bank development rows ──
-  const wbRows = [
-    ['GDP per capita', c.gdp_per_capita != null ? '$' + Math.round(c.gdp_per_capita).toLocaleString() + (c.gdp_per_capita_year ? ` <small style="color:#484f58">${c.gdp_per_capita_year}</small>` : '') : null],
-    ['Life expectancy', c.life_expectancy != null ? c.life_expectancy.toFixed(1) + ' yrs' : null],
-    ['Internet users', c.internet_pct != null ? c.internet_pct.toFixed(1) + '%' : null],
-    ['Urban population', c.urban_pct != null ? c.urban_pct.toFixed(1) + '%' : null],
-    ['Literacy rate', c.literacy_rate != null ? c.literacy_rate.toFixed(1) + '%' : null],
-    ['Electricity access', c.electricity_pct != null ? c.electricity_pct.toFixed(1) + '%' : null],
-    ['Income inequality (Gini)', c.gini != null ? c.gini.toFixed(1) + ' / 100' : null],
-    ['Child mortality', c.child_mortality != null ? c.child_mortality.toFixed(1) + ' / 1k' : null],
-    ['Income level', c.income_level || null],
-  ].filter(([, v]) => v != null);
+  _cpCurrentIso2 = iso2;
 
-  // ── IMF fiscal rows ──
-  const fiscalBalanceVal = fi.fiscal_balance_gdp != null
-    ? (() => {
-        const v = fi.fiscal_balance_gdp;
-        const color = v >= 0 ? '#3fb950' : '#f85149';
-        const sign  = v >= 0 ? '+' : '';
-        return `<span style="color:${color};font-weight:600">${sign}${v.toFixed(1)}%</span> <small style="color:#484f58">${fi.fiscal_balance_gdp_year || ''}</small>`;
-      })()
-    : null;
+  // render content (will be implemented in Task 7)
+  if (typeof _renderCountryPanel === "function") _renderCountryPanel(iso2);
 
-  const inflationVal = fi.cpi_inflation != null
-    ? (() => {
-        const v = fi.cpi_inflation;
-        const color = v > 10 ? '#f85149' : v > 5 ? '#d29922' : '#3fb950';
-        return `<span style="color:${color}">${v.toFixed(1)}%</span> <small style="color:#484f58">${fi.cpi_inflation_year || ''}</small>`;
-      })()
-    : null;
+  // slide panel in
+  document.getElementById("country-panel").classList.add("open");
 
-  const imfRows = [
-    ['Govt debt', fi.govt_debt_gdp != null ? fi.govt_debt_gdp.toFixed(1) + '% of GDP <small style="color:#484f58">' + (fi.govt_debt_gdp_year || '') + '</small>' : null],
-    ['Fiscal balance', fiscalBalanceVal],
-    ['CPI inflation', inflationVal],
-    ['Unemployment', fi.unemployment_rate != null ? fi.unemployment_rate.toFixed(1) + '%' + (fi.unemployment_rate_year ? ` <small style="color:#484f58">${fi.unemployment_rate_year}</small>` : '') : null],
-  ].filter(([, v]) => v != null);
+  // highlight selected country border on choropleth
+  if (choroplethLayer) {
+    choroplethLayer.eachLayer(function(layer) {
+      const liso = layer.feature && layer.feature.properties && layer.feature.properties.iso2;
+      if (liso === iso2) {
+        layer.setStyle({ weight: 2.5, color: "#58a6ff" });
+      } else {
+        choroplethLayer.resetStyle(layer);
+      }
+    });
+  }
 
-  // ── FRED bond yield row ──
-  const yieldRows = fy.yield_10y != null
-    ? [['10-yr bond yield', `${fy.yield_10y.toFixed(2)}% <small style="color:#484f58">${fy.yield_10y_date || ''}</small>`]]
-    : [];
+  // ESC listener (bound per panel open, unbound on close)
+  if (_cpEscListener) document.removeEventListener("keydown", _cpEscListener);
+  _cpEscListener = function(e) { if (e.key === "Escape") closeCountryPanel(); };
+  document.addEventListener("keydown", _cpEscListener);
 
-  const allRows = [...wbRows, ...imfRows, ...yieldRows];
+  // trigger trade arcs (existing behaviour)
+  if (typeof _loadAndShowTrade === "function") _loadAndShowTrade(iso2, c.name || iso2);
+}
 
-  const tableRows = allRows.map(([label, val]) => {
-    const isActive = ind && label.toLowerCase().includes(activeChoroKey.replace(/_/g, ' ').slice(0, 6));
-    return `<tr><td>${escHtml(label)}</td><td class="${isActive ? 'choro-popup-highlight' : ''}">${val}</td></tr>`;
-  }).join('');
-
-  // Section dividers in the table (after World Bank block, before fiscal block)
-  const hasImfOrYield = imfRows.length > 0 || yieldRows.length > 0;
-  const sectionedRows = (() => {
-    if (!hasImfOrYield) return tableRows;
-    const wbHtml   = wbRows.map(([l, v]) => {
-      const isActive = ind && l.toLowerCase().includes(activeChoroKey.replace(/_/g, ' ').slice(0, 6));
-      return `<tr><td>${escHtml(l)}</td><td class="${isActive ? 'choro-popup-highlight' : ''}">${v}</td></tr>`;
-    }).join('');
-    const fiscHtml = [...imfRows, ...yieldRows].map(([l, v]) =>
-      `<tr><td>${escHtml(l)}</td><td>${v}</td></tr>`
-    ).join('');
-    const divider = `<tr><td colspan="2" style="padding:4px 0 2px;font-size:0.68rem;color:#484f58;letter-spacing:.05em;border-top:1px solid #30363d">GOVERNMENT FINANCE · IMF / FRED</td></tr>`;
-    return wbHtml + (wbHtml && fiscHtml ? divider : '') + fiscHtml;
-  })();
-
-  const wbUrl = wbCountryUrl(iso2);
-  const html = `
-    <div class="choro-popup-name">${escHtml(c.name || iso2)}</div>
-    <div class="choro-popup-region">${escHtml(c.region || '')} · World Bank data</div>
-    <table class="choro-popup-table">${sectionedRows}</table>
-    ${wbUrl ? `<a href="${wbUrl}" target="_blank" rel="noopener"
-       style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;color:#58a6ff;font-size:0.78rem;text-decoration:none;">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-        <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-      </svg>
-      View on World Bank
-    </a>` : ''}`;
-
-  // Position as fixed overlay so it's never clipped by the map container
-  const containerPt = map.latLngToContainerPoint(latlng);
-  const mapRect     = map.getContainer().getBoundingClientRect();
-  const popup       = document.getElementById('country-popup');
-  const content     = document.getElementById('country-popup-content');
-  content.innerHTML = html;
-
-  // Show off-screen first to measure real size
-  popup.style.left = '-9999px'; popup.style.top = '-9999px';
-  popup.classList.add('visible');
-  const pw = popup.offsetWidth  || 290;
-  const ph = popup.offsetHeight || 320;
-
-  const vw = window.innerWidth, vh = window.innerHeight;
-  let left = mapRect.left + containerPt.x + 14;
-  let top  = mapRect.top  + containerPt.y - 20;
-  if (left + pw + 10 > vw) left = mapRect.left + containerPt.x - pw - 14;
-  if (top  + ph + 10 > vh) top  = vh - ph - 10;
-  if (top  < 10)           top  = 10;
-  if (left < 10)           left = 10;
-
-  popup.style.left = left + 'px';
-  popup.style.top  = top  + 'px';
-  map.closePopup();
-
-  // Trigger trade flow arrows (async, non-blocking)
-  _loadAndShowTrade(iso2, c.name || iso2);
+function closeCountryPanel() {
+  if (!_cpCurrentIso2) return;
+  _cpCurrentIso2 = null;
+  document.getElementById("country-panel").classList.remove("open");
+  if (_cpEscListener) {
+    document.removeEventListener("keydown", _cpEscListener);
+    _cpEscListener = null;
+  }
+  if (choroplethLayer) {
+    choroplethLayer.eachLayer(function(l) { choroplethLayer.resetStyle(l); });
+  }
 }
 
 // ── Trade flow arrows (BEA API) ──────────────────────────────────────────────
@@ -3325,9 +3280,7 @@ function _updateTradePanelNumbers(iso2, data, year) {
   document.getElementById('trade-balance-label').textContent = balance >= 0 ? 'US Surplus' : 'US Deficit';
 }
 
-function closeCountryPopup() {
-  document.getElementById('country-popup').classList.remove('visible');
-}
+function closeCountryPopup() { closeCountryPanel(); }
 
 function closeTradePanelFn() {
   document.getElementById('trade-panel').classList.remove('open');
