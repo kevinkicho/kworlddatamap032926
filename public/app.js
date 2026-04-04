@@ -1818,6 +1818,21 @@ const WB_STAT_DEFS = {
   wb_cpi_inflation:       { label:'CPI Inflation',           key:'cpi_inflation',       fmt: v=>v.toFixed(1)+'%',       higherBetter:false },
   wb_unemployment_rate:   { label:'Unemployment Rate',       key:'unemployment_rate',   fmt: v=>v.toFixed(1)+'%',       higherBetter:false },
   wb_bond_yield_10y:      { label:'10-Year Bond Yield',      key:'bond_yield_10y',      fmt: v=>v.toFixed(2)+'%',       higherBetter:null  },
+  // Human Development
+  wb_hdi:                 { label:'Human Development Index', key:'hdi',                 fmt: v=>v.toFixed(3),           higherBetter:true  },
+  wb_renewable_energy_pct:{ label:'Renewable Energy (%)',    key:'renewable_energy_pct',fmt: v=>v.toFixed(1)+'%',       higherBetter:true  },
+  wb_health_spend_gdp:    { label:'Healthcare Spending (% GDP)', key:'health_spend_gdp',fmt: v=>v.toFixed(1)+'%',       higherBetter:null  },
+  wb_education_spend_gdp: { label:'Education Spending (% GDP)', key:'education_spend_gdp',fmt: v=>v.toFixed(1)+'%',    higherBetter:null  },
+  // Governance & Transparency (WGI: raw -2.5 to +2.5, stored as-is)
+  wb_wgi_rule_of_law:     { label:'Rule of Law',             key:'wgi_rule_of_law',     fmt: v=>v.toFixed(2),           higherBetter:true  },
+  wb_wgi_corruption:      { label:'Control of Corruption',   key:'wgi_corruption',      fmt: v=>v.toFixed(2),           higherBetter:true  },
+  wb_wgi_govt_effectiveness:{ label:'Govt Effectiveness',    key:'wgi_govt_effectiveness',fmt: v=>v.toFixed(2),         higherBetter:true  },
+  wb_wgi_voice_accountability:{ label:'Voice & Accountability',key:'wgi_voice_accountability',fmt: v=>v.toFixed(2),     higherBetter:true  },
+  wb_wgi_political_stability:{ label:'Political Stability',  key:'wgi_political_stability',fmt: v=>v.toFixed(2),        higherBetter:true  },
+  wb_wgi_regulatory_quality:{ label:'Regulatory Quality',    key:'wgi_regulatory_quality',fmt: v=>v.toFixed(2),         higherBetter:true  },
+  // Transparency & Freedom (TI CPI / Freedom House)
+  wb_ti_cpi:              { label:'Corruption Index (TI CPI)',key:'ti_cpi_score',        fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
+  wb_fh_score:            { label:'Freedom Score (FH)',       key:'fh_score',            fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
 };
 
 // Company-level stats — company QID used as identifier; values converted to USD for fair ranking
@@ -2956,6 +2971,21 @@ function _cpFlagEmoji(iso2) {
          String.fromCodePoint(base + iso2.toUpperCase().charCodeAt(1));
 }
 
+// WGI rows: raw -2.5 to +2.5; bar fill normalised to 0-5 range so negatives show correctly
+function _cpWgiRow(label, val) {
+  if (!Number.isFinite(val)) {
+    return "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">" + escHtml(label) +
+           "</span><span class=\"cp-gauge-nil\">--</span></div>";
+  }
+  var pct = Math.min(100, ((val + 2.5) / 5) * 100).toFixed(1);
+  var cls = val >= 1.0 ? "cp-green" : val >= 0 ? "" : val >= -1.0 ? "cp-amber" : "cp-red";
+  var sign = val >= 0 ? "+" : "";
+  return "<div class=\"cp-gauge-row " + cls + "\">" +
+    "<span class=\"cp-gauge-lbl\">" + escHtml(label) + "</span>" +
+    "<div class=\"cp-gauge-bar\"><div class=\"cp-gauge-fill\" style=\"width:" + pct + "%\"></div></div>" +
+    "<span class=\"cp-gauge-val\">" + sign + val.toFixed(2) + "</span></div>";
+}
+
 function _cpGaugeRow(label, val, max, suffix, cls) {
   suffix = suffix || "";
   cls    = cls    || "";
@@ -3035,6 +3065,41 @@ function _renderCountryPanel(iso2) {
         (cd.credit_sp     ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">S&amp;P</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_sp)     + "</span></div>" : "") +
         (cd.credit_moodys ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Moody's</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_moodys) + "</span></div>" : "") +
         (cd.credit_fitch  ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Fitch</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_fitch)  + "</span></div>" : "")
+      : "") +
+    // ── Governance (WGI) ─────────────────────────────────────────────
+    (Number.isFinite(cd.wgi_rule_of_law)
+      ? "<div class=\"cp-gauge-section-hdr\">Governance (WGI)</div>" +
+        _cpWgiRow("Rule of Law",     cd.wgi_rule_of_law) +
+        _cpWgiRow("Anti-Corruption", cd.wgi_corruption) +
+        _cpWgiRow("Govt Effective.", cd.wgi_govt_effectiveness) +
+        _cpWgiRow("Voice & Acct",   cd.wgi_voice_accountability) +
+        _cpWgiRow("Pol. Stability",  cd.wgi_political_stability) +
+        _cpWgiRow("Regulatory",      cd.wgi_regulatory_quality)
+      : "") +
+    // ── Human Development ─────────────────────────────────────────────
+    (Number.isFinite(cd.hdi)
+      ? "<div class=\"cp-gauge-section-hdr\">Human Development (UNDP)</div>" +
+        _cpGaugeRow("HDI",             cd.hdi,                  1.0,  "", "cp-blue") +
+        (Number.isFinite(cd.hdi_rank) ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">HDI Rank</span><span class=\"cp-gauge-info\">#" + cd.hdi_rank + " of 193</span></div>" : "") +
+        _cpGaugeRow("Renewable energy",cd.renewable_energy_pct, 100,  "%") +
+        _cpGaugeRow("Health spending", cd.health_spend_gdp,     20,   "% GDP") +
+        _cpGaugeRow("Edu spending",    cd.education_spend_gdp,  15,   "% GDP")
+      : "") +
+    // ── Transparency & Freedom ────────────────────────────────────────
+    (Number.isFinite(cd.ti_cpi_score) || Number.isFinite(cd.fh_score)
+      ? "<div class=\"cp-gauge-section-hdr\">Transparency &amp; Freedom</div>" +
+        (Number.isFinite(cd.ti_cpi_score)
+          ? _cpGaugeRow("Corruption (TI)", cd.ti_cpi_score, 100, "/100",
+              cd.ti_cpi_score >= 70 ? "cp-green" : cd.ti_cpi_score >= 45 ? "" : "cp-red") +
+            (cd.ti_cpi_rank ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">TI Rank</span><span class=\"cp-gauge-info\">#" + cd.ti_cpi_rank + "</span></div>" : "")
+          : "") +
+        (Number.isFinite(cd.fh_score)
+          ? _cpGaugeRow("Freedom (FH)", cd.fh_score, 100, "/100",
+              cd.fh_score >= 70 ? "cp-green" : cd.fh_score >= 36 ? "" : "cp-red") +
+            (cd.fh_status ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Status</span><span class=\"cp-gauge-info cp-gauge-badge " +
+              (cd.fh_status === 'Free' ? 'cp-badge-green' : cd.fh_status === 'Partly Free' ? 'cp-badge-amber' : 'cp-badge-red') + "\">" +
+              escHtml(cd.fh_status) + "</span></div>" : "")
+          : "")
       : "");
 
   // ── body: two-column ──────────────────────────────────────────────
@@ -3172,11 +3237,16 @@ function _buildRankChips(iso2) {
   }
 
   var indicators = [
-    { key: "gdp_per_capita",    label: "GDP/cap",      inv: false, wbKey: "wb_gdp_per_capita"    },
-    { key: "life_expectancy",   label: "Life exp",     inv: false, wbKey: "wb_life_expectancy"   },
-    { key: "govt_debt_gdp",     label: "Debt/GDP",     inv: true,  wbKey: "wb_govt_debt_gdp"     },
-    { key: "cpi_inflation",     label: "Inflation",    inv: true,  wbKey: "wb_cpi_inflation"     },
-    { key: "unemployment_rate", label: "Unemployment", inv: true,  wbKey: "wb_unemployment_rate" }
+    { key: "gdp_per_capita",        label: "GDP/cap",       inv: false, wbKey: "wb_gdp_per_capita"            },
+    { key: "life_expectancy",       label: "Life exp",      inv: false, wbKey: "wb_life_expectancy"           },
+    { key: "govt_debt_gdp",         label: "Debt/GDP",      inv: true,  wbKey: "wb_govt_debt_gdp"             },
+    { key: "cpi_inflation",         label: "Inflation",     inv: true,  wbKey: "wb_cpi_inflation"             },
+    { key: "unemployment_rate",     label: "Unemployment",  inv: true,  wbKey: "wb_unemployment_rate"         },
+    { key: "hdi",                   label: "HDI",           inv: false, wbKey: "wb_hdi"                       },
+    { key: "ti_cpi_score",          label: "Transparency",  inv: false, wbKey: "wb_ti_cpi"                    },
+    { key: "wgi_rule_of_law",       label: "Rule of Law",   inv: false, wbKey: "wb_wgi_rule_of_law"           },
+    { key: "wgi_corruption",        label: "Anti-Corrupt.", inv: false, wbKey: "wb_wgi_corruption"            },
+    { key: "renewable_energy_pct",  label: "Renewables",    inv: false, wbKey: "wb_renewable_energy_pct"      }
   ];
 
   var chips = indicators.map(function(ind) {

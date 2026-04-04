@@ -1240,6 +1240,16 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 .cp-amber .cp-gauge-fill { background: #d29922; }
 .cp-red   .cp-gauge-fill { background: #f85149; }
 .cp-blue  .cp-gauge-fill { background: #58a6ff; }
+/* color modifiers for gauge val labels */
+.cp-green .cp-gauge-val { color: #3fb950; }
+.cp-amber .cp-gauge-val { color: #d29922; }
+.cp-red   .cp-gauge-val { color: #f85149; }
+
+/* Freedom House / status badges */
+.cp-gauge-badge { border-radius: 10px; padding: 1px 8px; font-weight: 600; font-size: 0.68rem; }
+.cp-badge-green { background: rgba(63,185,80,0.15); color: #3fb950; }
+.cp-badge-amber { background: rgba(210,153,34,0.15); color: #d29922; }
+.cp-badge-red   { background: rgba(248,81,73,0.15);  color: #f85149; }
 
 /* radar chart */
 .cp-radar-wrap { display: flex; justify-content: center; }
