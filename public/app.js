@@ -1620,8 +1620,6 @@ let japanPrefData  = {};   // prefecture English name → {perCapitaIncomeJpy, g
 let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
 let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
-let fredYields     = {};   // ISO2 → {yield_10y, yield_10y_date, yield_history} (from fred-yields.json)
-let imfFiscal      = {};   // ISO2 → {govt_debt_gdp, fiscal_balance_gdp, ...} (from imf-fiscal.json)
 let _cpCurrentIso2 = null;
 let _cpEscListener = null;
 function _cpMapClickHandler() { if (_cpCurrentIso2) closeCountryPanel(); }
@@ -2588,7 +2586,7 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, fredRes, imfRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
@@ -2602,8 +2600,6 @@ async function init() {
       fetch('/airport-connectivity.json').catch(() => null),
       fetch('/zillow-cities.json').catch(() => null),
       fetch('/climate-extra.json').catch(() => null),
-      fetch('/fred-yields.json').catch(() => null),
-      fetch('/imf-fiscal.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -2709,19 +2705,6 @@ async function init() {
         console.log(`[init] Climate extra data loaded (${Object.keys(climateExtra).length} cities)`);
       } catch { console.warn('[init] climate-extra.json is malformed'); }
     }
-    if (fredRes && fredRes.ok) {
-      try {
-        fredYields = await fredRes.json();
-        console.log(`[init] FRED bond yields loaded (${Object.keys(fredYields).length} countries)`);
-      } catch { console.warn('[init] fred-yields.json is malformed'); }
-    }
-    if (imfRes && imfRes.ok) {
-      try {
-        imfFiscal = await imfRes.json();
-        console.log(`[init] IMF fiscal data loaded (${Object.keys(imfFiscal).length} countries)`);
-      } catch { console.warn('[init] imf-fiscal.json is malformed'); }
-    }
-
     // ── Phase 5c: load world country borders GeoJSON (optional, for choropleth) ──
     if (geoRes && geoRes.ok) {
       try {
@@ -2969,34 +2952,7 @@ function _cpWorldMax(key) {
     v = countryData[k][key];
     if (Number.isFinite(v) && v > max) max = v;
   }
-  // IMF indicators
-  if (typeof imfFiscal !== 'undefined' && imfFiscal) {
-    for (var k in imfFiscal) {
-      v = imfFiscal[k][key];
-      if (Number.isFinite(v) && v > max) max = v;
-    }
-  }
-  // FRED bond yield
-  if (key === 'bond_yield_10y' && typeof fredYields !== 'undefined' && fredYields) {
-    for (var k in fredYields) {
-      v = fredYields[k].yield_10y;
-      if (Number.isFinite(v) && v > max) max = v;
-    }
-  }
   return max || 1;
-}
-
-function _cpMerged(iso2) {
-  var wb  = countryData[iso2]  || {};
-  var imf = imfFiscal[iso2]    || {};
-  var cd  = Object.assign({}, wb, imf);
-  // FRED bond yield — field names differ from the panel key names
-  var fred = fredYields && fredYields[iso2];
-  if (fred) {
-    cd.bond_yield_10y         = fred.yield_10y;
-    cd.bond_yield_10y_history = fred.yield_history;
-  }
-  return cd;
 }
 
 function _cpFlagEmoji(iso2) {
@@ -3023,7 +2979,7 @@ function _cpGaugeRow(label, val, max, suffix, cls) {
 // ── _renderCountryPanel ───────────────────────────────────────────────
 function _renderCountryPanel(iso2) {
   if (!countryData[iso2]) return;
-  var cd = _cpMerged(iso2);
+  var cd = countryData[iso2] || {};
 
   // ── header ────────────────────────────────────────────────────────
   var metaParts = [];
@@ -3109,7 +3065,7 @@ function _renderCountryPanel(iso2) {
 // ── _buildRadar ───────────────────────────────────────────────────────
 function _buildRadar(iso2) {
   if (!countryData[iso2]) return "";
-  var cd = _cpMerged(iso2);
+  var cd = countryData[iso2] || {};
 
   // 6 axes: key, label, whether lower-is-better (inverted)
   var axes = [
@@ -3145,7 +3101,7 @@ function _buildRadar(iso2) {
   function avgScore(axis) {
     var sum = 0, count = 0;
     for (var k in countryData) {
-      var merged = _cpMerged(k);
+      var merged = countryData[k] || {};
       var v = merged[axis.key];
       if (Number.isFinite(v)) { sum += score(axis.key, axis.inv, v); count++; }
     }
@@ -3210,14 +3166,14 @@ function _buildRankChips(iso2) {
   if (!wbData || !wbData.region) return "";
 
   var region = wbData.region;
-  var cd = _cpMerged(iso2);
+  var cd = countryData[iso2] || {};
 
   // rank iso2 among peers in the same region for a given indicator
   function rankIn(key, lowerIsBetter) {
     var peers = [];
     for (var k in countryData) {
       if (countryData[k].region !== region) continue;
-      var merged = _cpMerged(k);
+      var merged = countryData[k] || {};
       var v = merged[key];
       if (Number.isFinite(v)) peers.push({ iso: k, val: v });
     }
@@ -3262,7 +3218,7 @@ function _buildRankChips(iso2) {
 // ── _switchTrendTab ───────────────────────────────────────────────────
 function _switchTrendTab(iso2, key) {
   if (!countryData[iso2]) return;
-  var cd = _cpMerged(iso2);
+  var cd = countryData[iso2] || {};
 
   // update active tab UI
   document.querySelectorAll("#cp-trend .cp-tab").forEach(function(btn) {

@@ -31,8 +31,9 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-const OUT_FILE = path.join(__dirname, '..', 'public', 'fred-yields.json');
-const DELAY_MS = 350;   // stay well under FRED's 120 req/min rate limit
+const OUT_FILE   = path.join(__dirname, '..', 'public', 'country-data.json');
+const FRED_KEYS  = ['bond_yield_10y','bond_yield_10y_date','bond_yield_10y_history'];
+const DELAY_MS   = 350;   // stay well under FRED's 120 req/min rate limit
 
 // ── FRED series → ISO-2 mapping ───────────────────────────────────────────────
 // All use OECD long-term interest rate series: IRLTLT01{3LETTER}M156N
@@ -115,8 +116,10 @@ async function main() {
 
   // Load existing file so we can merge (keeps countries we don't re-fetch)
   let out = {};
-  if (fs.existsSync(OUT_FILE)) {
-    try { out = JSON.parse(fs.readFileSync(OUT_FILE, 'utf8')); } catch { /* start fresh */ }
+  try { out = JSON.parse(fs.readFileSync(OUT_FILE, 'utf8')); } catch { /* start fresh */ }
+  // Clear previous FRED keys to avoid stale data
+  for (const iso of Object.keys(out)) {
+    for (const k of FRED_KEYS) delete out[iso][k];
   }
 
   let fetched = 0, skipped = 0, errored = 0;
@@ -142,11 +145,10 @@ async function main() {
         parseFloat(parseFloat(o.value).toFixed(3)),
       ]);
 
-      out[iso2] = {
-        yield_10y:      latestVal,
-        yield_10y_date: latest.date.slice(0, 7),
-        yield_history:  history,
-      };
+      if (!out[iso2]) out[iso2] = {};
+      out[iso2].bond_yield_10y         = latestVal;
+      out[iso2].bond_yield_10y_date    = latest.date.slice(0, 7);
+      out[iso2].bond_yield_10y_history = history;
 
       console.log(`${latestVal.toFixed(2)}%  (${latest.date.slice(0, 7)}, ${valid.length} obs)`);
       fetched++;

@@ -33,7 +33,11 @@
 const fs   = require('fs');
 const path = require('path');
 
-const OUT_FILE = path.join(__dirname, '..', 'public', 'imf-fiscal.json');
+const OUT_FILE      = path.join(__dirname, '..', 'public', 'country-data.json');
+const IMF_KEYS = ['govt_debt_gdp','govt_debt_gdp_year','govt_debt_gdp_history',
+                  'fiscal_balance_gdp','fiscal_balance_gdp_year','fiscal_balance_gdp_history',
+                  'govt_revenue_gdp','govt_revenue_gdp_year','govt_revenue_gdp_history',
+                  'govt_expenditure_gdp','govt_expenditure_gdp_year','govt_expenditure_gdp_history'];
 const DELAY_MS = 1000;
 
 // ── IMF DataMapper indicator code → output field name ─────────────────────────
@@ -152,7 +156,14 @@ async function main() {
   console.log(`Indicators : ${INDICATORS.length}`);
   console.log(`Output     : ${OUT_FILE}\n`);
 
-  const out = {};  // iso2 → { indicator fields }
+  // Load existing country-data.json so we only update IMF keys
+  let base = {};
+  try { base = JSON.parse(fs.readFileSync(OUT_FILE, 'utf8')); } catch { /* start fresh */ }
+  const out = base;
+  // Clear previous IMF keys to avoid stale data
+  for (const iso of Object.keys(out)) {
+    for (const k of IMF_KEYS) delete out[iso][k];
+  }
 
   console.log('Fetching indicators:\n');
   for (const { code, key, label } of INDICATORS) {
