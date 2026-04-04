@@ -3176,6 +3176,60 @@ function _buildRadar(iso2) {
   "</div>";
 }
 
+// ── _buildRankChips ───────────────────────────────────────────────────
+function _buildRankChips(iso2) {
+  var cd = countryData[iso2];
+  if (!cd || !cd.region) return "";
+
+  var region = cd.region;
+
+  // rank iso2 among peers in the same region for a given indicator
+  function rankIn(key, lowerIsBetter) {
+    var peers = [];
+    for (var k in countryData) {
+      var v = countryData[k][key];
+      if (Number.isFinite(v) && countryData[k].region === region) {
+        peers.push({ iso: k, val: v });
+      }
+    }
+    if (peers.length < 2) return null;
+    peers.sort(function(a, b) {
+      return lowerIsBetter ? a.val - b.val : b.val - a.val;
+    });
+    var pos = peers.findIndex(function(p) { return p.iso === iso2; });
+    return pos === -1 ? null : { rank: pos + 1, total: peers.length };
+  }
+
+  var indicators = [
+    { key: "gdp_per_capita",    label: "GDP/cap",     inv: false },
+    { key: "life_expectancy",   label: "Life exp",    inv: false },
+    { key: "govt_debt_gdp",     label: "Debt/GDP",    inv: true  },
+    { key: "cpi_inflation",     label: "Inflation",   inv: true  },
+    { key: "unemployment_rate", label: "Unemployment",inv: true  }
+  ];
+
+  var chips = indicators.map(function(ind) {
+    var r = rankIn(ind.key, ind.inv);
+    if (!r) return "";
+    var medal = r.rank === 1 ? "\uD83E\uDD47" :   // 🥇
+                r.rank === 2 ? "\uD83E\uDD48" :   // 🥈
+                r.rank === 3 ? "\uD83E\uDD49" :   // 🥉
+                "#" + r.rank;
+    return "<div class=\"cp-rank-chip\">" +
+      "<span class=\"cp-chip-medal\">" + medal + "</span>" +
+      "<span class=\"cp-chip-lbl\">"   + escHtml(ind.label)  + "</span>" +
+      "<span class=\"cp-chip-count\">/ " + r.total + " " + escHtml(region) + "</span>" +
+    "</div>";
+  }).filter(function(s) { return s !== ""; }).join("");
+
+  if (!chips) return "";
+
+  return "<div class=\"cp-rank-chips\">" +
+    "<div class=\"cp-rank-hdr\">Regional rank</div>" +
+    chips +
+  "</div>";
+}
+
 // ── Trade flow arrows (BEA API) ──────────────────────────────────────────────
 
 // ISO-2 → BEA country name (BEA uses display names, not ISO codes)
