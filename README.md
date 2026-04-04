@@ -1,79 +1,74 @@
 # World Data Map
 
-An interactive world map that layers city demographics, corporate headquarters, national economic indicators, US trade flows, government finance data, and live FX rates into a single explorable interface.
+An interactive world map that layers city demographics, corporate headquarters, national economic indicators, governance scores, US trade flows, real estate data, climate normals, and live FX rates into a single explorable interface.
 
 **Live demo:** https://kevinkicho.github.io/kworlddatamap032926
 
-> **Built with Claude Code:** Nearly all of this codebase — from the data pipeline scripts to the frontend map logic — was written collaboratively with [Claude Code](https://claude.ai/code) (Anthropic's AI CLI). The human contributor directed features, reviewed output, and provided domain context; Claude Code did the implementation. This project is offered as an example of what human + AI pair-programming can produce.
+> **Built with Claude Code:** Nearly all of this codebase — from the data pipeline scripts to the frontend map logic — was written collaboratively with [Claude Code](https://claude.ai/code) (Anthropic's AI CLI). The human contributor directed features, reviewed output, and provided domain context; Claude Code did the implementation.
 
 ---
 
 ## What it does
 
 ### Cities layer
-- 6,600+ cities worldwide (10k+ population floor, 34 settlement types from Wikidata)
+- ~14,000 cities worldwide (10k+ population floor, 34 settlement types from Wikidata)
 - Click any dot → Wikipedia sidebar with summary, photos, key facts, climate chart
 - Colour-coded by population on a log scale; filter and sort via the Explore Cities panel
 
 ### Choropleth layer
-- Colours entire countries by any of 8 World Bank indicators:
-  GDP per capita · Life expectancy · Internet access · Urban population ·
-  Literacy · Electricity access · Gini inequality · Child mortality
+- Colours entire countries by World Bank development indicators
 - Legend and coverage stats update live as you switch indicators
 
-### Country popup — Government Finance
-- Click any country → popup shows World Bank development data **plus** a new Government Finance section:
-  - **Govt debt % GDP** — IMF WEO, 191 countries
-  - **Fiscal balance** — surplus (green) or deficit (red) as % GDP, 193 countries
-  - **CPI inflation** — colour-coded: green <5%, amber 5–10%, red >10%, 193 countries
-  - **Unemployment rate** — IMF, 114 countries
-  - **10-yr bond yield** — FRED/OECD, 27 developed countries (US, UK, DE, JP, AU, CA, …)
+### Country panel — National Data
+Click any country border → full data panel with left/right columns:
+
+**Left column (gauges + history):**
+- World Bank: GDP per capita, life expectancy, urban %, internet access, literacy, electricity access, Gini, child mortality, PM2.5 air quality, forest cover, air/road death rates
+- IMF WEO: Government debt (% GDP), fiscal balance, CPI inflation, unemployment rate
+- FRED/OECD: 10-year bond yield with 5-year history chart (27 developed countries)
+- Central Bank: policy rate + bank name (29 countries across 11 currency blocs)
+- Credit Ratings: S&P, Moody's, Fitch (12 major economies)
+- Governance (WGI): Rule of Law, Control of Corruption, Govt Effectiveness, Voice & Accountability, Political Stability, Regulatory Quality
+- Human Development: UNDP HDI score and rank
+- Transparency & Freedom: TI Corruption Perceptions Index, Freedom House status
+
+**Right column:**
+- Radar chart (6 economic axes)
+- Rank chips: GDP/cap, HDI, TI CPI, Rule of Law, Anti-Corruption, Renewables, Internet, Life Expectancy, Urban %, Electricity
+- Regional sub-rank within Europe & Central Asia, East Asia & Pacific, etc.
+
+*Every gauge row is clickable — opens the Stats distribution panel for that indicator.*
 
 ### Economic Centers layer
-- Zoom-adaptive clustering: at low zoom, nearby city dots merge into regional economic hubs; zoom in and they split back to individual cities
-- Cluster size and colour encode combined market cap or revenue (pale gold → orange-red on a log scale)
-- Click a cluster → convex-hull boundary expands, Bezier arcs connect constituent cities
-- **Zoom-persistent selection** — scroll the wheel while a cluster is expanded and the selection stays pinned
-- Switch metric between Market Cap and Revenue; toggle city dots Show / Dim / Hide
+- Zoom-adaptive clustering of corporate headquarters by market cap or revenue
+- Click a cluster → convex-hull expands, Bézier arcs connect constituent cities
+- Zoom-persistent selection; metric and dot-visibility toggles
 
 ### Corporations panel
-- City-level: click any city dot → full list of HQ'd companies with revenue history, net income, total assets, employees, founded year
-- Global: "All Corporations" panel with search, country/industry filter, USD-normalized revenue sort
+- City-level: full company list with revenue history, net income, assets, employees, analyst ratings
+- Global: "All Corporations" panel with search, country/industry filter, USD-normalized sort
+- Finance tab: 5-year price chart, analyst consensus (rating, target price, count), income/balance sheet
 
 ### BEA Trade Flow arrows
-- Click any country on the map → animated curved arrows connect it to the United States
-- Blue dashed arrows = US exports · Gold dashed arrows = US imports
-- Year slider 1999–2025 (Bureau of Economic Analysis annual data, pre-fetched)
-- Left-side panel shows Goods exports/imports, balance sparkline, top companies from that country
+- Click any country → animated curved arrows to/from United States
+- Year slider 1999–2025 (Bureau of Economic Analysis ITA, pre-fetched)
 
 ### FX Rate sidebar
-- 💱 button opens a live currency settings panel
-- Fetches ECB/Frankfurter reference rates for any historical date you choose
-- ~58 currencies editable inline — change any value and economic dot sizes recalculate instantly
-- Rates persist in localStorage across sessions
+- Fetches ECB reference rates (Frankfurter API) for any historical date
+- ~58 currencies editable inline; economic dot sizes recalculate instantly
+- Rates persist in localStorage
 
-### Census tab (US cities)
-- ACS 2023: median income with histogram bars, poverty, unemployment, rent burden, home value, Gini, education, transit use, median age, homeownership
-- CBP 2022: establishment count, payroll, sector mix bars, population sparkline, self-employment rate
-- Compact 2-column layout, no scrolling required
-
-### Eurostat tab (European cities)
-- Unemployment rate, activity rate, total companies from Eurostat Urban Audit (urb_clma, urb_cecfi)
-- Median income (EUR), at-risk-of-poverty rate, homeownership, average rent/m² (urb_clivcon)
-- 512 European cities across 37 countries; latest available year shown per city
-- Tab label switches dynamically between "Census" and "Eurostat" depending on city
+### City data tabs
+| Tab | Data | Coverage |
+|---|---|---|
+| Overview | Climate normals (monthly high/low/precip), city facts | ~14k cities |
+| Economy | Revenue/market cap for HQ'd companies | ~9k cities |
+| Census | ACS 2023 income, poverty, housing, education | 470 US cities |
+| Eurostat | Labour market, living conditions, company count | 512 European cities |
 
 ### Stats distribution panel
-- Click **any data value** in the Economy tab, Info tab chips, or World Bank chips → panel slides in to the left of the sidebar
-- Shows: histogram with the current city/country highlighted in gold, national rank, ranked neighbor list ±5
-- List is scrollable; ▲/▼ buttons load 12 more entries above/below
-- **Census metrics (17):** income, poverty, unemployment, rent burden, rent, home value, Gini, SNAP, education, transit, age, homeownership, establishments, payroll, manufacturing share, pop growth, self-employment
-- **City metrics (6, global):** population, metro population, city area, density, elevation, year founded — with 🌍 World / 📍 National scope toggle
-- **World Bank metrics (8):** GDP/cap, life expectancy, urban %, internet %, Gini, literacy, child mortality, electricity access — with region sub-rank
-
-### Overview tab — climate chart
-- Monthly high/low temperature bars + precipitation overlay (all values in Celsius / mm)
-- Covers cities worldwide including US cities (Fahrenheit Wikipedia articles converted to Celsius)
+- Click any gauge row or rank chip → histogram + neighbour list slides in
+- National rank, ±5 ranked neighbours, scrollable full list
 
 ---
 
@@ -87,71 +82,195 @@ npm start       # serves public/ on http://localhost:3000
 ## Test suite
 
 ```bash
-npm test        # 95 unit tests, ~160ms, zero dependencies (node:test built-in)
+npm test        # 139 unit tests, ~1 second, zero extra dependencies (node:test built-in)
 ```
 
-Tests cover all pure utility functions: population scaling, color interpolation, formatting helpers, HTML escaping, ISO flag conversion, trade arc geometry, convex hull, point-in-polygon, city validation, and more.
+---
+
+## Data sources
+
+All data is pre-fetched by Node.js scripts and committed as JSON — **the app makes no API calls at runtime** except for FX rates (Frankfurter) and Wikipedia content (on city click).
+
+### City & Company data
+
+| Dataset | Source API / URL | Key | Notes |
+|---|---|---|---|
+| ~14k world cities | [Wikidata SPARQL](https://query.wikidata.org/sparql) | None | P31 type-filter, 10k+ pop floor |
+| City infoboxes | [Wikipedia MediaWiki API](https://en.wikipedia.org/w/api.php) | None | Nicknames, leaders, metro pop, climate |
+| Company discovery & financials | [Wikidata SPARQL + wbgetentities](https://www.wikidata.org/w/api.php) | None | ~9k companies, full financial time-series |
+| Company market caps | Wikidata wbgetentities (P2226) | None | Supplemental one-time fetch |
+| Wikipedia infoboxes (companies) | [Wikipedia MediaWiki API](https://en.wikipedia.org/w/api.php) | None | Revenue, employees, key people |
+| Analyst ratings & fundamentals | Yahoo Finance quoteSummary (`/v1/finance/`) | None* | 83 companies; session cookie required |
+| World city tiers (GaWC 2024) | [GaWC dataset](https://www.lboro.ac.uk/gawc/world2024.html) | None | 278 cities re-keyed to QIDs |
+
+\* Yahoo Finance uses a session cookie + crumb, not a formal key — but usage terms apply.
+
+### Country-level data
+
+| Dataset | Source API / URL | Key | Coverage | Fields |
+|---|---|---|---|---|
+| Development indicators | [World Bank Open Data API](https://api.worldbank.org/v2/) | None | ~190 countries | GDP/cap, life expectancy, urban %, Gini, internet, child mortality, electricity, literacy, PM2.5, forest %, air/road death rates |
+| Sustainability indicators | [World Bank Open Data API](https://api.worldbank.org/v2/) | None | 226–260 countries | CO₂/capita, renewable energy %, health spend %, education spend % |
+| Governance (WGI) | [World Bank Open Data API](https://api.worldbank.org/v2/) | None | 205 countries | Rule of law, corruption, govt effectiveness, voice & accountability, political stability, regulatory quality |
+| Fiscal / debt | [IMF DataMapper API](https://www.imf.org/external/datamapper/api/) | None | 191–193 countries | Govt debt % GDP, fiscal balance % GDP |
+| CPI inflation & unemployment | [IMF DataMapper API](https://www.imf.org/external/datamapper/api/) | None | 114–193 countries | CPI % change, unemployment rate |
+| 10-yr bond yields | [FRED API](https://fred.stlouisfed.org/docs/api/fred/) (OECD series) | **Required** | 27 OECD countries | Monthly yield, 5-yr history |
+| Human Development Index | [UNDP HDR data centre](https://hdr.undp.org/data-center/documentation-and-downloads) | None | 193 countries | HDI score, rank, year |
+| Corruption Perceptions Index | [Transparency International CPI 2023](https://www.transparency.org/en/cpi/2023) | None (static) | 138 countries | Score 0–100, rank |
+| Freedom in the World | [Freedom House 2024](https://freedomhouse.org/report/freedom-world) | None (static) | 121 countries | Aggregate score 0–100, Free/Partly Free/Not Free |
+| Central bank policy rates | Static data (early 2025 values) | None | 29 countries, 11 currency blocs | Rate %, bank name, rate label |
+| Sovereign credit ratings | Static data | None | 12 major economies | S&P, Moody's, Fitch |
+
+### US regional data
+
+| Dataset | Source API / URL | Key | Coverage |
+|---|---|---|---|
+| ACS 5-year estimates 2023 | [Census Bureau ACS API](https://api.census.gov/data/2023/acs/acs5) | None | 470 cities — income, poverty, housing, education |
+| County Business Patterns 2022 | [Census Bureau CBP API](https://api.census.gov/data/2022/cbp) | None | 473 cities — establishments, payroll, sector mix |
+| Annual Business Survey 2021 | [Census Bureau ABS API](https://api.census.gov/data/2021/abscs) | None | State-level employer firm counts |
+| Population (Decennial 2020) | [Census Bureau Decennial API](https://api.census.gov/data/2020/dec/pl) | None | Exact population at place level |
+| FIPS code resolution | [Census Geocoder API](https://geocoding.census.gov/geocoder/) | None | Lat/lng → state+place FIPS |
+| Bilateral trade flows | [BEA ITA API](https://apps.bea.gov/api/) | **Required** | 57 countries, annual 1999–2025 |
+| Home values (ZHVI) | [Zillow Research CSV](https://www.zillow.com/research/data/) | None | 448 US cities, annual history to 2000 |
+| Rent index (ZORI) | [Zillow Research CSV](https://www.zillow.com/research/data/) | None | 448 US cities, annual history |
+
+### European & Japan data
+
+| Dataset | Source API / URL | Key | Coverage |
+|---|---|---|---|
+| Urban Audit — Labour market | [Eurostat API](https://ec.europa.eu/eurostat/api/dissemination/) (urb_clma) | None | 512 cities — unemployment, activity rate |
+| Urban Audit — Living conditions | [Eurostat API](https://ec.europa.eu/eurostat/api/dissemination/) (urb_clivcon) | None | 512 cities — income, poverty, homeownership, rent |
+| Urban Audit — Economy | [Eurostat API](https://ec.europa.eu/eurostat/api/dissemination/) (urb_cecfi) | None | 512 cities — total companies |
+| Prefectural GDP & income | [Japan Cabinet Office SNA](https://www.esri.cao.go.jp/jp/sna/data/data_list/kenmin/) | None | 47 prefectures, 2011–2022 XLSX |
+
+### Geography, climate & aviation
+
+| Dataset | Source / URL | Key | Coverage |
+|---|---|---|---|
+| Country borders | [Natural Earth via world-atlas (unpkg CDN)](https://unpkg.com/world-atlas@2/countries-50m.json) | None | 50m-resolution GeoJSON |
+| Climate normals (ERA5) | [Open-Meteo Historical API](https://archive-api.open-meteo.com/v1/archive) | None | ~150 cities, 2014–2023 10-yr averages |
+| Airport routes | [OpenFlights GitHub (CC BY 3.0)](https://raw.githubusercontent.com/jpatokal/openflights/master/data/) | None | 1,175 cities, direct destinations |
+
+### Runtime APIs (called live in the browser)
+
+| Purpose | API | Key |
+|---|---|---|
+| FX rates (any historical date) | [Frankfurter / ECB reference rates](https://api.frankfurter.app/) | None |
+| City Wikipedia summary + photos | [Wikipedia REST API](https://en.wikipedia.org/api/rest_v1/) | None |
+| Wikipedia infobox (on click) | [MediaWiki Action API](https://en.wikipedia.org/w/api.php) | None |
+| Wikidata sitelink lookup | [Wikidata Action API](https://www.wikidata.org/w/api.php) | None |
+| City photos | [Wikimedia Commons FilePath](https://commons.wikimedia.org/wiki/Special:FilePath/) | None |
+| Company Wikipedia page | Wikipedia REST API (media-list + summary) | None |
+| Local-language Wikipedia | Language-specific Wikipedia REST APIs | None |
+
+### APIs tapped but **not yet integrated** (potential future sources)
+
+| Source | What's available | Notes |
+|---|---|---|
+| Pew Research Center | Survey data: social attitudes, religion, demographics by country | No public API; PDFs + topline datasets available for download |
+| WHO Global Health Observatory | ~2,000 health indicators (mortality, disease burden, nutrition) | Free REST API: `https://ghoapi.azureedge.net/api/` |
+| OECD.Stat | 400+ economic datasets (labour, education, tax, health, trade) | Free SDMX-JSON API; more granular than World Bank |
+| ECB Statistical Data Warehouse | Euro area monetary/banking data, exchange rates history | Free REST API; overlaps with Frankfurter but richer |
+| Bank of Japan | JGB yields, monetary base, exchange rates | Free; CSV/XML download |
+| Reserve Bank of India | Policy rates, CPI, IIP, FX reserves | Free REST API |
+| CBRT (Turkey) | Policy rates, inflation, FX | Free REST API |
+| PBoC (China) | LPR rates, M2, FX | HTML/CSV; structured access limited |
+| OpenStreetMap Nominatim | Geocoding, admin boundaries, POI lookup | Free; rate-limited |
+| GeoNames | City alternative names, admin hierarchy, timezone | Free API with registration |
+| UN Comtrade | Bilateral merchandise trade (HS codes) by country pair | Free tier: 100 req/hr |
+| OEC (Observatory of Economic Complexity) | Economic complexity index, product space, trade | Free API available |
+| NOAA/NCEI Climate Normals | 1991–2020 normals for US stations | Free; overlaps with Open-Meteo |
+| FBI Crime Data API | US city-level crime statistics (UCR/NIBRS) | Free; coverage varies by agency |
+| Global Carbon Project | Country CO₂ emissions with fossil/land-use breakdown | Annual CSV download |
+
+---
+
+## API keys required
+
+Only two data sources require API keys. Set them in a `.env` file:
+
+```env
+FRED_API_KEY=your_key_here      # Free at https://fred.stlouisfed.org/docs/api/api_key.html
+BEA_API_KEY=your_key_here       # Free at https://apps.bea.gov/api/signup/
+```
+
+All other data sources (World Bank, IMF, Census, Eurostat, Wikidata, Wikipedia, Open-Meteo, OpenFlights, Zillow, UNDP, Frankfurter) require **no API key**.
+
+---
 
 ## Rebuilding the data
 
 Data files are pre-built and committed. To regenerate:
 
 ```bash
-# Cities  (~1–2 hours; checkpoint/resume supported)
+# Cities (~1–2 hours; checkpoint/resume)
 npm run fetch-cities
 
 # City infoboxes — Wikipedia settlement data + climate charts
 node scripts/fetch-city-infoboxes.js
 
-# Companies  (~6–8 hours; checkpoint/resume supported)
+# Companies (~6–8 hours; checkpoint/resume)
 npm run fetch-companies
+node scripts/fetch-market-cap.js       # supplement: Wikidata market caps
+node scripts/fetch-infoboxes.js        # supplement: Wikipedia revenue/employees
 
-# Country indicators — World Bank (~1 minute)
+# Analyst ratings (reads from ../kyahoofinance032926/data/stocks/)
+node scripts/enrich-companies-yahoo.js
+
+# Country indicators — World Bank, no key (~1 minute)
 npm run fetch-country
+node scripts/patch-country-pm25.js    # PM2.5, forest %, air/road death rates
 
-# Government finance — IMF DataMapper, no key needed (~15 seconds)
+# Governance (WGI) + sustainability — World Bank (~3 minutes)
+node scripts/fetch-wgi.js
+
+# Human Development Index — UNDP (~15 seconds)
+node scripts/fetch-hdi.js
+
+# TI CPI 2023 + Freedom House 2024 (static data, instant)
+node scripts/enrich-freedom-scores.js
+
+# Central bank rates + credit ratings (static data, instant)
+node scripts/enrich-country-central-banks.js
+
+# IMF fiscal data, no key (~15 seconds)
 npm run fetch-imf
 
-# Bond yields — FRED/OECD, requires FRED_API_KEY in .env (~2 minutes)
+# Bond yields — FRED/OECD, requires FRED_API_KEY (~2 minutes)
 npm run fetch-fred
 
-# BEA trade data  (~2 minutes, pre-fetches all countries)
+# US Census — ACS + CBP + ABS + Decennial (~20 seconds)
+node scripts/fetch-census-fips.js     # one-time: resolve FIPS codes
+node scripts/fetch-census-data.js
+node scripts/fetch-census-business.js
+
+# BEA trade data, requires BEA_API_KEY (~2 minutes)
 node scripts/fetch-bea-trade.js
 
-# Eurostat Urban Audit  (~15 seconds)
+# Eurostat Urban Audit (~15 seconds)
 node scripts/fetch-eurostat.js
+node scripts/fetch-eurostat-extended.js
+
+# Japan Cabinet Office prefectural GDP/income
+node scripts/fetch-japan-stats.js
+
+# Real estate — Zillow Research CSVs (~30 seconds)
+node scripts/fetch-zillow.js
+
+# Airport connectivity — OpenFlights (~10 seconds)
+node scripts/fetch-openflights.js
+
+# Climate normals — Open-Meteo ERA5 (~5 minutes for 400 cities)
+node scripts/fetch-climate.js
+
+# World city tiers — GaWC 2024 (data file already in public/)
+node scripts/migrate-gawc.js
+
+# Auto-generate data manifest
+node scripts/write-manifest.js
 ```
 
-Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to restart from scratch.
-
----
-
-## Data sources
-
-| Dataset | Source | Notes |
-|---|---|---|
-| Cities | Wikidata SPARQL | 10k+ population floor, 34 settlement types |
-| City infoboxes | Wikipedia API | Climate, leaders, metro pop, nicknames |
-| Companies | Wikidata SPARQL | Exchange-listed or revenue ≥ 1B; full financial time-series |
-| Country indicators | World Bank API | 8 development indicators, ~190 countries |
-| Govt debt & fiscal balance | IMF DataMapper (WEO) | 191–193 countries, current year |
-| CPI inflation & unemployment | IMF DataMapper (WEO) | 114–193 countries |
-| 10-yr government bond yields | FRED / OECD | 27 developed countries, 5-year monthly history |
-| Country borders | Natural Earth (world-atlas) | 50m resolution GeoJSON |
-| US Census (ACS) | Census Bureau API | 2023 5-year estimates, 470 cities |
-| US Census (CBP) | Census Bureau API | 2022 County Business Patterns, 473 cities |
-| US trade flows | Bureau of Economic Analysis (BEA ITA) | Annual 1999–2025, pre-fetched JSON |
-| European cities | Eurostat Urban Audit | 512 cities, labour market + living conditions |
-| FX rates | Frankfurter / ECB | Any historical date, cached in localStorage |
-
----
-
-## Tech stack
-
-- **Frontend:** Leaflet.js, vanilla JS/HTML/CSS, dark GitHub-inspired theme
-- **Data pipeline:** Node.js (Wikidata SPARQL + Wikipedia + World Bank + IMF + FRED + BEA + Census REST APIs)
-- **Testing:** Node.js built-in `node:test` — 95 tests, zero additional dependencies
-- **Hosting:** Fully static — no backend required after data build
+Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to restart.
 
 ---
 
@@ -159,38 +278,72 @@ Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to 
 
 ```
 public/
-  index.html              # app shell + panel HTML
-  app.js                  # ~5,100-line frontend (map, panels, clustering, trade, FX, stats)
-  style.css               # all styles
-  cities-full.json        # 6,600+ city records with climate data
-  companies.json          # companies keyed by city QID, full financial history
-  country-data.json       # World Bank indicators keyed by ISO-2
-  imf-fiscal.json         # IMF WEO: debt, fiscal balance, inflation, unemployment
-  fred-yields.json        # FRED/OECD: 10-yr bond yields, 5-year monthly history
-  world-countries.json    # GeoJSON country borders (Natural Earth)
-  census-cities.json      # ACS 2023, 470 US cities
-  census-business.json    # CBP 2022, 473 US cities
-  bea-trade.json          # BEA ITA trade data, 57 countries pre-fetched
-  eurostat-cities.json    # Eurostat Urban Audit, 512 European cities
+  index.html                  # app shell + panel HTML
+  app.js                      # ~5,300-line frontend
+  style.css                   # all styles
+  cities-full.json            # ~14k city records with climate, infobox data
+  companies.json              # ~9k companies keyed by city QID
+  country-data.json           # World Bank + IMF + WGI + HDI + TI + FH + CB data
+  world-countries.json        # GeoJSON country borders (Natural Earth)
+  census-cities.json          # ACS 2023, 470 US cities
+  census-business.json        # CBP 2022, 473 US cities
+  bea-trade.json              # BEA ITA, 57 countries 1999–2025
+  eurostat-cities.json        # Eurostat Urban Audit, 512 European cities
+  japan-prefectures.json      # Cabinet Office, 47 prefectures 2011–2022
+  zillow-cities.json          # Zillow ZHVI + ZORI, 448 US cities
+  airport-connectivity.json   # OpenFlights, 1,175 cities
+  climate-extra.json          # Open-Meteo ERA5, ~150 cities
+  gawc-cities.json            # GaWC 2024 tiers, 278 cities
+  data-manifest.json          # auto-generated file registry
 
 scripts/
-  fetch-cities.js         # Wikidata SPARQL → cities-full.json
-  fetch-city-infoboxes.js # Wikipedia API → climate, leaders, nicknames
-  fetch-companies.js      # Wikidata SPARQL → companies.json
-  fetch-country-data.js   # World Bank API  → country-data.json
-  fetch-imf.js            # IMF DataMapper  → imf-fiscal.json
-  fetch-fred.js           # FRED API        → fred-yields.json
-  fetch-bea-trade.js      # BEA ITA API     → bea-trade.json
-  fetch-census-data.js    # Census ACS API  → census-cities.json
-  fetch-census-business.js# Census CBP API  → census-business.json
-  fetch-eurostat.js       # Eurostat Urban Audit → eurostat-cities.json
+  fetch-cities.js             # Wikidata SPARQL → cities-full.json
+  fetch-city-infoboxes.js     # Wikipedia API → city infoboxes + climate
+  fetch-companies.js          # Wikidata SPARQL + wbgetentities → companies.json
+  fetch-market-cap.js         # Wikidata P2226 → market caps
+  fetch-infoboxes.js          # Wikipedia API → company revenue/employees
+  fetch-tickers.js            # Yahoo Finance search → ticker symbols
+  fetch-yahoo.js              # Yahoo Finance quoteSummary → fundamentals
+  fetch-prices.js             # Yahoo Finance chart → 5-yr price history
+  enrich-companies-yahoo.js   # kyahoofinance032926 stocks → analyst ratings
+  fetch-country-data.js       # World Bank API → development indicators
+  patch-country-pm25.js       # World Bank API → PM2.5, forest, death rates
+  fetch-wgi.js                # World Bank WGI + sustainability → governance
+  fetch-hdi.js                # UNDP HDR CSV → HDI scores + ranks
+  enrich-freedom-scores.js    # Static TI CPI 2023 + Freedom House 2024
+  enrich-country-central-banks.js  # Static CB rates + credit ratings
+  fetch-imf.js                # IMF DataMapper → fiscal data
+  fetch-fred.js               # FRED API → 10-yr bond yields
+  fetch-census-fips.js        # Census Geocoder → FIPS codes
+  fetch-census-data.js        # Census ACS API → income, housing, education
+  fetch-census-business.js    # Census CBP/ABS/Decennial → business patterns
+  fetch-bea-trade.js          # BEA ITA API → bilateral trade flows
+  fetch-eurostat.js           # Eurostat API → Urban Audit labour + living
+  fetch-eurostat-extended.js  # Eurostat API → extended indicators
+  fetch-japan-stats.js        # Japan Cabinet Office XLSX → prefectural data
+  fetch-zillow.js             # Zillow Research CSV → home values + rent
+  fetch-openflights.js        # OpenFlights GitHub → airport routes
+  fetch-climate.js            # Open-Meteo ERA5 → climate normals
+  fetch-world-geo.js          # world-atlas CDN → GeoJSON borders
+  migrate-gawc.js             # GaWC data → QID-keyed JSON
+  write-manifest.js           # Generates data-manifest.json
 
 lib/
-  pure-utils.cjs          # Pure functions extracted from app.js for unit testing
+  pure-utils.cjs              # Pure functions extracted for unit testing
 
 tests/
-  pure-utils.test.js      # 95 unit tests (node:test + node:assert, zero deps)
+  pure-utils.test.js          # 139 unit tests (node:test, zero deps)
 ```
+
+---
+
+## Tech stack
+
+- **Frontend:** Leaflet.js, vanilla JS/HTML/CSS, dark GitHub-inspired theme
+- **Map tiles:** CARTO Dark Matter (OpenStreetMap data)
+- **Data pipeline:** Node.js — 35 scripts calling 20+ APIs
+- **Testing:** Node.js built-in `node:test` — 139 tests, zero extra dependencies
+- **Hosting:** Fully static — no backend required after data build
 
 ---
 
