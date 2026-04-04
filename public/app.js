@@ -13,6 +13,28 @@ let editingKey = null;    // _key of the city currently open in the modal
 
 // Companies data keyed by city QID
 let companiesData = {};
+let _companiesLoaded = false;
+let _companiesLoading = null;  // in-flight promise
+
+async function _ensureCompanies() {
+  if (_companiesLoaded) return;
+  if (_companiesLoading) return _companiesLoading;
+  _companiesLoading = (async () => {
+    try {
+      const res = await fetch('/companies.json');
+      if (res.ok) {
+        companiesData = await res.json();
+        console.log(`[lazy] Companies loaded (${Object.keys(companiesData).length} cities)`);
+      }
+    } catch (e) {
+      console.warn('[lazy] companies.json failed to load', e);
+    } finally {
+      _companiesLoaded = true;
+      _companiesLoading = null;
+    }
+  })();
+  return _companiesLoading;
+}
 
 // Map ISO-2 country code → Wikipedia language subdomain
 // Used to prefer the local-language Wikipedia article over English
@@ -2585,11 +2607,11 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
-      fetch('/companies.json').catch(() => null),   // graceful — run npm run fetch-companies
+      // companies.json (75 MB) is lazy-loaded on first use — not fetched at startup
       fetch('/census-cities.json').catch(() => null),
       fetch('/census-business.json').catch(() => null),
       fetch('/bea-trade.json').catch(() => null),
@@ -2621,19 +2643,6 @@ async function init() {
       }
     } else {
       console.info('[init] country-data.json not found — run "npm run fetch-country" to enable World Bank indicators');
-    }
-
-    // ── Phase 5b: load companies data (optional) ──
-    if (companiesRes && companiesRes.ok) {
-      try {
-        companiesData = await companiesRes.json();
-        const n = Object.keys(companiesData).length;
-        console.log(`[init] Companies data loaded (${n} cities with HQ data)`);
-      } catch {
-        console.warn('[init] companies.json is malformed');
-      }
-    } else {
-      console.info('[init] companies.json not found — run "npm run fetch-companies"');
     }
 
     // ── Phase 5b2: load Census ACS data (optional, for US city economic panel + color layer) ──
@@ -2955,13 +2964,17 @@ function _cpFmt(val, decimals) {
   return val.toFixed(decimals);
 }
 
+var _cpWorldMaxCache = new Map();
 function _cpWorldMax(key) {
+  if (_cpWorldMaxCache.has(key)) return _cpWorldMaxCache.get(key);
   var max = 0, v;
   for (var k in countryData) {
     v = countryData[k][key];
     if (Number.isFinite(v) && v > max) max = v;
   }
-  return max || 1;
+  var result = max || 1;
+  _cpWorldMaxCache.set(key, result);
+  return result;
 }
 
 function _cpFlagEmoji(iso2) {
@@ -3774,13 +3787,14 @@ function _drawEconColorRamp() {
   }
 }
 
-function toggleEconLayer() {
+async function toggleEconLayer() {
   econOn = !econOn;
   const btn = document.getElementById('econ-toggle-btn');
   if (econOn) {
     btn.textContent = 'On';
     btn.classList.add('on');
     _drawEconColorRamp();
+    await _ensureCompanies();
     buildEconLayer();
   } else {
     btn.textContent = 'Off';
@@ -4165,31 +4179,33 @@ function fmtRevenue(n) {
   return n.toLocaleString();
 }
 
-function openCorpPanel(qid, cityName) {
+async function openCorpPanel(qid, cityName) {
   corpCityQid = qid;
   corpCityName = cityName;
   corpOverrideList = null;
   document.getElementById('corp-panel-title').textContent = cityName + ' · Corporations';
   document.getElementById('corp-search').value = '';
   document.getElementById('corp-sort').value = 'revenue';
-  renderCorpList();
   document.getElementById('corp-panel').classList.add('open');
   document.getElementById('wiki-sidebar').classList.add('corp-open');
+  await _ensureCompanies();
+  renderCorpList();
 }
 
-function openCorpPanelCluster(cityPoints, title) {
+async function openCorpPanelCluster(cityPoints, title) {
   // cityPoints: [{qid, city, totalUSD, validCos}, ...]  — same structure from buildEconLayer
   // Use the dominant city (highest revenue) for language/locale detection
   const dominant = cityPoints.reduce((best, p) => p.totalUSD > best.totalUSD ? p : best, cityPoints[0]);
   corpCityQid = dominant.qid;
   corpCityName = title;
-  corpOverrideList = cityPoints.flatMap(p => companiesData[p.qid] || []);
   document.getElementById('corp-panel-title').textContent = title + ' · Corporations';
   document.getElementById('corp-search').value = '';
   document.getElementById('corp-sort').value = 'revenue';
-  renderCorpList();
   document.getElementById('corp-panel').classList.add('open');
   document.getElementById('wiki-sidebar').classList.add('corp-open');
+  await _ensureCompanies();
+  corpOverrideList = cityPoints.flatMap(p => companiesData[p.qid] || []);
+  renderCorpList();
 }
 
 function closeCorpPanel() {
@@ -4388,10 +4404,11 @@ function renderCorpList() {
   }
 
   // Helper: convert a financial value to the display currency
+  const _corpCityIso = allCities.find(c => c.qid === corpCityQid)?.iso;
   function _toDisp(val, cur) {
     if (!val) return null;
     if (!displayCur || displayCur === (cur || '')) return val;
-    const usd = toUSD(val, cur || ISO2_TO_CURRENCY[allCities.find(c=>c.qid===corpCityQid)?.iso] || 'USD');
+    const usd = toUSD(val, cur || ISO2_TO_CURRENCY[_corpCityIso] || 'USD');
     if (!usd) return null;
     const rate = fxRates[displayCur];
     return rate ? usd / rate : null;
