@@ -3079,6 +3079,103 @@ function _renderCountryPanel(iso2) {
   if (typeof _switchTrendTab === "function") _switchTrendTab(iso2, "gdp_per_capita");
 }
 
+// ── _buildRadar ───────────────────────────────────────────────────────
+function _buildRadar(iso2) {
+  var cd = countryData[iso2];
+  if (!cd) return "";
+
+  // 6 axes: key, label, whether lower-is-better (inverted)
+  var axes = [
+    { key: "gdp_per_capita",     label: "GDP/cap",   inv: false },
+    { key: "life_expectancy",    label: "Life exp",  inv: false },
+    { key: "govt_debt_gdp",      label: "Debt",      inv: true  },
+    { key: "fiscal_balance_gdp", label: "Fiscal",    inv: true  },
+    { key: "cpi_inflation",      label: "Inflation", inv: true  },
+    { key: "unemployment_rate",  label: "Unemploy",  inv: true  }
+  ];
+
+  var n = axes.length;
+  var cx = 90, cy = 92, R = 65;
+
+  // world max per axis (reuse _cpWorldMax already defined above)
+  var maxVals = {};
+  axes.forEach(function(a) { maxVals[a.key] = _cpWorldMax(a.key); });
+
+  // normalise to 0..1, where 1 = best
+  function score(key, inv, val) {
+    if (!Number.isFinite(val)) return 0;
+    var max = maxVals[key];
+    if (!max) return 0;
+    // fiscal_balance_gdp: range -15..+15 → 0..1
+    if (key === "fiscal_balance_gdp") {
+      return Math.min(1, Math.max(0, (val + 15) / 30));
+    }
+    var raw = Math.min(1, Math.max(0, val / max));
+    return inv ? 1 - raw : raw;
+  }
+
+  // compute world average score per axis
+  function avgScore(axis) {
+    var sum = 0, count = 0;
+    for (var k in countryData) {
+      var v = countryData[k][axis.key];
+      if (Number.isFinite(v)) { sum += score(axis.key, axis.inv, v); count++; }
+    }
+    return count ? sum / count : 0;
+  }
+
+  // polar to cartesian (angle 0 = top, clockwise)
+  function pt(angle, r) {
+    var a = angle - Math.PI / 2;
+    return { x: (cx + r * Math.cos(a)).toFixed(1), y: (cy + r * Math.sin(a)).toFixed(1) };
+  }
+
+  // build SVG polygon points string from an array of 0..1 scores
+  function polyPts(scores) {
+    return scores.map(function(s, i) {
+      var p = pt(2 * Math.PI * i / n, s * R);
+      return p.x + "," + p.y;
+    }).join(" ");
+  }
+
+  // country and world-avg scores
+  var countryScores = axes.map(function(a) { return score(a.key, a.inv, cd[a.key]); });
+  var avgScores     = axes.map(function(a) { return avgScore(a); });
+
+  // grid rings
+  var rings = [0.25, 0.5, 0.75, 1.0].map(function(frac) {
+    var pts = axes.map(function(_, i) {
+      var p = pt(2 * Math.PI * i / n, frac * R);
+      return p.x + "," + p.y;
+    }).join(" ");
+    return "<polygon points=\"" + pts + "\" fill=\"none\" stroke=\"#30363d\" stroke-width=\"0.5\"/>";
+  }).join("");
+
+  // axis lines + labels
+  var axisLines = "", axisLabels = "";
+  axes.forEach(function(a, i) {
+    var tip = pt(2 * Math.PI * i / n, R);
+    axisLines += "<line x1=\"" + cx + "\" y1=\"" + cy + "\" x2=\"" + tip.x + "\" y2=\"" + tip.y +
+                 "\" stroke=\"#30363d\" stroke-width=\"0.5\"/>";
+    var lp = pt(2 * Math.PI * i / n, R + 15);
+    axisLabels += "<text x=\"" + lp.x + "\" y=\"" + lp.y +
+                  "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-size=\"7\" fill=\"#8b949e\">" +
+                  escHtml(a.label) + "</text>";
+  });
+
+  var svgW = 180, svgH = 200;
+  return "<div class=\"cp-radar-wrap\">" +
+    "<svg width=\"" + svgW + "\" height=\"" + svgH + "\" viewBox=\"0 0 " + svgW + " " + svgH + "\"" +
+         " xmlns=\"http://www.w3.org/2000/svg\">" +
+      rings + axisLines + axisLabels +
+      "<polygon points=\"" + polyPts(avgScores) + "\"" +
+           " fill=\"none\" stroke=\"#8b949e\" stroke-width=\"1\" stroke-dasharray=\"3,2\" opacity=\"0.5\"/>" +
+      "<polygon points=\"" + polyPts(countryScores) + "\"" +
+           " fill=\"#388bfd\" fill-opacity=\"0.2\" stroke=\"#388bfd\" stroke-width=\"1.5\"/>" +
+    "</svg>" +
+  "</div>";
+}
+
 // ── Trade flow arrows (BEA API) ──────────────────────────────────────────────
 
 // ISO-2 → BEA country name (BEA uses display names, not ISO codes)
