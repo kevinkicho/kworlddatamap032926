@@ -2953,6 +2953,132 @@ function closeCountryPanel() {
   }
 }
 
+// ── country panel helpers ─────────────────────────────────────────────
+function _cpFmt(val, decimals) {
+  if (!Number.isFinite(val)) return "--";
+  decimals = (decimals == null) ? 1 : decimals;
+  if (Math.abs(val) >= 1e9)  return (val/1e9).toFixed(decimals)  + "B";
+  if (Math.abs(val) >= 1e6)  return (val/1e6).toFixed(decimals)  + "M";
+  if (Math.abs(val) >= 1e3)  return (val/1e3).toFixed(decimals)  + "K";
+  return val.toFixed(decimals);
+}
+
+function _cpWorldMax(key) {
+  var max = 0;
+  for (var k in countryData) {
+    var v = countryData[k][key];
+    if (Number.isFinite(v) && v > max) max = v;
+  }
+  return max || 1;
+}
+
+function _cpFlagEmoji(iso2) {
+  if (!iso2 || iso2.length !== 2) return "";
+  var base = 0x1F1E6 - 65;
+  return String.fromCodePoint(base + iso2.toUpperCase().charCodeAt(0)) +
+         String.fromCodePoint(base + iso2.toUpperCase().charCodeAt(1));
+}
+
+function _cpGaugeRow(label, val, max, suffix, cls) {
+  suffix = suffix || "";
+  cls    = cls    || "";
+  if (!Number.isFinite(val)) {
+    return "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">" + escHtml(label) +
+           "</span><span class=\"cp-gauge-nil\">--</span></div>";
+  }
+  var pct = Math.min(100, (val / max) * 100).toFixed(1);
+  return "<div class=\"cp-gauge-row " + cls + "\">" +
+    "<span class=\"cp-gauge-lbl\">" + escHtml(label) + "</span>" +
+    "<div class=\"cp-gauge-bar\"><div class=\"cp-gauge-fill\" style=\"width:" + pct + "%\"></div></div>" +
+    "<span class=\"cp-gauge-val\">" + val.toFixed(1) + suffix + "</span></div>";
+}
+
+// ── _renderCountryPanel ───────────────────────────────────────────────
+function _renderCountryPanel(iso2) {
+  var cd = countryData[iso2];
+  if (!cd) return;
+
+  // ── header ────────────────────────────────────────────────────────
+  var metaParts = [];
+  if (cd.region)       metaParts.push(escHtml(cd.region));
+  if (cd.income_level) metaParts.push(escHtml(cd.income_level));
+  metaParts.push(escHtml(iso2));
+  document.getElementById("cp-header").innerHTML =
+    "<span class=\"cp-flag\">" + _cpFlagEmoji(iso2) + "</span>" +
+    "<div style=\"flex:1;min-width:0\">" +
+      "<div class=\"cp-country-name\">" + escHtml(cd.name || iso2) + "</div>" +
+      "<div class=\"cp-country-meta\">" + metaParts.join(" \u00b7 ") + "</div>" +
+    "</div>" +
+    "<button class=\"cp-close\" onclick=\"closeCountryPanel()\">\u00d7</button>";
+
+  // ── 4 stat cards ──────────────────────────────────────────────────
+  var gdp  = cd.gdp_per_capita,    inf  = cd.cpi_inflation;
+  var debt = cd.govt_debt_gdp,     fisc = cd.fiscal_balance_gdp;
+  var infCls  = !Number.isFinite(inf)  ? "" : inf  > 5  ? "cp-red"   : inf  > 3 ? "cp-amber" : "cp-green";
+  var debtCls = !Number.isFinite(debt) ? "" : debt > 90 ? "cp-red"   : debt > 60 ? "cp-amber" : "";
+  var fiscCls = !Number.isFinite(fisc) ? "" : fisc >= 0 ? "cp-green" : "cp-red";
+
+  function statCard(cls, val, fmt, suffix, label) {
+    var display = Number.isFinite(val) ? fmt(val) + suffix : "--";
+    return "<div class=\"cp-stat-card " + cls + "\"><div class=\"cp-stat-val\">" + display +
+           "</div><div class=\"cp-stat-lbl\">" + label + "</div></div>";
+  }
+  document.getElementById("cp-stats-row").innerHTML =
+    statCard("cp-blue",   gdp,  function(v){ return "$" + _cpFmt(v, 0); }, "", "GDP/cap") +
+    statCard(infCls,      inf,  function(v){ return v.toFixed(1); },       "%", "Inflation") +
+    statCard(debtCls,     debt, function(v){ return v.toFixed(0); },       "%", "Debt/GDP") +
+    statCard(fiscCls,     fisc, function(v){ return (v >= 0 ? "+" : "") + v.toFixed(1); }, "%", "Fiscal Bal");
+
+  // ── bar gauges (left column) ──────────────────────────────────────
+  var maxGdp   = _cpWorldMax("gdp_per_capita"),  maxLife  = _cpWorldMax("life_expectancy");
+  var maxDebt  = _cpWorldMax("govt_debt_gdp"),   maxInf   = _cpWorldMax("cpi_inflation");
+  var maxUnemp = _cpWorldMax("unemployment_rate"), maxYld = _cpWorldMax("bond_yield_10y");
+
+  var gaugeHtml =
+    "<div class=\"cp-gauge-section-hdr\">World Bank</div>" +
+    _cpGaugeRow("GDP/cap",      gdp,                   maxGdp,   "",    "cp-blue") +
+    _cpGaugeRow("Life exp",     cd.life_expectancy,    maxLife,  " yrs") +
+    (Number.isFinite(cd.population)
+      ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Population</span><span class=\"cp-gauge-info\">" + _cpFmt(cd.population, 1) + "</span></div>"
+      : "") +
+    "<div class=\"cp-gauge-section-hdr\">IMF</div>" +
+    _cpGaugeRow("Debt/GDP",     debt,                              maxDebt,  "%") +
+    _cpGaugeRow("Fiscal bal",   Number.isFinite(fisc) ? Math.abs(fisc) : null, 20, "%", fiscCls) +
+    _cpGaugeRow("CPI Inflation",Number.isFinite(inf)  ? Math.abs(inf)  : null, maxInf, "%", infCls) +
+    _cpGaugeRow("Unemployment", cd.unemployment_rate,              maxUnemp, "%") +
+    "<div class=\"cp-gauge-section-hdr\">FRED</div>" +
+    _cpGaugeRow("Bond yield",   cd.bond_yield_10y,                 maxYld,   "%");
+
+  // ── body: two-column ──────────────────────────────────────────────
+  document.getElementById("cp-body").innerHTML =
+    "<div class=\"cp-left-col\">" + gaugeHtml + "</div>" +
+    "<div class=\"cp-right-col\">" +
+      (typeof _buildRadar     === "function" ? _buildRadar(iso2)     : "") +
+      (typeof _buildRankChips === "function" ? _buildRankChips(iso2) : "") +
+    "</div>";
+
+  // ── trend tab strip ───────────────────────────────────────────────
+  var tabs = [
+    { key: "gdp_per_capita",    label: "GDP/cap"      },
+    { key: "govt_debt_gdp",     label: "Debt"         },
+    { key: "cpi_inflation",     label: "Inflation"    },
+    { key: "life_expectancy",   label: "Life exp"     },
+    { key: "unemployment_rate", label: "Unemployment" },
+    { key: "bond_yield_10y",    label: "Bond yield"   }
+  ];
+  var tabHtml = tabs.map(function(t) {
+    return "<button class=\"cp-tab" + (t.key === "gdp_per_capita" ? " active" : "") + "\" " +
+           "onclick=\"_switchTrendTab(" + JSON.stringify(iso2) + "," + JSON.stringify(t.key) + ")\">" +
+           escHtml(t.label) + "</button>";
+  }).join("");
+  document.getElementById("cp-trend").innerHTML =
+    "<div class=\"cp-tab-strip\">" + tabHtml + "</div>" +
+    "<div id=\"cp-chart-area\"></div>";
+
+  // render default tab
+  if (typeof _switchTrendTab === "function") _switchTrendTab(iso2, "gdp_per_capita");
+}
+
 // ── Trade flow arrows (BEA API) ──────────────────────────────────────────────
 
 // ISO-2 → BEA country name (BEA uses display names, not ISO codes)
