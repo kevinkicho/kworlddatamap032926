@@ -1,5 +1,5 @@
 'use strict';
-const { describe, it } = require('node:test');
+const { describe, it, test } = require('node:test');
 const assert = require('node:assert/strict');
 const {
   popToT, lerpRGB, wikiCityColor, wikiCityOpacity, wikiCityRadius,
@@ -7,6 +7,7 @@ const {
   _tradeArc, _tradeArrowWeight, _convexHull, _arcLine,
   econDotColor, _econCellDeg, fmtEmployees, fmtRevenue,
   _pointInPolygon, validateCities, cityKey,
+  _gaugeWidth, _radarScore,
 } = require('../lib/pure-utils.cjs');
 
 // ── popToT ────────────────────────────────────────────────────────────────────
@@ -459,5 +460,31 @@ describe('cityKey', () => {
   });
   it('empty qid string is falsy → uses lat,lng', () => {
     assert.equal(cityKey({ qid: '', lat: 35, lng: 139 }), '35,139');
+  });
+});
+
+// ── _gaugeWidth ───────────────────────────────────────────────────────────────
+describe('_gaugeWidth', () => {
+  test('null value returns 0', () => assert.equal(_gaugeWidth(null, 100), 0));
+  test('zero worldMax returns 0', () => assert.equal(_gaugeWidth(50, 0), 0));
+  test('at worldMax returns 100', () => assert.equal(_gaugeWidth(100, 100), 100));
+  test('above worldMax clamps to 100', () => assert.equal(_gaugeWidth(150, 100), 100));
+  test('half worldMax returns 50', () => assert.equal(_gaugeWidth(50, 100), 50));
+  test('result is integer', () => assert.equal(_gaugeWidth(33, 100), 33));
+});
+
+// ── _radarScore ───────────────────────────────────────────────────────────────
+describe('_radarScore', () => {
+  test('null value returns 0', () => assert.equal(_radarScore('gdp_per_capita', null, 100), 0));
+  test('zero worldMax returns 0', () => assert.equal(_radarScore('gdp_per_capita', 50, 0), 0));
+  test('higher gdp_per_capita gives higher score', () => {
+    assert.ok(_radarScore('gdp_per_capita', 80, 100) > _radarScore('gdp_per_capita', 40, 100));
+  });
+  test('lower govt_debt_gdp gives higher score (inverted)', () => {
+    assert.ok(_radarScore('govt_debt_gdp', 20, 100) > _radarScore('govt_debt_gdp', 80, 100));
+  });
+  test('score clamps to 0..1 range', () => {
+    assert.ok(_radarScore('gdp_per_capita', 200, 100) <= 1);
+    assert.ok(_radarScore('gdp_per_capita', -10, 100) >= 0);
   });
 });
