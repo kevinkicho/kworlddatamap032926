@@ -1620,6 +1620,8 @@ let japanPrefData  = {};   // prefecture English name → {perCapitaIncomeJpy, g
 let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
 let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
+let fredYields     = {};   // ISO2 → {yield_10y, yield_10y_date, yield_history} (from fred-yields.json)
+let imfFiscal      = {};   // ISO2 → {govt_debt_gdp, fiscal_balance_gdp, ...} (from imf-fiscal.json)
 let censusColorMetric = null;  // null = off, or key like 'medianIncome'
 
 // GaWC tier → numeric score (Alpha++=12 … Sufficiency=1)
@@ -2573,7 +2575,7 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, companiesRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, fredRes, imfRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
@@ -2587,6 +2589,8 @@ async function init() {
       fetch('/airport-connectivity.json').catch(() => null),
       fetch('/zillow-cities.json').catch(() => null),
       fetch('/climate-extra.json').catch(() => null),
+      fetch('/fred-yields.json').catch(() => null),
+      fetch('/imf-fiscal.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -2691,6 +2695,18 @@ async function init() {
         climateExtra = await climateExtraRes.json();
         console.log(`[init] Climate extra data loaded (${Object.keys(climateExtra).length} cities)`);
       } catch { console.warn('[init] climate-extra.json is malformed'); }
+    }
+    if (fredRes && fredRes.ok) {
+      try {
+        fredYields = await fredRes.json();
+        console.log(`[init] FRED bond yields loaded (${Object.keys(fredYields).length} countries)`);
+      } catch { console.warn('[init] fred-yields.json is malformed'); }
+    }
+    if (imfRes && imfRes.ok) {
+      try {
+        imfFiscal = await imfRes.json();
+        console.log(`[init] IMF fiscal data loaded (${Object.keys(imfFiscal).length} countries)`);
+      } catch { console.warn('[init] imf-fiscal.json is malformed'); }
     }
 
     // ── Phase 5c: load world country borders GeoJSON (optional, for choropleth) ──
@@ -2864,7 +2880,11 @@ function showCountryPopup(iso2, latlng) {
   if (!c) return;
 
   const ind = CHORO_INDICATORS.find(i => i.key === activeChoroKey);
-  const rows = [
+  const fi  = imfFiscal[iso2]  || {};
+  const fy  = fredYields[iso2] || {};
+
+  // ── World Bank development rows ──
+  const wbRows = [
     ['GDP per capita', c.gdp_per_capita != null ? '$' + Math.round(c.gdp_per_capita).toLocaleString() + (c.gdp_per_capita_year ? ` <small style="color:#484f58">${c.gdp_per_capita_year}</small>` : '') : null],
     ['Life expectancy', c.life_expectancy != null ? c.life_expectancy.toFixed(1) + ' yrs' : null],
     ['Internet users', c.internet_pct != null ? c.internet_pct.toFixed(1) + '%' : null],
@@ -2876,17 +2896,63 @@ function showCountryPopup(iso2, latlng) {
     ['Income level', c.income_level || null],
   ].filter(([, v]) => v != null);
 
-  const tableRows = rows.map(([label, val]) => {
-    const isActive = ind && CHORO_INDICATORS.find(i => i.key === activeChoroKey) &&
-      label.toLowerCase().includes(activeChoroKey.replace(/_/g, ' ').slice(0, 6));
+  // ── IMF fiscal rows ──
+  const fiscalBalanceVal = fi.fiscal_balance_gdp != null
+    ? (() => {
+        const v = fi.fiscal_balance_gdp;
+        const color = v >= 0 ? '#3fb950' : '#f85149';
+        const sign  = v >= 0 ? '+' : '';
+        return `<span style="color:${color};font-weight:600">${sign}${v.toFixed(1)}%</span> <small style="color:#484f58">${fi.fiscal_balance_gdp_year || ''}</small>`;
+      })()
+    : null;
+
+  const inflationVal = fi.cpi_inflation != null
+    ? (() => {
+        const v = fi.cpi_inflation;
+        const color = v > 10 ? '#f85149' : v > 5 ? '#d29922' : '#3fb950';
+        return `<span style="color:${color}">${v.toFixed(1)}%</span> <small style="color:#484f58">${fi.cpi_inflation_year || ''}</small>`;
+      })()
+    : null;
+
+  const imfRows = [
+    ['Govt debt', fi.govt_debt_gdp != null ? fi.govt_debt_gdp.toFixed(1) + '% of GDP <small style="color:#484f58">' + (fi.govt_debt_gdp_year || '') + '</small>' : null],
+    ['Fiscal balance', fiscalBalanceVal],
+    ['CPI inflation', inflationVal],
+    ['Unemployment', fi.unemployment_rate != null ? fi.unemployment_rate.toFixed(1) + '%' + (fi.unemployment_rate_year ? ` <small style="color:#484f58">${fi.unemployment_rate_year}</small>` : '') : null],
+  ].filter(([, v]) => v != null);
+
+  // ── FRED bond yield row ──
+  const yieldRows = fy.yield_10y != null
+    ? [['10-yr bond yield', `${fy.yield_10y.toFixed(2)}% <small style="color:#484f58">${fy.yield_10y_date || ''}</small>`]]
+    : [];
+
+  const allRows = [...wbRows, ...imfRows, ...yieldRows];
+
+  const tableRows = allRows.map(([label, val]) => {
+    const isActive = ind && label.toLowerCase().includes(activeChoroKey.replace(/_/g, ' ').slice(0, 6));
     return `<tr><td>${escHtml(label)}</td><td class="${isActive ? 'choro-popup-highlight' : ''}">${val}</td></tr>`;
   }).join('');
+
+  // Section dividers in the table (after World Bank block, before fiscal block)
+  const hasImfOrYield = imfRows.length > 0 || yieldRows.length > 0;
+  const sectionedRows = (() => {
+    if (!hasImfOrYield) return tableRows;
+    const wbHtml   = wbRows.map(([l, v]) => {
+      const isActive = ind && l.toLowerCase().includes(activeChoroKey.replace(/_/g, ' ').slice(0, 6));
+      return `<tr><td>${escHtml(l)}</td><td class="${isActive ? 'choro-popup-highlight' : ''}">${v}</td></tr>`;
+    }).join('');
+    const fiscHtml = [...imfRows, ...yieldRows].map(([l, v]) =>
+      `<tr><td>${escHtml(l)}</td><td>${v}</td></tr>`
+    ).join('');
+    const divider = `<tr><td colspan="2" style="padding:4px 0 2px;font-size:0.68rem;color:#484f58;letter-spacing:.05em;border-top:1px solid #30363d">GOVERNMENT FINANCE · IMF / FRED</td></tr>`;
+    return wbHtml + (wbHtml && fiscHtml ? divider : '') + fiscHtml;
+  })();
 
   const wbUrl = wbCountryUrl(iso2);
   const html = `
     <div class="choro-popup-name">${escHtml(c.name || iso2)}</div>
     <div class="choro-popup-region">${escHtml(c.region || '')} · World Bank data</div>
-    <table class="choro-popup-table">${tableRows}</table>
+    <table class="choro-popup-table">${sectionedRows}</table>
     ${wbUrl ? `<a href="${wbUrl}" target="_blank" rel="noopener"
        style="display:inline-flex;align-items:center;gap:5px;margin-top:10px;color:#58a6ff;font-size:0.78rem;text-decoration:none;">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">

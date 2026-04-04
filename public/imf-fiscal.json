@@ -1,0 +1,1770 @@
+{
+  "SD": {
+    "govt_debt_gdp": 172.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 54.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 58,
+    "unemployment_rate_year": 2026
+  },
+  "AF": {
+    "govt_debt_gdp": 8.8,
+    "govt_debt_gdp_year": 2024,
+    "fiscal_balance_gdp": -0.5,
+    "fiscal_balance_gdp_year": 2024,
+    "cpi_inflation": -4.3,
+    "cpi_inflation_year": 2024
+  },
+  "AL": {
+    "govt_debt_gdp": 52.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8.7,
+    "unemployment_rate_year": 2026
+  },
+  "DZ": {
+    "govt_debt_gdp": 62.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -12.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.9,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 11.4,
+    "unemployment_rate_year": 2019
+  },
+  "AD": {
+    "govt_debt_gdp": 30.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 2.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 1.6,
+    "unemployment_rate_year": 2026
+  },
+  "AO": {
+    "govt_debt_gdp": 63.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 16.3,
+    "cpi_inflation_year": 2026
+  },
+  "AG": {
+    "govt_debt_gdp": 63.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.4,
+    "cpi_inflation_year": 2026
+  },
+  "AR": {
+    "govt_debt_gdp": 73.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 0.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 16.4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.6,
+    "unemployment_rate_year": 2026
+  },
+  "AM": {
+    "govt_debt_gdp": 54.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 13.3,
+    "unemployment_rate_year": 2026
+  },
+  "AW": {
+    "govt_debt_gdp": 63.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 1.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.6,
+    "unemployment_rate_year": 2026
+  },
+  "AU": {
+    "govt_debt_gdp": 50.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.3,
+    "unemployment_rate_year": 2026
+  },
+  "AT": {
+    "govt_debt_gdp": 83,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.6,
+    "unemployment_rate_year": 2026
+  },
+  "AZ": {
+    "govt_debt_gdp": 23.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.3,
+    "unemployment_rate_year": 2026
+  },
+  "BH": {
+    "govt_debt_gdp": 146.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -9.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 0.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.2,
+    "unemployment_rate_year": 2024
+  },
+  "BD": {
+    "govt_debt_gdp": 40.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 8.7,
+    "cpi_inflation_year": 2026
+  },
+  "BB": {
+    "govt_debt_gdp": 94.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 0.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 7.8,
+    "unemployment_rate_year": 2026
+  },
+  "BY": {
+    "govt_debt_gdp": 36.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 1.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 7.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.9,
+    "unemployment_rate_year": 2026
+  },
+  "BE": {
+    "govt_debt_gdp": 110.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.2,
+    "unemployment_rate_year": 2026
+  },
+  "BZ": {
+    "govt_debt_gdp": 63.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.9,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.6,
+    "unemployment_rate_year": 2026
+  },
+  "BJ": {
+    "govt_debt_gdp": 49.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026
+  },
+  "BT": {
+    "govt_debt_gdp": 121.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.5,
+    "unemployment_rate_year": 2023
+  },
+  "BO": {
+    "govt_debt_gdp": 93.7,
+    "govt_debt_gdp_year": 2025,
+    "fiscal_balance_gdp": -13.1,
+    "fiscal_balance_gdp_year": 2025,
+    "cpi_inflation": 20.8,
+    "cpi_inflation_year": 2025,
+    "unemployment_rate": 5.1,
+    "unemployment_rate_year": 2025
+  },
+  "BA": {
+    "govt_debt_gdp": 31.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 12.6,
+    "unemployment_rate_year": 2026
+  },
+  "BW": {
+    "govt_debt_gdp": 44.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -8.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.7,
+    "cpi_inflation_year": 2026
+  },
+  "BR": {
+    "govt_debt_gdp": 95,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -7.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 7.3,
+    "unemployment_rate_year": 2026
+  },
+  "BN": {
+    "govt_debt_gdp": 2.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -11.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 0.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.7,
+    "unemployment_rate_year": 2026
+  },
+  "BG": {
+    "govt_debt_gdp": 29.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.4,
+    "unemployment_rate_year": 2026
+  },
+  "BF": {
+    "govt_debt_gdp": 51.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.4,
+    "cpi_inflation_year": 2026
+  },
+  "BI": {
+    "govt_debt_gdp": 40.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 26.3,
+    "cpi_inflation_year": 2026
+  },
+  "CV": {
+    "govt_debt_gdp": 101,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8.5,
+    "unemployment_rate_year": 2026
+  },
+  "KH": {
+    "govt_debt_gdp": 29.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.8,
+    "cpi_inflation_year": 2026
+  },
+  "CM": {
+    "govt_debt_gdp": 36.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.3,
+    "cpi_inflation_year": 2026
+  },
+  "CA": {
+    "govt_debt_gdp": 113,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.6,
+    "unemployment_rate_year": 2026
+  },
+  "CF": {
+    "govt_debt_gdp": 52.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 0,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.3,
+    "cpi_inflation_year": 2026
+  },
+  "TD": {
+    "govt_debt_gdp": 32.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.6,
+    "cpi_inflation_year": 2026
+  },
+  "CL": {
+    "govt_debt_gdp": 43.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8.3,
+    "unemployment_rate_year": 2026
+  },
+  "CN": {
+    "govt_debt_gdp": 102.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -8.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 0.7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.1,
+    "unemployment_rate_year": 2026
+  },
+  "CO": {
+    "govt_debt_gdp": 61.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 9.8,
+    "unemployment_rate_year": 2026
+  },
+  "KM": {
+    "govt_debt_gdp": 32.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.9,
+    "cpi_inflation_year": 2026
+  },
+  "CD": {
+    "govt_debt_gdp": 14.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 7.1,
+    "cpi_inflation_year": 2026
+  },
+  "CR": {
+    "govt_debt_gdp": 59.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8,
+    "unemployment_rate_year": 2026
+  },
+  "CI": {
+    "govt_debt_gdp": 54.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.5,
+    "cpi_inflation_year": 2026
+  },
+  "HR": {
+    "govt_debt_gdp": 57.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5,
+    "unemployment_rate_year": 2026
+  },
+  "CY": {
+    "govt_debt_gdp": 53.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 3.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.7,
+    "unemployment_rate_year": 2026
+  },
+  "CZ": {
+    "govt_debt_gdp": 45.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.4,
+    "unemployment_rate_year": 2026
+  },
+  "TL": {
+    "govt_debt_gdp": 14.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -50.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.8,
+    "cpi_inflation_year": 2026
+  },
+  "DK": {
+    "govt_debt_gdp": 29.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 0.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3,
+    "unemployment_rate_year": 2026
+  },
+  "DJ": {
+    "govt_debt_gdp": 28,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.4,
+    "cpi_inflation_year": 2026
+  },
+  "DM": {
+    "govt_debt_gdp": 92.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.3,
+    "cpi_inflation_year": 2026
+  },
+  "DO": {
+    "govt_debt_gdp": 58.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.3,
+    "unemployment_rate_year": 2026
+  },
+  "EC": {
+    "govt_debt_gdp": 53.8,
+    "govt_debt_gdp_year": 2024,
+    "fiscal_balance_gdp": -1.3,
+    "fiscal_balance_gdp_year": 2024,
+    "cpi_inflation": 2.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.8,
+    "unemployment_rate_year": 2026
+  },
+  "EG": {
+    "govt_debt_gdp": 85,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -10.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 11.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 7.3,
+    "unemployment_rate_year": 2026
+  },
+  "SV": {
+    "govt_debt_gdp": 86.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.9,
+    "unemployment_rate_year": 2026
+  },
+  "GQ": {
+    "govt_debt_gdp": 38.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.9,
+    "cpi_inflation_year": 2026
+  },
+  "ER": {
+    "govt_debt_gdp": 260.4,
+    "govt_debt_gdp_year": 2019,
+    "fiscal_balance_gdp": 2.7,
+    "fiscal_balance_gdp_year": 2019,
+    "cpi_inflation": 1.3,
+    "cpi_inflation_year": 2019
+  },
+  "EE": {
+    "govt_debt_gdp": 27.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 7.4,
+    "unemployment_rate_year": 2026
+  },
+  "SZ": {
+    "govt_debt_gdp": 43.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4,
+    "cpi_inflation_year": 2026
+  },
+  "ET": {
+    "govt_debt_gdp": 41.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 9.4,
+    "cpi_inflation_year": 2026
+  },
+  "FJ": {
+    "govt_debt_gdp": 79.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -6.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5,
+    "unemployment_rate_year": 2026
+  },
+  "FI": {
+    "govt_debt_gdp": 89.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.9,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8.7,
+    "unemployment_rate_year": 2026
+  },
+  "FR": {
+    "govt_debt_gdp": 119.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 7.5,
+    "unemployment_rate_year": 2026
+  },
+  "GA": {
+    "govt_debt_gdp": 82,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -7.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.5,
+    "cpi_inflation_year": 2026
+  },
+  "GE": {
+    "govt_debt_gdp": 33.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 13.9,
+    "unemployment_rate_year": 2026
+  },
+  "DE": {
+    "govt_debt_gdp": 66,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.4,
+    "unemployment_rate_year": 2026
+  },
+  "GH": {
+    "govt_debt_gdp": 56.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 9.9,
+    "cpi_inflation_year": 2026
+  },
+  "GR": {
+    "govt_debt_gdp": 141.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8.4,
+    "unemployment_rate_year": 2026
+  },
+  "GD": {
+    "govt_debt_gdp": 65.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.1,
+    "cpi_inflation_year": 2026
+  },
+  "GT": {
+    "govt_debt_gdp": 27.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.3,
+    "cpi_inflation_year": 2026
+  },
+  "GN": {
+    "govt_debt_gdp": 38.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3,
+    "cpi_inflation_year": 2026
+  },
+  "GW": {
+    "govt_debt_gdp": 74,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026
+  },
+  "GY": {
+    "govt_debt_gdp": 29.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.4,
+    "cpi_inflation_year": 2026
+  },
+  "HT": {
+    "govt_debt_gdp": 10,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 26.2,
+    "cpi_inflation_year": 2026
+  },
+  "HN": {
+    "govt_debt_gdp": 44.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8,
+    "unemployment_rate_year": 2026
+  },
+  "HK": {
+    "govt_debt_gdp": 14,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.3,
+    "unemployment_rate_year": 2026
+  },
+  "HU": {
+    "govt_debt_gdp": 75.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.2,
+    "unemployment_rate_year": 2026
+  },
+  "IS": {
+    "govt_debt_gdp": 44.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4,
+    "unemployment_rate_year": 2026
+  },
+  "IN": {
+    "govt_debt_gdp": 80.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -7.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.9,
+    "unemployment_rate_year": 2026
+  },
+  "ID": {
+    "govt_debt_gdp": 41.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.9,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5,
+    "unemployment_rate_year": 2026
+  },
+  "IR": {
+    "govt_debt_gdp": 36.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 41.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 9.2,
+    "unemployment_rate_year": 2026
+  },
+  "IQ": {
+    "govt_debt_gdp": 58,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -7.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.5,
+    "cpi_inflation_year": 2026
+  },
+  "IE": {
+    "govt_debt_gdp": 31.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 0.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.6,
+    "unemployment_rate_year": 2026
+  },
+  "IL": {
+    "govt_debt_gdp": 70.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.2,
+    "unemployment_rate_year": 2026
+  },
+  "IT": {
+    "govt_debt_gdp": 138.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.7,
+    "unemployment_rate_year": 2026
+  },
+  "JM": {
+    "govt_debt_gdp": 57.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.2,
+    "unemployment_rate_year": 2024
+  },
+  "JP": {
+    "govt_debt_gdp": 226.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.6,
+    "unemployment_rate_year": 2026
+  },
+  "JO": {
+    "govt_debt_gdp": 87.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 22,
+    "unemployment_rate_year": 2023
+  },
+  "KZ": {
+    "govt_debt_gdp": 26.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 11.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.6,
+    "unemployment_rate_year": 2026
+  },
+  "KE": {
+    "govt_debt_gdp": 70.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 5.2,
+    "cpi_inflation_year": 2026
+  },
+  "KI": {
+    "govt_debt_gdp": 16.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -16.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.5,
+    "cpi_inflation_year": 2026
+  },
+  "KR": {
+    "govt_debt_gdp": 56.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3,
+    "unemployment_rate_year": 2026
+  },
+  "KW": {
+    "govt_debt_gdp": 10.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 26.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.2,
+    "cpi_inflation_year": 2026
+  },
+  "KG": {
+    "govt_debt_gdp": 38.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 6.9,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4,
+    "unemployment_rate_year": 2026
+  },
+  "LA": {
+    "govt_debt_gdp": 84.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 1.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 5.5,
+    "cpi_inflation_year": 2026
+  },
+  "LV": {
+    "govt_debt_gdp": 47.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.6,
+    "unemployment_rate_year": 2026
+  },
+  "LB": {
+    "govt_debt_gdp": 163.8,
+    "govt_debt_gdp_year": 2024,
+    "fiscal_balance_gdp": -0.2,
+    "fiscal_balance_gdp_year": 2024,
+    "cpi_inflation": 45.2,
+    "cpi_inflation_year": 2024,
+    "unemployment_rate": 11.5,
+    "unemployment_rate_year": 2023
+  },
+  "LS": {
+    "govt_debt_gdp": 57.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 3.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.8,
+    "cpi_inflation_year": 2026
+  },
+  "LR": {
+    "govt_debt_gdp": 54.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 7.7,
+    "cpi_inflation_year": 2026
+  },
+  "LI": {
+    "govt_debt_gdp": 0.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 3.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 0.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.7,
+    "unemployment_rate_year": 2026
+  },
+  "LT": {
+    "govt_debt_gdp": 45.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.1,
+    "unemployment_rate_year": 2026
+  },
+  "LU": {
+    "govt_debt_gdp": 28.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.2,
+    "unemployment_rate_year": 2026
+  },
+  "MG": {
+    "govt_debt_gdp": 50.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 7.2,
+    "cpi_inflation_year": 2026
+  },
+  "MW": {
+    "govt_debt_gdp": 78.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -12.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 24.1,
+    "cpi_inflation_year": 2026
+  },
+  "MY": {
+    "govt_debt_gdp": 70.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3,
+    "unemployment_rate_year": 2026
+  },
+  "MV": {
+    "govt_debt_gdp": 135.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -12.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.5,
+    "cpi_inflation_year": 2026
+  },
+  "ML": {
+    "govt_debt_gdp": 48,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026
+  },
+  "MT": {
+    "govt_debt_gdp": 47.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.5,
+    "unemployment_rate_year": 2026
+  },
+  "MH": {
+    "govt_debt_gdp": 14.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 5.9,
+    "cpi_inflation_year": 2026
+  },
+  "MR": {
+    "govt_debt_gdp": 40.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.5,
+    "cpi_inflation_year": 2026
+  },
+  "MU": {
+    "govt_debt_gdp": 87.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.9,
+    "unemployment_rate_year": 2026
+  },
+  "MX": {
+    "govt_debt_gdp": 59.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.1,
+    "unemployment_rate_year": 2026
+  },
+  "FM": {
+    "govt_debt_gdp": 6.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 1.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.4,
+    "cpi_inflation_year": 2026
+  },
+  "MD": {
+    "govt_debt_gdp": 39.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 5.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.5,
+    "unemployment_rate_year": 2026
+  },
+  "MN": {
+    "govt_debt_gdp": 49.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 8.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5,
+    "unemployment_rate_year": 2026
+  },
+  "ME": {
+    "govt_debt_gdp": 61.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.3,
+    "cpi_inflation_year": 2026
+  },
+  "MA": {
+    "govt_debt_gdp": 66.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 12.7,
+    "unemployment_rate_year": 2026
+  },
+  "MZ": {
+    "govt_debt_gdp": 99.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 5.4,
+    "cpi_inflation_year": 2026
+  },
+  "MM": {
+    "govt_debt_gdp": 63,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -6.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 28,
+    "cpi_inflation_year": 2026
+  },
+  "NA": {
+    "govt_debt_gdp": 63.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.6,
+    "cpi_inflation_year": 2026
+  },
+  "NR": {
+    "govt_debt_gdp": 13,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 9.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.5,
+    "cpi_inflation_year": 2026
+  },
+  "NP": {
+    "govt_debt_gdp": 49.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.2,
+    "cpi_inflation_year": 2026
+  },
+  "NL": {
+    "govt_debt_gdp": 45.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4,
+    "unemployment_rate_year": 2026
+  },
+  "NZ": {
+    "govt_debt_gdp": 56.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.1,
+    "unemployment_rate_year": 2026
+  },
+  "NI": {
+    "govt_debt_gdp": 40.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 2.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.4,
+    "unemployment_rate_year": 2026
+  },
+  "NE": {
+    "govt_debt_gdp": 41.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.2,
+    "cpi_inflation_year": 2026
+  },
+  "NG": {
+    "govt_debt_gdp": 35,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 22,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 22.6,
+    "unemployment_rate_year": 2018
+  },
+  "MK": {
+    "govt_debt_gdp": 53.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 12.7,
+    "unemployment_rate_year": 2026
+  },
+  "NO": {
+    "govt_debt_gdp": 42.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 10.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.2,
+    "unemployment_rate_year": 2026
+  },
+  "OM": {
+    "govt_debt_gdp": 33,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.5,
+    "cpi_inflation_year": 2026
+  },
+  "PK": {
+    "govt_debt_gdp": 71.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 7.5,
+    "unemployment_rate_year": 2026
+  },
+  "PW": {
+    "govt_debt_gdp": 59,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 1.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.9,
+    "cpi_inflation_year": 2026
+  },
+  "PA": {
+    "govt_debt_gdp": 60.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 7.7,
+    "unemployment_rate_year": 2026
+  },
+  "PG": {
+    "govt_debt_gdp": 50,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.6,
+    "cpi_inflation_year": 2026
+  },
+  "PY": {
+    "govt_debt_gdp": 40.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.2,
+    "unemployment_rate_year": 2026
+  },
+  "PE": {
+    "govt_debt_gdp": 33.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.9,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.5,
+    "unemployment_rate_year": 2026
+  },
+  "PH": {
+    "govt_debt_gdp": 58.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.9,
+    "unemployment_rate_year": 2026
+  },
+  "PL": {
+    "govt_debt_gdp": 65.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -6.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.8,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.1,
+    "unemployment_rate_year": 2026
+  },
+  "PT": {
+    "govt_debt_gdp": 86.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 0,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 6.3,
+    "unemployment_rate_year": 2026
+  },
+  "QA": {
+    "govt_debt_gdp": 38.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 1.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.6,
+    "cpi_inflation_year": 2026
+  },
+  "CG": {
+    "govt_debt_gdp": 89.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 2.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.2,
+    "cpi_inflation_year": 2026
+  },
+  "RO": {
+    "govt_debt_gdp": 62.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 6.7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.8,
+    "unemployment_rate_year": 2026
+  },
+  "RU": {
+    "govt_debt_gdp": 24.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 5.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.1,
+    "unemployment_rate_year": 2026
+  },
+  "RW": {
+    "govt_debt_gdp": 74.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.7,
+    "cpi_inflation_year": 2026
+  },
+  "WS": {
+    "govt_debt_gdp": 17.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.2,
+    "cpi_inflation_year": 2026
+  },
+  "SM": {
+    "govt_debt_gdp": 61.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.5,
+    "unemployment_rate_year": 2026
+  },
+  "ST": {
+    "govt_debt_gdp": 45.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 2.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 13.5,
+    "unemployment_rate_year": 2017
+  },
+  "SA": {
+    "govt_debt_gdp": 31.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.5,
+    "unemployment_rate_year": 2024
+  },
+  "SN": {
+    "govt_debt_gdp": 124.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026
+  },
+  "RS": {
+    "govt_debt_gdp": 44.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8.6,
+    "unemployment_rate_year": 2026
+  },
+  "SC": {
+    "govt_debt_gdp": 58.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3,
+    "unemployment_rate_year": 2026
+  },
+  "SL": {
+    "govt_debt_gdp": 38.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 10.5,
+    "cpi_inflation_year": 2026
+  },
+  "SG": {
+    "govt_debt_gdp": 176.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 2.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.1,
+    "unemployment_rate_year": 2026
+  },
+  "SK": {
+    "govt_debt_gdp": 63.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.4,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 5.6,
+    "unemployment_rate_year": 2026
+  },
+  "SI": {
+    "govt_debt_gdp": 66.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4,
+    "unemployment_rate_year": 2026
+  },
+  "SB": {
+    "govt_debt_gdp": 25.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.7,
+    "cpi_inflation_year": 2026
+  },
+  "ZA": {
+    "govt_debt_gdp": 79.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 32.7,
+    "unemployment_rate_year": 2026
+  },
+  "SS": {
+    "govt_debt_gdp": 60.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 4.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 15.8,
+    "cpi_inflation_year": 2026
+  },
+  "ES": {
+    "govt_debt_gdp": 98.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 10.7,
+    "unemployment_rate_year": 2026
+  },
+  "LK": {
+    "govt_debt_gdp": 100.8,
+    "govt_debt_gdp_year": 2024,
+    "fiscal_balance_gdp": -5.6,
+    "fiscal_balance_gdp_year": 2024,
+    "cpi_inflation": 1.2,
+    "cpi_inflation_year": 2024,
+    "unemployment_rate": 4.8,
+    "unemployment_rate_year": 2024
+  },
+  "KN": {
+    "govt_debt_gdp": 67.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -8.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.1,
+    "cpi_inflation_year": 2026
+  },
+  "LC": {
+    "govt_debt_gdp": 77.2,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.5,
+    "cpi_inflation_year": 2026
+  },
+  "VC": {
+    "govt_debt_gdp": 90.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.1,
+    "cpi_inflation_year": 2026
+  },
+  "SR": {
+    "govt_debt_gdp": 82.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 9.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 9,
+    "unemployment_rate_year": 2026
+  },
+  "SE": {
+    "govt_debt_gdp": 35.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -1.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8.4,
+    "unemployment_rate_year": 2026
+  },
+  "CH": {
+    "govt_debt_gdp": 36.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 0.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 0.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.1,
+    "unemployment_rate_year": 2026
+  },
+  "SY": {
+    "govt_debt_gdp": 30,
+    "govt_debt_gdp_year": 2010,
+    "fiscal_balance_gdp": -7.8,
+    "fiscal_balance_gdp_year": 2010,
+    "cpi_inflation": 4.4,
+    "cpi_inflation_year": 2010,
+    "unemployment_rate": 8.6,
+    "unemployment_rate_year": 2010
+  },
+  "TW": {
+    "govt_debt_gdp": 20.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 3.4,
+    "unemployment_rate_year": 2026
+  },
+  "TJ": {
+    "govt_debt_gdp": 22.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.5,
+    "unemployment_rate_year": 2011
+  },
+  "TZ": {
+    "govt_debt_gdp": 48.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.5,
+    "cpi_inflation_year": 2026
+  },
+  "TH": {
+    "govt_debt_gdp": 66.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 0.7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 1,
+    "unemployment_rate_year": 2026
+  },
+  "BS": {
+    "govt_debt_gdp": 72.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 9.1,
+    "unemployment_rate_year": 2026
+  },
+  "GM": {
+    "govt_debt_gdp": 70,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.9,
+    "cpi_inflation_year": 2026
+  },
+  "TG": {
+    "govt_debt_gdp": 70.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.5,
+    "cpi_inflation_year": 2026
+  },
+  "TO": {
+    "govt_debt_gdp": 37.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -7.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.2,
+    "cpi_inflation_year": 2026
+  },
+  "TT": {
+    "govt_debt_gdp": 68.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.1,
+    "unemployment_rate_year": 2026
+  },
+  "TN": {
+    "govt_debt_gdp": 82.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 6.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 16.4,
+    "unemployment_rate_year": 2023
+  },
+  "TR": {
+    "govt_debt_gdp": 25.1,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 24.7,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8.3,
+    "unemployment_rate_year": 2026
+  },
+  "TM": {
+    "govt_debt_gdp": 3.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 5,
+    "cpi_inflation_year": 2026
+  },
+  "TV": {
+    "govt_debt_gdp": 3.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.3,
+    "cpi_inflation_year": 2026
+  },
+  "UG": {
+    "govt_debt_gdp": 53,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -5.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.3,
+    "cpi_inflation_year": 2026
+  },
+  "UA": {
+    "govt_debt_gdp": 110.4,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -10.1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 7.6,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 10.2,
+    "unemployment_rate_year": 2026
+  },
+  "AE": {
+    "govt_debt_gdp": 31.9,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": 4.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2,
+    "cpi_inflation_year": 2026
+  },
+  "GB": {
+    "govt_debt_gdp": 104.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.6,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.7,
+    "unemployment_rate_year": 2026
+  },
+  "US": {
+    "govt_debt_gdp": 128.7,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -7.9,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.4,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.1,
+    "unemployment_rate_year": 2026
+  },
+  "UY": {
+    "govt_debt_gdp": 68.3,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -3.8,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 4.5,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 8,
+    "unemployment_rate_year": 2026
+  },
+  "UZ": {
+    "govt_debt_gdp": 31,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 7.3,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 4.5,
+    "unemployment_rate_year": 2026
+  },
+  "VU": {
+    "govt_debt_gdp": 51.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 2.2,
+    "cpi_inflation_year": 2026
+  },
+  "VE": {
+    "govt_debt_gdp": 164.3,
+    "govt_debt_gdp_year": 2024,
+    "fiscal_balance_gdp": -3.6,
+    "fiscal_balance_gdp_year": 2024,
+    "cpi_inflation": 682.1,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 35.6,
+    "unemployment_rate_year": 2018
+  },
+  "VN": {
+    "govt_debt_gdp": 31.8,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -2.3,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.2,
+    "cpi_inflation_year": 2026,
+    "unemployment_rate": 2.5,
+    "unemployment_rate_year": 2026
+  },
+  "YE": {
+    "govt_debt_gdp": 68.5,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -4.5,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 18.5,
+    "cpi_inflation_year": 2026
+  },
+  "ZM": {
+    "govt_debt_gdp": 114.9,
+    "govt_debt_gdp_year": 2024,
+    "fiscal_balance_gdp": -3.7,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 9.2,
+    "cpi_inflation_year": 2026
+  },
+  "ZW": {
+    "govt_debt_gdp": 41.6,
+    "govt_debt_gdp_year": 2026,
+    "fiscal_balance_gdp": -0.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 18.2,
+    "cpi_inflation_year": 2026
+  },
+  "LY": {
+    "fiscal_balance_gdp": -1,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 1.6,
+    "cpi_inflation_year": 2026
+  },
+  "SO": {
+    "fiscal_balance_gdp": -1.2,
+    "fiscal_balance_gdp_year": 2026,
+    "cpi_inflation": 3.5,
+    "cpi_inflation_year": 2026
+  }
+}

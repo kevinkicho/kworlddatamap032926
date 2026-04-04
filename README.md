@@ -1,8 +1,10 @@
 # World Data Map
 
-An interactive world map that layers city demographics, corporate headquarters, national economic indicators, US trade flows, and live FX rates into a single explorable interface.
+An interactive world map that layers city demographics, corporate headquarters, national economic indicators, US trade flows, government finance data, and live FX rates into a single explorable interface.
 
 **Live demo:** https://kevinkicho.github.io/kworlddatamap032926
+
+> **Built with Claude Code:** Nearly all of this codebase — from the data pipeline scripts to the frontend map logic — was written collaboratively with [Claude Code](https://claude.ai/code) (Anthropic's AI CLI). The human contributor directed features, reviewed output, and provided domain context; Claude Code did the implementation. This project is offered as an example of what human + AI pair-programming can produce.
 
 ---
 
@@ -18,6 +20,14 @@ An interactive world map that layers city demographics, corporate headquarters, 
   GDP per capita · Life expectancy · Internet access · Urban population ·
   Literacy · Electricity access · Gini inequality · Child mortality
 - Legend and coverage stats update live as you switch indicators
+
+### Country popup — Government Finance
+- Click any country → popup shows World Bank development data **plus** a new Government Finance section:
+  - **Govt debt % GDP** — IMF WEO, 191 countries
+  - **Fiscal balance** — surplus (green) or deficit (red) as % GDP, 193 countries
+  - **CPI inflation** — colour-coded: green <5%, amber 5–10%, red >10%, 193 countries
+  - **Unemployment rate** — IMF, 114 countries
+  - **10-yr bond yield** — FRED/OECD, 27 developed countries (US, UK, DE, JP, AU, CA, …)
 
 ### Economic Centers layer
 - Zoom-adaptive clustering: at low zoom, nearby city dots merge into regional economic hubs; zoom in and they split back to individual cities
@@ -55,17 +65,15 @@ An interactive world map that layers city demographics, corporate headquarters, 
 
 ### Stats distribution panel
 - Click **any data value** in the Economy tab, Info tab chips, or World Bank chips → panel slides in to the left of the sidebar
-- Shows: histogram with the current city/country highlighted in gold, national rank (#X of ~470 for US Census data), state or region sub-rank, ranked neighbor list ±5
+- Shows: histogram with the current city/country highlighted in gold, national rank, ranked neighbor list ±5
 - List is scrollable; ▲/▼ buttons load 12 more entries above/below
-- Click any row to fly the map to that city or country and update the highlight
 - **Census metrics (17):** income, poverty, unemployment, rent burden, rent, home value, Gini, SNAP, education, transit, age, homeownership, establishments, payroll, manufacturing share, pop growth, self-employment
 - **City metrics (6, global):** population, metro population, city area, density, elevation, year founded — with 🌍 World / 📍 National scope toggle
-- **World Bank metrics (8, all countries):** GDP/cap, life expectancy, urban %, internet %, Gini, literacy, child mortality, electricity access — with region sub-rank; aggregate entries excluded
+- **World Bank metrics (8):** GDP/cap, life expectancy, urban %, internet %, Gini, literacy, child mortality, electricity access — with region sub-rank
 
 ### Overview tab — climate chart
 - Monthly high/low temperature bars + precipitation overlay (all values in Celsius / mm)
 - Covers cities worldwide including US cities (Fahrenheit Wikipedia articles converted to Celsius)
-- 335 of 473 US cities have climate data; remainder have no Wikipedia weather table
 
 ---
 
@@ -75,6 +83,14 @@ An interactive world map that layers city demographics, corporate headquarters, 
 npm install
 npm start       # serves public/ on http://localhost:3000
 ```
+
+## Test suite
+
+```bash
+npm test        # 95 unit tests, ~160ms, zero dependencies (node:test built-in)
+```
+
+Tests cover all pure utility functions: population scaling, color interpolation, formatting helpers, HTML escaping, ISO flag conversion, trade arc geometry, convex hull, point-in-polygon, city validation, and more.
 
 ## Rebuilding the data
 
@@ -87,19 +103,22 @@ npm run fetch-cities
 # City infoboxes — Wikipedia settlement data + climate charts
 node scripts/fetch-city-infoboxes.js
 
-# US climate data only (fast, ~10 min) — patches cities-full.json in-place
-node scripts/fetch-us-climate.js
-
 # Companies  (~6–8 hours; checkpoint/resume supported)
 npm run fetch-companies
 
-# Country indicators  (~1 minute)
-npm run fetch-country-data
+# Country indicators — World Bank (~1 minute)
+npm run fetch-country
+
+# Government finance — IMF DataMapper, no key needed (~15 seconds)
+npm run fetch-imf
+
+# Bond yields — FRED/OECD, requires FRED_API_KEY in .env (~2 minutes)
+npm run fetch-fred
 
 # BEA trade data  (~2 minutes, pre-fetches all countries)
 node scripts/fetch-bea-trade.js
 
-# Eurostat Urban Audit  (~15 seconds, downloads 3 datasets)
+# Eurostat Urban Audit  (~15 seconds)
 node scripts/fetch-eurostat.js
 ```
 
@@ -114,7 +133,10 @@ Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to 
 | Cities | Wikidata SPARQL | 10k+ population floor, 34 settlement types |
 | City infoboxes | Wikipedia API | Climate, leaders, metro pop, nicknames |
 | Companies | Wikidata SPARQL | Exchange-listed or revenue ≥ 1B; full financial time-series |
-| Country indicators | World Bank API | 8 development indicators, ~180 real countries |
+| Country indicators | World Bank API | 8 development indicators, ~190 countries |
+| Govt debt & fiscal balance | IMF DataMapper (WEO) | 191–193 countries, current year |
+| CPI inflation & unemployment | IMF DataMapper (WEO) | 114–193 countries |
+| 10-yr government bond yields | FRED / OECD | 27 developed countries, 5-year monthly history |
 | Country borders | Natural Earth (world-atlas) | 50m resolution GeoJSON |
 | US Census (ACS) | Census Bureau API | 2023 5-year estimates, 470 cities |
 | US Census (CBP) | Census Bureau API | 2022 County Business Patterns, 473 cities |
@@ -127,7 +149,8 @@ Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to 
 ## Tech stack
 
 - **Frontend:** Leaflet.js, vanilla JS/HTML/CSS, dark GitHub-inspired theme
-- **Data pipeline:** Node.js (Wikidata SPARQL + Wikipedia + World Bank + BEA + Census REST APIs)
+- **Data pipeline:** Node.js (Wikidata SPARQL + Wikipedia + World Bank + IMF + FRED + BEA + Census REST APIs)
+- **Testing:** Node.js built-in `node:test` — 95 tests, zero additional dependencies
 - **Hosting:** Fully static — no backend required after data build
 
 ---
@@ -137,11 +160,13 @@ Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to 
 ```
 public/
   index.html              # app shell + panel HTML
-  app.js                  # ~3,300-line frontend (map, panels, clustering, trade, FX, stats)
-  style.css               # all styles (~1,150 lines)
+  app.js                  # ~5,100-line frontend (map, panels, clustering, trade, FX, stats)
+  style.css               # all styles
   cities-full.json        # 6,600+ city records with climate data
   companies.json          # companies keyed by city QID, full financial history
   country-data.json       # World Bank indicators keyed by ISO-2
+  imf-fiscal.json         # IMF WEO: debt, fiscal balance, inflation, unemployment
+  fred-yields.json        # FRED/OECD: 10-yr bond yields, 5-year monthly history
   world-countries.json    # GeoJSON country borders (Natural Earth)
   census-cities.json      # ACS 2023, 470 US cities
   census-business.json    # CBP 2022, 473 US cities
@@ -151,13 +176,20 @@ public/
 scripts/
   fetch-cities.js         # Wikidata SPARQL → cities-full.json
   fetch-city-infoboxes.js # Wikipedia API → climate, leaders, nicknames
-  fetch-us-climate.js     # Targeted US climate patch (Fahrenheit → Celsius)
   fetch-companies.js      # Wikidata SPARQL → companies.json
   fetch-country-data.js   # World Bank API  → country-data.json
+  fetch-imf.js            # IMF DataMapper  → imf-fiscal.json
+  fetch-fred.js           # FRED API        → fred-yields.json
   fetch-bea-trade.js      # BEA ITA API     → bea-trade.json
   fetch-census-data.js    # Census ACS API  → census-cities.json
   fetch-census-business.js# Census CBP API  → census-business.json
   fetch-eurostat.js       # Eurostat Urban Audit → eurostat-cities.json
+
+lib/
+  pure-utils.cjs          # Pure functions extracted from app.js for unit testing
+
+tests/
+  pure-utils.test.js      # 95 unit tests (node:test + node:assert, zero deps)
 ```
 
 ---

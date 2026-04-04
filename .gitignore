@@ -7,4 +7,6 @@ scripts/.checkpoint.json
 scripts/.companies-checkpoint.json
 scripts/.yahoo-checkpoint.json
 scripts/.tickers-checkpoint.json
+scripts/.company-enrichment-checkpoint.json
+public/companies-pre-enrich-backup.json
 public/prices/
