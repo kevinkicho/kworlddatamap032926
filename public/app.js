@@ -4989,18 +4989,18 @@ function _renderFinanceTab(co, containerEl) {
   const revHistory = (() => {
     const yh = (co.revenue_history_yahoo || []).filter(r => r.revenue > 0).map(r => ({ t: r.year, v: r.revenue }));
     if (yh.length >= 2) return yh;
-    return (co.revenue_history || []).filter(r => r.value > 0).map(r => ({ t: r.year, v: r.value }));
+    return (co.revenue_history || []).filter(r => r[1] > 0).map(r => ({ t: r[0], v: r[1] }));
   })();
   const niHistory = (() => {
     const yh = (co.revenue_history_yahoo || []).filter(r => r.net_income != null).map(r => ({ t: r.year, v: r.net_income }));
     if (yh.length >= 2) return yh;
-    return (co.net_income_history || []).filter(r => r.value != null).map(r => ({ t: r.year, v: r.value }));
+    return (co.net_income_history || []).filter(r => r[1] != null).map(r => ({ t: r[0], v: r[1] }));
   })();
   const cfHistory = (co.cashflow_history_yahoo || [])
     .filter(r => r.free_cash_flow != null)
     .map(r => ({ t: r.year, v: r.free_cash_flow }));
-  const assetHistory = (co.total_assets_history || []).filter(r => r.value > 0).map(r => ({ t: r.year, v: r.value }));
-  const equityHistory = (co.total_equity_history || []).filter(r => r.value != null && r.value !== 0).map(r => ({ t: r.year, v: r.value }));
+  const assetHistory = (co.total_assets_history || []).filter(r => r[1] > 0).map(r => ({ t: r[0], v: r[1] }));
+  const equityHistory = (co.total_equity_history || []).filter(r => r[1] != null && r[1] !== 0).map(r => ({ t: r[0], v: r[1] }));
 
   // ── Build HTML ─────────────────────────────────────────────────────────────
   const phId = 'co-price-' + ticker.replace(/[^a-z0-9]/gi, '_');
@@ -5241,11 +5241,11 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
     // Returns a placeholder div; IYChart is mounted after innerHTML is inserted.
     let _iycN = 0;
     const _sparkline = (hist, label, color, fmtFn) => {
-      const rows = (hist || []).filter(h => h.year && h.value > 0);
+      const rows = (hist || []).filter(h => h[0] && h[1] > 0);
       if (rows.length < 2) return '';
-      const minV = Math.min(...rows.map(h => h.value));
-      const maxV = Math.max(...rows.map(h => h.value));
-      const pts  = JSON.stringify(rows.map(h => [h.year, h.value]));
+      const minV = Math.min(...rows.map(h => h[1]));
+      const maxV = Math.max(...rows.map(h => h[1]));
+      const pts  = JSON.stringify(rows);
       const fmt  = fmtFn === fmtEmployees ? 'emp' : 'rev';
       const id   = `iyc-${++_iycN}`;
       return `<div style="border-top:1px solid #21262d">
