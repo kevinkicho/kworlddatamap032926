@@ -3230,6 +3230,69 @@ function _buildRankChips(iso2) {
   "</div>";
 }
 
+// ── _switchTrendTab ───────────────────────────────────────────────────
+function _switchTrendTab(iso2, key) {
+  var cd = countryData[iso2];
+  if (!cd) return;
+
+  // update active tab UI
+  document.querySelectorAll("#cp-trend .cp-tab").forEach(function(btn) {
+    var onc = btn.getAttribute("onclick") || "";
+    btn.classList.toggle("active", onc.indexOf(JSON.stringify(key)) !== -1);
+  });
+
+  var chartArea = document.getElementById("cp-chart-area");
+  if (!chartArea) return;
+
+  var isFred  = key === "bond_yield_10y";
+  var histKey = key + "_history";
+  var raw     = cd[histKey];
+
+  if (!raw || !raw.length) {
+    chartArea.innerHTML = "<div class=\"cp-no-data\">No historical data available</div>";
+    return;
+  }
+
+  var points;
+  if (isFred) {
+    // FRED format: [["YYYY-MM", value], ...]
+    points = raw
+      .map(function(row) { return { t: new Date(row[0] + "-01").getTime(), v: row[1] }; })
+      .filter(function(p) { return Number.isFinite(p.v); });
+  } else {
+    // World Bank / IMF format: [[year, value], ...]
+    points = raw
+      .map(function(row) { return { t: row[0], v: row[1] }; })
+      .filter(function(p) { return Number.isFinite(p.v); });
+  }
+
+  if (!points.length) {
+    chartArea.innerHTML = "<div class=\"cp-no-data\">No historical data available</div>";
+    return;
+  }
+
+  var chartLabels = {
+    gdp_per_capita:    "GDP per capita (USD)",
+    govt_debt_gdp:     "Govt debt (% of GDP)",
+    cpi_inflation:     "CPI inflation (%)",
+    life_expectancy:   "Life expectancy (yrs)",
+    unemployment_rate: "Unemployment (%)",
+    bond_yield_10y:    "10-yr bond yield (%)"
+  };
+
+  // inject canvas and render after layout pass (display:block forces correct sizing)
+  chartArea.innerHTML = "<canvas id=\"cp-iy-canvas\" style=\"width:100%;height:144px;display:block;\"></canvas>";
+  var canvas = document.getElementById("cp-iy-canvas");
+  requestAnimationFrame(function() {
+    _IYChart(canvas, points, {
+      isTimestamp:  isFred,
+      label:        chartLabels[key] || key,
+      color:        "#388bfd",
+      fillOpacity:  0.15
+    });
+  });
+}
+
 // ── Trade flow arrows (BEA API) ──────────────────────────────────────────────
 
 // ISO-2 → BEA country name (BEA uses display names, not ISO codes)
