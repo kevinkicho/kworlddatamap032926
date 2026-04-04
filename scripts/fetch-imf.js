@@ -116,6 +116,15 @@ function pickBest(yearMap) {
   return null;
 }
 
+function extractHistory(yearMap) {
+  if (!yearMap || typeof yearMap !== 'object') return [];
+  return Object.entries(yearMap)
+    .map(([yr, v]) => [Number(yr), v])
+    .filter(([yr, v]) => yr <= CURRENT_YEAR && v != null && isFinite(Number(v)))
+    .sort((a, b) => a[0] - b[0])
+    .map(([yr, v]) => [yr, parseFloat(Number(v).toFixed(3))]);
+}
+
 // ── Fetch one IMF indicator for all countries ─────────────────────────────────
 async function fetchIndicator(code) {
   // The DataMapper API returns all countries and all years in one response
@@ -157,8 +166,9 @@ async function main() {
       if (!best) continue;
 
       if (!out[iso2]) out[iso2] = {};
-      out[iso2][key]            = best.value;
-      out[iso2][key + '_year']  = best.year;
+      out[iso2][key]               = best.value;
+      out[iso2][key + '_year']     = best.year;
+      out[iso2][key + '_history']  = extractHistory(yearMap);
     }
 
     await sleep(DELAY_MS);
