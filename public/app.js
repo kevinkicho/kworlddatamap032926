@@ -2764,6 +2764,19 @@ function _statSourceAttr(metric) {
     wb_youth_unemployment: 'World Bank · WDI (SL.UEM.1524.ZS)',
     wb_poverty_rate_oecd: 'OECD · Income Distribution Database (IDD)',
     eci: 'Observatory of Economic Complexity · Atlas',
+    // Trade (World Bank)
+    wb_trade_pct_gdp: 'World Bank · WDI (NE.TRD.GNFS.ZS)',
+    wb_current_account: 'World Bank · WDI (BN.CAB.XOKA.GD.ZS)',
+    wb_fdi_inflow: 'World Bank · WDI (BX.KLT.DINV.WD.GD.ZS)',
+    wb_exports_pct_gdp: 'World Bank · WDI (NE.EXP.GNFS.ZS)',
+    wb_imports_pct_gdp: 'World Bank · WDI (NE.IMP.GNFS.ZS)',
+    // Health (WHO)
+    wb_who_physicians: 'WHO · Global Health Observatory (HWF_0001)',
+    wb_who_nurses: 'WHO · Global Health Observatory (HWF_0006)',
+    wb_who_hospital_beds: 'WHO · Global Health Observatory (WHS6_102)',
+    wb_who_immunization: 'WHO · Global Health Observatory (WHS4_543)',
+    wb_who_maternal_mort: 'WHO · Global Health Observatory (MDG_0000000026)',
+    wb_who_ncd_mortality: 'WHO · Global Health Observatory (NCDMORT3070)',
     // Census
     population: 'U.S. Census Bureau · ACS 2023',
     medianIncome: 'U.S. Census Bureau · ACS 2023',
@@ -2869,6 +2882,19 @@ const WB_STAT_DEFS = {
   wb_social_spend_gdp: { label:'Social Spending (% GDP)', key:'social_spend_gdp', fmt: v=>v.toFixed(1)+'%',    higherBetter:null,  src:'oecd' },
   wb_youth_unemployment:{ label:'Youth Unemployment 15-24', key:'youth_unemployment', fmt: v=>v.toFixed(1)+'%', higherBetter:false, src:'oecd' },
   wb_poverty_rate_oecd:{ label:'Poverty Rate (50% median)', key:'poverty_rate_oecd', fmt: v=>v.toFixed(1)+'%',  higherBetter:false, src:'oecd' },
+  // Trade & Investment (World Bank)
+  wb_trade_pct_gdp:     { label:'Trade (% GDP)',            key:'trade_pct_gdp',      fmt: v=>v.toFixed(1)+'%',       higherBetter:null  },
+  wb_current_account:   { label:'Current Account (% GDP)',  key:'current_account_gdp', fmt: v=>(v>=0?'+':'')+v.toFixed(1)+'%', higherBetter:null },
+  wb_fdi_inflow:        { label:'FDI Inflows (% GDP)',      key:'fdi_inflow_gdp',     fmt: v=>v.toFixed(1)+'%',       higherBetter:true  },
+  wb_exports_pct_gdp:   { label:'Exports (% GDP)',          key:'exports_pct_gdp',    fmt: v=>v.toFixed(1)+'%',       higherBetter:true  },
+  wb_imports_pct_gdp:   { label:'Imports (% GDP)',          key:'imports_pct_gdp',    fmt: v=>v.toFixed(1)+'%',       higherBetter:null  },
+  // Health (WHO GHO)
+  wb_who_physicians:    { label:'Physicians per 10k',       key:'who_physicians',     fmt: v=>v.toFixed(1)+'/10k',    higherBetter:true  },
+  wb_who_nurses:        { label:'Nurses per 10k',           key:'who_nurses',         fmt: v=>v.toFixed(1)+'/10k',    higherBetter:true  },
+  wb_who_hospital_beds: { label:'Hospital Beds per 10k',    key:'who_hospital_beds',  fmt: v=>v.toFixed(1)+'/10k',    higherBetter:true  },
+  wb_who_immunization:  { label:'DPT3 Immunization (%)',    key:'who_immunization',   fmt: v=>v.toFixed(0)+'%',       higherBetter:true  },
+  wb_who_maternal_mort: { label:'Maternal Mortality /100k',  key:'who_maternal_mort',  fmt: v=>v.toFixed(0)+'/100k',   higherBetter:false },
+  wb_who_ncd_mortality: { label:'NCD Mortality 30-70 (%)',   key:'who_ncd_mortality',  fmt: v=>v.toFixed(1)+'%',       higherBetter:false },
 };
 
 // Company-level stats — company QID used as identifier; values converted to USD for fair ranking
@@ -4747,6 +4773,31 @@ function _renderCountryPanel(iso2) {
       if (Number.isFinite(od.youth_unemployment))  rows += _cpGaugeRow('Youth unemp',    od.youth_unemployment, maxYu,   '%',    'cp-red',    'wb_youth_unemployment',iso2);
       if (Number.isFinite(od.poverty_rate_oecd))   rows += _cpGaugeRow('Poverty rate',   od.poverty_rate_oecd,  maxPov,  '%',    'cp-red',    'wb_poverty_rate_oecd', iso2);
       return rows ? '<div class="cp-gauge-section-hdr">Social &amp; Wages (OECD)</div>' + rows : '';
+    })() +
+    // ── Trade & Investment (World Bank) ───────────────────────────────
+    (function() {
+      var c = countryData[iso2];
+      if (!c) return '';
+      var rows = '';
+      if (Number.isFinite(c.trade_pct_gdp))      rows += _cpGaugeRow('Trade/GDP',      c.trade_pct_gdp,      _cpWorldMax('trade_pct_gdp'),      '%',    '',         'wb_trade_pct_gdp',   iso2);
+      if (Number.isFinite(c.exports_pct_gdp))     rows += _cpGaugeRow('Exports',        c.exports_pct_gdp,    _cpWorldMax('exports_pct_gdp'),    '% GDP','cp-blue',  'wb_exports_pct_gdp', iso2);
+      if (Number.isFinite(c.imports_pct_gdp))     rows += _cpGaugeRow('Imports',        c.imports_pct_gdp,    _cpWorldMax('imports_pct_gdp'),    '% GDP','cp-amber', 'wb_imports_pct_gdp', iso2);
+      if (Number.isFinite(c.current_account_gdp)) rows += _cpGaugeRow('Current acct',   c.current_account_gdp, Math.max(Math.abs(_cpWorldMax('current_account_gdp')), 30), '% GDP', c.current_account_gdp >= 0 ? 'cp-green' : 'cp-red', 'wb_current_account', iso2);
+      if (Number.isFinite(c.fdi_inflow_gdp))      rows += _cpGaugeRow('FDI inflows',    c.fdi_inflow_gdp,     _cpWorldMax('fdi_inflow_gdp'),     '% GDP','cp-blue',  'wb_fdi_inflow',      iso2);
+      return rows ? '<div class="cp-gauge-section-hdr">Trade &amp; Investment (World Bank)</div>' + rows : '';
+    })() +
+    // ── Health (WHO GHO) ──────────────────────────────────────────────
+    (function() {
+      var c = countryData[iso2];
+      if (!c) return '';
+      var rows = '';
+      if (Number.isFinite(c.who_physicians))    rows += _cpGaugeRow('Physicians',    c.who_physicians,    _cpWorldMax('who_physicians'),    '/10k', 'cp-blue',  'wb_who_physicians',    iso2);
+      if (Number.isFinite(c.who_nurses))        rows += _cpGaugeRow('Nurses',        c.who_nurses,        _cpWorldMax('who_nurses'),        '/10k', 'cp-blue',  'wb_who_nurses',        iso2);
+      if (Number.isFinite(c.who_hospital_beds)) rows += _cpGaugeRow('Hospital beds', c.who_hospital_beds, _cpWorldMax('who_hospital_beds'), '/10k', '',         'wb_who_hospital_beds', iso2);
+      if (Number.isFinite(c.who_immunization))  rows += _cpGaugeRow('DPT3 immun.',   c.who_immunization,  100,                              '%',    'cp-green', 'wb_who_immunization',  iso2);
+      if (Number.isFinite(c.who_maternal_mort)) rows += _cpGaugeRow('Maternal mort', c.who_maternal_mort, _cpWorldMax('who_maternal_mort'), '/100k','cp-red',   'wb_who_maternal_mort', iso2);
+      if (Number.isFinite(c.who_ncd_mortality)) rows += _cpGaugeRow('NCD mort 30-70',c.who_ncd_mortality, _cpWorldMax('who_ncd_mortality'), '%',   'cp-amber', 'wb_who_ncd_mortality', iso2);
+      return rows ? '<div class="cp-gauge-section-hdr">Health (WHO)</div>' + rows : '';
     })() +
     // ── ECB (Eurozone only) ───────────────────────────────────────────
     (function() {

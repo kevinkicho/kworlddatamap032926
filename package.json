@@ -25,6 +25,8 @@
     "fetch-whr": "node scripts/fetch-whr.js",
     "fetch-ember": "node scripts/fetch-ember.js",
     "fetch-oecd-social": "node scripts/fetch-oecd-social.js",
+    "fetch-trade": "node scripts/fetch-trade.js",
+    "fetch-who": "node scripts/fetch-who.js",
     "test": "node --test tests/*.test.js"
   },
   "keywords": [],

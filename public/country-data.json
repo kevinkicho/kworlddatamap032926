@@ -708,7 +708,13 @@
     "renewable_energy_pct": 8.8,
     "renewable_energy_pct_year": "2022",
     "education_spend_gdp": 3.619,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "trade_pct_gdp": 160.4,
+    "current_account_gdp": 5.1,
+    "fdi_inflow_gdp": 2.4,
+    "exports_pct_gdp": 84,
+    "imports_pct_gdp": 76.4,
+    "trade_year": 2024
   },
   "ZH": {
     "name": "Africa Eastern and Southern",
@@ -817,7 +823,12 @@
     "health_spend_gdp": 5.541,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.962,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 54.4,
+    "fdi_inflow_gdp": 2.2,
+    "exports_pct_gdp": 25.7,
+    "imports_pct_gdp": 28.5,
+    "trade_year": 2024
   },
   "AF": {
     "name": "Afghanistan",
@@ -1338,12 +1349,31 @@
         2023,
         3.09
       ]
-    ]
+    ],
+    "trade_pct_gdp": 67.6,
+    "current_account_gdp": -15.7,
+    "fdi_inflow_gdp": 0.1,
+    "exports_pct_gdp": 16.9,
+    "imports_pct_gdp": 50.7,
+    "trade_year": 2023,
+    "who_physicians": 3.2,
+    "who_nurses": 5.5,
+    "who_hospital_beds": 3.5,
+    "who_immunization": 68,
+    "who_maternal_mort": 521,
+    "who_ncd_mortality": 32.7,
+    "who_year": 2024
   },
   "A9": {
     "name": "Africa",
     "region": "Aggregates",
-    "income_level": "Aggregates"
+    "income_level": "Aggregates",
+    "who_physicians": 3.1,
+    "who_nurses": 13.3,
+    "who_immunization": 83,
+    "who_maternal_mort": 442,
+    "who_ncd_mortality": 20.8,
+    "who_year": 2024
   },
   "ZI": {
     "name": "Africa Western and Central",
@@ -1452,7 +1482,9 @@
     "health_spend_gdp": 4.143,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.216,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "fdi_inflow_gdp": 2.4,
+    "trade_year": 2024
   },
   "AO": {
     "name": "Angola",
@@ -2112,7 +2144,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 50.8,
+    "current_account_gdp": 6.2,
+    "fdi_inflow_gdp": -1.1,
+    "exports_pct_gdp": 31.5,
+    "imports_pct_gdp": 19.4,
+    "trade_year": 2024,
+    "who_physicians": 2,
+    "who_nurses": 13.9,
+    "who_hospital_beds": 7.5,
+    "who_immunization": 68,
+    "who_maternal_mort": 183,
+    "who_ncd_mortality": 24.7,
+    "who_year": 2024
   },
   "AL": {
     "name": "Albania",
@@ -2949,7 +2994,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 79.5,
+    "current_account_gdp": -2.4,
+    "fdi_inflow_gdp": 6.3,
+    "exports_pct_gdp": 36.3,
+    "imports_pct_gdp": 43.2,
+    "trade_year": 2024,
+    "who_physicians": 18.8,
+    "who_nurses": 58.2,
+    "who_hospital_beds": 29,
+    "who_immunization": 99,
+    "who_maternal_mort": 7,
+    "who_ncd_mortality": 10,
+    "who_year": 2024
   },
   "AD": {
     "name": "Andorra",
@@ -3463,7 +3521,14 @@
     "health_spend_gdp": 7.699,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.899,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "current_account_gdp": 16.1,
+    "fdi_inflow_gdp": 6.6,
+    "trade_year": 2024,
+    "who_physicians": 51.2,
+    "who_nurses": 49.5,
+    "who_maternal_mort": 11,
+    "who_year": 2024
   },
   "1A": {
     "name": "Arab World",
@@ -3568,7 +3633,12 @@
     "renewable_energy_pct": 5.171,
     "renewable_energy_pct_year": "2020",
     "health_spend_gdp": 5.158,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "trade_pct_gdp": 62.2,
+    "fdi_inflow_gdp": 3.6,
+    "exports_pct_gdp": 46.8,
+    "imports_pct_gdp": 39.8,
+    "trade_year": 2024
   },
   "AE": {
     "name": "United Arab Emirates",
@@ -4273,7 +4343,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 199,
+    "current_account_gdp": 14.5,
+    "fdi_inflow_gdp": 8.3,
+    "exports_pct_gdp": 106.8,
+    "imports_pct_gdp": 92.2,
+    "trade_year": 2024,
+    "who_physicians": 29.9,
+    "who_nurses": 61.6,
+    "who_hospital_beds": 18.7,
+    "who_immunization": 96,
+    "who_maternal_mort": 3,
+    "who_ncd_mortality": 11.6,
+    "who_year": 2024
   },
   "AR": {
     "name": "Argentina",
@@ -5106,7 +5189,20 @@
         2024,
         0.86
       ]
-    ]
+    ],
+    "trade_pct_gdp": 27.9,
+    "current_account_gdp": 0.9,
+    "fdi_inflow_gdp": 1.8,
+    "exports_pct_gdp": 15.2,
+    "imports_pct_gdp": 12.7,
+    "trade_year": 2024,
+    "who_physicians": 50.9,
+    "who_nurses": 64.9,
+    "who_hospital_beds": 33.6,
+    "who_immunization": 81,
+    "who_maternal_mort": 33,
+    "who_ncd_mortality": 13.4,
+    "who_year": 2024
   },
   "AM": {
     "name": "Armenia",
@@ -5823,7 +5919,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 150.1,
+    "current_account_gdp": -4.6,
+    "fdi_inflow_gdp": 0.5,
+    "exports_pct_gdp": 73.6,
+    "imports_pct_gdp": 76.4,
+    "trade_year": 2024,
+    "who_physicians": 33.6,
+    "who_nurses": 47.5,
+    "who_hospital_beds": 42.4,
+    "who_immunization": 98,
+    "who_maternal_mort": 19,
+    "who_ncd_mortality": 20.6,
+    "who_year": 2024
   },
   "AS": {
     "name": "American Samoa",
@@ -5924,7 +6033,11 @@
     "wgi_regulatory_quality": 0.512,
     "wgi_regulatory_quality_year": "2023",
     "renewable_energy_pct": 0.4,
-    "renewable_energy_pct_year": "2022"
+    "renewable_energy_pct_year": "2022",
+    "trade_pct_gdp": 124.7,
+    "exports_pct_gdp": 47,
+    "imports_pct_gdp": 77.7,
+    "trade_year": 2022
   },
   "AG": {
     "name": "Antigua and Barbuda",
@@ -6542,7 +6655,19 @@
     "health_spend_gdp": 3.913,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.105,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 117.7,
+    "current_account_gdp": -8.2,
+    "fdi_inflow_gdp": 11.1,
+    "exports_pct_gdp": 54.7,
+    "imports_pct_gdp": 63,
+    "trade_year": 2024,
+    "who_physicians": 43.2,
+    "who_nurses": 50.8,
+    "who_hospital_beds": 34.2,
+    "who_maternal_mort": 35,
+    "who_ncd_mortality": 12.1,
+    "who_year": 2024
   },
   "AU": {
     "name": "Australia",
@@ -7735,7 +7860,19 @@
         2024,
         45.21
       ]
-    ]
+    ],
+    "trade_pct_gdp": 47.1,
+    "current_account_gdp": -2,
+    "fdi_inflow_gdp": 3,
+    "exports_pct_gdp": 24.6,
+    "imports_pct_gdp": 22.5,
+    "trade_year": 2024,
+    "who_physicians": 42.3,
+    "who_nurses": 144.3,
+    "who_hospital_beds": 38.2,
+    "who_maternal_mort": 2,
+    "who_ncd_mortality": 8.3,
+    "who_year": 2024
   },
   "AT": {
     "name": "Austria",
@@ -8933,7 +9070,19 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 108.8,
+    "current_account_gdp": 1.5,
+    "fdi_inflow_gdp": 2.6,
+    "exports_pct_gdp": 55.7,
+    "imports_pct_gdp": 53.1,
+    "trade_year": 2024,
+    "who_physicians": 56.7,
+    "who_nurses": 109.4,
+    "who_hospital_beds": 67,
+    "who_maternal_mort": 6,
+    "who_ncd_mortality": 9.9,
+    "who_year": 2024
   },
   "AZ": {
     "name": "Azerbaijan",
@@ -9700,7 +9849,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 82.7,
+    "current_account_gdp": 6.3,
+    "fdi_inflow_gdp": 0.3,
+    "exports_pct_gdp": 45.9,
+    "imports_pct_gdp": 36.8,
+    "trade_year": 2024,
+    "who_physicians": 31.9,
+    "who_nurses": 55.8,
+    "who_hospital_beds": 36.8,
+    "who_immunization": 96,
+    "who_maternal_mort": 18,
+    "who_ncd_mortality": 17.4,
+    "who_year": 2024
   },
   "BI": {
     "name": "Burundi",
@@ -10386,7 +10548,16 @@
         2023,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": -15.4,
+    "fdi_inflow_gdp": 1.1,
+    "trade_year": 2024,
+    "who_physicians": 0.8,
+    "who_nurses": 7.9,
+    "who_immunization": 89,
+    "who_maternal_mort": 392,
+    "who_ncd_mortality": 24.8,
+    "who_year": 2024
   },
   "B4": {
     "name": "East Asia & Pacific (IBRD-only countries)",
@@ -11658,7 +11829,19 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 158.9,
+    "current_account_gdp": -0.4,
+    "fdi_inflow_gdp": -6.2,
+    "exports_pct_gdp": 79.3,
+    "imports_pct_gdp": 79.7,
+    "trade_year": 2024,
+    "who_physicians": 33.9,
+    "who_nurses": 122.9,
+    "who_hospital_beds": 54.2,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 9.2,
+    "who_year": 2023
   },
   "BJ": {
     "name": "Benin",
@@ -12365,7 +12548,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 40.6,
+    "current_account_gdp": -8.2,
+    "fdi_inflow_gdp": 2.5,
+    "exports_pct_gdp": 18.8,
+    "imports_pct_gdp": 21.8,
+    "trade_year": 2024,
+    "who_physicians": 2.1,
+    "who_nurses": 6.1,
+    "who_hospital_beds": 4.3,
+    "who_immunization": 99,
+    "who_maternal_mort": 518,
+    "who_ncd_mortality": 20.8,
+    "who_year": 2024
   },
   "BF": {
     "name": "Burkina Faso",
@@ -13072,7 +13268,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 60.5,
+    "current_account_gdp": -5.1,
+    "fdi_inflow_gdp": 0.4,
+    "exports_pct_gdp": 28.6,
+    "imports_pct_gdp": 31.9,
+    "trade_year": 2024,
+    "who_physicians": 1.1,
+    "who_nurses": 8.2,
+    "who_hospital_beds": 2,
+    "who_immunization": 98,
+    "who_maternal_mort": 242,
+    "who_ncd_mortality": 23.4,
+    "who_year": 2024
   },
   "BD": {
     "name": "Bangladesh",
@@ -13805,7 +14014,20 @@
         2024,
         20.16
       ]
-    ]
+    ],
+    "trade_pct_gdp": 26.8,
+    "current_account_gdp": 0.3,
+    "fdi_inflow_gdp": 0.3,
+    "exports_pct_gdp": 10.5,
+    "imports_pct_gdp": 16.3,
+    "trade_year": 2024,
+    "who_physicians": 7.2,
+    "who_nurses": 6.6,
+    "who_hospital_beds": 9.2,
+    "who_immunization": 99,
+    "who_maternal_mort": 115,
+    "who_ncd_mortality": 18.1,
+    "who_year": 2024
   },
   "BG": {
     "name": "Bulgaria",
@@ -14641,7 +14863,20 @@
         2025,
         22.51
       ]
-    ]
+    ],
+    "trade_pct_gdp": 110.2,
+    "current_account_gdp": -1.5,
+    "fdi_inflow_gdp": 3.1,
+    "exports_pct_gdp": 56.4,
+    "imports_pct_gdp": 53.9,
+    "trade_year": 2024,
+    "who_physicians": 43.9,
+    "who_nurses": 46.8,
+    "who_hospital_beds": 82,
+    "who_immunization": 97,
+    "who_maternal_mort": 6,
+    "who_ncd_mortality": 25.6,
+    "who_year": 2024
   },
   "B1": {
     "name": "IBRD countries classified as high income",
@@ -15461,7 +15696,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 157.8,
+    "current_account_gdp": 4.8,
+    "fdi_inflow_gdp": 5.7,
+    "exports_pct_gdp": 87.7,
+    "imports_pct_gdp": 70.1,
+    "trade_year": 2024,
+    "who_physicians": 7.4,
+    "who_nurses": 26.5,
+    "who_hospital_beds": 18.4,
+    "who_maternal_mort": 17,
+    "who_ncd_mortality": 14.8,
+    "who_year": 2023
   },
   "BS": {
     "name": "Bahamas, The",
@@ -16347,7 +16594,19 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 79.2,
+    "current_account_gdp": -6.6,
+    "fdi_inflow_gdp": 1.5,
+    "exports_pct_gdp": 37.8,
+    "imports_pct_gdp": 41.5,
+    "trade_year": 2024,
+    "who_physicians": 18.9,
+    "who_nurses": 42.2,
+    "who_hospital_beds": 21.7,
+    "who_maternal_mort": 76,
+    "who_ncd_mortality": 20.4,
+    "who_year": 2023
   },
   "BA": {
     "name": "Bosnia and Herzegovina",
@@ -17100,7 +17359,20 @@
         2025,
         59.38
       ]
-    ]
+    ],
+    "trade_pct_gdp": 95.2,
+    "current_account_gdp": -3.5,
+    "fdi_inflow_gdp": 3.4,
+    "exports_pct_gdp": 40.9,
+    "imports_pct_gdp": 54.3,
+    "trade_year": 2024,
+    "who_physicians": 25.8,
+    "who_nurses": 67.3,
+    "who_hospital_beds": 23.5,
+    "who_immunization": 97,
+    "who_maternal_mort": 6,
+    "who_ncd_mortality": 17.2,
+    "who_year": 2024
   },
   "B2": {
     "name": "Latin America & the Caribbean (IBRD-only countries)",
@@ -17837,7 +18109,20 @@
         2024,
         0.07
       ]
-    ]
+    ],
+    "trade_pct_gdp": 131.9,
+    "current_account_gdp": -2.6,
+    "fdi_inflow_gdp": 2.3,
+    "exports_pct_gdp": 65.1,
+    "imports_pct_gdp": 66.9,
+    "trade_year": 2024,
+    "who_physicians": 48,
+    "who_nurses": 107.5,
+    "who_hospital_beds": 97.7,
+    "who_immunization": 98,
+    "who_maternal_mort": 1,
+    "who_ncd_mortality": 23.8,
+    "who_year": 2024
   },
   "BZ": {
     "name": "Belize",
@@ -18543,7 +18828,20 @@
     "health_spend_gdp": 4.147,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.623,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "trade_pct_gdp": 109,
+    "current_account_gdp": -1.6,
+    "fdi_inflow_gdp": 4,
+    "exports_pct_gdp": 55.2,
+    "imports_pct_gdp": 53.7,
+    "trade_year": 2024,
+    "who_physicians": 13.4,
+    "who_nurses": 20.6,
+    "who_hospital_beds": 10,
+    "who_immunization": 85,
+    "who_maternal_mort": 67,
+    "who_ncd_mortality": 15.4,
+    "who_year": 2024
   },
   "B3": {
     "name": "Middle East, North Africa, Afghanistan & Pakistan (IBRD only)",
@@ -18661,7 +18959,13 @@
     "renewable_energy_pct": 0.9,
     "renewable_energy_pct_year": "2022",
     "education_spend_gdp": 1.865,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 75.3,
+    "current_account_gdp": 15.4,
+    "fdi_inflow_gdp": 1.3,
+    "exports_pct_gdp": 52.1,
+    "imports_pct_gdp": 23.1,
+    "trade_year": 2024
   },
   "BO": {
     "name": "Bolivia",
@@ -19498,7 +19802,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 47,
+    "current_account_gdp": -2.6,
+    "fdi_inflow_gdp": 0.7,
+    "exports_pct_gdp": 21.4,
+    "imports_pct_gdp": 25.5,
+    "trade_year": 2024,
+    "who_physicians": 12.8,
+    "who_nurses": 16.2,
+    "who_hospital_beds": 14.9,
+    "who_immunization": 68,
+    "who_maternal_mort": 146,
+    "who_ncd_mortality": 19.9,
+    "who_year": 2024
   },
   "BR": {
     "name": "Brazil",
@@ -20310,7 +20627,20 @@
         2024,
         2.17
       ]
-    ]
+    ],
+    "trade_pct_gdp": 35.6,
+    "current_account_gdp": -3,
+    "fdi_inflow_gdp": 3.4,
+    "exports_pct_gdp": 17.9,
+    "imports_pct_gdp": 17.6,
+    "trade_year": 2024,
+    "who_physicians": 25,
+    "who_nurses": 58.3,
+    "who_hospital_beds": 25.2,
+    "who_immunization": 95,
+    "who_maternal_mort": 67,
+    "who_ncd_mortality": 14.5,
+    "who_year": 2024
   },
   "BB": {
     "name": "Barbados",
@@ -21086,7 +21416,16 @@
     "health_spend_gdp": 5.405,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.556,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "current_account_gdp": -5.2,
+    "fdi_inflow_gdp": 4,
+    "trade_year": 2024,
+    "who_physicians": 24,
+    "who_nurses": 41.4,
+    "who_hospital_beds": 64,
+    "who_maternal_mort": 35,
+    "who_ncd_mortality": 14,
+    "who_year": 2023
   },
   "BN": {
     "name": "Brunei Darussalam",
@@ -21906,7 +22245,20 @@
         2023,
         21.65
       ]
-    ]
+    ],
+    "trade_pct_gdp": 132.6,
+    "current_account_gdp": 14.5,
+    "fdi_inflow_gdp": 0.2,
+    "exports_pct_gdp": 74.3,
+    "imports_pct_gdp": 58.3,
+    "trade_year": 2024,
+    "who_physicians": 21.8,
+    "who_nurses": 65,
+    "who_hospital_beds": 35.8,
+    "who_immunization": 99,
+    "who_maternal_mort": 36,
+    "who_ncd_mortality": 14.9,
+    "who_year": 2024
   },
   "B6": {
     "name": "Sub-Saharan Africa (IBRD-only countries)",
@@ -22641,7 +22993,20 @@
     "health_spend_gdp": 4.416,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.845,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 81.7,
+    "current_account_gdp": -20,
+    "fdi_inflow_gdp": 0.3,
+    "exports_pct_gdp": 28.4,
+    "imports_pct_gdp": 53.3,
+    "trade_year": 2024,
+    "who_physicians": 5.5,
+    "who_nurses": 20.5,
+    "who_hospital_beds": 21.6,
+    "who_immunization": 99,
+    "who_maternal_mort": 47,
+    "who_ncd_mortality": 15.9,
+    "who_year": 2024
   },
   "BW": {
     "name": "Botswana",
@@ -23310,7 +23675,20 @@
         2023,
         95.75
       ]
-    ]
+    ],
+    "trade_pct_gdp": 71.1,
+    "current_account_gdp": -4.2,
+    "fdi_inflow_gdp": 2.4,
+    "exports_pct_gdp": 27.4,
+    "imports_pct_gdp": 43.7,
+    "trade_year": 2024,
+    "who_physicians": 4.3,
+    "who_nurses": 30.2,
+    "who_hospital_beds": 23.6,
+    "who_immunization": 98,
+    "who_maternal_mort": 155,
+    "who_ncd_mortality": 19,
+    "who_year": 2024
   },
   "C9": {
     "name": "Sub-Saharan Africa (IFC classification)",
@@ -24023,7 +24401,18 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 46.4,
+    "fdi_inflow_gdp": 1.5,
+    "exports_pct_gdp": 15,
+    "imports_pct_gdp": 31.4,
+    "trade_year": 2024,
+    "who_physicians": 1,
+    "who_nurses": 4.4,
+    "who_immunization": 61,
+    "who_maternal_mort": 692,
+    "who_ncd_mortality": 30.8,
+    "who_year": 2024
   },
   "CA": {
     "name": "Canada",
@@ -25284,7 +25673,19 @@
         2024,
         3.95
       ]
-    ]
+    ],
+    "trade_pct_gdp": 65.1,
+    "current_account_gdp": -0.5,
+    "fdi_inflow_gdp": 2.8,
+    "exports_pct_gdp": 32.4,
+    "imports_pct_gdp": 32.7,
+    "trade_year": 2024,
+    "who_physicians": 28.5,
+    "who_nurses": 116.2,
+    "who_hospital_beds": 25.4,
+    "who_maternal_mort": 12,
+    "who_ncd_mortality": 9.7,
+    "who_year": 2024
   },
   "C4": {
     "name": "East Asia and the Pacific (IFC classification)",
@@ -25396,7 +25797,12 @@
     "health_spend_gdp": 7.172,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.316,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 116.3,
+    "fdi_inflow_gdp": -0.1,
+    "exports_pct_gdp": 58.3,
+    "imports_pct_gdp": 56.2,
+    "trade_year": 2024
   },
   "C5": {
     "name": "Europe and Central Asia (IFC classification)",
@@ -26611,7 +27017,19 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 134.1,
+    "current_account_gdp": 7.7,
+    "fdi_inflow_gdp": -11.6,
+    "exports_pct_gdp": 72.2,
+    "imports_pct_gdp": 61.9,
+    "trade_year": 2024,
+    "who_physicians": 45.6,
+    "who_nurses": 192,
+    "who_hospital_beds": 43.8,
+    "who_maternal_mort": 5,
+    "who_ncd_mortality": 7.5,
+    "who_year": 2023
   },
   "JG": {
     "name": "Channel Islands",
@@ -27637,7 +28055,20 @@
         2024,
         15.8
       ]
-    ]
+    ],
+    "trade_pct_gdp": 63.9,
+    "current_account_gdp": -1.5,
+    "fdi_inflow_gdp": 3.8,
+    "exports_pct_gdp": 33.7,
+    "imports_pct_gdp": 30.1,
+    "trade_year": 2024,
+    "who_physicians": 34.9,
+    "who_nurses": 47.2,
+    "who_hospital_beds": 19.4,
+    "who_immunization": 99,
+    "who_maternal_mort": 10,
+    "who_ncd_mortality": 9.4,
+    "who_year": 2024
   },
   "CN": {
     "name": "China",
@@ -28440,7 +28871,20 @@
         2024,
         57.77
       ]
-    ]
+    ],
+    "trade_pct_gdp": 37.2,
+    "current_account_gdp": 2.3,
+    "fdi_inflow_gdp": 0.1,
+    "exports_pct_gdp": 20,
+    "imports_pct_gdp": 17.2,
+    "trade_year": 2024,
+    "who_physicians": 28.2,
+    "who_nurses": 39.6,
+    "who_hospital_beds": 56.3,
+    "who_immunization": 99,
+    "who_maternal_mort": 16,
+    "who_ncd_mortality": 15.9,
+    "who_year": 2024
   },
   "CI": {
     "name": "Cote d'Ivoire",
@@ -29125,7 +29569,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 51.3,
+    "current_account_gdp": -11.4,
+    "fdi_inflow_gdp": 3.6,
+    "exports_pct_gdp": 26,
+    "imports_pct_gdp": 25.2,
+    "trade_year": 2024,
+    "who_physicians": 2.5,
+    "who_nurses": 9.9,
+    "who_immunization": 88,
+    "who_maternal_mort": 359,
+    "who_ncd_mortality": 22.7,
+    "who_year": 2024
   },
   "C6": {
     "name": "Latin America and the Caribbean (IFC classification)",
@@ -29804,7 +30260,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 34.4,
+    "current_account_gdp": -4.1,
+    "fdi_inflow_gdp": 1.7,
+    "exports_pct_gdp": 15.7,
+    "imports_pct_gdp": 18.7,
+    "trade_year": 2024,
+    "who_physicians": 0.9,
+    "who_nurses": 6.6,
+    "who_hospital_beds": 26.5,
+    "who_immunization": 93,
+    "who_maternal_mort": 258,
+    "who_ncd_mortality": 24.3,
+    "who_year": 2024
   },
   "CD": {
     "name": "Congo, Dem. Rep.",
@@ -30481,7 +30950,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 100.6,
+    "current_account_gdp": -3.8,
+    "fdi_inflow_gdp": 4.1,
+    "exports_pct_gdp": 48.8,
+    "imports_pct_gdp": 51.8,
+    "trade_year": 2024,
+    "who_physicians": 2.1,
+    "who_nurses": 11.7,
+    "who_immunization": 77,
+    "who_maternal_mort": 427,
+    "who_ncd_mortality": 25.1,
+    "who_year": 2024
   },
   "CG": {
     "name": "Congo, Rep.",
@@ -31223,7 +31704,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 93.2,
+    "current_account_gdp": 11.6,
+    "fdi_inflow_gdp": 3.8,
+    "exports_pct_gdp": 52.8,
+    "imports_pct_gdp": 40.4,
+    "trade_year": 2024,
+    "who_physicians": 5,
+    "who_nurses": 13.3,
+    "who_immunization": 67,
+    "who_maternal_mort": 241,
+    "who_ncd_mortality": 21.2,
+    "who_year": 2024
   },
   "CO": {
     "name": "Colombia",
@@ -32166,7 +32659,20 @@
         2024,
         15.15
       ]
-    ]
+    ],
+    "trade_pct_gdp": 37,
+    "current_account_gdp": -1.6,
+    "fdi_inflow_gdp": 3.3,
+    "exports_pct_gdp": 16.1,
+    "imports_pct_gdp": 20.9,
+    "trade_year": 2024,
+    "who_physicians": 25.4,
+    "who_nurses": 15.7,
+    "who_hospital_beds": 17,
+    "who_immunization": 85,
+    "who_maternal_mort": 59,
+    "who_ncd_mortality": 10.3,
+    "who_year": 2024
   },
   "KM": {
     "name": "Comoros",
@@ -32843,7 +33349,19 @@
     "whr_health": 0.37,
     "whr_freedom": 0.172,
     "whr_generosity": 0.128,
-    "whr_corruption": 0.16
+    "whr_corruption": 0.16,
+    "trade_pct_gdp": 44.4,
+    "current_account_gdp": -1.9,
+    "fdi_inflow_gdp": 0.5,
+    "exports_pct_gdp": 9.9,
+    "imports_pct_gdp": 34.5,
+    "trade_year": 2024,
+    "who_physicians": 4.2,
+    "who_nurses": 16.4,
+    "who_immunization": 84,
+    "who_maternal_mort": 179,
+    "who_ncd_mortality": 20.2,
+    "who_year": 2024
   },
   "CV": {
     "name": "Cabo Verde",
@@ -33713,7 +34231,20 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 96.5,
+    "current_account_gdp": 3.9,
+    "fdi_inflow_gdp": 4,
+    "exports_pct_gdp": 42.5,
+    "imports_pct_gdp": 54,
+    "trade_year": 2024,
+    "who_physicians": 7.3,
+    "who_nurses": 18,
+    "who_hospital_beds": 22.1,
+    "who_immunization": 99,
+    "who_maternal_mort": 40,
+    "who_ncd_mortality": 17.2,
+    "who_year": 2024
   },
   "CR": {
     "name": "Costa Rica",
@@ -34621,7 +35152,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 71.3,
+    "current_account_gdp": -1.3,
+    "fdi_inflow_gdp": 5.6,
+    "exports_pct_gdp": 38.5,
+    "imports_pct_gdp": 32.8,
+    "trade_year": 2024,
+    "who_physicians": 26.9,
+    "who_nurses": 30.7,
+    "who_hospital_beds": 11.4,
+    "who_immunization": 99,
+    "who_maternal_mort": 24,
+    "who_ncd_mortality": 9.9,
+    "who_year": 2024
   },
   "C8": {
     "name": "South Asia (IFC classification)",
@@ -34731,7 +35275,9 @@
     "health_spend_gdp": 5.489,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.011,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "fdi_inflow_gdp": 10.7,
+    "trade_year": 2024
   },
   "CU": {
     "name": "Cuba",
@@ -34943,7 +35489,18 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 124.9,
+    "exports_pct_gdp": 42.5,
+    "imports_pct_gdp": 82.4,
+    "trade_year": 2024,
+    "who_physicians": 85,
+    "who_nurses": 71.9,
+    "who_hospital_beds": 43.3,
+    "who_immunization": 99,
+    "who_maternal_mort": 35,
+    "who_ncd_mortality": 17.6,
+    "who_year": 2024
   },
   "CW": {
     "name": "Curacao",
@@ -35046,7 +35603,13 @@
     "renewable_energy_pct": 2.8,
     "renewable_energy_pct_year": "2021",
     "education_spend_gdp": 5.443,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "trade_pct_gdp": 155.3,
+    "current_account_gdp": -20,
+    "fdi_inflow_gdp": 4.3,
+    "exports_pct_gdp": 63.2,
+    "imports_pct_gdp": 92,
+    "trade_year": 2024
   },
   "KY": {
     "name": "Cayman Islands",
@@ -35157,7 +35720,13 @@
     "renewable_energy_pct": 0,
     "renewable_energy_pct_year": "2022",
     "education_spend_gdp": 1.57,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 105.5,
+    "current_account_gdp": -9.8,
+    "fdi_inflow_gdp": 93.7,
+    "exports_pct_gdp": 59.6,
+    "imports_pct_gdp": 45.8,
+    "trade_year": 2023
   },
   "CY": {
     "name": "Cyprus",
@@ -36048,7 +36617,19 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 190.4,
+    "current_account_gdp": -8.2,
+    "fdi_inflow_gdp": -133.8,
+    "exports_pct_gdp": 97,
+    "imports_pct_gdp": 93.4,
+    "trade_year": 2024,
+    "who_physicians": 38.1,
+    "who_nurses": 39.8,
+    "who_hospital_beds": 21.5,
+    "who_maternal_mort": 14,
+    "who_ncd_mortality": 8.5,
+    "who_year": 2023
   },
   "CZ": {
     "name": "Czechia",
@@ -37063,7 +37644,19 @@
         2025,
         35.23
       ]
-    ]
+    ],
+    "trade_pct_gdp": 131.5,
+    "current_account_gdp": 1.7,
+    "fdi_inflow_gdp": 3.8,
+    "exports_pct_gdp": 68.9,
+    "imports_pct_gdp": 62.6,
+    "trade_year": 2024,
+    "who_physicians": 42.4,
+    "who_nurses": 94.2,
+    "who_hospital_beds": 65.4,
+    "who_maternal_mort": 3,
+    "who_ncd_mortality": 14.2,
+    "who_year": 2023
   },
   "D4": {
     "name": "East Asia & Pacific (IDA-eligible countries)",
@@ -38246,7 +38839,19 @@
         2025,
         20.74
       ]
-    ]
+    ],
+    "trade_pct_gdp": 79.1,
+    "current_account_gdp": 5.8,
+    "fdi_inflow_gdp": 1,
+    "exports_pct_gdp": 41.4,
+    "imports_pct_gdp": 37.7,
+    "trade_year": 2024,
+    "who_physicians": 45.9,
+    "who_nurses": 124,
+    "who_hospital_beds": 75.5,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 11.6,
+    "who_year": 2023
   },
   "DJ": {
     "name": "Djibouti",
@@ -38740,7 +39345,20 @@
     "renewable_energy_pct": 26.9,
     "renewable_energy_pct_year": "2022",
     "health_spend_gdp": 2.283,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "trade_pct_gdp": 241.2,
+    "current_account_gdp": 14.7,
+    "fdi_inflow_gdp": 1.6,
+    "exports_pct_gdp": 126.4,
+    "imports_pct_gdp": 114.8,
+    "trade_year": 2024,
+    "who_physicians": 2.1,
+    "who_nurses": 1.9,
+    "who_hospital_beds": 14,
+    "who_immunization": 77,
+    "who_maternal_mort": 162,
+    "who_ncd_mortality": 20.6,
+    "who_year": 2024
   },
   "D2": {
     "name": "Latin America & the Caribbean (IDA-eligible countries)",
@@ -39363,7 +39981,16 @@
     "health_spend_gdp": 5.008,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.386,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "current_account_gdp": -23.2,
+    "fdi_inflow_gdp": 8.7,
+    "trade_year": 2024,
+    "who_physicians": 11.6,
+    "who_nurses": 67.6,
+    "who_hospital_beds": 39.7,
+    "who_immunization": 95,
+    "who_maternal_mort": 36,
+    "who_year": 2024
   },
   "D3": {
     "name": "Middle East, North Africa, Afghanistan & Pakistan (IDA total)",
@@ -40579,7 +41206,19 @@
         2025,
         2.66
       ]
-    ]
+    ],
+    "trade_pct_gdp": 131.8,
+    "current_account_gdp": 12.3,
+    "fdi_inflow_gdp": 4.4,
+    "exports_pct_gdp": 71,
+    "imports_pct_gdp": 60.8,
+    "trade_year": 2024,
+    "who_physicians": 45.3,
+    "who_nurses": 109.3,
+    "who_hospital_beds": 24.3,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 10.7,
+    "who_year": 2023
   },
   "N6": {
     "name": "IDA countries in Sub-Saharan Africa not classified as fragile situations ",
@@ -41421,7 +42060,20 @@
         2024,
         30.11
       ]
-    ]
+    ],
+    "trade_pct_gdp": 51.8,
+    "current_account_gdp": -3.4,
+    "fdi_inflow_gdp": 3.6,
+    "exports_pct_gdp": 22.8,
+    "imports_pct_gdp": 29,
+    "trade_year": 2024,
+    "who_physicians": 21.2,
+    "who_nurses": 17.6,
+    "who_hospital_beds": 7.5,
+    "who_immunization": 99,
+    "who_maternal_mort": 124,
+    "who_ncd_mortality": 17.4,
+    "who_year": 2024
   },
   "D5": {
     "name": "South Asia (IDA-eligible countries)",
@@ -42333,7 +42985,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 40.1,
+    "current_account_gdp": -1,
+    "fdi_inflow_gdp": 0.5,
+    "exports_pct_gdp": 19.9,
+    "imports_pct_gdp": 20.3,
+    "trade_year": 2024,
+    "who_physicians": 16.6,
+    "who_nurses": 25.1,
+    "who_hospital_beds": 16.1,
+    "who_immunization": 98,
+    "who_maternal_mort": 62,
+    "who_ncd_mortality": 13.3,
+    "who_year": 2024
   },
   "4E": {
     "name": "East Asia & Pacific (excluding high income)",
@@ -42442,7 +43107,12 @@
     "health_spend_gdp": 5.608,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.018,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 45.9,
+    "fdi_inflow_gdp": 0.5,
+    "exports_pct_gdp": 24.2,
+    "imports_pct_gdp": 21.7,
+    "trade_year": 2024
   },
   "V2": {
     "name": "Early-demographic dividend",
@@ -42549,7 +43219,12 @@
     "health_spend_gdp": 4.812,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.289,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 51.7,
+    "fdi_inflow_gdp": 1.7,
+    "exports_pct_gdp": 25.2,
+    "imports_pct_gdp": 26.7,
+    "trade_year": 2024
   },
   "Z4": {
     "name": "East Asia & Pacific",
@@ -42658,7 +43333,12 @@
     "health_spend_gdp": 6.799,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.515,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 58.5,
+    "fdi_inflow_gdp": 1.5,
+    "exports_pct_gdp": 31,
+    "imports_pct_gdp": 28,
+    "trade_year": 2024
   },
   "7E": {
     "name": "Europe & Central Asia (excluding high income)",
@@ -42767,7 +43447,12 @@
     "health_spend_gdp": 4.918,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.709,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 65,
+    "fdi_inflow_gdp": 1.6,
+    "exports_pct_gdp": 31.9,
+    "imports_pct_gdp": 34.2,
+    "trade_year": 2024
   },
   "Z7": {
     "name": "Europe & Central Asia",
@@ -42876,7 +43561,12 @@
     "health_spend_gdp": 9.58,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.569,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 83,
+    "fdi_inflow_gdp": 0.6,
+    "exports_pct_gdp": 44.8,
+    "imports_pct_gdp": 41.4,
+    "trade_year": 2024
   },
   "EC": {
     "name": "Ecuador",
@@ -43701,7 +44391,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 57.2,
+    "current_account_gdp": 5.7,
+    "fdi_inflow_gdp": 0.4,
+    "exports_pct_gdp": 30.3,
+    "imports_pct_gdp": 26.9,
+    "trade_year": 2024,
+    "who_physicians": 23.1,
+    "who_nurses": 26.3,
+    "who_hospital_beds": 13.2,
+    "who_immunization": 76,
+    "who_maternal_mort": 55,
+    "who_ncd_mortality": 13.2,
+    "who_year": 2024
   },
   "EG": {
     "name": "Egypt, Arab Rep.",
@@ -44528,7 +45231,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 39.6,
+    "current_account_gdp": -5.7,
+    "fdi_inflow_gdp": 12,
+    "exports_pct_gdp": 16.4,
+    "imports_pct_gdp": 23.2,
+    "trade_year": 2024,
+    "who_physicians": 11.8,
+    "who_nurses": 19.5,
+    "who_hospital_beds": 10.6,
+    "who_immunization": 98,
+    "who_maternal_mort": 17,
+    "who_ncd_mortality": 26,
+    "who_year": 2024
   },
   "XC": {
     "name": "Euro area",
@@ -44633,7 +45349,12 @@
     "health_spend_gdp": 10.775,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.958,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 88.6,
+    "fdi_inflow_gdp": 1.6,
+    "exports_pct_gdp": 49.2,
+    "imports_pct_gdp": 44.8,
+    "trade_year": 2024
   },
   "ER": {
     "name": "Eritrea",
@@ -45125,7 +45846,14 @@
         2023,
         0
       ]
-    ]
+    ],
+    "who_physicians": 0.9,
+    "who_nurses": 15.2,
+    "who_hospital_beds": 10.2,
+    "who_immunization": 97,
+    "who_maternal_mort": 291,
+    "who_ncd_mortality": 27.3,
+    "who_year": 2024
   },
   "ES": {
     "name": "Spain",
@@ -46389,7 +47117,19 @@
         2025,
         0.32
       ]
-    ]
+    ],
+    "trade_pct_gdp": 70,
+    "current_account_gdp": 3.2,
+    "fdi_inflow_gdp": 2.5,
+    "exports_pct_gdp": 37.1,
+    "imports_pct_gdp": 32.9,
+    "trade_year": 2024,
+    "who_physicians": 44.3,
+    "who_nurses": 62.2,
+    "who_hospital_beds": 29.1,
+    "who_maternal_mort": 3,
+    "who_ncd_mortality": 9.3,
+    "who_year": 2023
   },
   "EE": {
     "name": "Estonia",
@@ -47183,7 +47923,20 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 151,
+    "current_account_gdp": -1.3,
+    "fdi_inflow_gdp": -8,
+    "exports_pct_gdp": 75.7,
+    "imports_pct_gdp": 75.4,
+    "trade_year": 2024,
+    "who_physicians": 34.9,
+    "who_nurses": 70.4,
+    "who_hospital_beds": 41.3,
+    "who_immunization": 87,
+    "who_maternal_mort": 5,
+    "who_ncd_mortality": 15.5,
+    "who_year": 2024
   },
   "ET": {
     "name": "Ethiopia",
@@ -47956,7 +48709,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 17.4,
+    "current_account_gdp": -2.5,
+    "fdi_inflow_gdp": 2.7,
+    "exports_pct_gdp": 5.5,
+    "imports_pct_gdp": 11.9,
+    "trade_year": 2024,
+    "who_physicians": 1.6,
+    "who_nurses": 10.8,
+    "who_hospital_beds": 3.3,
+    "who_immunization": 84,
+    "who_maternal_mort": 195,
+    "who_ncd_mortality": 16.8,
+    "who_year": 2024
   },
   "EU": {
     "name": "European Union",
@@ -48061,7 +48827,12 @@
     "health_spend_gdp": 10.543,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.655,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 91.7,
+    "fdi_inflow_gdp": 1.5,
+    "exports_pct_gdp": 50.4,
+    "imports_pct_gdp": 46.1,
+    "trade_year": 2024
   },
   "F1": {
     "name": "Fragile and conflict affected situations",
@@ -48170,7 +48941,11 @@
     "health_spend_gdp": 4.628,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.335,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "fdi_inflow_gdp": 1.1,
+    "exports_pct_gdp": 27.9,
+    "imports_pct_gdp": 31.9,
+    "trade_year": 2024
   },
   "FI": {
     "name": "Finland",
@@ -49432,7 +50207,19 @@
         2025,
         0.2
       ]
-    ]
+    ],
+    "trade_pct_gdp": 83.5,
+    "current_account_gdp": -0.7,
+    "fdi_inflow_gdp": 2.9,
+    "exports_pct_gdp": 41.9,
+    "imports_pct_gdp": 41.6,
+    "trade_year": 2024,
+    "who_physicians": 28.8,
+    "who_nurses": 130.2,
+    "who_hospital_beds": 26.1,
+    "who_maternal_mort": 8,
+    "who_ncd_mortality": 9.6,
+    "who_year": 2023
   },
   "FJ": {
     "name": "Fiji",
@@ -50308,7 +51095,17 @@
         2023,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": -17.4,
+    "fdi_inflow_gdp": 3.4,
+    "trade_year": 2024,
+    "who_physicians": 7.5,
+    "who_nurses": 21.3,
+    "who_hospital_beds": 18.9,
+    "who_immunization": 93,
+    "who_maternal_mort": 30,
+    "who_ncd_mortality": 37.9,
+    "who_year": 2024
   },
   "FR": {
     "name": "France",
@@ -51573,7 +52370,19 @@
         2025,
         0.31
       ]
-    ]
+    ],
+    "trade_pct_gdp": 68.1,
+    "current_account_gdp": 0.1,
+    "fdi_inflow_gdp": 1.6,
+    "exports_pct_gdp": 33.9,
+    "imports_pct_gdp": 34.2,
+    "trade_year": 2024,
+    "who_physicians": 40.1,
+    "who_nurses": 94.2,
+    "who_hospital_beds": 56.5,
+    "who_maternal_mort": 7,
+    "who_ncd_mortality": 10.2,
+    "who_year": 2023
   },
   "FO": {
     "name": "Faroe Islands",
@@ -51674,7 +52483,11 @@
     "electricity_pct": 100,
     "electricity_pct_year": "2023",
     "renewable_energy_pct": 7.9,
-    "renewable_energy_pct_year": "2022"
+    "renewable_energy_pct_year": "2022",
+    "trade_pct_gdp": 105.8,
+    "exports_pct_gdp": 54.6,
+    "imports_pct_gdp": 51.2,
+    "trade_year": 2024
   },
   "FM": {
     "name": "Micronesia, Fed. Sts.",
@@ -52189,7 +53002,17 @@
     "renewable_energy_pct": 2,
     "renewable_energy_pct_year": "2022",
     "health_spend_gdp": 12.881,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "trade_pct_gdp": 98.4,
+    "exports_pct_gdp": 26.9,
+    "imports_pct_gdp": 71.5,
+    "trade_year": 2024,
+    "who_physicians": 9.7,
+    "who_nurses": 22.2,
+    "who_immunization": 70,
+    "who_maternal_mort": 129,
+    "who_ncd_mortality": 40.5,
+    "who_year": 2024
   },
   "6F": {
     "name": "IDA countries classified as fragile situations, excluding Sub-Saharan Africa",
@@ -52932,7 +53755,18 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 92,
+    "fdi_inflow_gdp": 5.5,
+    "exports_pct_gdp": 64.6,
+    "imports_pct_gdp": 27.5,
+    "trade_year": 2024,
+    "who_physicians": 5.2,
+    "who_nurses": 23.7,
+    "who_immunization": 78,
+    "who_maternal_mort": 233,
+    "who_ncd_mortality": 18.1,
+    "who_year": 2024
   },
   "GB": {
     "name": "United Kingdom",
@@ -54197,7 +55031,19 @@
         2025,
         0.11
       ]
-    ]
+    ],
+    "trade_pct_gdp": 62.8,
+    "current_account_gdp": -2.2,
+    "fdi_inflow_gdp": -0.4,
+    "exports_pct_gdp": 31,
+    "imports_pct_gdp": 31.9,
+    "trade_year": 2024,
+    "who_physicians": 33.5,
+    "who_nurses": 95.6,
+    "who_hospital_beds": 24.2,
+    "who_maternal_mort": 8,
+    "who_ncd_mortality": 11,
+    "who_year": 2023
   },
   "GE": {
     "name": "Georgia",
@@ -54942,7 +55788,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 103.5,
+    "current_account_gdp": -5.2,
+    "fdi_inflow_gdp": 4.7,
+    "exports_pct_gdp": 47.8,
+    "imports_pct_gdp": 55.6,
+    "trade_year": 2024,
+    "who_physicians": 56.4,
+    "who_nurses": 56.9,
+    "who_hospital_beds": 40.4,
+    "who_immunization": 96,
+    "who_maternal_mort": 20,
+    "who_ncd_mortality": 22.1,
+    "who_year": 2024
   },
   "GH": {
     "name": "Ghana",
@@ -55723,7 +56582,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 69.8,
+    "current_account_gdp": 2,
+    "fdi_inflow_gdp": 2.1,
+    "exports_pct_gdp": 35.5,
+    "imports_pct_gdp": 34.3,
+    "trade_year": 2024,
+    "who_physicians": 2.9,
+    "who_nurses": 41.7,
+    "who_hospital_beds": 6.9,
+    "who_immunization": 92,
+    "who_maternal_mort": 234,
+    "who_ncd_mortality": 22.2,
+    "who_year": 2024
   },
   "GI": {
     "name": "Gibraltar",
@@ -56515,7 +57387,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 97.8,
+    "current_account_gdp": -1.6,
+    "fdi_inflow_gdp": 5.6,
+    "exports_pct_gdp": 41.4,
+    "imports_pct_gdp": 56.4,
+    "trade_year": 2024,
+    "who_physicians": 1.1,
+    "who_nurses": 2,
+    "who_immunization": 75,
+    "who_maternal_mort": 494,
+    "who_ncd_mortality": 23.6,
+    "who_year": 2024
   },
   "GM": {
     "name": "Gambia, The",
@@ -57170,7 +58054,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 42.2,
+    "current_account_gdp": -4.1,
+    "fdi_inflow_gdp": 9.7,
+    "exports_pct_gdp": 8.7,
+    "imports_pct_gdp": 33.4,
+    "trade_year": 2024,
+    "who_physicians": 0.9,
+    "who_nurses": 6.6,
+    "who_hospital_beds": 11.1,
+    "who_immunization": 79,
+    "who_maternal_mort": 354,
+    "who_ncd_mortality": 21.8,
+    "who_year": 2024
   },
   "GW": {
     "name": "Guinea-Bissau",
@@ -57758,7 +58655,19 @@
     "renewable_energy_pct": 87.4,
     "renewable_energy_pct_year": "2022",
     "health_spend_gdp": 8.822,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "trade_pct_gdp": 38.8,
+    "current_account_gdp": -7.5,
+    "fdi_inflow_gdp": 1.2,
+    "exports_pct_gdp": 11.8,
+    "imports_pct_gdp": 27,
+    "trade_year": 2024,
+    "who_physicians": 2.5,
+    "who_nurses": 9.3,
+    "who_immunization": 71,
+    "who_maternal_mort": 505,
+    "who_ncd_mortality": 25.3,
+    "who_year": 2024
   },
   "GQ": {
     "name": "Equatorial Guinea",
@@ -58456,7 +59365,18 @@
     "renewable_energy_pct": 4.2,
     "renewable_energy_pct_year": "2022",
     "health_spend_gdp": 3.499,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "trade_pct_gdp": 60.5,
+    "fdi_inflow_gdp": 1.5,
+    "exports_pct_gdp": 35.2,
+    "imports_pct_gdp": 25.4,
+    "trade_year": 2024,
+    "who_physicians": 1.5,
+    "who_nurses": 13.8,
+    "who_immunization": 77,
+    "who_maternal_mort": 174,
+    "who_ncd_mortality": 20.3,
+    "who_year": 2024
   },
   "GR": {
     "name": "Greece",
@@ -59718,7 +60638,19 @@
         2025,
         4.71
       ]
-    ]
+    ],
+    "trade_pct_gdp": 89.8,
+    "current_account_gdp": -7.1,
+    "fdi_inflow_gdp": 2.6,
+    "exports_pct_gdp": 42.1,
+    "imports_pct_gdp": 47.7,
+    "trade_year": 2024,
+    "who_physicians": 67.1,
+    "who_nurses": 41.3,
+    "who_hospital_beds": 42.7,
+    "who_maternal_mort": 5,
+    "who_ncd_mortality": 12,
+    "who_year": 2023
   },
   "GD": {
     "name": "Grenada",
@@ -60334,7 +61266,16 @@
     "health_spend_gdp": 4.653,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.125,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "current_account_gdp": -19.7,
+    "fdi_inflow_gdp": 11.9,
+    "trade_year": 2024,
+    "who_physicians": 13.8,
+    "who_nurses": 45.8,
+    "who_hospital_beds": 30.1,
+    "who_maternal_mort": 48,
+    "who_ncd_mortality": 17.1,
+    "who_year": 2023
   },
   "GL": {
     "name": "Greenland",
@@ -60443,7 +61384,11 @@
     "wgi_regulatory_quality": 1.207,
     "wgi_regulatory_quality_year": "2023",
     "renewable_energy_pct": 11.7,
-    "renewable_energy_pct_year": "2022"
+    "renewable_energy_pct_year": "2022",
+    "trade_pct_gdp": 91.9,
+    "exports_pct_gdp": 40.8,
+    "imports_pct_gdp": 51.1,
+    "trade_year": 2023
   },
   "GT": {
     "name": "Guatemala",
@@ -61124,7 +62069,20 @@
         2023,
         17.61
       ]
-    ]
+    ],
+    "trade_pct_gdp": 47.3,
+    "current_account_gdp": 2.9,
+    "fdi_inflow_gdp": 1.6,
+    "exports_pct_gdp": 15.9,
+    "imports_pct_gdp": 31.5,
+    "trade_year": 2024,
+    "who_physicians": 16.3,
+    "who_nurses": 22.7,
+    "who_hospital_beds": 4.5,
+    "who_immunization": 83,
+    "who_maternal_mort": 94,
+    "who_ncd_mortality": 14.6,
+    "who_year": 2024
   },
   "GU": {
     "name": "Guam",
@@ -61229,7 +62187,11 @@
     "wgi_regulatory_quality": 0.512,
     "wgi_regulatory_quality_year": "2023",
     "renewable_energy_pct": 6.7,
-    "renewable_energy_pct_year": "2022"
+    "renewable_energy_pct_year": "2022",
+    "trade_pct_gdp": 71.9,
+    "exports_pct_gdp": 7.9,
+    "imports_pct_gdp": 64,
+    "trade_year": 2022
   },
   "GY": {
     "name": "Guyana",
@@ -61898,7 +62860,17 @@
         2023,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": 13.9,
+    "fdi_inflow_gdp": 35,
+    "trade_year": 2024,
+    "who_physicians": 12.5,
+    "who_nurses": 48.4,
+    "who_hospital_beds": 32.4,
+    "who_immunization": 99,
+    "who_maternal_mort": 75,
+    "who_ncd_mortality": 25.4,
+    "who_year": 2024
   },
   "XD": {
     "name": "High income",
@@ -62007,7 +62979,12 @@
     "health_spend_gdp": 12.511,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.655,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 60.8,
+    "fdi_inflow_gdp": 1.5,
+    "exports_pct_gdp": 31.7,
+    "imports_pct_gdp": 30.5,
+    "trade_year": 2024
   },
   "HK": {
     "name": "Hong Kong SAR, China",
@@ -62912,7 +63889,13 @@
         2023,
         35.26
       ]
-    ]
+    ],
+    "trade_pct_gdp": 359.5,
+    "current_account_gdp": 12.9,
+    "fdi_inflow_gdp": 30.9,
+    "exports_pct_gdp": 181.8,
+    "imports_pct_gdp": 177.7,
+    "trade_year": 2024
   },
   "HN": {
     "name": "Honduras",
@@ -63845,7 +64828,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 91.1,
+    "current_account_gdp": -4.4,
+    "fdi_inflow_gdp": 3.5,
+    "exports_pct_gdp": 33.5,
+    "imports_pct_gdp": 57.6,
+    "trade_year": 2024,
+    "who_physicians": 19,
+    "who_nurses": 7.3,
+    "who_hospital_beds": 5.3,
+    "who_immunization": 73,
+    "who_maternal_mort": 47,
+    "who_ncd_mortality": 17.8,
+    "who_year": 2024
   },
   "XE": {
     "name": "Heavily indebted poor countries (HIPC)",
@@ -63952,7 +64948,12 @@
     "health_spend_gdp": 4.452,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.244,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 52.1,
+    "fdi_inflow_gdp": 4.4,
+    "exports_pct_gdp": 23.1,
+    "imports_pct_gdp": 29.9,
+    "trade_year": 2024
   },
   "HR": {
     "name": "Croatia",
@@ -64752,7 +65753,20 @@
         2025,
         5.02
       ]
-    ]
+    ],
+    "trade_pct_gdp": 104.9,
+    "current_account_gdp": -1.1,
+    "fdi_inflow_gdp": 4.9,
+    "exports_pct_gdp": 50.1,
+    "imports_pct_gdp": 54.8,
+    "trade_year": 2024,
+    "who_physicians": 39.7,
+    "who_nurses": 80.5,
+    "who_hospital_beds": 56,
+    "who_immunization": 96,
+    "who_maternal_mort": 3,
+    "who_ncd_mortality": 15.9,
+    "who_year": 2024
   },
   "HT": {
     "name": "Haiti",
@@ -65416,7 +66430,20 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 22.2,
+    "current_account_gdp": -0.6,
+    "fdi_inflow_gdp": 0.1,
+    "exports_pct_gdp": 3.4,
+    "imports_pct_gdp": 18.8,
+    "trade_year": 2024,
+    "who_physicians": 2.9,
+    "who_nurses": 7.3,
+    "who_hospital_beds": 49,
+    "who_immunization": 68,
+    "who_maternal_mort": 328,
+    "who_ncd_mortality": 31.6,
+    "who_year": 2024
   },
   "HU": {
     "name": "Hungary",
@@ -66555,7 +67582,20 @@
         2025,
         3.41
       ]
-    ]
+    ],
+    "trade_pct_gdp": 146.5,
+    "current_account_gdp": 1.6,
+    "fdi_inflow_gdp": -27.9,
+    "exports_pct_gdp": 75.4,
+    "imports_pct_gdp": 71.1,
+    "trade_year": 2024,
+    "who_physicians": 35.9,
+    "who_nurses": 57.2,
+    "who_hospital_beds": 66.3,
+    "who_immunization": 99,
+    "who_maternal_mort": 12,
+    "who_ncd_mortality": 21.7,
+    "who_year": 2024
   },
   "ZB": {
     "name": "IBRD, including blend",
@@ -66669,7 +67709,12 @@
     "health_spend_gdp": 5.901,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.641,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 49.3,
+    "fdi_inflow_gdp": 1,
+    "exports_pct_gdp": 25.6,
+    "imports_pct_gdp": 24.3,
+    "trade_year": 2024
   },
   "ZT": {
     "name": "IDA & IBRD total",
@@ -66778,7 +67823,12 @@
     "health_spend_gdp": 5.761,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.426,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 49.2,
+    "fdi_inflow_gdp": 1.1,
+    "exports_pct_gdp": 25.3,
+    "imports_pct_gdp": 24.6,
+    "trade_year": 2024
   },
   "XG": {
     "name": "IDA total",
@@ -66887,7 +67937,12 @@
     "health_spend_gdp": 3.859,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.23,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 47.1,
+    "fdi_inflow_gdp": 2.4,
+    "exports_pct_gdp": 23.2,
+    "imports_pct_gdp": 29.1,
+    "trade_year": 2024
   },
   "XH": {
     "name": "IDA blend",
@@ -66996,7 +68051,10 @@
     "health_spend_gdp": 3.883,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.34,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "fdi_inflow_gdp": 1.2,
+    "imports_pct_gdp": 25.5,
+    "trade_year": 2024
   },
   "ID": {
     "name": "Indonesia",
@@ -67865,7 +68923,20 @@
         2024,
         61.48
       ]
-    ]
+    ],
+    "trade_pct_gdp": 42.6,
+    "current_account_gdp": -0.6,
+    "fdi_inflow_gdp": 1.7,
+    "exports_pct_gdp": 22.2,
+    "imports_pct_gdp": 20.4,
+    "trade_year": 2024,
+    "who_physicians": 5.6,
+    "who_nurses": 33,
+    "who_hospital_beds": 13.7,
+    "who_immunization": 88,
+    "who_maternal_mort": 140,
+    "who_ncd_mortality": 21.9,
+    "who_year": 2024
   },
   "XI": {
     "name": "IDA only",
@@ -67974,7 +69045,12 @@
     "health_spend_gdp": 3.84,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.216,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 50.8,
+    "fdi_inflow_gdp": 3.3,
+    "exports_pct_gdp": 22,
+    "imports_pct_gdp": 31.1,
+    "trade_year": 2024
   },
   "IM": {
     "name": "Isle of Man",
@@ -68854,7 +69930,20 @@
         2024,
         74.77
       ]
-    ]
+    ],
+    "trade_pct_gdp": 44.6,
+    "current_account_gdp": -0.8,
+    "fdi_inflow_gdp": 0.7,
+    "exports_pct_gdp": 21.2,
+    "imports_pct_gdp": 23.5,
+    "trade_year": 2024,
+    "who_physicians": 9.6,
+    "who_nurses": 27.1,
+    "who_hospital_beds": 15.9,
+    "who_immunization": 91,
+    "who_maternal_mort": 80,
+    "who_ncd_mortality": 23.6,
+    "who_year": 2024
   },
   "XY": {
     "name": "Not classified",
@@ -69981,7 +71070,20 @@
         2025,
         0.52
       ]
-    ]
+    ],
+    "trade_pct_gdp": 246.2,
+    "current_account_gdp": 17.4,
+    "fdi_inflow_gdp": 0.8,
+    "exports_pct_gdp": 144,
+    "imports_pct_gdp": 102.2,
+    "trade_year": 2024,
+    "who_physicians": 39.9,
+    "who_nurses": 154,
+    "who_hospital_beds": 29.6,
+    "who_immunization": 18,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 9.6,
+    "who_year": 2024
   },
   "IR": {
     "name": "Iran, Islamic Rep.",
@@ -70854,7 +71956,19 @@
         2024,
         0.18
       ]
-    ]
+    ],
+    "trade_pct_gdp": 52.1,
+    "fdi_inflow_gdp": 0.3,
+    "exports_pct_gdp": 23.6,
+    "imports_pct_gdp": 28.5,
+    "trade_year": 2024,
+    "who_physicians": 18.1,
+    "who_nurses": 28.8,
+    "who_hospital_beds": 18.5,
+    "who_immunization": 99,
+    "who_maternal_mort": 16,
+    "who_ncd_mortality": 13.9,
+    "who_year": 2024
   },
   "IQ": {
     "name": "Iraq",
@@ -71381,7 +72495,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 70.7,
+    "current_account_gdp": 3,
+    "fdi_inflow_gdp": -2.7,
+    "exports_pct_gdp": 37.5,
+    "imports_pct_gdp": 33.2,
+    "trade_year": 2024,
+    "who_physicians": 10.6,
+    "who_nurses": 25.7,
+    "who_hospital_beds": 10.6,
+    "who_immunization": 95,
+    "who_maternal_mort": 66,
+    "who_ncd_mortality": 22.7,
+    "who_year": 2024
   },
   "IS": {
     "name": "Iceland",
@@ -72384,7 +73511,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 86,
+    "current_account_gdp": -2.6,
+    "fdi_inflow_gdp": 8.1,
+    "exports_pct_gdp": 42.5,
+    "imports_pct_gdp": 43.5,
+    "trade_year": 2024,
+    "who_physicians": 45.8,
+    "who_nurses": 160.8,
+    "who_hospital_beds": 28.3,
+    "who_maternal_mort": 3,
+    "who_ncd_mortality": 8.5,
+    "who_year": 2024
   },
   "IL": {
     "name": "Israel",
@@ -73235,7 +74374,19 @@
         2023,
         17.64
       ]
-    ]
+    ],
+    "trade_pct_gdp": 54.5,
+    "current_account_gdp": 2.9,
+    "fdi_inflow_gdp": 2.7,
+    "exports_pct_gdp": 28.4,
+    "imports_pct_gdp": 26,
+    "trade_year": 2024,
+    "who_physicians": 39.2,
+    "who_nurses": 62.1,
+    "who_hospital_beds": 31.4,
+    "who_maternal_mort": 2,
+    "who_ncd_mortality": 7.6,
+    "who_year": 2024
   },
   "IT": {
     "name": "Italy",
@@ -74438,7 +75589,19 @@
         2025,
         1.41
       ]
-    ]
+    ],
+    "trade_pct_gdp": 62.8,
+    "current_account_gdp": 1.1,
+    "fdi_inflow_gdp": 1.1,
+    "exports_pct_gdp": 32.5,
+    "imports_pct_gdp": 30.3,
+    "trade_year": 2024,
+    "who_physicians": 53.1,
+    "who_nurses": 71,
+    "who_hospital_beds": 30.6,
+    "who_maternal_mort": 6,
+    "who_ncd_mortality": 9.1,
+    "who_year": 2023
   },
   "JM": {
     "name": "Jamaica",
@@ -75315,7 +76478,17 @@
         2022,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": 3.1,
+    "fdi_inflow_gdp": 1.4,
+    "trade_year": 2024,
+    "who_physicians": 10.2,
+    "who_nurses": 20.9,
+    "who_hospital_beds": 16.5,
+    "who_immunization": 97,
+    "who_maternal_mort": 130,
+    "who_ncd_mortality": 20.2,
+    "who_year": 2024
   },
   "JO": {
     "name": "Jordan",
@@ -76239,7 +77412,20 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 99.7,
+    "current_account_gdp": -5.9,
+    "fdi_inflow_gdp": 3.1,
+    "exports_pct_gdp": 42.6,
+    "imports_pct_gdp": 57.1,
+    "trade_year": 2024,
+    "who_physicians": 32.6,
+    "who_nurses": 33.4,
+    "who_hospital_beds": 14.1,
+    "who_immunization": 90,
+    "who_maternal_mort": 31,
+    "who_ncd_mortality": 11.6,
+    "who_year": 2024
   },
   "JP": {
     "name": "Japan",
@@ -77500,7 +78686,20 @@
         2024,
         32.19
       ]
-    ]
+    ],
+    "trade_pct_gdp": 46.4,
+    "current_account_gdp": 4.8,
+    "fdi_inflow_gdp": 0.4,
+    "exports_pct_gdp": 22.8,
+    "imports_pct_gdp": 23.6,
+    "trade_year": 2024,
+    "who_physicians": 26.5,
+    "who_nurses": 124.4,
+    "who_hospital_beds": 125.9,
+    "who_immunization": 97,
+    "who_maternal_mort": 3,
+    "who_ncd_mortality": 8,
+    "who_year": 2024
   },
   "KZ": {
     "name": "Kazakhstan",
@@ -78231,7 +79430,20 @@
         2024,
         54.03
       ]
-    ]
+    ],
+    "trade_pct_gdp": 57.2,
+    "current_account_gdp": -2.7,
+    "fdi_inflow_gdp": 0.7,
+    "exports_pct_gdp": 31.6,
+    "imports_pct_gdp": 25.6,
+    "trade_year": 2024,
+    "who_physicians": 30.6,
+    "who_nurses": 66,
+    "who_hospital_beds": 65.4,
+    "who_immunization": 94,
+    "who_maternal_mort": 10,
+    "who_ncd_mortality": 21.2,
+    "who_year": 2024
   },
   "KE": {
     "name": "Kenya",
@@ -78974,7 +80186,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 40.2,
+    "current_account_gdp": -1.3,
+    "fdi_inflow_gdp": 0.4,
+    "exports_pct_gdp": 17.1,
+    "imports_pct_gdp": 23.1,
+    "trade_year": 2024,
+    "who_physicians": 2.6,
+    "who_nurses": 12.1,
+    "who_hospital_beds": 13.3,
+    "who_immunization": 87,
+    "who_maternal_mort": 379,
+    "who_ncd_mortality": 18,
+    "who_year": 2024
   },
   "KG": {
     "name": "Kyrgyz Republic",
@@ -79735,7 +80960,20 @@
         2024,
         14.11
       ]
-    ]
+    ],
+    "trade_pct_gdp": 127.7,
+    "current_account_gdp": -42.7,
+    "fdi_inflow_gdp": 4,
+    "exports_pct_gdp": 43.4,
+    "imports_pct_gdp": 84.2,
+    "trade_year": 2024,
+    "who_physicians": 15.4,
+    "who_nurses": 40.3,
+    "who_hospital_beds": 37.3,
+    "who_immunization": 92,
+    "who_maternal_mort": 42,
+    "who_ncd_mortality": 18.8,
+    "who_year": 2024
   },
   "KH": {
     "name": "Cambodia",
@@ -80402,7 +81640,20 @@
         2024,
         56.11
       ]
-    ]
+    ],
+    "trade_pct_gdp": 143.4,
+    "current_account_gdp": 0.5,
+    "fdi_inflow_gdp": 9.5,
+    "exports_pct_gdp": 71.4,
+    "imports_pct_gdp": 72.1,
+    "trade_year": 2024,
+    "who_physicians": 2.1,
+    "who_nurses": 10.1,
+    "who_hospital_beds": 7.3,
+    "who_immunization": 90,
+    "who_maternal_mort": 137,
+    "who_ncd_mortality": 22.6,
+    "who_year": 2024
   },
   "KI": {
     "name": "Kiribati",
@@ -81032,7 +82283,20 @@
     "health_spend_gdp": 10.945,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 16.391,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 107.6,
+    "current_account_gdp": -19.3,
+    "fdi_inflow_gdp": 2.6,
+    "exports_pct_gdp": 5.9,
+    "imports_pct_gdp": 101.7,
+    "trade_year": 2024,
+    "who_physicians": 4.7,
+    "who_nurses": 39,
+    "who_hospital_beds": 18.6,
+    "who_immunization": 94,
+    "who_maternal_mort": 80,
+    "who_ncd_mortality": 44.1,
+    "who_year": 2024
   },
   "KN": {
     "name": "St. Kitts and Nevis",
@@ -81666,7 +82930,16 @@
     "health_spend_gdp": 5.736,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.497,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "current_account_gdp": -15.1,
+    "fdi_inflow_gdp": 3.7,
+    "trade_year": 2024,
+    "who_physicians": 30.9,
+    "who_nurses": 65.8,
+    "who_hospital_beds": 39.8,
+    "who_immunization": 97,
+    "who_maternal_mort": 74,
+    "who_year": 2024
   },
   "KR": {
     "name": "Korea, Rep.",
@@ -82821,7 +84094,20 @@
         2024,
         30.51
       ]
-    ]
+    ],
+    "trade_pct_gdp": 84.6,
+    "current_account_gdp": 5.3,
+    "fdi_inflow_gdp": 0.8,
+    "exports_pct_gdp": 44.4,
+    "imports_pct_gdp": 40.3,
+    "trade_year": 2024,
+    "who_physicians": 26.6,
+    "who_nurses": 98,
+    "who_hospital_beds": 128.1,
+    "who_immunization": 97,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 6.9,
+    "who_year": 2024
   },
   "KW": {
     "name": "Kuwait",
@@ -83444,7 +84730,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 96.1,
+    "current_account_gdp": 29.1,
+    "fdi_inflow_gdp": 0.4,
+    "exports_pct_gdp": 57.7,
+    "imports_pct_gdp": 38.3,
+    "trade_year": 2024,
+    "who_physicians": 29.7,
+    "who_nurses": 67.1,
+    "who_hospital_beds": 23.3,
+    "who_immunization": 99,
+    "who_maternal_mort": 8,
+    "who_ncd_mortality": 9.3,
+    "who_year": 2024
   },
   "XJ": {
     "name": "Latin America & Caribbean (excluding high income)",
@@ -83553,7 +84852,12 @@
     "health_spend_gdp": 7.91,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.827,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 48.7,
+    "fdi_inflow_gdp": 2.7,
+    "exports_pct_gdp": 24.1,
+    "imports_pct_gdp": 25.1,
+    "trade_year": 2024
   },
   "LA": {
     "name": "Lao PDR",
@@ -84204,7 +85508,17 @@
         2023,
         23.29
       ]
-    ]
+    ],
+    "current_account_gdp": 3.2,
+    "fdi_inflow_gdp": 6,
+    "trade_year": 2024,
+    "who_physicians": 3.8,
+    "who_nurses": 13.6,
+    "who_hospital_beds": 17.1,
+    "who_immunization": 88,
+    "who_maternal_mort": 112,
+    "who_ncd_mortality": 26.5,
+    "who_year": 2024
   },
   "LB": {
     "name": "Lebanon",
@@ -85013,7 +86327,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 104.2,
+    "current_account_gdp": -28.1,
+    "fdi_inflow_gdp": 3.3,
+    "exports_pct_gdp": 30.6,
+    "imports_pct_gdp": 73.7,
+    "trade_year": 2023,
+    "who_physicians": 26.8,
+    "who_nurses": 19.2,
+    "who_hospital_beds": 27.3,
+    "who_maternal_mort": 15,
+    "who_ncd_mortality": 11.9,
+    "who_year": 2023
   },
   "LR": {
     "name": "Liberia",
@@ -85590,7 +86916,17 @@
         2023,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": 1.6,
+    "fdi_inflow_gdp": 9.9,
+    "trade_year": 2024,
+    "who_physicians": 1.8,
+    "who_nurses": 8.3,
+    "who_hospital_beds": 15.9,
+    "who_immunization": 82,
+    "who_maternal_mort": 628,
+    "who_ncd_mortality": 22,
+    "who_year": 2024
   },
   "LY": {
     "name": "Libya",
@@ -86173,7 +87509,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 128.8,
+    "current_account_gdp": 4.2,
+    "fdi_inflow_gdp": 1.8,
+    "exports_pct_gdp": 72,
+    "imports_pct_gdp": 56.8,
+    "trade_year": 2024,
+    "who_physicians": 20.4,
+    "who_nurses": 63.8,
+    "who_hospital_beds": 35,
+    "who_immunization": 85,
+    "who_maternal_mort": 59,
+    "who_ncd_mortality": 19.8,
+    "who_year": 2024
   },
   "LC": {
     "name": "St. Lucia",
@@ -86813,7 +88162,17 @@
     "health_spend_gdp": 4.73,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.847,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "current_account_gdp": -2.5,
+    "fdi_inflow_gdp": 7.3,
+    "trade_year": 2024,
+    "who_physicians": 42.3,
+    "who_nurses": 53.4,
+    "who_hospital_beds": 10.9,
+    "who_immunization": 87,
+    "who_maternal_mort": 44,
+    "who_ncd_mortality": 15.5,
+    "who_year": 2024
   },
   "ZJ": {
     "name": "Latin America & Caribbean ",
@@ -86922,7 +88281,12 @@
     "health_spend_gdp": 7.942,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.761,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 49.5,
+    "fdi_inflow_gdp": 2.8,
+    "exports_pct_gdp": 25.7,
+    "imports_pct_gdp": 25.9,
+    "trade_year": 2024
   },
   "XL": {
     "name": "Least developed countries: UN classification",
@@ -87031,7 +88395,12 @@
     "health_spend_gdp": 3.605,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.201,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 47.2,
+    "fdi_inflow_gdp": 2.5,
+    "exports_pct_gdp": 21,
+    "imports_pct_gdp": 28.7,
+    "trade_year": 2024
   },
   "XM": {
     "name": "Low income",
@@ -87140,7 +88509,12 @@
     "health_spend_gdp": 5.276,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.98,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 55.6,
+    "fdi_inflow_gdp": 4.8,
+    "exports_pct_gdp": 25.9,
+    "imports_pct_gdp": 39.2,
+    "trade_year": 2024
   },
   "LI": {
     "name": "Liechtenstein",
@@ -87610,7 +88984,9 @@
     "renewable_energy_pct": 56.9,
     "renewable_energy_pct_year": "2022",
     "health_spend_gdp": 5.715,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "fdi_inflow_gdp": -1303.1,
+    "trade_year": 2018
   },
   "LK": {
     "name": "Sri Lanka",
@@ -88423,7 +89799,20 @@
         2022,
         40.62
       ]
-    ]
+    ],
+    "trade_pct_gdp": 42.4,
+    "current_account_gdp": 1.2,
+    "fdi_inflow_gdp": 0.8,
+    "exports_pct_gdp": 19.9,
+    "imports_pct_gdp": 22.5,
+    "trade_year": 2024,
+    "who_physicians": 11.4,
+    "who_nurses": 22.6,
+    "who_hospital_beds": 39.3,
+    "who_immunization": 98,
+    "who_maternal_mort": 18,
+    "who_ncd_mortality": 13.9,
+    "who_year": 2024
   },
   "XN": {
     "name": "Lower middle income",
@@ -88532,7 +89921,12 @@
     "health_spend_gdp": 3.848,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.426,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 54.7,
+    "fdi_inflow_gdp": 1.8,
+    "exports_pct_gdp": 27.2,
+    "imports_pct_gdp": 30.7,
+    "trade_year": 2024
   },
   "XO": {
     "name": "Low & middle income",
@@ -88639,7 +90033,12 @@
     "health_spend_gdp": 5.617,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.515,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 48.7,
+    "fdi_inflow_gdp": 1.1,
+    "exports_pct_gdp": 24.5,
+    "imports_pct_gdp": 24.1,
+    "trade_year": 2024
   },
   "LS": {
     "name": "Lesotho",
@@ -89310,7 +90709,19 @@
     "whr_health": 0,
     "whr_freedom": 0.523,
     "whr_generosity": 0.082,
-    "whr_corruption": 0.085
+    "whr_corruption": 0.085,
+    "trade_pct_gdp": 141.5,
+    "current_account_gdp": 3.9,
+    "fdi_inflow_gdp": -0.6,
+    "exports_pct_gdp": 42.9,
+    "imports_pct_gdp": 98.6,
+    "trade_year": 2024,
+    "who_physicians": 1.8,
+    "who_nurses": 34,
+    "who_immunization": 82,
+    "who_maternal_mort": 478,
+    "who_ncd_mortality": 36.3,
+    "who_year": 2024
   },
   "V3": {
     "name": "Late-demographic dividend",
@@ -89417,7 +90828,12 @@
     "health_spend_gdp": 6.312,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.001,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 51.4,
+    "fdi_inflow_gdp": 0.8,
+    "exports_pct_gdp": 30.5,
+    "imports_pct_gdp": 26.6,
+    "trade_year": 2024
   },
   "LT": {
     "name": "Lithuania",
@@ -90167,7 +91583,20 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 143,
+    "current_account_gdp": 3.3,
+    "fdi_inflow_gdp": 5.5,
+    "exports_pct_gdp": 74.1,
+    "imports_pct_gdp": 68.9,
+    "trade_year": 2024,
+    "who_physicians": 46.5,
+    "who_nurses": 77.9,
+    "who_hospital_beds": 57.1,
+    "who_immunization": 93,
+    "who_maternal_mort": 8,
+    "who_ncd_mortality": 19.8,
+    "who_year": 2024
   },
   "LU": {
     "name": "Luxembourg",
@@ -91069,7 +92498,19 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 351.3,
+    "current_account_gdp": 4.4,
+    "fdi_inflow_gdp": 113.6,
+    "exports_pct_gdp": 191.5,
+    "imports_pct_gdp": 159.7,
+    "trade_year": 2024,
+    "who_physicians": 29.8,
+    "who_nurses": 137.2,
+    "who_hospital_beds": 39.5,
+    "who_maternal_mort": 12,
+    "who_ncd_mortality": 7.8,
+    "who_year": 2023
   },
   "LV": {
     "name": "Latvia",
@@ -91847,7 +93288,20 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 132.3,
+    "current_account_gdp": -1.6,
+    "fdi_inflow_gdp": 3.5,
+    "exports_pct_gdp": 65.3,
+    "imports_pct_gdp": 66.9,
+    "trade_year": 2024,
+    "who_physicians": 33.5,
+    "who_nurses": 43.6,
+    "who_hospital_beds": 49.5,
+    "who_immunization": 99,
+    "who_maternal_mort": 19,
+    "who_ncd_mortality": 22.7,
+    "who_year": 2024
   },
   "MO": {
     "name": "Macao SAR, China",
@@ -91964,7 +93418,13 @@
     "renewable_energy_pct": 11,
     "renewable_energy_pct_year": "2022",
     "education_spend_gdp": 3.502,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 142.1,
+    "current_account_gdp": 36.3,
+    "fdi_inflow_gdp": 3.8,
+    "exports_pct_gdp": 92.2,
+    "imports_pct_gdp": 49.9,
+    "trade_year": 2024
   },
   "MF": {
     "name": "St. Martin (French part)",
@@ -92902,7 +94362,20 @@
         2024,
         59.27
       ]
-    ]
+    ],
+    "trade_pct_gdp": 92.2,
+    "current_account_gdp": -1.2,
+    "fdi_inflow_gdp": 1,
+    "exports_pct_gdp": 42,
+    "imports_pct_gdp": 50.2,
+    "trade_year": 2024,
+    "who_physicians": 7.9,
+    "who_nurses": 7.2,
+    "who_hospital_beds": 7.3,
+    "who_immunization": 98,
+    "who_maternal_mort": 70,
+    "who_ncd_mortality": 22,
+    "who_year": 2024
   },
   "MC": {
     "name": "Monaco",
@@ -93019,7 +94492,10 @@
     "health_spend_gdp": 3.12,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.732,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "who_physicians": 86.1,
+    "who_maternal_mort": 5,
+    "who_year": 2023
   },
   "MD": {
     "name": "Moldova",
@@ -93804,7 +95280,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 88.7,
+    "current_account_gdp": -16.6,
+    "fdi_inflow_gdp": 2.5,
+    "exports_pct_gdp": 31.4,
+    "imports_pct_gdp": 57.3,
+    "trade_year": 2024,
+    "who_physicians": 39.3,
+    "who_nurses": 63.2,
+    "who_hospital_beds": 55.4,
+    "who_immunization": 94,
+    "who_maternal_mort": 19,
+    "who_ncd_mortality": 24.7,
+    "who_year": 2024
   },
   "M1": {
     "name": "Middle East (developing only)",
@@ -94583,7 +96072,19 @@
         2022,
         19.32
       ]
-    ]
+    ],
+    "trade_pct_gdp": 55,
+    "current_account_gdp": -5.4,
+    "fdi_inflow_gdp": 3.5,
+    "exports_pct_gdp": 23.3,
+    "imports_pct_gdp": 31.7,
+    "trade_year": 2024,
+    "who_physicians": 1,
+    "who_nurses": 2.7,
+    "who_immunization": 64,
+    "who_maternal_mort": 445,
+    "who_ncd_mortality": 25.9,
+    "who_year": 2024
   },
   "MV": {
     "name": "Maldives",
@@ -95177,7 +96678,20 @@
     "health_spend_gdp": 9.25,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.167,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 156.5,
+    "current_account_gdp": -18.7,
+    "fdi_inflow_gdp": 11.4,
+    "exports_pct_gdp": 78.2,
+    "imports_pct_gdp": 78.3,
+    "trade_year": 2024,
+    "who_physicians": 23,
+    "who_nurses": 59.6,
+    "who_hospital_beds": 45.6,
+    "who_immunization": 99,
+    "who_maternal_mort": 32,
+    "who_ncd_mortality": 9,
+    "who_year": 2024
   },
   "ZQ": {
     "name": "Middle East, North Africa, Afghanistan & Pakistan",
@@ -95286,7 +96800,12 @@
     "health_spend_gdp": 5.336,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.301,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 58.6,
+    "fdi_inflow_gdp": 3.8,
+    "exports_pct_gdp": 41.1,
+    "imports_pct_gdp": 37.4,
+    "trade_year": 2024
   },
   "MX": {
     "name": "Mexico",
@@ -96399,7 +97918,20 @@
         2024,
         3.49
       ]
-    ]
+    ],
+    "trade_pct_gdp": 74.6,
+    "current_account_gdp": -0.9,
+    "fdi_inflow_gdp": 2.4,
+    "exports_pct_gdp": 36.7,
+    "imports_pct_gdp": 37.9,
+    "trade_year": 2024,
+    "who_physicians": 27.5,
+    "who_nurses": 30.5,
+    "who_hospital_beds": 10.1,
+    "who_immunization": 89,
+    "who_maternal_mort": 42,
+    "who_ncd_mortality": 16.3,
+    "who_year": 2024
   },
   "MH": {
     "name": "Marshall Islands",
@@ -96869,7 +98401,18 @@
     "health_spend_gdp": 13.405,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 7.701,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 123.8,
+    "current_account_gdp": 29.2,
+    "fdi_inflow_gdp": 0.6,
+    "exports_pct_gdp": 42.1,
+    "imports_pct_gdp": 81.7,
+    "trade_year": 2024,
+    "who_physicians": 11.3,
+    "who_nurses": 48.1,
+    "who_immunization": 81,
+    "who_maternal_mort": 155,
+    "who_year": 2024
   },
   "XP": {
     "name": "Middle income",
@@ -96976,7 +98519,12 @@
     "health_spend_gdp": 5.62,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.515,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 48.6,
+    "fdi_inflow_gdp": 1.1,
+    "exports_pct_gdp": 24.5,
+    "imports_pct_gdp": 23.9,
+    "trade_year": 2024
   },
   "MK": {
     "name": "North Macedonia",
@@ -97733,7 +99281,20 @@
         2025,
         38.71
       ]
-    ]
+    ],
+    "trade_pct_gdp": 136.3,
+    "current_account_gdp": -2.1,
+    "fdi_inflow_gdp": 6.2,
+    "exports_pct_gdp": 61.7,
+    "imports_pct_gdp": 74.6,
+    "trade_year": 2024,
+    "who_physicians": 29.4,
+    "who_nurses": 55.1,
+    "who_hospital_beds": 47.4,
+    "who_immunization": 93,
+    "who_maternal_mort": 3,
+    "who_ncd_mortality": 19.6,
+    "who_year": 2024
   },
   "ML": {
     "name": "Mali",
@@ -98388,7 +99949,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 49.9,
+    "current_account_gdp": -6.5,
+    "fdi_inflow_gdp": 3.4,
+    "exports_pct_gdp": 22.6,
+    "imports_pct_gdp": 27.3,
+    "trade_year": 2024,
+    "who_physicians": 3.2,
+    "who_nurses": 3.5,
+    "who_hospital_beds": 2.5,
+    "who_immunization": 91,
+    "who_maternal_mort": 367,
+    "who_ncd_mortality": 23,
+    "who_year": 2024
   },
   "MT": {
     "name": "Malta",
@@ -99255,7 +100829,19 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 218.2,
+    "current_account_gdp": 7.1,
+    "fdi_inflow_gdp": 170.5,
+    "exports_pct_gdp": 118.5,
+    "imports_pct_gdp": 99.7,
+    "trade_year": 2024,
+    "who_physicians": 47.2,
+    "who_nurses": 82.6,
+    "who_hospital_beds": 40.9,
+    "who_maternal_mort": 8,
+    "who_ncd_mortality": 9.8,
+    "who_year": 2023
   },
   "MM": {
     "name": "Myanmar",
@@ -99862,7 +101448,17 @@
         2024,
         9.48
       ]
-    ]
+    ],
+    "current_account_gdp": 0.1,
+    "fdi_inflow_gdp": 1.5,
+    "trade_year": 2024,
+    "who_physicians": 7.6,
+    "who_nurses": 2,
+    "who_hospital_beds": 10.7,
+    "who_immunization": 79,
+    "who_maternal_mort": 185,
+    "who_ncd_mortality": 24,
+    "who_year": 2024
   },
   "XQ": {
     "name": "Middle East, North Africa, Afghanistan & Pakistan (excluding high income)",
@@ -99967,7 +101563,12 @@
     "renewable_energy_pct": 11.218,
     "renewable_energy_pct_year": "2020",
     "health_spend_gdp": 5.197,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "trade_pct_gdp": 55.9,
+    "fdi_inflow_gdp": 2.3,
+    "exports_pct_gdp": 24.5,
+    "imports_pct_gdp": 30.3,
+    "trade_year": 2024
   },
   "ME": {
     "name": "Montenegro",
@@ -100512,7 +102113,20 @@
         2025,
         24.24
       ]
-    ]
+    ],
+    "trade_pct_gdp": 109.9,
+    "current_account_gdp": -17,
+    "fdi_inflow_gdp": 7.2,
+    "exports_pct_gdp": 43.7,
+    "imports_pct_gdp": 66.2,
+    "trade_year": 2024,
+    "who_physicians": 27.9,
+    "who_nurses": 59.7,
+    "who_hospital_beds": 38.2,
+    "who_immunization": 85,
+    "who_maternal_mort": 6,
+    "who_ncd_mortality": 18,
+    "who_year": 2024
   },
   "MN": {
     "name": "Mongolia",
@@ -101269,7 +102883,20 @@
         2024,
         86.16
       ]
-    ]
+    ],
+    "trade_pct_gdp": 138.4,
+    "current_account_gdp": -10.4,
+    "fdi_inflow_gdp": 11.7,
+    "exports_pct_gdp": 68.7,
+    "imports_pct_gdp": 69.7,
+    "trade_year": 2024,
+    "who_physicians": 46,
+    "who_nurses": 47,
+    "who_hospital_beds": 85.8,
+    "who_immunization": 99,
+    "who_maternal_mort": 41,
+    "who_ncd_mortality": 26.3,
+    "who_year": 2024
   },
   "MP": {
     "name": "Northern Mariana Islands",
@@ -101360,7 +102987,11 @@
     "electricity_pct": 100,
     "electricity_pct_year": "2023",
     "renewable_energy_pct": 0.5,
-    "renewable_energy_pct_year": "2022"
+    "renewable_energy_pct_year": "2022",
+    "trade_pct_gdp": 93.2,
+    "exports_pct_gdp": 22.3,
+    "imports_pct_gdp": 70.9,
+    "trade_year": 2022
   },
   "MZ": {
     "name": "Mozambique",
@@ -102105,7 +103736,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 95.7,
+    "current_account_gdp": -11,
+    "fdi_inflow_gdp": 15.4,
+    "exports_pct_gdp": 42.8,
+    "imports_pct_gdp": 52.8,
+    "trade_year": 2024,
+    "who_physicians": 0.9,
+    "who_nurses": 7.6,
+    "who_hospital_beds": 7.4,
+    "who_immunization": 93,
+    "who_maternal_mort": 82,
+    "who_ncd_mortality": 26.6,
+    "who_year": 2024
   },
   "MR": {
     "name": "Mauritania",
@@ -102696,7 +104340,19 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 93.6,
+    "current_account_gdp": -9.5,
+    "fdi_inflow_gdp": 13.2,
+    "exports_pct_gdp": 41.4,
+    "imports_pct_gdp": 52.2,
+    "trade_year": 2024,
+    "who_physicians": 2.6,
+    "who_nurses": 16.1,
+    "who_immunization": 95,
+    "who_maternal_mort": 381,
+    "who_ncd_mortality": 18.7,
+    "who_year": 2024
   },
   "MU": {
     "name": "Mauritius",
@@ -103541,7 +105197,20 @@
         2023,
         33.64
       ]
-    ]
+    ],
+    "trade_pct_gdp": 145.4,
+    "current_account_gdp": -7,
+    "fdi_inflow_gdp": 4.6,
+    "exports_pct_gdp": 67.1,
+    "imports_pct_gdp": 78.3,
+    "trade_year": 2024,
+    "who_physicians": 30.1,
+    "who_nurses": 35,
+    "who_hospital_beds": 38,
+    "who_immunization": 98,
+    "who_maternal_mort": 66,
+    "who_ncd_mortality": 21.7,
+    "who_year": 2024
   },
   "MW": {
     "name": "Malawi",
@@ -104179,7 +105848,19 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 42.4,
+    "current_account_gdp": -18.8,
+    "fdi_inflow_gdp": 6,
+    "exports_pct_gdp": 11.2,
+    "imports_pct_gdp": 31.2,
+    "trade_year": 2024,
+    "who_physicians": 0.8,
+    "who_nurses": 5.8,
+    "who_immunization": 99,
+    "who_maternal_mort": 225,
+    "who_ncd_mortality": 24.9,
+    "who_year": 2024
   },
   "MY": {
     "name": "Malaysia",
@@ -105096,7 +106777,20 @@
         2024,
         43.05
       ]
-    ]
+    ],
+    "trade_pct_gdp": 137.4,
+    "current_account_gdp": 1.7,
+    "fdi_inflow_gdp": 3.7,
+    "exports_pct_gdp": 71.3,
+    "imports_pct_gdp": 66,
+    "trade_year": 2024,
+    "who_physicians": 22.7,
+    "who_nurses": 40.3,
+    "who_hospital_beds": 19.6,
+    "who_immunization": 90,
+    "who_maternal_mort": 26,
+    "who_ncd_mortality": 19.9,
+    "who_year": 2024
   },
   "XU": {
     "name": "North America",
@@ -105205,7 +106899,12 @@
     "health_spend_gdp": 16.288,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.88,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 28.8,
+    "fdi_inflow_gdp": 1.2,
+    "exports_pct_gdp": 12.7,
+    "imports_pct_gdp": 15.6,
+    "trade_year": 2024
   },
   "M2": {
     "name": "North Africa",
@@ -105899,7 +107598,19 @@
         2023,
         1.59
       ]
-    ]
+    ],
+    "trade_pct_gdp": 109.6,
+    "current_account_gdp": 0,
+    "fdi_inflow_gdp": 14.8,
+    "exports_pct_gdp": 41.6,
+    "imports_pct_gdp": 68,
+    "trade_year": 2024,
+    "who_physicians": 5.6,
+    "who_nurses": 38,
+    "who_immunization": 94,
+    "who_maternal_mort": 139,
+    "who_ncd_mortality": 23.1,
+    "who_year": 2024
   },
   "NC": {
     "name": "New Caledonia",
@@ -106000,7 +107711,12 @@
     "electricity_pct": 100,
     "electricity_pct_year": "2023",
     "renewable_energy_pct": 9.6,
-    "renewable_energy_pct_year": "2022"
+    "renewable_energy_pct_year": "2022",
+    "trade_pct_gdp": 40.4,
+    "fdi_inflow_gdp": 8.5,
+    "exports_pct_gdp": 11.7,
+    "imports_pct_gdp": 28.7,
+    "trade_year": 2024
   },
   "NE": {
     "name": "Niger",
@@ -106701,7 +108417,20 @@
         2023,
         22.5
       ]
-    ]
+    ],
+    "trade_pct_gdp": 50,
+    "current_account_gdp": -14,
+    "fdi_inflow_gdp": 1.8,
+    "exports_pct_gdp": 27.3,
+    "imports_pct_gdp": 22.7,
+    "trade_year": 2024,
+    "who_physicians": 0.4,
+    "who_nurses": 4.2,
+    "who_hospital_beds": 2.8,
+    "who_immunization": 93,
+    "who_maternal_mort": 350,
+    "who_ncd_mortality": 20.2,
+    "who_year": 2024
   },
   "NG": {
     "name": "Nigeria",
@@ -107422,7 +109151,16 @@
         2024,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": 6.8,
+    "fdi_inflow_gdp": 0.4,
+    "trade_year": 2024,
+    "who_physicians": 4.1,
+    "who_nurses": 11.5,
+    "who_immunization": 69,
+    "who_maternal_mort": 993,
+    "who_ncd_mortality": 17.7,
+    "who_year": 2024
   },
   "NI": {
     "name": "Nicaragua",
@@ -108283,7 +110021,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 98.5,
+    "current_account_gdp": 4.2,
+    "fdi_inflow_gdp": 6.9,
+    "exports_pct_gdp": 40.5,
+    "imports_pct_gdp": 58.1,
+    "trade_year": 2024,
+    "who_physicians": 9.1,
+    "who_nurses": 17,
+    "who_hospital_beds": 9.7,
+    "who_maternal_mort": 60,
+    "who_ncd_mortality": 12.6,
+    "who_year": 2023
   },
   "NL": {
     "name": "Netherlands",
@@ -109544,7 +111294,19 @@
         2025,
         7.07
       ]
-    ]
+    ],
+    "trade_pct_gdp": 153.8,
+    "current_account_gdp": 9.1,
+    "fdi_inflow_gdp": -1.4,
+    "exports_pct_gdp": 82.4,
+    "imports_pct_gdp": 71.4,
+    "trade_year": 2024,
+    "who_physicians": 38.7,
+    "who_nurses": 112.3,
+    "who_hospital_beds": 24.2,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 9.9,
+    "who_year": 2023
   },
   "NO": {
     "name": "Norway",
@@ -110806,7 +112568,19 @@
         2025,
         0.02
       ]
-    ]
+    ],
+    "trade_pct_gdp": 81.4,
+    "current_account_gdp": 14.8,
+    "fdi_inflow_gdp": 2.5,
+    "exports_pct_gdp": 47.5,
+    "imports_pct_gdp": 33.9,
+    "trade_year": 2024,
+    "who_physicians": 49.8,
+    "who_nurses": 160.4,
+    "who_hospital_beds": 33,
+    "who_maternal_mort": 1,
+    "who_ncd_mortality": 7.8,
+    "who_year": 2023
   },
   "NP": {
     "name": "Nepal",
@@ -111457,7 +113231,20 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 40.5,
+    "current_account_gdp": 3.9,
+    "fdi_inflow_gdp": 0.1,
+    "exports_pct_gdp": 7.6,
+    "imports_pct_gdp": 32.9,
+    "trade_year": 2024,
+    "who_physicians": 10.9,
+    "who_nurses": 41.6,
+    "who_hospital_beds": 5.4,
+    "who_immunization": 99,
+    "who_maternal_mort": 142,
+    "who_ncd_mortality": 19.4,
+    "who_year": 2024
   },
   "6X": {
     "name": "Non-resource rich Sub-Saharan Africa countries",
@@ -111830,7 +113617,18 @@
     "health_spend_gdp": 18.211,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.675,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 165.8,
+    "current_account_gdp": 6,
+    "fdi_inflow_gdp": -3.6,
+    "exports_pct_gdp": 55.3,
+    "imports_pct_gdp": 110.5,
+    "trade_year": 2024,
+    "who_physicians": 12.7,
+    "who_nurses": 73,
+    "who_immunization": 99,
+    "who_maternal_mort": 273,
+    "who_year": 2024
   },
   "6N": {
     "name": "IDA countries not classified as fragile situations, excluding Sub-Saharan Africa",
@@ -113051,7 +114849,19 @@
         2024,
         3.76
       ]
-    ]
+    ],
+    "trade_pct_gdp": 51.2,
+    "current_account_gdp": -4.7,
+    "fdi_inflow_gdp": 0.7,
+    "exports_pct_gdp": 24.8,
+    "imports_pct_gdp": 26.4,
+    "trade_year": 2024,
+    "who_physicians": 37.7,
+    "who_nurses": 131.2,
+    "who_hospital_beds": 25.1,
+    "who_maternal_mort": 7,
+    "who_ncd_mortality": 10.3,
+    "who_year": 2024
   },
   "OE": {
     "name": "OECD members",
@@ -113158,7 +114968,12 @@
     "health_spend_gdp": 12.724,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.992,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 57.2,
+    "fdi_inflow_gdp": 1.1,
+    "exports_pct_gdp": 28.4,
+    "imports_pct_gdp": 28.2,
+    "trade_year": 2024
   },
   "OM": {
     "name": "Oman",
@@ -113892,7 +115707,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 114.9,
+    "current_account_gdp": 2.9,
+    "fdi_inflow_gdp": 11.6,
+    "exports_pct_gdp": 66.1,
+    "imports_pct_gdp": 48.8,
+    "trade_year": 2024,
+    "who_physicians": 21.4,
+    "who_nurses": 45.9,
+    "who_hospital_beds": 9.9,
+    "who_immunization": 99,
+    "who_maternal_mort": 13,
+    "who_ncd_mortality": 14.6,
+    "who_year": 2024
   },
   "S4": {
     "name": "Other small states",
@@ -113999,7 +115827,12 @@
     "health_spend_gdp": 7.348,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.004,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 148,
+    "fdi_inflow_gdp": -2.8,
+    "exports_pct_gdp": 76.7,
+    "imports_pct_gdp": 75.5,
+    "trade_year": 2024
   },
   "PK": {
     "name": "Pakistan",
@@ -114896,7 +116729,20 @@
         2024,
         13.95
       ]
-    ]
+    ],
+    "trade_pct_gdp": 27.6,
+    "current_account_gdp": 0.1,
+    "fdi_inflow_gdp": 0.7,
+    "exports_pct_gdp": 10.4,
+    "imports_pct_gdp": 17.2,
+    "trade_year": 2024,
+    "who_physicians": 12.8,
+    "who_nurses": 5.2,
+    "who_hospital_beds": 6.3,
+    "who_immunization": 96,
+    "who_maternal_mort": 155,
+    "who_ncd_mortality": 25.5,
+    "who_year": 2024
   },
   "PA": {
     "name": "Panama",
@@ -115797,7 +117643,20 @@
         2023,
         3.57
       ]
-    ]
+    ],
+    "trade_pct_gdp": 83.7,
+    "current_account_gdp": 1.9,
+    "fdi_inflow_gdp": 3.7,
+    "exports_pct_gdp": 44.4,
+    "imports_pct_gdp": 39.3,
+    "trade_year": 2024,
+    "who_physicians": 16.3,
+    "who_nurses": 33.5,
+    "who_hospital_beds": 19.5,
+    "who_immunization": 99,
+    "who_maternal_mort": 37,
+    "who_ncd_mortality": 10.9,
+    "who_year": 2024
   },
   "PE": {
     "name": "Peru",
@@ -116654,7 +118513,20 @@
         2024,
         0.13
       ]
-    ]
+    ],
+    "trade_pct_gdp": 51.5,
+    "current_account_gdp": 2.2,
+    "fdi_inflow_gdp": 2.4,
+    "exports_pct_gdp": 28.5,
+    "imports_pct_gdp": 22.9,
+    "trade_year": 2024,
+    "who_physicians": 16.9,
+    "who_nurses": 27.4,
+    "who_hospital_beds": 15.6,
+    "who_immunization": 82,
+    "who_maternal_mort": 51,
+    "who_ncd_mortality": 12.3,
+    "who_year": 2024
   },
   "PH": {
     "name": "Philippines",
@@ -117563,7 +119435,20 @@
         2024,
         62.51
       ]
-    ]
+    ],
+    "trade_pct_gdp": 65.9,
+    "current_account_gdp": -4,
+    "fdi_inflow_gdp": 2,
+    "exports_pct_gdp": 25.8,
+    "imports_pct_gdp": 40.1,
+    "trade_year": 2024,
+    "who_physicians": 8.7,
+    "who_nurses": 52.9,
+    "who_hospital_beds": 9.7,
+    "who_immunization": 86,
+    "who_maternal_mort": 84,
+    "who_ncd_mortality": 31.9,
+    "who_year": 2024
   },
   "PW": {
     "name": "Palau",
@@ -118013,7 +119898,17 @@
     "health_spend_gdp": 10.855,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.526,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 106.7,
+    "current_account_gdp": -48.5,
+    "fdi_inflow_gdp": 28.9,
+    "exports_pct_gdp": 26.3,
+    "imports_pct_gdp": 80.4,
+    "trade_year": 2023,
+    "who_physicians": 18.1,
+    "who_nurses": 66.1,
+    "who_maternal_mort": 89,
+    "who_year": 2023
   },
   "PG": {
     "name": "Papua New Guinea",
@@ -118749,7 +120644,17 @@
         2023,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": 15,
+    "fdi_inflow_gdp": -0.6,
+    "trade_year": 2024,
+    "who_physicians": 0.5,
+    "who_nurses": 8.1,
+    "who_hospital_beds": 6.2,
+    "who_immunization": 52,
+    "who_maternal_mort": 189,
+    "who_ncd_mortality": 28.5,
+    "who_year": 2024
   },
   "PL": {
     "name": "Poland",
@@ -119845,7 +121750,20 @@
         2025,
         50.71
       ]
-    ]
+    ],
+    "trade_pct_gdp": 100.4,
+    "current_account_gdp": 0.3,
+    "fdi_inflow_gdp": 2.2,
+    "exports_pct_gdp": 52.2,
+    "imports_pct_gdp": 48.2,
+    "trade_year": 2024,
+    "who_physicians": 36.5,
+    "who_nurses": 63.1,
+    "who_hospital_beds": 60.4,
+    "who_immunization": 91,
+    "who_maternal_mort": 2,
+    "who_ncd_mortality": 17,
+    "who_year": 2024
   },
   "V1": {
     "name": "Pre-demographic dividend",
@@ -119952,7 +121870,11 @@
     "health_spend_gdp": 4.471,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.244,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "fdi_inflow_gdp": 1.6,
+    "exports_pct_gdp": 29.8,
+    "imports_pct_gdp": 30.6,
+    "trade_year": 2024
   },
   "PR": {
     "name": "Puerto Rico (US)",
@@ -120069,7 +121991,14 @@
     "renewable_energy_pct": 2.5,
     "renewable_energy_pct_year": "2022",
     "education_spend_gdp": 4.271,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "trade_pct_gdp": 94.6,
+    "exports_pct_gdp": 51.9,
+    "imports_pct_gdp": 42.7,
+    "trade_year": 2024,
+    "who_maternal_mort": 11,
+    "who_ncd_mortality": 10.1,
+    "who_year": 2023
   },
   "KP": {
     "name": "Korea, Dem. People's Rep.",
@@ -120238,7 +122167,14 @@
         2022,
         34.77
       ]
-    ]
+    ],
+    "who_physicians": 31,
+    "who_nurses": 44.5,
+    "who_hospital_beds": 128,
+    "who_immunization": 99,
+    "who_maternal_mort": 67,
+    "who_ncd_mortality": 23.7,
+    "who_year": 2024
   },
   "PT": {
     "name": "Portugal",
@@ -121436,7 +123372,20 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 89.7,
+    "current_account_gdp": 2.1,
+    "fdi_inflow_gdp": 4.3,
+    "exports_pct_gdp": 45.8,
+    "imports_pct_gdp": 43.9,
+    "trade_year": 2024,
+    "who_physicians": 60.2,
+    "who_nurses": 80.1,
+    "who_hospital_beds": 34.8,
+    "who_immunization": 32,
+    "who_maternal_mort": 15,
+    "who_ncd_mortality": 10.5,
+    "who_year": 2023
   },
   "PY": {
     "name": "Paraguay",
@@ -122397,7 +124346,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 76.8,
+    "current_account_gdp": -3.4,
+    "fdi_inflow_gdp": 2.5,
+    "exports_pct_gdp": 37.2,
+    "imports_pct_gdp": 39.6,
+    "trade_year": 2024,
+    "who_physicians": 38.9,
+    "who_nurses": 94.1,
+    "who_hospital_beds": 10.4,
+    "who_immunization": 79,
+    "who_maternal_mort": 58,
+    "who_ncd_mortality": 16.1,
+    "who_year": 2024
   },
   "PS": {
     "name": "West Bank and Gaza",
@@ -122632,7 +124594,18 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 81.3,
+    "current_account_gdp": -21.1,
+    "fdi_inflow_gdp": 1.2,
+    "exports_pct_gdp": 21,
+    "imports_pct_gdp": 60.3,
+    "trade_year": 2024,
+    "who_hospital_beds": 13,
+    "who_immunization": 87,
+    "who_maternal_mort": 16,
+    "who_ncd_mortality": 18.3,
+    "who_year": 2024
   },
   "S2": {
     "name": "Pacific island small states",
@@ -122735,7 +124708,9 @@
     "renewable_energy_pct": 29.426,
     "renewable_energy_pct_year": "2020",
     "health_spend_gdp": 5.681,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "fdi_inflow_gdp": 2.6,
+    "trade_year": 2024
   },
   "V4": {
     "name": "Post-demographic dividend",
@@ -122840,7 +124815,12 @@
     "health_spend_gdp": 13.262,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.992,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 59.3,
+    "fdi_inflow_gdp": 1.5,
+    "exports_pct_gdp": 29,
+    "imports_pct_gdp": 29,
+    "trade_year": 2024
   },
   "PF": {
     "name": "French Polynesia",
@@ -122941,7 +124921,12 @@
     "electricity_pct": 100,
     "electricity_pct_year": "2023",
     "renewable_energy_pct": 7,
-    "renewable_energy_pct_year": "2022"
+    "renewable_energy_pct_year": "2022",
+    "trade_pct_gdp": 64.5,
+    "fdi_inflow_gdp": -0.2,
+    "exports_pct_gdp": 18.3,
+    "imports_pct_gdp": 46.1,
+    "trade_year": 2024
   },
   "QA": {
     "name": "Qatar",
@@ -123673,7 +125658,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 100.2,
+    "current_account_gdp": 17.3,
+    "fdi_inflow_gdp": 0.2,
+    "exports_pct_gdp": 68.6,
+    "imports_pct_gdp": 31.6,
+    "trade_year": 2024,
+    "who_physicians": 31.4,
+    "who_nurses": 86.1,
+    "who_hospital_beds": 12.5,
+    "who_immunization": 99,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 12.1,
+    "who_year": 2024
   },
   "RO": {
     "name": "Romania",
@@ -124551,7 +126549,20 @@
         2025,
         13.41
       ]
-    ]
+    ],
+    "trade_pct_gdp": 77.2,
+    "current_account_gdp": -8.2,
+    "fdi_inflow_gdp": 1.9,
+    "exports_pct_gdp": 35.6,
+    "imports_pct_gdp": 41.6,
+    "trade_year": 2024,
+    "who_physicians": 37.1,
+    "who_nurses": 83.3,
+    "who_hospital_beds": 72.3,
+    "who_immunization": 94,
+    "who_maternal_mort": 12,
+    "who_ncd_mortality": 21.5,
+    "who_year": 2024
   },
   "R6": {
     "name": "Resource rich Sub-Saharan Africa countries",
@@ -125345,7 +127356,20 @@
         2024,
         17.79
       ]
-    ]
+    ],
+    "trade_pct_gdp": 39.5,
+    "current_account_gdp": 2.9,
+    "fdi_inflow_gdp": -0.4,
+    "exports_pct_gdp": 21.9,
+    "imports_pct_gdp": 17.6,
+    "trade_year": 2024,
+    "who_physicians": 51.1,
+    "who_nurses": 70.4,
+    "who_hospital_beds": 68.1,
+    "who_immunization": 96,
+    "who_maternal_mort": 9,
+    "who_ncd_mortality": 22.4,
+    "who_year": 2024
   },
   "RW": {
     "name": "Rwanda",
@@ -126049,7 +128073,20 @@
         2023,
         4.72
       ]
-    ]
+    ],
+    "trade_pct_gdp": 70,
+    "current_account_gdp": -12.7,
+    "fdi_inflow_gdp": 4,
+    "exports_pct_gdp": 30.8,
+    "imports_pct_gdp": 39.1,
+    "trade_year": 2024,
+    "who_physicians": 1.8,
+    "who_nurses": 12.8,
+    "who_hospital_beds": 7.5,
+    "who_immunization": 99,
+    "who_maternal_mort": 229,
+    "who_ncd_mortality": 20,
+    "who_year": 2024
   },
   "8S": {
     "name": "South Asia",
@@ -126158,7 +128195,12 @@
     "health_spend_gdp": 3.262,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.861,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "trade_pct_gdp": 43.3,
+    "fdi_inflow_gdp": 0.7,
+    "exports_pct_gdp": 20,
+    "imports_pct_gdp": 22.9,
+    "trade_year": 2024
   },
   "SA": {
     "name": "Saudi Arabia",
@@ -127001,7 +129043,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 54.7,
+    "current_account_gdp": -1.3,
+    "fdi_inflow_gdp": 1.7,
+    "exports_pct_gdp": 29.1,
+    "imports_pct_gdp": 25.6,
+    "trade_year": 2024,
+    "who_physicians": 34.1,
+    "who_nurses": 65.6,
+    "who_hospital_beds": 24.1,
+    "who_immunization": 97,
+    "who_maternal_mort": 7,
+    "who_ncd_mortality": 13.6,
+    "who_year": 2024
   },
   "SD": {
     "name": "Sudan",
@@ -127907,7 +129962,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 2,
+    "current_account_gdp": -8.6,
+    "fdi_inflow_gdp": 1.4,
+    "exports_pct_gdp": 0.7,
+    "imports_pct_gdp": 1.3,
+    "trade_year": 2024,
+    "who_physicians": 2.5,
+    "who_nurses": 10.8,
+    "who_hospital_beds": 6.6,
+    "who_immunization": 49,
+    "who_maternal_mort": 256,
+    "who_ncd_mortality": 21.2,
+    "who_year": 2024
   },
   "SN": {
     "name": "Senegal",
@@ -128608,7 +130676,20 @@
         2023,
         5.84
       ]
-    ]
+    ],
+    "trade_pct_gdp": 68.1,
+    "current_account_gdp": -19.8,
+    "fdi_inflow_gdp": 6.1,
+    "exports_pct_gdp": 24.7,
+    "imports_pct_gdp": 43.4,
+    "trade_year": 2024,
+    "who_physicians": 1.2,
+    "who_nurses": 4.3,
+    "who_hospital_beds": 7.1,
+    "who_immunization": 92,
+    "who_maternal_mort": 237,
+    "who_ncd_mortality": 21.4,
+    "who_year": 2024
   },
   "SG": {
     "name": "Singapore",
@@ -129543,7 +131624,20 @@
         2024,
         0.96
       ]
-    ]
+    ],
+    "trade_pct_gdp": 322.4,
+    "current_account_gdp": 17.5,
+    "fdi_inflow_gdp": 27.8,
+    "exports_pct_gdp": 178.8,
+    "imports_pct_gdp": 143.6,
+    "trade_year": 2024,
+    "who_physicians": 26.7,
+    "who_nurses": 70.9,
+    "who_hospital_beds": 28.1,
+    "who_immunization": 95,
+    "who_maternal_mort": 6,
+    "who_ncd_mortality": 10.3,
+    "who_year": 2024
   },
   "SB": {
     "name": "Solomon Islands",
@@ -130176,7 +132270,19 @@
     "health_spend_gdp": 5.364,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 8.293,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 111.4,
+    "current_account_gdp": -4.2,
+    "fdi_inflow_gdp": 2.1,
+    "exports_pct_gdp": 40.6,
+    "imports_pct_gdp": 70.8,
+    "trade_year": 2024,
+    "who_physicians": 2.9,
+    "who_nurses": 21.3,
+    "who_immunization": 83,
+    "who_maternal_mort": 123,
+    "who_ncd_mortality": 40.6,
+    "who_year": 2024
   },
   "SL": {
     "name": "Sierra Leone",
@@ -130827,7 +132933,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 40.5,
+    "current_account_gdp": -9.5,
+    "fdi_inflow_gdp": 1.7,
+    "exports_pct_gdp": 17.3,
+    "imports_pct_gdp": 23.3,
+    "trade_year": 2024,
+    "who_physicians": 1.3,
+    "who_nurses": 11.6,
+    "who_immunization": 97,
+    "who_maternal_mort": 354,
+    "who_ncd_mortality": 23.9,
+    "who_year": 2024
   },
   "SV": {
     "name": "El Salvador",
@@ -131728,7 +133846,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 84.7,
+    "current_account_gdp": -1.8,
+    "fdi_inflow_gdp": 2.6,
+    "exports_pct_gdp": 32.8,
+    "imports_pct_gdp": 51.9,
+    "trade_year": 2024,
+    "who_physicians": 16.2,
+    "who_nurses": 21.8,
+    "who_hospital_beds": 12.1,
+    "who_immunization": 99,
+    "who_maternal_mort": 39,
+    "who_ncd_mortality": 12.6,
+    "who_year": 2024
   },
   "SM": {
     "name": "San Marino",
@@ -132258,7 +134389,17 @@
     "health_spend_gdp": 6.608,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.898,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 341,
+    "current_account_gdp": 22,
+    "fdi_inflow_gdp": -0.9,
+    "exports_pct_gdp": 186,
+    "imports_pct_gdp": 155,
+    "trade_year": 2023,
+    "who_physicians": 44,
+    "who_nurses": 97,
+    "who_maternal_mort": 8,
+    "who_year": 2024
   },
   "SO": {
     "name": "Somalia, Fed. Rep.",
@@ -132612,7 +134753,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 130.3,
+    "fdi_inflow_gdp": 6.4,
+    "exports_pct_gdp": 31.2,
+    "imports_pct_gdp": 99.1,
+    "trade_year": 2024,
+    "who_physicians": 0.7,
+    "who_nurses": 3.2,
+    "who_hospital_beds": 8.7,
+    "who_immunization": 74,
+    "who_maternal_mort": 563,
+    "who_ncd_mortality": 27.6,
+    "who_year": 2024
   },
   "RS": {
     "name": "Serbia",
@@ -133333,7 +135486,20 @@
         2025,
         64.76
       ]
-    ]
+    ],
+    "trade_pct_gdp": 111.7,
+    "current_account_gdp": -4.6,
+    "fdi_inflow_gdp": 6.2,
+    "exports_pct_gdp": 53.6,
+    "imports_pct_gdp": 58.1,
+    "trade_year": 2024,
+    "who_physicians": 32.1,
+    "who_nurses": 70.2,
+    "who_hospital_beds": 57.8,
+    "who_immunization": 98,
+    "who_maternal_mort": 11,
+    "who_ncd_mortality": 20.7,
+    "who_year": 2024
   },
   "ZF": {
     "name": "Sub-Saharan Africa (excluding high income)",
@@ -133442,7 +135608,12 @@
     "health_spend_gdp": 5.065,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.299,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 58,
+    "fdi_inflow_gdp": 2.2,
+    "exports_pct_gdp": 30.1,
+    "imports_pct_gdp": 30.2,
+    "trade_year": 2024
   },
   "SS": {
     "name": "South Sudan",
@@ -133790,7 +135961,15 @@
         2023,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": 7.9,
+    "trade_year": 2023,
+    "who_physicians": 1.5,
+    "who_nurses": 7.1,
+    "who_immunization": 72,
+    "who_maternal_mort": 692,
+    "who_ncd_mortality": 22.4,
+    "who_year": 2024
   },
   "ZG": {
     "name": "Sub-Saharan Africa ",
@@ -133899,7 +136078,12 @@
     "health_spend_gdp": 4.918,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.259,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 56,
+    "fdi_inflow_gdp": 2.3,
+    "exports_pct_gdp": 28.3,
+    "imports_pct_gdp": 28.8,
+    "trade_year": 2024
   },
   "S1": {
     "name": "Small states",
@@ -134008,7 +136192,12 @@
     "health_spend_gdp": 6.768,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.786,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 141.3,
+    "fdi_inflow_gdp": 1.4,
+    "exports_pct_gdp": 74.9,
+    "imports_pct_gdp": 71.6,
+    "trade_year": 2024
   },
   "ST": {
     "name": "Sao Tome and Principe",
@@ -134702,7 +136891,17 @@
     "health_spend_gdp": 5.773,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.029,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "current_account_gdp": 5,
+    "fdi_inflow_gdp": -2,
+    "trade_year": 2024,
+    "who_physicians": 4.6,
+    "who_nurses": 21.6,
+    "who_hospital_beds": 29.1,
+    "who_immunization": 80,
+    "who_maternal_mort": 75,
+    "who_ncd_mortality": 19.5,
+    "who_year": 2024
   },
   "SR": {
     "name": "Suriname",
@@ -135562,7 +137761,16 @@
         2023,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": 0.2,
+    "fdi_inflow_gdp": -0.9,
+    "trade_year": 2024,
+    "who_physicians": 13.1,
+    "who_nurses": 18.4,
+    "who_hospital_beds": 28.7,
+    "who_maternal_mort": 84,
+    "who_ncd_mortality": 18.7,
+    "who_year": 2024
   },
   "SK": {
     "name": "Slovak Republic",
@@ -136356,7 +138564,20 @@
         2025,
         1.06
       ]
-    ]
+    ],
+    "trade_pct_gdp": 171.2,
+    "current_account_gdp": -4.6,
+    "fdi_inflow_gdp": 3.6,
+    "exports_pct_gdp": 85.5,
+    "imports_pct_gdp": 85.7,
+    "trade_year": 2024,
+    "who_physicians": 37.6,
+    "who_nurses": 59.7,
+    "who_hospital_beds": 55.7,
+    "who_immunization": 0,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 16.6,
+    "who_year": 2024
   },
   "SI": {
     "name": "Slovenia",
@@ -137158,7 +139379,19 @@
         2025,
         14.65
       ]
-    ]
+    ],
+    "trade_pct_gdp": 155.7,
+    "current_account_gdp": 4.6,
+    "fdi_inflow_gdp": 2.6,
+    "exports_pct_gdp": 80.9,
+    "imports_pct_gdp": 74.7,
+    "trade_year": 2024,
+    "who_physicians": 35.1,
+    "who_nurses": 106.8,
+    "who_hospital_beds": 41.1,
+    "who_maternal_mort": 3,
+    "who_ncd_mortality": 11.6,
+    "who_year": 2023
   },
   "SE": {
     "name": "Sweden",
@@ -138371,7 +140604,20 @@
         2025,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 105.9,
+    "current_account_gdp": 5.9,
+    "fdi_inflow_gdp": 4.5,
+    "exports_pct_gdp": 54.3,
+    "imports_pct_gdp": 51.6,
+    "trade_year": 2024,
+    "who_physicians": 44.7,
+    "who_nurses": 117.4,
+    "who_hospital_beds": 19,
+    "who_immunization": 0,
+    "who_maternal_mort": 4,
+    "who_ncd_mortality": 7.9,
+    "who_year": 2024
   },
   "SZ": {
     "name": "Eswatini",
@@ -139134,7 +141380,19 @@
         2023,
         3.57
       ]
-    ]
+    ],
+    "trade_pct_gdp": 107.5,
+    "current_account_gdp": 1.6,
+    "fdi_inflow_gdp": 1.6,
+    "exports_pct_gdp": 53.8,
+    "imports_pct_gdp": 53.7,
+    "trade_year": 2024,
+    "who_physicians": 5.6,
+    "who_nurses": 42.6,
+    "who_immunization": 86,
+    "who_maternal_mort": 118,
+    "who_ncd_mortality": 32.3,
+    "who_year": 2024
   },
   "SX": {
     "name": "Sint Maarten (Dutch part)",
@@ -139235,7 +141493,10 @@
     "renewable_energy_pct": 0,
     "renewable_energy_pct_year": "2022",
     "education_spend_gdp": 3.924,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "current_account_gdp": -6.9,
+    "fdi_inflow_gdp": 2.1,
+    "trade_year": 2024
   },
   "A4": {
     "name": "Sub-Saharan Africa excluding South Africa",
@@ -140020,7 +142281,20 @@
     "health_spend_gdp": 4.482,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.454,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 188.4,
+    "current_account_gdp": -8.1,
+    "fdi_inflow_gdp": 10.4,
+    "exports_pct_gdp": 85.2,
+    "imports_pct_gdp": 103.2,
+    "trade_year": 2024,
+    "who_physicians": 16.3,
+    "who_nurses": 62,
+    "who_hospital_beds": 26.3,
+    "who_immunization": 99,
+    "who_maternal_mort": 42,
+    "who_ncd_mortality": 15.6,
+    "who_year": 2024
   },
   "SY": {
     "name": "Syrian Arab Republic",
@@ -140606,7 +142880,18 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 35.6,
+    "exports_pct_gdp": 6.8,
+    "imports_pct_gdp": 28.8,
+    "trade_year": 2022,
+    "who_physicians": 16.3,
+    "who_nurses": 14.3,
+    "who_hospital_beds": 14.3,
+    "who_immunization": 84,
+    "who_maternal_mort": 20,
+    "who_ncd_mortality": 21.3,
+    "who_year": 2024
   },
   "TC": {
     "name": "Turks and Caicos Islands",
@@ -140709,7 +142994,10 @@
     "renewable_energy_pct": 0.8,
     "renewable_energy_pct_year": "2022",
     "education_spend_gdp": 2.95,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "current_account_gdp": 13.1,
+    "fdi_inflow_gdp": 2.5,
+    "trade_year": 2024
   },
   "TD": {
     "name": "Chad",
@@ -141384,7 +143672,19 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 47.9,
+    "fdi_inflow_gdp": 5.2,
+    "exports_pct_gdp": 29.8,
+    "imports_pct_gdp": 18.1,
+    "trade_year": 2024,
+    "who_physicians": 0.8,
+    "who_nurses": 3.6,
+    "who_hospital_beds": 1.5,
+    "who_immunization": 92,
+    "who_maternal_mort": 748,
+    "who_ncd_mortality": 23.4,
+    "who_year": 2024
   },
   "T4": {
     "name": "East Asia & Pacific (IDA & IBRD countries)",
@@ -141493,7 +143793,12 @@
     "health_spend_gdp": 5.609,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.018,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 46,
+    "fdi_inflow_gdp": 0.5,
+    "exports_pct_gdp": 24.2,
+    "imports_pct_gdp": 21.7,
+    "trade_year": 2024
   },
   "T7": {
     "name": "Europe & Central Asia (IDA & IBRD countries)",
@@ -141602,7 +143907,12 @@
     "health_spend_gdp": 6.218,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.937,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 60.4,
+    "fdi_inflow_gdp": 1.1,
+    "exports_pct_gdp": 32.3,
+    "imports_pct_gdp": 31.5,
+    "trade_year": 2024
   },
   "TG": {
     "name": "Togo",
@@ -142281,7 +144591,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 61.6,
+    "current_account_gdp": -0.3,
+    "fdi_inflow_gdp": 0.8,
+    "exports_pct_gdp": 25,
+    "imports_pct_gdp": 36.6,
+    "trade_year": 2024,
+    "who_physicians": 0.6,
+    "who_nurses": 4.1,
+    "who_hospital_beds": 3.3,
+    "who_immunization": 96,
+    "who_maternal_mort": 349,
+    "who_ncd_mortality": 25.4,
+    "who_year": 2024
   },
   "TH": {
     "name": "Thailand",
@@ -143134,7 +145457,20 @@
         2024,
         16.67
       ]
-    ]
+    ],
+    "trade_pct_gdp": 136.7,
+    "current_account_gdp": 2.2,
+    "fdi_inflow_gdp": 2.7,
+    "exports_pct_gdp": 70,
+    "imports_pct_gdp": 66.7,
+    "trade_year": 2024,
+    "who_physicians": 5.9,
+    "who_nurses": 35.7,
+    "who_hospital_beds": 23.9,
+    "who_immunization": 99,
+    "who_maternal_mort": 34,
+    "who_ncd_mortality": 14.5,
+    "who_year": 2024
   },
   "TJ": {
     "name": "Tajikistan",
@@ -143817,7 +146153,20 @@
         2024,
         7.06
       ]
-    ]
+    ],
+    "trade_pct_gdp": 65.6,
+    "current_account_gdp": 6.2,
+    "fdi_inflow_gdp": 2.1,
+    "exports_pct_gdp": 17.2,
+    "imports_pct_gdp": 48.4,
+    "trade_year": 2024,
+    "who_physicians": 18.7,
+    "who_nurses": 64.5,
+    "who_hospital_beds": 40.4,
+    "who_immunization": 99,
+    "who_maternal_mort": 14,
+    "who_ncd_mortality": 18.1,
+    "who_year": 2024
   },
   "TM": {
     "name": "Turkmenistan",
@@ -144439,7 +146788,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 28.7,
+    "fdi_inflow_gdp": 3.2,
+    "exports_pct_gdp": 17.6,
+    "imports_pct_gdp": 11.2,
+    "trade_year": 2024,
+    "who_physicians": 19,
+    "who_nurses": 34.7,
+    "who_hospital_beds": 36,
+    "who_immunization": 98,
+    "who_maternal_mort": 5,
+    "who_ncd_mortality": 25.7,
+    "who_year": 2024
   },
   "T2": {
     "name": "Latin America & the Caribbean (IDA & IBRD countries)",
@@ -144548,7 +146909,12 @@
     "health_spend_gdp": 7.946,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.584,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 47.7,
+    "fdi_inflow_gdp": 2.8,
+    "exports_pct_gdp": 25.5,
+    "imports_pct_gdp": 25.8,
+    "trade_year": 2024
   },
   "TL": {
     "name": "Timor-Leste",
@@ -145088,7 +147454,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 95.4,
+    "current_account_gdp": -31.5,
+    "fdi_inflow_gdp": 11.6,
+    "exports_pct_gdp": 10.6,
+    "imports_pct_gdp": 84.9,
+    "trade_year": 2024,
+    "who_physicians": 7.7,
+    "who_nurses": 15.2,
+    "who_hospital_beds": 3.8,
+    "who_immunization": 90,
+    "who_maternal_mort": 192,
+    "who_ncd_mortality": 20.1,
+    "who_year": 2024
   },
   "T3": {
     "name": "Middle East, North Africa, Afghanistan & Pakistan (IDA & IBRD)",
@@ -145195,7 +147574,12 @@
     "health_spend_gdp": 5.148,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.515,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 55.6,
+    "fdi_inflow_gdp": 2.4,
+    "exports_pct_gdp": 24.6,
+    "imports_pct_gdp": 30.1,
+    "trade_year": 2024
   },
   "TO": {
     "name": "Tonga",
@@ -145741,7 +148125,19 @@
     "health_spend_gdp": 7.36,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.31,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "trade_pct_gdp": 79.6,
+    "current_account_gdp": -6.7,
+    "fdi_inflow_gdp": 0.4,
+    "exports_pct_gdp": 14.7,
+    "imports_pct_gdp": 64.9,
+    "trade_year": 2024,
+    "who_physicians": 10.1,
+    "who_nurses": 42,
+    "who_immunization": 99,
+    "who_maternal_mort": 67,
+    "who_ncd_mortality": 26.9,
+    "who_year": 2024
   },
   "T5": {
     "name": "South Asia (IDA & IBRD)",
@@ -145850,7 +148246,12 @@
     "health_spend_gdp": 3.262,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.861,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "trade_pct_gdp": 43.3,
+    "fdi_inflow_gdp": 0.7,
+    "exports_pct_gdp": 20,
+    "imports_pct_gdp": 22.9,
+    "trade_year": 2024
   },
   "T6": {
     "name": "Sub-Saharan Africa (IDA & IBRD countries)",
@@ -145959,7 +148360,12 @@
     "health_spend_gdp": 4.918,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.259,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 56,
+    "fdi_inflow_gdp": 2.3,
+    "exports_pct_gdp": 28.3,
+    "imports_pct_gdp": 28.8,
+    "trade_year": 2024
   },
   "TT": {
     "name": "Trinidad and Tobago",
@@ -146848,7 +149254,16 @@
         2023,
         0
       ]
-    ]
+    ],
+    "current_account_gdp": 2.5,
+    "fdi_inflow_gdp": -1.8,
+    "trade_year": 2024,
+    "who_physicians": 41.6,
+    "who_nurses": 41.1,
+    "who_hospital_beds": 23.7,
+    "who_maternal_mort": 54,
+    "who_ncd_mortality": 20.3,
+    "who_year": 2023
   },
   "TN": {
     "name": "Tunisia",
@@ -147725,7 +150140,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 106.3,
+    "current_account_gdp": -1.5,
+    "fdi_inflow_gdp": 1.5,
+    "exports_pct_gdp": 50,
+    "imports_pct_gdp": 56.3,
+    "trade_year": 2024,
+    "who_physicians": 12.4,
+    "who_nurses": 19.2,
+    "who_hospital_beds": 18.2,
+    "who_immunization": 98,
+    "who_maternal_mort": 36,
+    "who_ncd_mortality": 13,
+    "who_year": 2024
   },
   "TR": {
     "name": "Turkiye",
@@ -148586,7 +151014,20 @@
         2025,
         34.31
       ]
-    ]
+    ],
+    "trade_pct_gdp": 54.6,
+    "current_account_gdp": -0.7,
+    "fdi_inflow_gdp": 0.9,
+    "exports_pct_gdp": 27.6,
+    "imports_pct_gdp": 27,
+    "trade_year": 2024,
+    "who_physicians": 23.4,
+    "who_nurses": 35.3,
+    "who_hospital_beds": 30.5,
+    "who_immunization": 96,
+    "who_maternal_mort": 15,
+    "who_ncd_mortality": 15.4,
+    "who_year": 2024
   },
   "TV": {
     "name": "Tuvalu",
@@ -149002,7 +151443,15 @@
     "health_spend_gdp": 27.09,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 12.846,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "current_account_gdp": 4.6,
+    "fdi_inflow_gdp": 0.3,
+    "trade_year": 2023,
+    "who_physicians": 17.7,
+    "who_nurses": 41.7,
+    "who_immunization": 99,
+    "who_maternal_mort": 170,
+    "who_year": 2024
   },
   "TZ": {
     "name": "Tanzania",
@@ -149695,7 +152144,20 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 41.5,
+    "current_account_gdp": -3,
+    "fdi_inflow_gdp": 2.2,
+    "exports_pct_gdp": 19.8,
+    "imports_pct_gdp": 21.7,
+    "trade_year": 2024,
+    "who_physicians": 1.8,
+    "who_nurses": 2.6,
+    "who_hospital_beds": 8.4,
+    "who_immunization": 89,
+    "who_maternal_mort": 276,
+    "who_ncd_mortality": 18.8,
+    "who_year": 2024
   },
   "UG": {
     "name": "Uganda",
@@ -150376,7 +152838,19 @@
         2022,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 42.7,
+    "current_account_gdp": -8,
+    "fdi_inflow_gdp": 6,
+    "exports_pct_gdp": 16.8,
+    "imports_pct_gdp": 25.9,
+    "trade_year": 2024,
+    "who_physicians": 2.1,
+    "who_nurses": 23.3,
+    "who_immunization": 92,
+    "who_maternal_mort": 170,
+    "who_ncd_mortality": 21.5,
+    "who_year": 2024
   },
   "UA": {
     "name": "Ukraine",
@@ -151147,7 +153621,20 @@
         2022,
         20.91
       ]
-    ]
+    ],
+    "trade_pct_gdp": 77.8,
+    "current_account_gdp": -7.9,
+    "fdi_inflow_gdp": 2.1,
+    "exports_pct_gdp": 29.4,
+    "imports_pct_gdp": 48.3,
+    "trade_year": 2024,
+    "who_physicians": 35.3,
+    "who_nurses": 60.8,
+    "who_hospital_beds": 61.4,
+    "who_immunization": 93,
+    "who_maternal_mort": 15,
+    "who_ncd_mortality": 24.8,
+    "who_year": 2024
   },
   "XT": {
     "name": "Upper middle income",
@@ -151256,7 +153743,12 @@
     "health_spend_gdp": 6.08,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.661,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 47.3,
+    "fdi_inflow_gdp": 0.9,
+    "exports_pct_gdp": 24,
+    "imports_pct_gdp": 22.2,
+    "trade_year": 2024
   },
   "UY": {
     "name": "Uruguay",
@@ -152109,7 +154601,20 @@
         2024,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 52.5,
+    "current_account_gdp": -0.8,
+    "fdi_inflow_gdp": -4.9,
+    "exports_pct_gdp": 28.8,
+    "imports_pct_gdp": 23.7,
+    "trade_year": 2024,
+    "who_physicians": 45.5,
+    "who_nurses": 76.3,
+    "who_hospital_beds": 24.4,
+    "who_immunization": 99,
+    "who_maternal_mort": 15,
+    "who_ncd_mortality": 17.4,
+    "who_year": 2024
   },
   "US": {
     "name": "United States",
@@ -153202,7 +155707,19 @@
         2024,
         14.85
       ]
-    ]
+    ],
+    "trade_pct_gdp": 25.4,
+    "current_account_gdp": -4.1,
+    "fdi_inflow_gdp": 1,
+    "exports_pct_gdp": 11.1,
+    "imports_pct_gdp": 14.3,
+    "trade_year": 2024,
+    "who_physicians": 26.5,
+    "who_nurses": 123.9,
+    "who_hospital_beds": 26.8,
+    "who_maternal_mort": 17,
+    "who_ncd_mortality": 13.7,
+    "who_year": 2024
   },
   "UZ": {
     "name": "Uzbekistan",
@@ -153963,7 +156480,20 @@
         2023,
         7.47
       ]
-    ]
+    ],
+    "trade_pct_gdp": 60.7,
+    "current_account_gdp": -5,
+    "fdi_inflow_gdp": 2.6,
+    "exports_pct_gdp": 22.8,
+    "imports_pct_gdp": 38,
+    "trade_year": 2024,
+    "who_physicians": 23.2,
+    "who_nurses": 107,
+    "who_hospital_beds": 48.9,
+    "who_immunization": 99,
+    "who_maternal_mort": 26,
+    "who_ncd_mortality": 24.6,
+    "who_year": 2024
   },
   "VC": {
     "name": "St. Vincent and the Grenadines",
@@ -154621,7 +157151,17 @@
     "health_spend_gdp": 4.437,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.458,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "current_account_gdp": -13.5,
+    "fdi_inflow_gdp": 12,
+    "trade_year": 2024,
+    "who_physicians": 19,
+    "who_nurses": 80.2,
+    "who_hospital_beds": 32.1,
+    "who_immunization": 99,
+    "who_maternal_mort": 56,
+    "who_ncd_mortality": 23.6,
+    "who_year": 2024
   },
   "VE": {
     "name": "Venezuela, RB",
@@ -155404,7 +157944,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 26.1,
+    "fdi_inflow_gdp": 1.4,
+    "exports_pct_gdp": 16.9,
+    "imports_pct_gdp": 9.2,
+    "trade_year": 2024,
+    "who_physicians": 16.6,
+    "who_nurses": 20,
+    "who_hospital_beds": 9.9,
+    "who_immunization": 66,
+    "who_maternal_mort": 227,
+    "who_ncd_mortality": 18.7,
+    "who_year": 2024
   },
   "VG": {
     "name": "British Virgin Islands",
@@ -155568,7 +158120,11 @@
     "wgi_regulatory_quality": 1.351,
     "wgi_regulatory_quality_year": "2023",
     "renewable_energy_pct": 5.9,
-    "renewable_energy_pct_year": "2022"
+    "renewable_energy_pct_year": "2022",
+    "trade_pct_gdp": 205.6,
+    "exports_pct_gdp": 97.4,
+    "imports_pct_gdp": 108.3,
+    "trade_year": 2022
   },
   "VN": {
     "name": "Viet Nam",
@@ -156393,7 +158949,20 @@
         2024,
         50.32
       ]
-    ]
+    ],
+    "trade_pct_gdp": 173.9,
+    "current_account_gdp": 5.9,
+    "fdi_inflow_gdp": 4.2,
+    "exports_pct_gdp": 90.2,
+    "imports_pct_gdp": 83.7,
+    "trade_year": 2024,
+    "who_physicians": 11.1,
+    "who_nurses": 14.4,
+    "who_hospital_beds": 25.2,
+    "who_immunization": 96,
+    "who_maternal_mort": 48,
+    "who_ncd_mortality": 20.1,
+    "who_year": 2024
   },
   "VU": {
     "name": "Vanuatu",
@@ -157010,7 +159579,19 @@
     "health_spend_gdp": 4.119,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 7.581,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 63.6,
+    "current_account_gdp": -12.1,
+    "fdi_inflow_gdp": 2.6,
+    "exports_pct_gdp": 9.4,
+    "imports_pct_gdp": 54.2,
+    "trade_year": 2024,
+    "who_physicians": 1.6,
+    "who_nurses": 14.6,
+    "who_immunization": 85,
+    "who_maternal_mort": 100,
+    "who_ncd_mortality": 36.8,
+    "who_year": 2024
   },
   "1W": {
     "name": "World",
@@ -157119,7 +159700,12 @@
     "health_spend_gdp": 10.016,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.515,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "trade_pct_gdp": 56.8,
+    "fdi_inflow_gdp": 1.3,
+    "exports_pct_gdp": 29.1,
+    "imports_pct_gdp": 28.2,
+    "trade_year": 2024
   },
   "WS": {
     "name": "Samoa",
@@ -157699,7 +160285,19 @@
     "health_spend_gdp": 6.781,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.456,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "trade_pct_gdp": 79.5,
+    "current_account_gdp": 5.6,
+    "fdi_inflow_gdp": 0.3,
+    "exports_pct_gdp": 30.7,
+    "imports_pct_gdp": 48.9,
+    "trade_year": 2024,
+    "who_physicians": 5.6,
+    "who_nurses": 30.6,
+    "who_immunization": 99,
+    "who_maternal_mort": 101,
+    "who_ncd_mortality": 32.3,
+    "who_year": 2024
   },
   "XK": {
     "name": "Kosovo",
@@ -157824,7 +160422,13 @@
     "whr_health": 0.599,
     "whr_freedom": 0.739,
     "whr_generosity": 0.254,
-    "whr_corruption": 0.073
+    "whr_corruption": 0.073,
+    "trade_pct_gdp": 113.8,
+    "current_account_gdp": -8.3,
+    "fdi_inflow_gdp": 7.7,
+    "exports_pct_gdp": 41.7,
+    "imports_pct_gdp": 72,
+    "trade_year": 2024
   },
   "A5": {
     "name": "Sub-Saharan Africa excluding South Africa and Nigeria",
@@ -158460,7 +161064,19 @@
         2023,
         0
       ]
-    ]
+    ],
+    "trade_pct_gdp": 56.1,
+    "fdi_inflow_gdp": -1.3,
+    "exports_pct_gdp": 8.8,
+    "imports_pct_gdp": 47.3,
+    "trade_year": 2018,
+    "who_physicians": 1.6,
+    "who_nurses": 5.4,
+    "who_hospital_beds": 4.6,
+    "who_immunization": 50,
+    "who_maternal_mort": 118,
+    "who_ncd_mortality": 25.8,
+    "who_year": 2024
   },
   "ZA": {
     "name": "South Africa",
@@ -159555,7 +162171,19 @@
         2024,
         83.03
       ]
-    ]
+    ],
+    "trade_pct_gdp": 61.6,
+    "current_account_gdp": -0.6,
+    "fdi_inflow_gdp": 0.6,
+    "exports_pct_gdp": 31.8,
+    "imports_pct_gdp": 29.9,
+    "trade_year": 2024,
+    "who_physicians": 7.7,
+    "who_nurses": 41.5,
+    "who_immunization": 74,
+    "who_maternal_mort": 118,
+    "who_ncd_mortality": 22.7,
+    "who_year": 2024
   },
   "ZM": {
     "name": "Zambia",
@@ -160208,7 +162836,19 @@
         2023,
         10.95
       ]
-    ]
+    ],
+    "trade_pct_gdp": 62.5,
+    "current_account_gdp": -1.9,
+    "fdi_inflow_gdp": 9.3,
+    "exports_pct_gdp": 35,
+    "imports_pct_gdp": 27.6,
+    "trade_year": 2024,
+    "who_physicians": 1.6,
+    "who_nurses": 16.7,
+    "who_immunization": 90,
+    "who_maternal_mort": 85,
+    "who_ncd_mortality": 23.6,
+    "who_year": 2024
   },
   "ZW": {
     "name": "Zimbabwe",
@@ -160825,7 +163465,19 @@
         2023,
         32.49
       ]
-    ]
+    ],
+    "trade_pct_gdp": 41.5,
+    "current_account_gdp": 1.2,
+    "fdi_inflow_gdp": 1.1,
+    "exports_pct_gdp": 18,
+    "imports_pct_gdp": 23.4,
+    "trade_year": 2024,
+    "who_physicians": 1.9,
+    "who_nurses": 14.7,
+    "who_immunization": 96,
+    "who_maternal_mort": 358,
+    "who_ncd_mortality": 31.2,
+    "who_year": 2024
   },
   "TW": {
     "govt_debt_gdp": 20.9,
