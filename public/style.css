@@ -22,6 +22,45 @@ header p  { font-size: 0.9rem; color: #8b949e; margin-top: 4px; }
 #map-wrapper { position: relative; width: 100%; max-width: 1000px; }
 #map-container { width: 100%; height: 580px; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
 
+/* ── City search overlay ── */
+#city-search-box {
+  position: absolute; top: 10px; left: 50px; z-index: 1000;
+  width: 260px; font-size: 0.85rem;
+}
+#city-search-inner {
+  display: flex; align-items: center; gap: 6px;
+  background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+  padding: 6px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+#city-search-icon { color: #8b949e; flex-shrink: 0; }
+#city-search-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  color: #e6edf3; font-size: 0.85rem; min-width: 0;
+}
+#city-search-input::placeholder { color: #484f58; }
+#city-search-clear {
+  background: none; border: none; color: #484f58; cursor: pointer;
+  font-size: 0.75rem; padding: 0; line-height: 1; display: none;
+}
+#city-search-clear:hover { color: #8b949e; }
+#city-search-results {
+  list-style: none; margin: 4px 0 0; padding: 0;
+  background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6); overflow: hidden;
+  display: none; max-height: 320px; overflow-y: auto;
+}
+#city-search-results li {
+  padding: 8px 12px; cursor: pointer; display: flex;
+  align-items: baseline; gap: 8px; border-bottom: 1px solid #21262d;
+}
+#city-search-results li:last-child { border-bottom: none; }
+#city-search-results li:hover, #city-search-results li.selected {
+  background: #21262d;
+}
+.csr-name { color: #e6edf3; font-weight: 500; flex-shrink: 0; }
+.csr-name em { color: #58a6ff; font-style: normal; }
+.csr-meta { color: #8b949e; font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 /* ── Leaflet dark theme ── */
 .leaflet-container { background: #0d1117 !important; font-family: 'Segoe UI', system-ui, sans-serif; }
 .leaflet-control-zoom a { background: #21262d !important; color: #c9d1d9 !important; border-color: #30363d !important; }

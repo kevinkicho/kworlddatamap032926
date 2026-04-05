@@ -6394,6 +6394,126 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
   }
 }
 
+// ── City search ──────────────────────────────────────────────────────────────
+(function initCitySearch() {
+  const box     = document.getElementById('city-search-box');
+  const input   = document.getElementById('city-search-input');
+  const results = document.getElementById('city-search-results');
+  const clearBtn= document.getElementById('city-search-clear');
+  if (!box || !input) return;
+
+  let _selIdx = -1;
+
+  function fmtPop(p) {
+    if (!p) return '';
+    if (p >= 1e6)  return (p / 1e6).toFixed(1) + 'M';
+    if (p >= 1e3)  return Math.round(p / 1e3) + 'K';
+    return String(p);
+  }
+
+  // Highlight matching portion of a name
+  function highlight(name, q) {
+    const i = name.toLowerCase().indexOf(q.toLowerCase());
+    if (i < 0) return escHtml(name);
+    return escHtml(name.slice(0, i))
+      + '<em>' + escHtml(name.slice(i, i + q.length)) + '</em>'
+      + escHtml(name.slice(i + q.length));
+  }
+
+  function search(q) {
+    q = q.trim();
+    clearBtn.style.display = q ? '' : 'none';
+    if (q.length < 1) { close(); return; }
+
+    const ql = q.toLowerCase();
+    const scored = [];
+    for (const c of allCities) {
+      const nl = (c.name || '').toLowerCase();
+      if (!nl.includes(ql)) continue;
+      // Score: 0 = exact, 1 = starts-with, 2 = word-start, 3 = contains
+      const score = nl === ql ? 0
+                  : nl.startsWith(ql) ? 1
+                  : nl.includes(' ' + ql) ? 2 : 3;
+      scored.push({ c, score });
+    }
+    scored.sort((a, b) => a.score - b.score || (b.c.pop || 0) - (a.c.pop || 0));
+    const hits = scored.slice(0, 8);
+
+    if (!hits.length) { close(); return; }
+
+    _selIdx = -1;
+    results.innerHTML = hits.map(({ c }, i) =>
+      `<li data-idx="${i}" data-qid="${escAttr(c.qid)}"
+           data-lat="${c.lat}" data-lng="${c.lng}"
+           data-name="${escAttr(c.name)}">
+         <span class="csr-name">${highlight(c.name, q)}</span>
+         <span class="csr-meta">${escHtml(c.country || '')}${c.pop ? ' · ' + fmtPop(c.pop) : ''}</span>
+       </li>`
+    ).join('');
+    results.style.display = '';
+
+    results.querySelectorAll('li').forEach(li => {
+      li.addEventListener('mousedown', e => {
+        e.preventDefault();
+        selectResult(li);
+      });
+    });
+  }
+
+  function selectResult(li) {
+    const qid  = li.dataset.qid;
+    const lat  = parseFloat(li.dataset.lat);
+    const lng  = parseFloat(li.dataset.lng);
+    const name = li.dataset.name;
+    input.value = name;
+    clearBtn.style.display = '';
+    close();
+    map.flyTo([lat, lng], Math.max(map.getZoom(), 8), { duration: 1.2 });
+    if (qid) openWikiSidebar(qid, name);
+  }
+
+  function close() {
+    results.style.display = 'none';
+    results.innerHTML = '';
+    _selIdx = -1;
+  }
+
+  function moveSelection(dir) {
+    const items = results.querySelectorAll('li');
+    if (!items.length) return;
+    items[_selIdx]?.classList.remove('selected');
+    _selIdx = Math.max(0, Math.min(items.length - 1, _selIdx + dir));
+    items[_selIdx].classList.add('selected');
+    items[_selIdx].scrollIntoView({ block: 'nearest' });
+  }
+
+  input.addEventListener('input', () => search(input.value));
+  input.addEventListener('focus', () => { if (input.value.trim()) search(input.value); });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown')  { e.preventDefault(); moveSelection(1); }
+    else if (e.key === 'ArrowUp')   { e.preventDefault(); moveSelection(-1); }
+    else if (e.key === 'Enter') {
+      e.preventDefault();
+      const sel = results.querySelector('li.selected') || results.querySelector('li');
+      if (sel) selectResult(sel);
+    }
+    else if (e.key === 'Escape') { close(); input.blur(); }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    input.value = '';
+    clearBtn.style.display = 'none';
+    close();
+    input.focus();
+  });
+
+  // Close on outside click
+  document.addEventListener('mousedown', e => {
+    if (!box.contains(e.target)) close();
+  });
+})();
+
 function showLoading(visible, msg) {
   const overlay = document.getElementById('loading-overlay');
   const text = document.getElementById('loading-text');
