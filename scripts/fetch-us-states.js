@@ -5,8 +5,13 @@
 
 const { writeFileSync } = require('fs');
 const { join } = require('path');
+require('dotenv').config({ path: join(__dirname, '..', '.env') });
 
-const FRED_API_KEY = 'REDACTED_USE_ENV';
+const FRED_API_KEY = process.env.FRED_API_KEY;
+if (!FRED_API_KEY) {
+  console.error('ERROR: FRED_API_KEY is not set in .env');
+  process.exit(1);
+}
 const FRED_BASE = 'https://api.stlouisfed.org/fred/series/observations';
 const OUT_PATH = join(__dirname, '..', 'public', 'us-states.json');
 
