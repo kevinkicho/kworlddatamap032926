@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
   <script src="https://unpkg.com/@joergdietrich/leaflet.terminator@1.0.0/L.Terminator.js"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -15,7 +16,7 @@
 
   <header>
     <h1>🌍 World Cities Map</h1>
-    <p>Cities from Wikidata · zoom, explore, and filter</p>
+    <p>Cities from Wikidata &nbsp;·&nbsp; Leaflet.js &nbsp;·&nbsp; zoom, explore, and filter</p>
   </header>
 
   <!-- ── Choropleth control bar ── -->
@@ -29,6 +30,21 @@
       <span class="choro-leg-label" id="choro-hi-label"></span>
     </div>
     <span id="choro-coverage"></span>
+  </div>
+
+  <!-- ── Air quality city color bar ── -->
+  <div id="aq-bar" style="display:none">
+    <label>Color cities by PM2.5:</label>
+    <button id="aq-toggle-btn" onclick="toggleAqMode()">Off</button>
+    <div id="aq-legend-wrap" style="display:none">
+      <span class="aq-swatch" style="background:#3fb950" title="Good &lt;5 µg/m³"></span>Good
+      <span class="aq-swatch" style="background:#58a6ff" title="Acceptable 5–10"></span>Acceptable
+      <span class="aq-swatch" style="background:#f0a500" title="Moderate 10–15"></span>Moderate
+      <span class="aq-swatch" style="background:#ffa657" title="Poor 15–25"></span>Poor
+      <span class="aq-swatch" style="background:#f85149" title="Very Poor 25–50"></span>Very Poor
+      <span class="aq-swatch" style="background:#bc8cff" title="Severe &gt;50"></span>Severe
+    </div>
+    <span id="aq-coverage"></span>
   </div>
 
   <!-- ── Census city color bar ── -->
@@ -378,11 +394,43 @@
     <div id="fx-source">Source: <a href="https://www.frankfurter.app" target="_blank" rel="noopener">Frankfurter / ECB</a> · edit any row to override</div>
   </div>
 
+  <!-- ── City Comparison Panel ── -->
+  <div id="compare-panel" style="display:none">
+    <div id="compare-header">
+      <span id="compare-title">Compare Cities</span>
+      <button id="compare-close" onclick="closeComparePanel()" title="Close">×</button>
+    </div>
+    <div id="compare-search-row">
+      <span id="compare-vs-label">vs.</span>
+      <div id="compare-search-wrap">
+        <input id="compare-search-input" type="text" placeholder="Search second city…" autocomplete="off" />
+        <ul id="compare-search-results"></ul>
+      </div>
+    </div>
+    <div id="compare-body">
+      <table id="compare-table">
+        <thead>
+          <tr>
+            <th class="cmp-metric-col">Metric</th>
+            <th id="compare-col-a" class="cmp-city-col">—</th>
+            <th id="compare-col-b" class="cmp-city-col">—</th>
+          </tr>
+        </thead>
+        <tbody id="compare-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- ── FX toggle button (always visible) ── -->
   <button id="fx-fab" onclick="toggleFxSidebar()" title="FX Rate Settings">💱</button>
 
   <!-- ── Draw boundary button (always visible) ── -->
   <button id="draw-fab" onclick="toggleDrawMode()" title="Draw a region to explore">⬡ Draw</button>
+
+  <!-- ── Filter panel FAB ── -->
+  <button id="filter-fab" onclick="toggleFilterPanel()" title="Filter cities">
+    ⚗ Filter<span id="filter-fab-badge"></span>
+  </button>
 
   <!-- ── Edit modal ── -->
   <div id="edit-modal">
@@ -442,6 +490,145 @@
         <button class="btn-cancel" onclick="closeModal()">Cancel</button>
         <button class="btn-save"   onclick="saveEdit()">Save</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ── Filter Panel ── -->
+  <div id="filter-panel">
+    <div id="filter-panel-header">
+      <span id="filter-panel-title">⚗ Filters</span>
+      <div id="filter-panel-header-right">
+        <button id="filter-clear-btn" onclick="clearAllFilters()">Clear all</button>
+        <button id="filter-panel-close" onclick="closeFilterPanel()" title="Close">×</button>
+      </div>
+    </div>
+
+    <div id="heat-dot-row" style="display:none">
+      <span class="filter-row-label">City dots:</span>
+      <div class="filter-btn-group">
+        <button class="filter-mode-btn" data-dotmode="show" onclick="setHeatDotMode('show')">Show</button>
+        <button class="filter-mode-btn active" data-dotmode="dim"  onclick="setHeatDotMode('dim')">Dim</button>
+        <button class="filter-mode-btn" data-dotmode="hide" onclick="setHeatDotMode('hide')">Hide</button>
+      </div>
+    </div>
+
+    <div id="filter-dim-row">
+      <span class="filter-row-label">Unmatched cities:</span>
+      <div class="filter-btn-group">
+        <button class="filter-mode-btn active" data-mode="dim"  onclick="setFilterDimMode('dim')">Dim</button>
+        <button class="filter-mode-btn"        data-mode="hide" onclick="setFilterDimMode('hide')">Hide</button>
+      </div>
+    </div>
+
+    <div class="filter-section-head">Availability</div>
+    <div id="filter-avail-list">
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">🌡 Air Quality</span>
+        <button class="filter-avail-btn" data-key="airQuality" onclick="toggleAvailFilter('airQuality')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">🚇 Metro system</span>
+        <button class="filter-avail-btn" data-key="metro" onclick="toggleAvailFilter('metro')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">🏅 Nobel laureates</span>
+        <button class="filter-avail-btn" data-key="nobel" onclick="toggleAvailFilter('nobel')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">🎓 Universities</span>
+        <button class="filter-avail-btn" data-key="universities" onclick="toggleAvailFilter('universities')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">✈ Airport data</span>
+        <button class="filter-avail-btn" data-key="airport" onclick="toggleAvailFilter('airport')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">📊 Eurostat</span>
+        <button class="filter-avail-btn" data-key="eurostat" onclick="toggleAvailFilter('eurostat')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">🇺🇸 Census (US)</span>
+        <button class="filter-avail-btn" data-key="census" onclick="toggleAvailFilter('census')">off</button>
+      </div>
+    </div>
+
+    <div class="filter-section-head">Value Filters</div>
+    <div id="filter-value-list">
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">🏅 Nobel Laureates</span>
+          <button class="filter-heat-btn" data-metric="nobel" onclick="setHeatmapMetric('nobel')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="filter-bucket-row" data-metric="nobel">
+          <button class="filter-bucket active" data-val="null"  onclick="setValueFilter('nobel', null)">Any</button>
+          <button class="filter-bucket"        data-val="1"     onclick="setValueFilter('nobel', 1)">1+</button>
+          <button class="filter-bucket"        data-val="5"     onclick="setValueFilter('nobel', 5)">5+</button>
+          <button class="filter-bucket"        data-val="10"    onclick="setValueFilter('nobel', 10)">10+</button>
+          <button class="filter-bucket"        data-val="20"    onclick="setValueFilter('nobel', 20)">20+</button>
+        </div>
+      </div>
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">🎓 Universities</span>
+          <button class="filter-heat-btn" data-metric="universities" onclick="setHeatmapMetric('universities')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="filter-bucket-row" data-metric="universities">
+          <button class="filter-bucket active" data-val="null" onclick="setValueFilter('universities', null)">Any</button>
+          <button class="filter-bucket"        data-val="1"    onclick="setValueFilter('universities', 1)">1+</button>
+          <button class="filter-bucket"        data-val="5"    onclick="setValueFilter('universities', 5)">5+</button>
+          <button class="filter-bucket"        data-val="10"   onclick="setValueFilter('universities', 10)">10+</button>
+        </div>
+      </div>
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">👥 Population</span>
+          <button class="filter-heat-btn" data-metric="pop" onclick="setHeatmapMetric('pop')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="filter-bucket-row" data-metric="pop">
+          <button class="filter-bucket active" data-val="null"     onclick="setValueFilter('pop', null)">Any</button>
+          <button class="filter-bucket"        data-val="small"    onclick="setValueFilter('pop', 'small')">&lt;100k</button>
+          <button class="filter-bucket"        data-val="medium"   onclick="setValueFilter('pop', 'medium')">100k–1M</button>
+          <button class="filter-bucket"        data-val="large"    onclick="setValueFilter('pop', 'large')">1M–10M</button>
+          <button class="filter-bucket"        data-val="mega"     onclick="setValueFilter('pop', 'mega')">10M+</button>
+        </div>
+      </div>
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">🚇 Metro Stations</span>
+          <button class="filter-heat-btn" data-metric="metro" onclick="setHeatmapMetric('metro')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="filter-bucket-row" data-metric="metro">
+          <button class="filter-bucket active" data-val="null"   onclick="setValueFilter('metro', null)">Any</button>
+          <button class="filter-bucket"        data-val="1"      onclick="setValueFilter('metro', 1)">Has metro</button>
+          <button class="filter-bucket"        data-val="100"    onclick="setValueFilter('metro', 100)">100+</button>
+          <button class="filter-bucket"        data-val="500"    onclick="setValueFilter('metro', 500)">500+</button>
+        </div>
+      </div>
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">🌡 Air Quality (PM2.5)</span>
+          <button class="filter-heat-btn" data-metric="aq" onclick="setHeatmapMetric('aq')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="filter-bucket-row" data-metric="aq">
+          <button class="filter-bucket active"                                       data-val="null"      onclick="setValueFilter('aq', null)">Any</button>
+          <button class="filter-bucket" style="--aq:#3fb950;--aqbg:#0f2c12"         data-val="Good"      onclick="setValueFilter('aq', 'Good')">Good</button>
+          <button class="filter-bucket" style="--aq:#58a6ff;--aqbg:#162040"         data-val="Acceptable" onclick="setValueFilter('aq', 'Acceptable')">OK</button>
+          <button class="filter-bucket" style="--aq:#f0a500;--aqbg:#2a1f08"         data-val="Moderate"  onclick="setValueFilter('aq', 'Moderate')">Mod</button>
+          <button class="filter-bucket" style="--aq:#ffa657;--aqbg:#2a1208"         data-val="Poor"      onclick="setValueFilter('aq', 'Poor')">Poor</button>
+          <button class="filter-bucket" style="--aq:#f85149;--aqbg:#2a0a0a"         data-val="Very Poor" onclick="setValueFilter('aq', 'Very Poor')">V.Poor</button>
+          <button class="filter-bucket" style="--aq:#bc8cff;--aqbg:#1e1028"         data-val="Severe"    onclick="setValueFilter('aq', 'Severe')">Severe</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="filter-panel-footer">
+      Showing <span id="filter-match-count">—</span> <span id="filter-total-count"></span>
     </div>
   </div>
 
