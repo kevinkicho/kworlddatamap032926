@@ -1813,7 +1813,8 @@ function _renderStatsPanel() {
     </div>
     ${note ? `<div class="stats-note">${note}</div>` : ''}
     <div id="stats-rank-list-wrap" class="stats-rank-list"></div>
-    <div class="stats-source">${points.length} ${primaryLabel} · click to navigate · click another stat to compare</div>
+    <div class="stats-source">${points.length} ${primaryLabel}</div>
+    <div class="stats-source-attr">${_statSourceAttr(metric)}</div>
   `;
   const _sp = document.getElementById('stats-panel');
   const _wikiOpen = document.getElementById('wiki-sidebar')?.classList.contains('open');
@@ -2690,6 +2691,110 @@ const CITY_STAT_DEFS = {
   nobelLaureates:   { label:'Nobel Laureates',    key: c => nobelCitiesData[c.qid]?.total ?? null,
                       fmt: v => String(v), higherBetter:true },
 };
+
+// Data source attribution for stats panel
+function _statSourceAttr(metric) {
+  var sources = {
+    // World Bank
+    wb_gdp_per_capita: 'World Bank · WDI (NY.GDP.PCAP.CD)',
+    wb_life_expectancy: 'World Bank · WDI (SP.DYN.LE00.IN)',
+    wb_urban_pct: 'World Bank · WDI (SP.URB.TOTL.IN.ZS)',
+    wb_internet_pct: 'World Bank · WDI (IT.NET.USER.ZS)',
+    wb_gini: 'World Bank · WDI (SI.POV.GINI)',
+    wb_literacy_rate: 'World Bank · WDI (SE.ADT.LITR.ZS)',
+    wb_child_mortality: 'World Bank · WDI (SH.DYN.MORT)',
+    wb_electricity_pct: 'World Bank · WDI (EG.ELC.ACCS.ZS)',
+    wb_pm25: 'World Bank · WDI (EN.ATM.PM25.MC.M3)',
+    wb_forest_pct: 'World Bank · WDI (AG.LND.FRST.ZS)',
+    wb_air_death_rate: 'World Bank · WDI (SH.STA.AIRP.P5)',
+    wb_road_death_rate: 'World Bank · WDI (SH.STA.TRAF.P5)',
+    // IMF
+    wb_govt_debt_gdp: 'IMF · World Economic Outlook (GGXWDG_NGDP)',
+    wb_fiscal_balance_gdp: 'IMF · World Economic Outlook (GGXCNL_NGDP)',
+    wb_cpi_inflation: 'IMF · World Economic Outlook (PCPIPCH)',
+    wb_unemployment_rate: 'IMF · World Economic Outlook (LUR)',
+    // FRED
+    wb_bond_yield_10y: 'FRED · OECD 10-Year Government Bond Yields',
+    // Central Bank
+    wb_cb_rate: 'Central bank official websites · manually curated',
+    // Credit Ratings
+    wb_credit_sp: 'S&P Global Ratings',
+    wb_credit_moodys: "Moody's Investors Service",
+    wb_credit_fitch: 'Fitch Ratings',
+    // Governance
+    wb_wgi_rule_of_law: 'World Bank · Worldwide Governance Indicators',
+    wb_wgi_corruption: 'World Bank · Worldwide Governance Indicators',
+    wb_wgi_govt_effectiveness: 'World Bank · Worldwide Governance Indicators',
+    wb_wgi_voice_accountability: 'World Bank · Worldwide Governance Indicators',
+    wb_wgi_political_stability: 'World Bank · Worldwide Governance Indicators',
+    wb_wgi_regulatory_quality: 'World Bank · Worldwide Governance Indicators',
+    // HDI & Sustainability
+    wb_hdi: 'UNDP · Human Development Report 2024',
+    wb_renewable_energy_pct: 'World Bank · WDI (EG.FEC.RNEW.ZS)',
+    wb_health_spend_gdp: 'World Bank · WDI (SH.XPD.CHEX.GD.ZS)',
+    wb_education_spend_gdp: 'World Bank · WDI (SE.XPD.TOTL.GD.ZS)',
+    // Transparency & Freedom
+    wb_ti_cpi: 'Transparency International · CPI 2023',
+    wb_fh_score: 'Freedom House · Freedom in the World 2024',
+    // WHR
+    wb_whr_score: 'World Happiness Report 2024 · Gallup World Poll',
+    wb_whr_gdp: 'World Happiness Report 2024 · Gallup World Poll',
+    wb_whr_social: 'World Happiness Report 2024 · Gallup World Poll',
+    wb_whr_health: 'World Happiness Report 2024 · Gallup World Poll',
+    wb_whr_freedom: 'World Happiness Report 2024 · Gallup World Poll',
+    wb_whr_generosity: 'World Happiness Report 2024 · Gallup World Poll',
+    wb_whr_corruption: 'World Happiness Report 2024 · Gallup World Poll',
+    // Energy
+    wb_energy_wind_solar_pct: 'Our World in Data · Ember Global Electricity Review',
+    wb_energy_hydro_pct: 'Our World in Data · Ember Global Electricity Review',
+    wb_energy_nuclear_pct: 'Our World in Data · Ember Global Electricity Review',
+    wb_energy_gas_pct: 'Our World in Data · Ember Global Electricity Review',
+    wb_energy_coal_pct: 'Our World in Data · Ember Global Electricity Review',
+    // OECD
+    wb_rd_spend_pct: 'OECD · Main Science and Technology Indicators',
+    wb_tax_revenue_pct: 'OECD · Revenue Statistics',
+    wb_hours_worked: 'OECD · Employment Outlook',
+    wb_tertiary_pct: 'OECD · Education at a Glance',
+    wb_pisa_reading: 'OECD · PISA 2022',
+    wb_min_wage_usd_ppp: 'OECD · Minimum Wage Database',
+    eci: 'Observatory of Economic Complexity · Atlas',
+    // Census
+    population: 'U.S. Census Bureau · ACS 2023',
+    medianIncome: 'U.S. Census Bureau · ACS 2023',
+    povertyRate: 'U.S. Census Bureau · ACS 2023',
+    medianHomeValue: 'U.S. Census Bureau · ACS 2023',
+    medianRent: 'U.S. Census Bureau · ACS 2023',
+    bachelorsPct: 'U.S. Census Bureau · ACS 2023',
+    foreignBornPct: 'U.S. Census Bureau · ACS 2023',
+    unemploymentPct: 'U.S. Census Bureau · ACS 2023',
+    commuteTime: 'U.S. Census Bureau · ACS 2023',
+    // City-level
+    airQuality: 'WHO · Ambient Air Pollution Database',
+    metroStations: 'Wikidata · metro/transit systems',
+    nobelCount: 'Wikidata · Nobel laureate birthplaces',
+    universityCount: 'Wikidata · higher education institutions',
+    airportConnections: 'OpenFlights · airport route data',
+    // Zillow
+    zhvi: 'Zillow · Home Value Index (ZHVI)',
+    zori: 'Zillow · Observed Rent Index (ZORI)',
+    // Crime
+    violentPer100k: 'FBI · Uniform Crime Report',
+    propertyPer100k: 'FBI · Uniform Crime Report',
+    // Japan
+    japan_perCapitaIncome: 'Japan Cabinet Office · prefectural accounts',
+    japan_gdp: 'Japan Cabinet Office · prefectural accounts',
+    // Climate
+    avgHighTemp: 'NOAA · U.S. Climate Normals 1991–2020',
+    avgLowTemp: 'NOAA · U.S. Climate Normals 1991–2020',
+    annualPrecipMm: 'NOAA · U.S. Climate Normals 1991–2020',
+    warmestMonthTemp: 'Open-Meteo · ERA5 reanalysis 2014–2023',
+    coldestMonthTemp: 'Open-Meteo · ERA5 reanalysis 2014–2023',
+  };
+  // Eurostat: all keys start with eurostat_
+  if (metric.indexOf('eurostat_') === 0) return 'Source: Eurostat · Urban Audit';
+  var src = sources[metric];
+  return src ? 'Source: ' + escHtml(src) : '';
+}
 
 // Country-level World Bank stats — iso2 used as identifier (not city qid)
 const WB_STAT_DEFS = {

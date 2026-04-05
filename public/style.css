@@ -1157,6 +1157,7 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 }
 .stats-rank-more:hover { background: #21262d; text-decoration: underline; }
 .stats-source { font-size: 0.65rem; color: #484f58; margin-top: 8px; }
+.stats-source-attr { font-size: 0.6rem; color: #6e7681; margin-top: 4px; font-style: italic; padding-top: 4px; border-top: 1px solid #21262d; }
 /* Clickable stat cells in Economy tab */
 .census-stat-clickable {
   cursor: pointer; border-radius: 5px; padding: 3px 4px; margin: -3px -4px;
