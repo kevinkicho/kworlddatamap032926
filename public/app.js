@@ -5,6 +5,8 @@ let rawCities = [];      // validated data from server, never mutated
 let allCities = [];      // rawCities with overrides applied
 let cityByQid = new Map();  // QID → city object, rebuilt whenever allCities changes
 let countryData = {};      // World Bank data keyed by ISO-2 code
+let _avgScoreCache = null;    // Map<axisKey, avgScore> — computed once after countryData loads
+let _rankCacheByRegion = null; // Map<region, Map<key, sortedPeers[]>>
 let filtered = [];
 let visibleCount = 100;
 const PAGE_SIZE = 100;
@@ -4125,6 +4127,7 @@ async function init() {
       try {
         countryData = await countryRes.json();
         console.log(`[init] Country data loaded (${Object.keys(countryData).length} countries)`);
+        _buildCountryDataCaches();
       } catch {
         console.warn('[init] country-data.json is malformed — World Bank data will be unavailable');
       }
@@ -4763,6 +4766,64 @@ function _renderCountryPanel(iso2) {
   _buildTrendTabs(iso2);
 }
 
+// ── _buildCountryDataCaches ───────────────────────────────────────────
+function _buildCountryDataCaches() {
+  // avgScore cache: average normalized score per radar axis
+  // Each axis has a fixed key and inv flag; cache by "key|inv"
+  var radarAxes = [
+    { key: "gdp_per_capita",     inv: false },
+    { key: "life_expectancy",    inv: false },
+    { key: "govt_debt_gdp",      inv: true  },
+    { key: "fiscal_balance_gdp", inv: true  },
+    { key: "cpi_inflation",      inv: true  },
+    { key: "unemployment_rate",  inv: true  }
+  ];
+  _avgScoreCache = new Map();
+  radarAxes.forEach(function(axis) {
+    var max = _cpWorldMax(axis.key);
+    var sum = 0, count = 0;
+    for (var k in countryData) {
+      var v = (countryData[k] || {})[axis.key];
+      if (!Number.isFinite(v)) continue;
+      var raw;
+      if (axis.key === "fiscal_balance_gdp") {
+        raw = Math.min(1, Math.max(0, (v + 15) / 30));
+      } else {
+        var r = Math.min(1, Math.max(0, v / (max || 1)));
+        raw = axis.inv ? 1 - r : r;
+      }
+      sum += raw; count++;
+    }
+    _avgScoreCache.set(axis.key, count ? sum / count : 0);
+  });
+
+  // rankIn cache: per-region, per-key unsorted peer arrays (sorted lazily on first use)
+  var rankKeys = [
+    "gdp_per_capita", "life_expectancy", "govt_debt_gdp",
+    "cpi_inflation", "unemployment_rate", "hdi",
+    "ti_cpi_score", "wgi_rule_of_law", "wgi_corruption", "renewable_energy_pct"
+  ];
+  _rankCacheByRegion = new Map();
+  var regions = [];
+  for (var iso in countryData) {
+    var r = countryData[iso] && countryData[iso].region;
+    if (r && regions.indexOf(r) === -1) regions.push(r);
+  }
+  regions.forEach(function(region) {
+    var byKey = new Map();
+    rankKeys.forEach(function(key) {
+      var peers = [];
+      for (var iso in countryData) {
+        if (!countryData[iso] || countryData[iso].region !== region) continue;
+        var v = countryData[iso][key];
+        if (Number.isFinite(v)) peers.push({ iso: iso, val: v });
+      }
+      byKey.set(key, peers);
+    });
+    _rankCacheByRegion.set(region, byKey);
+  });
+}
+
 // ── _buildRadar ───────────────────────────────────────────────────────
 function _buildRadar(iso2) {
   if (!countryData[iso2]) return "";
@@ -4800,6 +4861,8 @@ function _buildRadar(iso2) {
 
   // compute world average score per axis
   function avgScore(axis) {
+    if (_avgScoreCache) return _avgScoreCache.get(axis.key) ?? 0;
+    // fallback: compute live if cache not ready
     var sum = 0, count = 0;
     for (var k in countryData) {
       var merged = countryData[k] || {};
@@ -4871,17 +4934,34 @@ function _buildRankChips(iso2) {
 
   // rank iso2 among peers in the same region for a given indicator
   function rankIn(key, lowerIsBetter) {
-    var peers = [];
-    for (var k in countryData) {
-      if (countryData[k].region !== region) continue;
-      var merged = countryData[k] || {};
-      var v = merged[key];
-      if (Number.isFinite(v)) peers.push({ iso: k, val: v });
+    var peers;
+    if (_rankCacheByRegion) {
+      var regionMap = _rankCacheByRegion.get(region);
+      if (!regionMap) return null;
+      var cacheKey = key + '__' + lowerIsBetter;
+      var cached = regionMap.get(cacheKey);
+      if (!cached) {
+        var raw = regionMap.get(key);
+        if (!raw) return null;
+        cached = raw.slice().sort(function(a, b) {
+          return lowerIsBetter ? a.val - b.val : b.val - a.val;
+        });
+        regionMap.set(cacheKey, cached);
+      }
+      peers = cached;
+    } else {
+      // fallback: compute live if cache not ready
+      peers = [];
+      for (var k in countryData) {
+        if (!countryData[k] || countryData[k].region !== region) continue;
+        var v = countryData[k][key];
+        if (Number.isFinite(v)) peers.push({ iso: k, val: v });
+      }
+      peers.sort(function(a, b) {
+        return lowerIsBetter ? a.val - b.val : b.val - a.val;
+      });
     }
     if (peers.length < 2) return null;
-    peers.sort(function(a, b) {
-      return lowerIsBetter ? a.val - b.val : b.val - a.val;
-    });
     var pos = peers.findIndex(function(p) { return p.iso === iso2; });
     return pos === -1 ? null : { rank: pos + 1, total: peers.length };
   }
