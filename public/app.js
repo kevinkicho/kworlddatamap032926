@@ -2716,6 +2716,20 @@ const WB_STAT_DEFS = {
   // Transparency & Freedom (TI CPI / Freedom House)
   wb_ti_cpi:              { label:'Corruption Index (TI CPI)',key:'ti_cpi_score',        fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
   wb_fh_score:            { label:'Freedom Score (FH)',       key:'fh_score',            fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
+  // Happiness (WHR 2024)
+  wb_whr_score:      { label:'Happiness Score (WHR)',   key:'whr_score',      fmt: v=>v.toFixed(3),  higherBetter:true  },
+  wb_whr_gdp:        { label:'GDP Contribution (WHR)',  key:'whr_gdp',        fmt: v=>v.toFixed(3),  higherBetter:true  },
+  wb_whr_social:     { label:'Social Support (WHR)',    key:'whr_social',     fmt: v=>v.toFixed(3),  higherBetter:true  },
+  wb_whr_health:     { label:'Life Expectancy (WHR)',   key:'whr_health',     fmt: v=>v.toFixed(3),  higherBetter:true  },
+  wb_whr_freedom:    { label:'Freedom (WHR)',           key:'whr_freedom',    fmt: v=>v.toFixed(3),  higherBetter:true  },
+  wb_whr_generosity: { label:'Generosity (WHR)',        key:'whr_generosity', fmt: v=>v.toFixed(3),  higherBetter:true  },
+  wb_whr_corruption: { label:'Low Corruption (WHR)',    key:'whr_corruption', fmt: v=>v.toFixed(3),  higherBetter:true  },
+  // Central Bank
+  wb_cb_rate:        { label:'Central Bank Policy Rate', key:'cb_rate',       fmt: v=>v.toFixed(2)+'%', higherBetter:null },
+  // Credit Ratings (numeric equivalents: AAA=21 ... D=0)
+  wb_credit_sp:      { label:"S&P Credit Rating",       key:'credit_sp_num',     fmt: function(v){ return _numToCredit.sp[v]     || v.toFixed(0); }, higherBetter:true },
+  wb_credit_moodys:  { label:"Moody's Credit Rating",   key:'credit_moodys_num', fmt: function(v){ return _numToCredit.moodys[v] || v.toFixed(0); }, higherBetter:true },
+  wb_credit_fitch:   { label:"Fitch Credit Rating",     key:'credit_fitch_num',  fmt: function(v){ return _numToCredit.fitch[v]  || v.toFixed(0); }, higherBetter:true },
   // Energy Mix (Ember / OWID)
   wb_energy_wind_solar_pct: { label:'Wind & Solar (%)',    key:'energy_wind_solar_pct', fmt: v=>v.toFixed(1)+'%', higherBetter:true  },
   wb_energy_hydro_pct:      { label:'Hydro (%)',           key:'energy_hydro_pct',      fmt: v=>v.toFixed(1)+'%', higherBetter:null  },
@@ -4428,7 +4442,8 @@ function _cpWgiRow(label, val, wbKey, iso2) {
 }
 
 // wbKey + iso2: if provided, the row becomes clickable.
-function _cpGaugeRow(label, val, max, suffix, cls, wbKey, iso2) {
+// displayVal (optional 8th arg): override the displayed value text.
+function _cpGaugeRow(label, val, max, suffix, cls, wbKey, iso2, displayVal) {
   suffix = suffix || "";
   cls    = cls    || "";
   var clickable = wbKey && iso2;
@@ -4439,10 +4454,11 @@ function _cpGaugeRow(label, val, max, suffix, cls, wbKey, iso2) {
            "</span><span class=\"cp-gauge-nil\">--</span></div>";
   }
   var pct = Math.min(100, (Math.abs(val) / max) * 100).toFixed(1);
+  var shown = displayVal != null ? displayVal : val.toFixed(1) + suffix;
   return "<div class=\"cp-gauge-row " + cls + clickCls + "\"" + onc + ">" +
     "<span class=\"cp-gauge-lbl\">" + escHtml(label) + "</span>" +
     "<div class=\"cp-gauge-bar\"><div class=\"cp-gauge-fill\" style=\"width:" + pct + "%\"></div></div>" +
-    "<span class=\"cp-gauge-val\">" + val.toFixed(1) + suffix + "</span></div>";
+    "<span class=\"cp-gauge-val\">" + escHtml(String(shown)) + "</span></div>";
 }
 
 // ── _renderCountryPanel ───────────────────────────────────────────────
@@ -4504,14 +4520,13 @@ function _renderCountryPanel(iso2) {
     _cpGaugeRow("Bond yield",   cd.bond_yield_10y,    maxYld,   "%",  "", "wb_bond_yield_10y", iso2) +
     (Number.isFinite(cd.cb_rate)
       ? "<div class=\"cp-gauge-section-hdr\">" + escHtml(cd.cb_bank || "Central Bank") + "</div>" +
-        "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">" + escHtml(cd.cb_rate_label || "Policy Rate") + "</span>" +
-        "<span class=\"cp-gauge-info\">" + cd.cb_rate.toFixed(2) + "%</span></div>"
+        _cpGaugeRow(cd.cb_rate_label || "Policy Rate", cd.cb_rate, 30, "%", "", "wb_cb_rate", iso2)
       : "") +
     (cd.credit_sp || cd.credit_moodys || cd.credit_fitch
       ? "<div class=\"cp-gauge-section-hdr\">Credit Ratings</div>" +
-        (cd.credit_sp     ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">S&amp;P</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_sp)     + "</span></div>" : "") +
-        (cd.credit_moodys ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Moody's</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_moodys) + "</span></div>" : "") +
-        (cd.credit_fitch  ? "<div class=\"cp-gauge-row\"><span class=\"cp-gauge-lbl\">Fitch</span><span class=\"cp-gauge-info\">" + escHtml(cd.credit_fitch)  + "</span></div>" : "")
+        (Number.isFinite(cd.credit_sp_num)     ? _cpGaugeRow("S&P",     cd.credit_sp_num,     21, "", "", "wb_credit_sp",     iso2, cd.credit_sp)     : "") +
+        (Number.isFinite(cd.credit_moodys_num) ? _cpGaugeRow("Moody's", cd.credit_moodys_num, 21, "", "", "wb_credit_moodys", iso2, cd.credit_moodys) : "") +
+        (Number.isFinite(cd.credit_fitch_num)  ? _cpGaugeRow("Fitch",   cd.credit_fitch_num,  21, "", "", "wb_credit_fitch",  iso2, cd.credit_fitch)  : "")
       : "") +
     // ── Governance (WGI) ─────────────────────────────────────────────
     (Number.isFinite(cd.wgi_rule_of_law)
@@ -4554,13 +4569,13 @@ function _renderCountryPanel(iso2) {
     (Number.isFinite(cd.whr_score)
       ? '<div class="cp-gauge-section-hdr">Happiness (WHR 2024)</div>' +
         '<div class="cp-gauge-row"><span class="cp-gauge-lbl">Happiness Rank</span><span class="cp-gauge-info">#' + cd.whr_rank + ' of 143</span></div>' +
-        _cpGaugeRow('Happiness score',  cd.whr_score,      8.0, '', 'cp-green', '', '') +
-        _cpGaugeRow('GDP contribution', cd.whr_gdp,        2.0, '', 'cp-blue',  '', '') +
-        _cpGaugeRow('Social support',   cd.whr_social,     1.5, '', 'cp-blue',  '', '') +
-        _cpGaugeRow('Life expectancy',  cd.whr_health,     1.0, '', '',          '', '') +
-        _cpGaugeRow('Freedom',          cd.whr_freedom,    0.8, '', '',          '', '') +
-        _cpGaugeRow('Generosity',       cd.whr_generosity, 0.5, '', 'cp-amber', '', '') +
-        _cpGaugeRow('Low corruption',   cd.whr_corruption, 0.6, '', 'cp-green', '', '')
+        _cpGaugeRow('Happiness score',  cd.whr_score,      8.0, '', 'cp-green', 'wb_whr_score',      iso2) +
+        _cpGaugeRow('GDP contribution', cd.whr_gdp,        2.0, '', 'cp-blue',  'wb_whr_gdp',        iso2) +
+        _cpGaugeRow('Social support',   cd.whr_social,     1.5, '', 'cp-blue',  'wb_whr_social',     iso2) +
+        _cpGaugeRow('Life expectancy',  cd.whr_health,     1.0, '', '',          'wb_whr_health',     iso2) +
+        _cpGaugeRow('Freedom',          cd.whr_freedom,    0.8, '', '',          'wb_whr_freedom',    iso2) +
+        _cpGaugeRow('Generosity',       cd.whr_generosity, 0.5, '', 'cp-amber', 'wb_whr_generosity', iso2) +
+        _cpGaugeRow('Low corruption',   cd.whr_corruption, 0.6, '', 'cp-green', 'wb_whr_corruption', iso2)
       : '') +
     // ── Energy Mix (Ember) ────────────────────────────────────────────
     (Number.isFinite(cd.energy_coal_pct)
@@ -4663,7 +4678,30 @@ function _renderCountryPanel(iso2) {
 }
 
 // ── _buildCountryDataCaches ───────────────────────────────────────────
+var _creditToNum = (function() {
+  var sp = { 'AAA':21,'AA+':20,'AA':19,'AA-':18,'A+':17,'A':16,'A-':15,
+    'BBB+':14,'BBB':13,'BBB-':12,'BB+':11,'BB':10,'BB-':9,'B+':8,'B':7,'B-':6,
+    'CCC+':5,'CCC':4,'CCC-':3,'CC':2,'C':1,'D':0 };
+  var moodys = { 'Aaa':21,'Aa1':20,'Aa2':19,'Aa3':18,'A1':17,'A2':16,'A3':15,
+    'Baa1':14,'Baa2':13,'Baa3':12,'Ba1':11,'Ba2':10,'Ba3':9,'B1':8,'B2':7,'B3':6,
+    'Caa1':5,'Caa2':4,'Caa3':3,'Ca':2,'C':1 };
+  return { sp: sp, moodys: moodys, fitch: sp };
+})();
+var _numToCredit = (function() {
+  function invert(obj) { var r = {}; for (var k in obj) r[obj[k]] = k; return r; }
+  return { sp: invert(_creditToNum.sp), moodys: invert(_creditToNum.moodys), fitch: invert(_creditToNum.fitch) };
+})();
+
 function _buildCountryDataCaches() {
+  // Compute numeric credit scores for ranking
+  for (var iso in countryData) {
+    var c = countryData[iso];
+    if (!c) continue;
+    if (c.credit_sp)     c.credit_sp_num     = _creditToNum.sp[c.credit_sp]         ?? null;
+    if (c.credit_moodys) c.credit_moodys_num = _creditToNum.moodys[c.credit_moodys] ?? null;
+    if (c.credit_fitch)  c.credit_fitch_num  = _creditToNum.fitch[c.credit_fitch]    ?? null;
+  }
+
   // avgScore cache: average normalized score per radar axis
   // Each axis has a fixed key and inv flag; cache by "key|inv"
   var radarAxes = [
