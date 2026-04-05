@@ -6229,25 +6229,7 @@ function renderCorpList() {
     const wikiAttr = co.wikipedia
       ? ` data-wiki="${escAttr(co.wikipedia)}" data-name="${escAttr(co.name)}"`
       : '';
-    const finJson = escHtml(JSON.stringify({
-      qid: co.qid || null,
-      description: co.description || null,
-      industry: co.industry || null, exchange: co.exchange || null,
-      ticker: co.ticker || null, traded_as: co.traded_as || null,
-      founded: co.founded || null, company_type: co.company_type || null,
-      website: co.website || null,
-      ceo: co.ceo || null, key_people: co.key_people || null,
-      founders: co.founders || null, parent_org: co.parent_org || null,
-      products: co.products || null, subsidiaries: co.subsidiaries || null,
-      employees: co.employees || null, employees_history: co.employees_history || [],
-      revenue: co.revenue || null, revenue_year: co.revenue_year || null,
-      revenue_currency: co.revenue_currency || null, revenue_history: co.revenue_history || [],
-      net_income: co.net_income || null, net_income_currency: co.net_income_currency || null, net_income_history: co.net_income_history || [],
-      operating_income: co.operating_income || null, operating_income_currency: co.operating_income_currency || null, operating_income_history: co.operating_income_history || [],
-      total_assets: co.total_assets || null, total_assets_currency: co.total_assets_currency || null, total_assets_history: co.total_assets_history || [],
-      total_equity: co.total_equity || null, total_equity_currency: co.total_equity_currency || null, total_equity_history: co.total_equity_history || [],
-      market_cap: co.market_cap || null, market_cap_year: co.market_cap_year || null, market_cap_currency: co.market_cap_currency || null,
-    }));
+    const finJson = _gcorpFinJson(co);
     const wdUrl = `https://www.wikidata.org/wiki/${escHtml(co.qid)}`;
     const linkHtml = co.wikipedia
       ? `<a href="${escAttr(co.wikipedia)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Wikipedia">W↗</a>`
