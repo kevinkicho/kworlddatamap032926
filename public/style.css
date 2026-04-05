@@ -1342,6 +1342,25 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 }
 .region-spark-range { font-size: 0.61rem; color: #484f58; }
 
+/* Universities section in city info tab */
+.univ-section { margin-top: 10px; border-top: 1px solid #21262d; padding-top: 8px; }
+.univ-header {
+  font-size: 0.72rem; font-weight: 600; color: #8b949e;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+}
+.univ-count {
+  background: #21262d; color: #58a6ff;
+  border-radius: 10px; padding: 0 6px;
+  font-size: 0.68rem; font-weight: 700;
+}
+.univ-list { list-style: none; margin: 0; padding: 0; max-height: 220px; overflow-y: auto; }
+.univ-item { padding: 4px 0; border-bottom: 1px solid #161b22; line-height: 1.4; }
+.univ-item:last-child { border-bottom: none; }
+.univ-name { font-size: 0.82rem; color: #e6edf3; font-weight: 500; }
+.univ-detail, .univ-meta { font-size: 0.72rem; color: #8b949e; }
+.univ-more { padding: 4px 0; font-size: 0.72rem; color: #484f58; font-style: italic; }
+
 /* Trade partners row in country panel */
 .cp-trade-row { align-items: center; }
 .cp-trade-partners { display: flex; gap: 4px; flex-wrap: wrap; }

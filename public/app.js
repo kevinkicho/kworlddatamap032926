@@ -971,6 +971,15 @@ function _renderStatsPanel() {
         const cdata = countryData[iso2];
         points.push({ qid: iso2, val: rawVal, name: (cdata && cdata.name) || iso2, region: (cdata && cdata.region) || '', iso: iso2 });
       }
+    } else if (wbDef.src === 'eci') {
+      // ECI data lives in eciData
+      for (const [iso2, edata] of Object.entries(eciData)) {
+        if (!edata) continue;
+        const rawVal = edata[wbDef.key];
+        if (rawVal == null || isNaN(rawVal)) continue;
+        const cdata = countryData[iso2];
+        points.push({ qid: iso2, val: rawVal, name: (cdata && cdata.name) || iso2, region: (cdata && cdata.region) || '', iso: iso2 });
+      }
     } else {
       for (const [iso2, cdata] of Object.entries(countryData)) {
         if (!cdata || !cdata.region || cdata.region === 'Aggregates') continue;
@@ -1427,6 +1436,14 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     ${(() => { const g = gawcCities[city.qid]; if (!g) return ''; const col = GAWC_TIER_COLOR[g.tier] || '#8b949e'; return infoChip('World City', `<span class="gawc-tier-chip" style="background:${col}22;color:${col};border:1px solid ${col}55">${escHtml(g.tier)}</span>`, true, false, 'gawc_score'); })()}
     ${(() => { const a = airportData[city.qid]; if (!a) return ''; return infoChip('Airport', `<span style="color:#58a6ff;font-weight:600">✈ ${fmtNum(a.directDestinations)}</span> <span style="color:#8b949e;font-size:0.78em">direct routes · ${escHtml(a.iata)}</span>`, true, false, 'directDestinations'); })()}
     ${(() => {
+      const aq = airQualityData[city.qid];
+      if (!aq) return '';
+      const AQ_COL = { 'Good':'#3fb950', 'Acceptable':'#58a6ff', 'Moderate':'#f0a500', 'Poor':'#ffa657', 'Very Poor':'#f85149', 'Severe':'#bc8cff' };
+      const col = AQ_COL[aq.category] || '#8b949e';
+      const badge = `<span style="background:${col}22;color:${col};border:1px solid ${col}55;border-radius:4px;padding:1px 5px;font-size:0.75em;font-weight:600">${escHtml(aq.category)}</span>`;
+      return infoChip('Air Quality', `<span style="color:${col};font-weight:700">${aq.pm25}</span><span style="color:#8b949e;font-size:0.78em"> µg/m³ PM2.5</span> ${badge} <span style="color:#484f58;font-size:0.72em">${aq.year}</span>`, true, false, 'who_pm25');
+    })()}
+    ${(() => {
       const ca = climateAnnual(getCityClimate(city));
       if (!ca) return '';
       const tempCol = ca.avgTemp > 25 ? '#ffa657' : ca.avgTemp > 15 ? '#3fb950' : ca.avgTemp > 5 ? '#58a6ff' : '#a5d6ff';
@@ -1476,6 +1493,12 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
         ${wbChip('Air deaths', 'air_death_rate',  v => v.toFixed(1)+'/100k',             'wb_air_death_rate')}
         ${wbChip('Road deaths','road_death_rate', v => v.toFixed(1)+'/100k',             'wb_road_death_rate')}
         ${wb.income_level ? `<div class="wb-chip wb-chip-full"><div class="wb-chip-lbl">Income level</div><div class="wb-chip-val">${escHtml(wb.income_level)}</div></div>` : ''}
+        ${(() => {
+          const e = city.iso ? eciData[city.iso] : null;
+          if (!e) return '';
+          const col = e.eci > 1.5 ? '#3fb950' : e.eci > 0.5 ? '#58a6ff' : e.eci > -0.5 ? '#f0a500' : '#f85149';
+          return `<div class="wb-chip wb-chip-clickable" onclick="openStatsPanel('eci','${escHtml(city.iso)}')" title="Economic Complexity Index — click for country ranking"><div class="wb-chip-lbl">Complexity (ECI)</div><div class="wb-chip-val" style="color:${col}">${e.eci > 0 ? '+' : ''}${e.eci.toFixed(2)} <span class="wb-chip-yr">${e.year}</span></div></div>`;
+        })()}
       </div>
     </td></tr>` : '';
 
@@ -1673,6 +1696,19 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   const regionInfo  = _getRegionData(city);
   const regionHtml  = regionInfo ? _buildRegionHtml(regionInfo) : '';
 
+  // ── Universities section ──
+  const univList = universitiesData[city.qid] || [];
+  const univHtml = univList.length ? (function() {
+    const rows = univList.slice(0, 20).map(u => {
+      const foundedStr = u.founded ? `<span class="univ-meta">est. ${u.founded}</span>` : '';
+      const studentsStr = u.students ? `<span class="univ-meta">${fmtNum(u.students)} students</span>` : '';
+      const meta = [foundedStr, studentsStr].filter(Boolean).join(' · ');
+      return `<li class="univ-item"><span class="univ-name">${escHtml(u.name)}</span>${meta ? `<br><span class="univ-detail">${meta}</span>` : ''}</li>`;
+    }).join('');
+    const more = univList.length > 20 ? `<li class="univ-more">+${univList.length - 20} more</li>` : '';
+    return `<div class="univ-section"><div class="univ-header">Universities &amp; Research Institutions <span class="univ-count">${univList.length}</span></div><ul class="univ-list">${rows}${more}</ul></div>`;
+  })() : '';
+
   if (infoEl) {
     infoEl.innerHTML = `
       ${carouselHtml}
@@ -1683,6 +1719,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
       ${infoChips}
       ${(govSec || linksSec || wbSec) ? `<table class="wiki-info-table">${govSec}${linksSec}${wbSec}</table>` : ''}
       ${regionHtml}
+      ${univHtml}
     `;
     // Mount region sparkline charts after innerHTML is set
     infoEl.querySelectorAll('.region-spark[data-region-pts]').forEach(el => {
@@ -1760,6 +1797,10 @@ let usStatesData   = {};   // 2-letter state abbr → {name, unemployment_rate, 
 let eurostatRegions = {};  // NUTS-2 code → {name, unemployment_rate, gdp_pps_eu100, histories...}
 let canadaProvinces = {};  // province abbr → {name, unemployment_rate, gdp_bn_cad, ...}
 let australiaStates = {};  // state abbr → {name, unemployment_rate, gsp_bn_aud, ...}
+let airQualityData  = {};  // city QID → {pm25, year, category}
+let universitiesData= {};  // city QID → [{qid, name, founded, students}]
+let fbiCrimeData    = {};  // city QID → {violentPer100k, propertyPer100k, year}
+let eciData         = {};  // ISO2 → {eci, year}
 let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
 let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
@@ -1933,6 +1974,12 @@ const CITY_STAT_DEFS = {
                 higherBetter:true },
   directDestinations: { label:'Direct Air Destinations', key: c=>airportData[c.qid]?.directDestinations ?? null,
                 fmt: v => fmtNum(v) + ' airports', higherBetter:true },
+  who_pm25:     { label:'PM2.5 Air Quality (WHO)',   key: c=>airQualityData[c.qid]?.pm25 ?? null,
+                  fmt: v => v.toFixed(1) + ' μg/m³', higherBetter:false },
+  fbi_violentPer100k:  { label:'Violent Crime Rate (FBI)',  key: c=>fbiCrimeData[c.qid]?.violentPer100k ?? null,
+                          fmt: v => v.toFixed(0) + '/100k', higherBetter:false },
+  fbi_propertyPer100k: { label:'Property Crime Rate (FBI)', key: c=>fbiCrimeData[c.qid]?.propertyPer100k ?? null,
+                          fmt: v => v.toFixed(0) + '/100k', higherBetter:false },
   zhvi: { label:'Home Value (Zillow ZHVI)',  key: c=>zillowData[c.qid]?.zhvi  ?? null,
           fmt: v => '$' + fmtNum(Math.round(v)), higherBetter:null },
   zori: { label:'Rent Index (Zillow ZORI)',  key: c=>zillowData[c.qid]?.zori  ?? null,
@@ -1983,6 +2030,7 @@ const WB_STAT_DEFS = {
   // Transparency & Freedom (TI CPI / Freedom House)
   wb_ti_cpi:              { label:'Corruption Index (TI CPI)',key:'ti_cpi_score',        fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
   wb_fh_score:            { label:'Freedom Score (FH)',       key:'fh_score',            fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
+  eci:                 { label:'Economic Complexity Index', key:'eci',          fmt: v=>(v>0?'+':'')+v.toFixed(2), higherBetter:true, src:'eci' },
   wb_rd_spend_pct:     { label:'R&D Spending',        key:'rd_spend_pct',     fmt: v=>v.toFixed(1)+'%',        higherBetter:true,  src:'oecd' },
   wb_tax_revenue_pct:  { label:'Tax Revenue (central)',key:'tax_revenue_pct',  fmt: v=>v.toFixed(1)+'%',        higherBetter:null,  src:'oecd' },
   wb_hours_worked:     { label:'Hours Worked/Year',    key:'hours_worked',     fmt: v=>Math.round(v)+' hrs',    higherBetter:null,  src:'oecd' },
@@ -2226,7 +2274,19 @@ function buildEconomyHtml(acs, biz, qid) {
     html += `</div>`;
   }
 
-  html += `<div class="census-source" style="margin-top:8px">US Census Bureau · ACS 2023 · CBP 2022 · Decennial 2020${zw ? ' · Zillow Research' : ''}</div></div>`;
+  // ── FBI Crime block ───────────────────────────────────────────────────────
+  const crime = fbiCrimeData[qid];
+  if (crime) {
+    const vCol = crime.violentPer100k > 800 ? 'census-red' : crime.violentPer100k > 400 ? 'census-amber' : 'census-green';
+    const pCol = crime.propertyPer100k > 3000 ? 'census-red' : crime.propertyPer100k > 1500 ? 'census-amber' : '';
+    html += `<div class="census-section-title" style="margin-top:10px">Crime · FBI UCR ${crime.year}</div>
+    <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
+      ${statCell('Violent Crime', crime.violentPer100k.toFixed(0) + '/100k', vCol, 'fbi_violentPer100k')}
+      ${statCell('Property Crime', crime.propertyPer100k.toFixed(0) + '/100k', pCol, 'fbi_propertyPer100k')}
+    </div>`;
+  }
+
+  html += `<div class="census-source" style="margin-top:8px">US Census Bureau · ACS 2023 · CBP 2022 · Decennial 2020${zw ? ' · Zillow Research' : ''}${crime ? ' · FBI UCR' : ''}</div></div>`;
   return html;
 }
 
@@ -2852,10 +2912,20 @@ function buildEurostatHtml(es, qid) {
   if (es.pm10 != null || es.no2 != null || es.greenSpacePct != null || es.roadNoisePct != null) {
     html += `<div class="census-section-title" style="margin-top:6px">Environment & Air Quality</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
-      ${es.pm10 != null          ? statCell('PM10', es.pm10.toFixed(1) + ' μg/m³', pm10Cls, 'eurostat_pm10') : ''}
-      ${es.no2  != null          ? statCell('NO₂',  es.no2.toFixed(1)  + ' μg/m³', no2Cls,  'eurostat_no2')  : ''}
-      ${es.greenSpacePct != null ? statCell('Green Space', es.greenSpacePct.toFixed(1) + '%', '', 'eurostat_greenSpacePct') : ''}
-      ${es.roadNoisePct  != null ? statCell('Road Noise >65dB', es.roadNoisePct.toFixed(1) + '%', '', 'eurostat_roadNoisePct') : ''}
+      ${es.pm10 != null           ? statCell('PM10', es.pm10.toFixed(1) + ' μg/m³', pm10Cls, 'eurostat_pm10') : ''}
+      ${es.no2  != null           ? statCell('NO₂',  es.no2.toFixed(1)  + ' μg/m³', no2Cls,  'eurostat_no2')  : ''}
+      ${es.greenSpacePct != null  ? statCell('Green Urban Area', es.greenSpacePct.toFixed(1) + '% land', '', 'eurostat_greenSpacePct') : ''}
+      ${es.roadNoisePct  != null  ? statCell('Road Noise >65dB', es.roadNoisePct.toFixed(1) + '% residents', '', 'eurostat_roadNoisePct') : ''}
+    </div>`;
+  }
+
+  // ── Transport ─────────────────────────────────────────────────────────────
+  if (es.publicTransportPerInhab != null || es.carsPerHundred != null || es.hospitalBedsPer100k != null) {
+    html += `<div class="census-section-title" style="margin-top:6px">Transport &amp; Health</div>
+    <div class="census-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-top:4px">
+      ${es.publicTransportPerInhab != null ? statCell('Transit veh-km/p', fmtN(es.publicTransportPerInhab), '', 'eurostat_publicTransportPerInhab') : ''}
+      ${es.carsPerHundred != null          ? statCell('Cars / 100 people', es.carsPerHundred.toFixed(0), '', 'eurostat_carsPerHundred') : ''}
+      ${es.hospitalBedsPer100k != null     ? statCell('Hospital beds/100k', fmtN(es.hospitalBedsPer100k), '', 'eurostat_hospitalBedsPer100k') : ''}
     </div>`;
   }
 
@@ -2882,33 +2952,34 @@ function buildEurostatHtml(es, qid) {
   }
 
   // ── Demographics ──────────────────────────────────────────────────────────
-  if (es.medianAge != null || es.popChangePct != null || es.ageDependency != null) {
+  if (es.medianAge != null || es.popChangePct != null || es.ageDependency != null || es.foreignBornPct != null) {
     const popChangeFmt = v => v != null ? (v >= 0 ? '+' : '') + v.toFixed(2) + '%' : '—';
     const popChangeCls = es.popChangePct != null ? (es.popChangePct > 0 ? 'census-green' : 'census-red') : '';
     html += `<div class="census-section-title" style="margin-top:6px">Demographics</div>
-    <div class="census-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-top:4px">
-      ${es.medianAge     != null ? statCell('Median Age', es.medianAge.toFixed(1) + ' yrs', '', 'eurostat_medianAge') : ''}
-      ${es.popChangePct  != null ? statCell('Pop Change/yr', popChangeFmt(es.popChangePct), popChangeCls, 'eurostat_popChangePct') : ''}
-      ${es.ageDependency != null ? statCell('Age Dependency', es.ageDependency.toFixed(1) + '%', '', 'eurostat_ageDependency') : ''}
+    <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
+      ${es.medianAge      != null ? statCell('Median Age', es.medianAge.toFixed(1) + ' yrs', '', 'eurostat_medianAge') : ''}
+      ${es.popChangePct   != null ? statCell('Pop Change/yr', popChangeFmt(es.popChangePct), popChangeCls, 'eurostat_popChangePct') : ''}
+      ${es.foreignBornPct != null ? statCell('Foreign-Born', es.foreignBornPct.toFixed(1) + '%', '', 'eurostat_foreignBornPct') : ''}
+      ${es.ageDependency  != null ? statCell('Age Dependency', es.ageDependency.toFixed(1) + '%', '', 'eurostat_ageDependency') : ''}
     </div>`;
   }
 
   // ── Trend sparklines ───────────────────────────────────────────────────────
   const TREND_ROWS = [
-    { key:'unemploymentHistory',   label:'Unemployment',      valKey:'unemploymentPct',  fmt:fmtPct, color:'#f85149', metric:'eurostat_unemploymentPct'  },
-    { key:'medianIncomeHistory',   label:'Median Income',     valKey:'medianIncome',     fmt:fmtEur, color:'#f0a500', metric:'eurostat_medianIncome'     },
-    { key:'povertyHistory',        label:'At-Risk Poverty',   valKey:'povertyPct',       fmt:fmtPct, color:'#ffa657', metric:'eurostat_povertyPct'       },
-    { key:'activityHistory',       label:'Activity Rate',     valKey:'activityRate',     fmt:fmtPct, color:'#3fb950', metric:'eurostat_activityRate'     },
-    { key:'homeownershipHistory',  label:'Homeownership',     valKey:'homeownershipPct', fmt:fmtPct, color:'#58a6ff', metric:'eurostat_homeownershipPct' },
-    { key:'rentHistory',           label:'Rent / m²',         valKey:'rentPerSqm',       fmt:v=>'€'+v.toFixed(1), color:'#a371f7', metric:'eurostat_rentPerSqm' },
-    { key:'companiesHistory',      label:'Companies',         valKey:'totalCompanies',   fmt:fmtN,   color:'#79c0ff', metric:'eurostat_totalCompanies'   },
-    { key:'pm10History',           label:'PM10',              valKey:'pm10',             fmt:v=>v.toFixed(1)+' μg/m³', color:'#ff7b72', metric:'eurostat_pm10'          },
-    { key:'no2History',            label:'NO₂',               valKey:'no2',              fmt:v=>v.toFixed(1)+' μg/m³', color:'#ffa657', metric:'eurostat_no2'           },
-    { key:'greenSpacePctHistory',  label:'Green Space %',     valKey:'greenSpacePct',    fmt:v=>v.toFixed(1)+'%',  color:'#3fb950', metric:'eurostat_greenSpacePct'  },
-    { key:'touristNightsHistory',  label:'Tourist Nights',    valKey:'touristNights',    fmt:fmtN,   color:'#e3b341', metric:'eurostat_touristNights'    },
-    { key:'museumVisitorsHistory', label:'Museum Visitors',   valKey:'museumVisitors',   fmt:fmtN,   color:'#d2a8ff', metric:'eurostat_museumVisitors'   },
-    { key:'medianAgeHistory',      label:'Median Age',        valKey:'medianAge',        fmt:v=>v.toFixed(1)+' yrs', color:'#79c0ff', metric:'eurostat_medianAge'      },
-    { key:'popChangePctHistory',   label:'Pop Change/yr',     valKey:'popChangePct',     fmt:v=>(v>=0?'+':'')+v.toFixed(2)+'%', color:'#56d364', metric:'eurostat_popChangePct'   },
+    { key:'unemploymentHistory',       label:'Unemployment',         valKey:'unemploymentPct',         fmt:fmtPct, color:'#f85149', metric:'eurostat_unemploymentPct'         },
+    { key:'medianIncomeHistory',       label:'Median Income',        valKey:'medianIncome',            fmt:fmtEur, color:'#f0a500', metric:'eurostat_medianIncome'            },
+    { key:'povertyHistory',            label:'At-Risk Poverty',      valKey:'povertyPct',              fmt:fmtPct, color:'#ffa657', metric:'eurostat_povertyPct'              },
+    { key:'activityHistory',           label:'Activity Rate',        valKey:'activityRate',            fmt:fmtPct, color:'#3fb950', metric:'eurostat_activityRate'            },
+    { key:'homeownershipHistory',      label:'Homeownership',        valKey:'homeownershipPct',        fmt:fmtPct, color:'#58a6ff', metric:'eurostat_homeownershipPct'        },
+    { key:'rentHistory',               label:'Rent / m²',            valKey:'rentPerSqm',              fmt:v=>'€'+v.toFixed(1), color:'#a371f7', metric:'eurostat_rentPerSqm' },
+    { key:'companiesHistory',          label:'Companies',            valKey:'totalCompanies',          fmt:fmtN,   color:'#79c0ff', metric:'eurostat_totalCompanies'          },
+    { key:'pm10History',               label:'PM10',                 valKey:'pm10',                    fmt:v=>v.toFixed(1)+' μg/m³', color:'#ff7b72', metric:'eurostat_pm10'  },
+    { key:'no2History',                label:'NO₂',                  valKey:'no2',                     fmt:v=>v.toFixed(1)+' μg/m³', color:'#ffa657', metric:'eurostat_no2'   },
+    { key:'greenSpacePctHistory',       label:'Green Urban Area %',   valKey:'greenSpacePct',           fmt:v=>v.toFixed(1)+'%', color:'#3fb950', metric:'eurostat_greenSpacePct'  },
+    { key:'touristNightsHistory',      label:'Tourist Nights',       valKey:'touristNights',           fmt:fmtN,   color:'#e3b341', metric:'eurostat_touristNights'           },
+    { key:'museumVisitorsHistory',     label:'Museum Visitors',      valKey:'museumVisitors',          fmt:fmtN,   color:'#d2a8ff', metric:'eurostat_museumVisitors'          },
+    { key:'medianAgeHistory',          label:'Median Age',           valKey:'medianAge',               fmt:v=>v.toFixed(1)+' yrs', color:'#79c0ff', metric:'eurostat_medianAge' },
+    { key:'popChangePctHistory',       label:'Pop Change/yr',        valKey:'popChangePct',            fmt:v=>(v>=0?'+':'')+v.toFixed(2)+'%', color:'#56d364', metric:'eurostat_popChangePct' },
   ].filter(r => es[r.key] && es[r.key].length >= 2);
 
   if (TREND_ROWS.length > 0) {
@@ -3198,7 +3269,7 @@ async function init() {
     // world-countries.json (3.9 MB) is lazy-loaded on first choropleth toggle
     // eurostat-cities.json (1.2 MB) is lazy-loaded on first EU city panel open
     // companies.json (75 MB) is lazy-loaded on first use
-    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, noaaRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes] = await Promise.all([
+    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, noaaRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes, airQualRes, univRes, fbiRes, eciRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/census-cities.json').catch(() => null),
@@ -3219,6 +3290,10 @@ async function init() {
       fetch('/eurostat-regions.json').catch(() => null),
       fetch('/canada-provinces.json').catch(() => null),
       fetch('/australia-states.json').catch(() => null),
+      fetch('/who-airquality.json').catch(() => null),
+      fetch('/universities.json').catch(() => null),
+      fetch('/fbi-crime.json').catch(() => null),
+      fetch('/eci-data.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -3361,6 +3436,30 @@ async function init() {
         australiaStates = await australiaStateRes.json();
         console.log(`[init] Australia states loaded (${Object.keys(australiaStates).length})`);
       } catch { console.warn('[init] australia-states.json is malformed'); }
+    }
+    if (airQualRes && airQualRes.ok) {
+      try {
+        airQualityData = await airQualRes.json();
+        console.log(`[init] WHO air quality loaded (${Object.keys(airQualityData).length} cities)`);
+      } catch { console.warn('[init] who-airquality.json is malformed'); }
+    }
+    if (univRes && univRes.ok) {
+      try {
+        universitiesData = await univRes.json();
+        console.log(`[init] Universities loaded (${Object.keys(universitiesData).length} cities)`);
+      } catch { console.warn('[init] universities.json is malformed'); }
+    }
+    if (fbiRes && fbiRes.ok) {
+      try {
+        fbiCrimeData = await fbiRes.json();
+        console.log(`[init] FBI crime data loaded (${Object.keys(fbiCrimeData).length} cities)`);
+      } catch { console.warn('[init] fbi-crime.json is malformed'); }
+    }
+    if (eciRes && eciRes.ok) {
+      try {
+        eciData = await eciRes.json();
+        console.log(`[init] ECI data loaded (${Object.keys(eciData).length} countries)`);
+      } catch { console.warn('[init] eci-data.json is malformed'); }
     }
     // ── Phase 6: apply overrides + build UI ──
     applyOverrides();

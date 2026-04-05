@@ -1,0 +1,7807 @@
+{
+  "Q1017": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q25410": {
+    "pm25": 7.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q6869": {
+    "pm25": 9.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q34106": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q78": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q25319": {
+    "pm25": 7.8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q118958": {
+    "pm25": 10.1,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q63049": {
+    "pm25": 32.5,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q816845": {
+    "pm25": 15,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q271730": {
+    "pm25": 6.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q36405": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1519": {
+    "pm25": 33.8,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q2634": {
+    "pm25": 14.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q42956": {
+    "pm25": 47,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q665894": {
+    "pm25": 18,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q406": {
+    "pm25": 12.4,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q175323": {
+    "pm25": 23.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q3624": {
+    "pm25": 20.5,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q5112": {
+    "pm25": 6.1,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q485172": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q152462": {
+    "pm25": 18.3,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q170454": {
+    "pm25": 55.5,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q983026": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3856": {
+    "pm25": 13.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q11959": {
+    "pm25": 13.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q42941": {
+    "pm25": 111.8,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q13678": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q200805": {
+    "pm25": 25,
+    "year": 2018,
+    "category": "Very Poor"
+  },
+  "Q23984578": {
+    "pm25": 10.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q31917806": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1022149": {
+    "pm25": 11.3,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q35178": {
+    "pm25": 45.3,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q1070": {
+    "pm25": 27.6,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q170366": {
+    "pm25": 57.6,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q807": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q106869611": {
+    "pm25": 11.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q349983": {
+    "pm25": 17,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q217646": {
+    "pm25": 31,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q36312": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q47465": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q192379": {
+    "pm25": 27.1,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q40104": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q530171": {
+    "pm25": 20.9,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q200049": {
+    "pm25": 110.1,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q163132": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q182025": {
+    "pm25": 21.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q424435": {
+    "pm25": 35.7,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q310893": {
+    "pm25": 85.1,
+    "year": 2012,
+    "category": "Severe"
+  },
+  "Q31926034": {
+    "pm25": 12.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q24008386": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q24017120": {
+    "pm25": 3.1,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q24861": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q13320": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q50189": {
+    "pm25": 9.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q34804": {
+    "pm25": 6.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q24012786": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q15092": {
+    "pm25": 4.7,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q2807": {
+    "pm25": 9.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q6088": {
+    "pm25": 18.9,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q88": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q12292": {
+    "pm25": 10.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q13364": {
+    "pm25": 15.2,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q31916251": {
+    "pm25": 7.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3561": {
+    "pm25": 21.5,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q142811": {
+    "pm25": 8.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1218": {
+    "pm25": 14.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q112795541": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q104746": {
+    "pm25": 11.6,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q3519": {
+    "pm25": 11.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3750": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q206116": {
+    "pm25": 17.3,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q1489": {
+    "pm25": 19,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q200017": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q170532": {
+    "pm25": 31.6,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q8621": {
+    "pm25": 10.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q41604": {
+    "pm25": 11.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3805": {
+    "pm25": 28.8,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q270176": {
+    "pm25": 30,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q487801": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q48403": {
+    "pm25": 69.5,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q41329": {
+    "pm25": 11.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q39450": {
+    "pm25": 5.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q58710": {
+    "pm25": 42,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q3415": {
+    "pm25": 12.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1726": {
+    "pm25": 5.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q134121": {
+    "pm25": 8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q186006": {
+    "pm25": 27,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q42116": {
+    "pm25": 18.5,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q13486": {
+    "pm25": 12.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q38380": {
+    "pm25": 9.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3640": {
+    "pm25": 19.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q760153": {
+    "pm25": 31.5,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q2795": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q183584": {
+    "pm25": 34,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q360374": {
+    "pm25": 36,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q2090": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q74957": {
+    "pm25": 44,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q486149": {
+    "pm25": 23,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q6487": {
+    "pm25": 18.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q3915": {
+    "pm25": 32,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q3612": {
+    "pm25": 12,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q12892": {
+    "pm25": 11.2,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q324293": {
+    "pm25": 62,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q42120": {
+    "pm25": 26.2,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q47430": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q41843": {
+    "pm25": 16.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q173591": {
+    "pm25": 24.8,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q54898": {
+    "pm25": 5.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q212628": {
+    "pm25": 31.1,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q13666": {
+    "pm25": 11.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q201101": {
+    "pm25": 19.8,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q2096": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q81033": {
+    "pm25": 23,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q2751": {
+    "pm25": 11.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q13362": {
+    "pm25": 15.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q2203": {
+    "pm25": 11.6,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q2211": {
+    "pm25": 5.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q856171": {
+    "pm25": 16.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q647543": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q28587": {
+    "pm25": 32,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q42114": {
+    "pm25": 34.2,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q202139": {
+    "pm25": 65,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q7053": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q171639": {
+    "pm25": 15.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q648501": {
+    "pm25": 6.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q23438": {
+    "pm25": 22.1,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q60956": {
+    "pm25": 16.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1520": {
+    "pm25": 21.8,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q6122": {
+    "pm25": 19.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q2933": {
+    "pm25": 18.4,
+    "year": 2010,
+    "category": "Poor"
+  },
+  "Q12833394": {
+    "pm25": 6.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q203263": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1524": {
+    "pm25": 14.8,
+    "year": 2022,
+    "category": "Moderate"
+  },
+  "Q23556": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q170521": {
+    "pm25": 52.1,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q37100": {
+    "pm25": 5.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2749": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q236083": {
+    "pm25": 17.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q16559": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q49280477": {
+    "pm25": 15.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q6397": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q102309114": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q71": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q178835": {
+    "pm25": 26,
+    "year": 2014,
+    "category": "Very Poor"
+  },
+  "Q243846": {
+    "pm25": 39.7,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q10737004": {
+    "pm25": 24.8,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q4108": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1741": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q15679": {
+    "pm25": 6.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1040": {
+    "pm25": 7.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q9125": {
+    "pm25": 10.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3992": {
+    "pm25": 7.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q799808": {
+    "pm25": 67,
+    "year": 2012,
+    "category": "Severe"
+  },
+  "Q1530": {
+    "pm25": 48.5,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q2656": {
+    "pm25": 11.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3616": {
+    "pm25": 45.7,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q360178": {
+    "pm25": 55.3,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q54108": {
+    "pm25": 11.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q185280": {
+    "pm25": 29.8,
+    "year": 2022,
+    "category": "Very Poor"
+  },
+  "Q658240": {
+    "pm25": 26,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q24013256": {
+    "pm25": 13.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q594843": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q75203": {
+    "pm25": 41,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q532981": {
+    "pm25": 31.1,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q16572": {
+    "pm25": 23,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q49256": {
+    "pm25": 18.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q199723": {
+    "pm25": 15.3,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q397905": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3936": {
+    "pm25": 10.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q528432": {
+    "pm25": 132,
+    "year": 2012,
+    "category": "Severe"
+  },
+  "Q11725": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q495": {
+    "pm25": 16.6,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1355": {
+    "pm25": 28.2,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q360069": {
+    "pm25": 43,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1861": {
+    "pm25": 23.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q144983": {
+    "pm25": 16.5,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q58584": {
+    "pm25": 50,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q185684": {
+    "pm25": 36,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q514796": {
+    "pm25": 47,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q496576": {
+    "pm25": 19,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q515388": {
+    "pm25": 32,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q569907": {
+    "pm25": 44,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q5826": {
+    "pm25": 51,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q23564": {
+    "pm25": 11.7,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q43788": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q48278": {
+    "pm25": 10.5,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q1492": {
+    "pm25": 12.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q379509": {
+    "pm25": 35,
+    "year": 2011,
+    "category": "Severe"
+  },
+  "Q26119": {
+    "pm25": 15.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q213026": {
+    "pm25": 27,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q747840": {
+    "pm25": 21.8,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q13470": {
+    "pm25": 12.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q471886": {
+    "pm25": 21.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q709298": {
+    "pm25": 49,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q62823": {
+    "pm25": 17,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q34183": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q211805": {
+    "pm25": 24.9,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q6537": {
+    "pm25": 14.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1479": {
+    "pm25": 10.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q28218": {
+    "pm25": 8.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q748336": {
+    "pm25": 35,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q1083": {
+    "pm25": 8.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q37776": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q208948": {
+    "pm25": 8.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1012465": {
+    "pm25": 7.4,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q178945": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q1842": {
+    "pm25": 9.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q34647": {
+    "pm25": 35.5,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q58422": {
+    "pm25": 49,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q210365": {
+    "pm25": 23,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q416748": {
+    "pm25": 31.6,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q956": {
+    "pm25": 38,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q42780": {
+    "pm25": 23,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q3820": {
+    "pm25": 19,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q194531": {
+    "pm25": 42.7,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q3879": {
+    "pm25": 7.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q10686": {
+    "pm25": 6.8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3711": {
+    "pm25": 24.2,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q2868": {
+    "pm25": 30.2,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q34227": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q81137": {
+    "pm25": 17.5,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q190828": {
+    "pm25": 22.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q152467": {
+    "pm25": 23.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q24009374": {
+    "pm25": 12.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q487981": {
+    "pm25": 7.9,
+    "year": 2013,
+    "category": "Acceptable"
+  },
+  "Q23986070": {
+    "pm25": 11.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q75091": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q240": {
+    "pm25": 6.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q628": {
+    "pm25": 19.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q26793": {
+    "pm25": 5.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q64": {
+    "pm25": 13.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q70": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1085": {
+    "pm25": 15.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q6231": {
+    "pm25": 19,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q648": {
+    "pm25": 11.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q238508": {
+    "pm25": 220.4,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q80989": {
+    "pm25": 61,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q72990": {
+    "pm25": 46,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q761": {
+    "pm25": 14.2,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q894077": {
+    "pm25": 9.1,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3012": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2112": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q6046": {
+    "pm25": 11.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q106583": {
+    "pm25": 22.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q204434": {
+    "pm25": 20.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q486235": {
+    "pm25": 25,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q486319": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q208006": {
+    "pm25": 9.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q132671": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q372414": {
+    "pm25": 49,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q11736": {
+    "pm25": 48,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q42651": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q4970": {
+    "pm25": 30,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q7024": {
+    "pm25": 12,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q193806": {
+    "pm25": 15.3,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q26772254": {
+    "pm25": 1.5,
+    "year": 2022,
+    "category": "Good"
+  },
+  "Q746718": {
+    "pm25": 10.8,
+    "year": 2013,
+    "category": "Moderate"
+  },
+  "Q79867": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2256": {
+    "pm25": 7.8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q9361": {
+    "pm25": 33.2,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q82765": {
+    "pm25": 16.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q157246": {
+    "pm25": 23.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q170377": {
+    "pm25": 8.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1761": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q160927": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q490737": {
+    "pm25": 8.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q90": {
+    "pm25": 11.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q24008518": {
+    "pm25": 7.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q31487": {
+    "pm25": 21.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q26268": {
+    "pm25": 2.8,
+    "year": 2017,
+    "category": "Good"
+  },
+  "Q3014": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2841": {
+    "pm25": 15.6,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q8385": {
+    "pm25": 20,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q156974": {
+    "pm25": 15.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1906": {
+    "pm25": 11.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1891": {
+    "pm25": 15,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q200951": {
+    "pm25": 25.5,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q6526": {
+    "pm25": 13.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3886": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q103732": {
+    "pm25": 5.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q2936": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q198370": {
+    "pm25": 52,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q100": {
+    "pm25": 6.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q46400": {
+    "pm25": 17.2,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q317946": {
+    "pm25": 28.1,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q192517": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q172455": {
+    "pm25": 10.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q20989094": {
+    "pm25": 11.2,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q605454": {
+    "pm25": 16.5,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q519741": {
+    "pm25": 21.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q188478": {
+    "pm25": 12.7,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q44198": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1711": {
+    "pm25": 10.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q61432": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q34180": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q82174": {
+    "pm25": 12,
+    "year": 2022,
+    "category": "Moderate"
+  },
+  "Q1780": {
+    "pm25": 13.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3200": {
+    "pm25": 6.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2773": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q40191": {
+    "pm25": 4,
+    "year": 2019,
+    "category": "Good"
+  },
+  "Q24879": {
+    "pm25": 9.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2706": {
+    "pm25": 9.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q5968": {
+    "pm25": 17.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q6221": {
+    "pm25": 19.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q12193": {
+    "pm25": 6.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q146356": {
+    "pm25": 11.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q49174": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q131491": {
+    "pm25": 9.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q13496": {
+    "pm25": 10.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q34932": {
+    "pm25": 7.5,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q23154": {
+    "pm25": 9.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1735": {
+    "pm25": 9.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q14960": {
+    "pm25": 15.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q340": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3437": {
+    "pm25": 9.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q133315": {
+    "pm25": 14.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q12994": {
+    "pm25": 10.4,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q4197": {
+    "pm25": 12.3,
+    "year": 2018,
+    "category": "Moderate"
+  },
+  "Q239": {
+    "pm25": 9.8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q8684": {
+    "pm25": 38.6,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q19660": {
+    "pm25": 16.2,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q1486": {
+    "pm25": 10.3,
+    "year": 2015,
+    "category": "Moderate"
+  },
+  "Q40435": {
+    "pm25": 7.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q209537": {
+    "pm25": 12.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q256711": {
+    "pm25": 8.4,
+    "year": 2016,
+    "category": "Acceptable"
+  },
+  "Q8826": {
+    "pm25": 7.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q211811": {
+    "pm25": 25.4,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q1733": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3075": {
+    "pm25": 7.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q34218": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q24639": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1449": {
+    "pm25": 17.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q16520": {
+    "pm25": 21,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q158928": {
+    "pm25": 45.9,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q102317": {
+    "pm25": 18.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q201404": {
+    "pm25": 23.9,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q41252": {
+    "pm25": 12.9,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q11938328": {
+    "pm25": 38,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q145002": {
+    "pm25": 17.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q31915927": {
+    "pm25": 6.3,
+    "year": 2017,
+    "category": "Acceptable"
+  },
+  "Q31915930": {
+    "pm25": 7.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q41185": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q11746": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q384": {
+    "pm25": 28.8,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q6454": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q12258": {
+    "pm25": 13.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q51103": {
+    "pm25": 23,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q35969205": {
+    "pm25": 21.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q13580": {
+    "pm25": 19,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q84": {
+    "pm25": 9.4,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q13386": {
+    "pm25": 13.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q689868": {
+    "pm25": 9,
+    "year": 2015,
+    "category": "Acceptable"
+  },
+  "Q216075": {
+    "pm25": 15.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q3114": {
+    "pm25": 13.9,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q68481": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q58695": {
+    "pm25": 47,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1020646": {
+    "pm25": 27.3,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q209925": {
+    "pm25": 19.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q39984": {
+    "pm25": 11.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q13373": {
+    "pm25": 19.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q462789": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q5465": {
+    "pm25": 14.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q43167665": {
+    "pm25": 5.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q10690": {
+    "pm25": 7.4,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1094110": {
+    "pm25": 8.4,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q657461": {
+    "pm25": 24,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q24019772": {
+    "pm25": 9.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q490": {
+    "pm25": 21.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q2028": {
+    "pm25": 17.9,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q279": {
+    "pm25": 16.2,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q13377": {
+    "pm25": 4.8,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q38545": {
+    "pm25": 11.4,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q1903": {
+    "pm25": 12.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3883": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q8646": {
+    "pm25": 27.6,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q272709": {
+    "pm25": 23.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q44401": {
+    "pm25": 9.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q486439": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q13498": {
+    "pm25": 15.6,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q173121": {
+    "pm25": 21,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q1010": {
+    "pm25": 16.8,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q57278": {
+    "pm25": 10.5,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q6252": {
+    "pm25": 18.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q2887": {
+    "pm25": 25.4,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q165090": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q34412": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q43433": {
+    "pm25": 60,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q92161": {
+    "pm25": 42,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q416544": {
+    "pm25": 41,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1012419": {
+    "pm25": 11.8,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q16959": {
+    "pm25": 47,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q34405": {
+    "pm25": 25,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q8686": {
+    "pm25": 32,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q174091": {
+    "pm25": 42,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q57947": {
+    "pm25": 34,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q92277": {
+    "pm25": 41,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q72945": {
+    "pm25": 44,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q57970": {
+    "pm25": 40,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q24012306": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q59100": {
+    "pm25": 19,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q75336": {
+    "pm25": 40.2,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q59227": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q47716": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q16565": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q113464": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q186702": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1850": {
+    "pm25": 33,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q234184": {
+    "pm25": 17.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q123511": {
+    "pm25": 14.6,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q5869": {
+    "pm25": 12,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q69060": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q58675": {
+    "pm25": 27,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q30002": {
+    "pm25": 41,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q182852": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q68579": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q170322": {
+    "pm25": 31,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q38968": {
+    "pm25": 29,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q1352": {
+    "pm25": 24.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q191871": {
+    "pm25": 7.8,
+    "year": 2022,
+    "category": "Acceptable"
+  },
+  "Q42448": {
+    "pm25": 7.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q39042": {
+    "pm25": 5.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q52028": {
+    "pm25": 26.5,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q170616": {
+    "pm25": 11,
+    "year": 2010,
+    "category": "Moderate"
+  },
+  "Q1297": {
+    "pm25": 9.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2704": {
+    "pm25": 14,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q570829": {
+    "pm25": 25,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q3765": {
+    "pm25": 17.7,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q59144": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q2116338": {
+    "pm25": 8.1,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q3774": {
+    "pm25": 23.3,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q11198998": {
+    "pm25": 18,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q376749": {
+    "pm25": 56.4,
+    "year": 2018,
+    "category": "Severe"
+  },
+  "Q1490": {
+    "pm25": 10.8,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q170919": {
+    "pm25": 18,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q58650": {
+    "pm25": 23,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q146351": {
+    "pm25": 10.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q79990": {
+    "pm25": 10.1,
+    "year": 2012,
+    "category": "Moderate"
+  },
+  "Q426644": {
+    "pm25": 29,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q42147": {
+    "pm25": 27.4,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q114045": {
+    "pm25": 39,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q43196": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q56241563": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q129610": {
+    "pm25": 5.1,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q328941": {
+    "pm25": 10.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q42168": {
+    "pm25": 8.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q37320": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q26887": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q183551": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q100188": {
+    "pm25": 12.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q36647": {
+    "pm25": 7.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q515117": {
+    "pm25": 29,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q9885": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q13410": {
+    "pm25": 18.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q2079": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q35381": {
+    "pm25": 23.6,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q49258": {
+    "pm25": 6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q16567": {
+    "pm25": 8.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1308": {
+    "pm25": 21.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1880": {
+    "pm25": 25.9,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q5475": {
+    "pm25": 15.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q58570": {
+    "pm25": 57,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q79808": {
+    "pm25": 15.4,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q116423012": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1748": {
+    "pm25": 8.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3868": {
+    "pm25": 12.3,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q3871": {
+    "pm25": 11.9,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q101948176": {
+    "pm25": 12.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q214655": {
+    "pm25": 22.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q956690": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q21674890": {
+    "pm25": 7.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3873": {
+    "pm25": 18.2,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q49242": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q206900": {
+    "pm25": 37.5,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q43595": {
+    "pm25": 7.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3214": {
+    "pm25": 12.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q6225": {
+    "pm25": 7.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q168057": {
+    "pm25": 22.2,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q16461": {
+    "pm25": 8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1289": {
+    "pm25": 11.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q147955": {
+    "pm25": 23.2,
+    "year": 2017,
+    "category": "Poor"
+  },
+  "Q54886": {
+    "pm25": 8.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q427265": {
+    "pm25": 40,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q207324": {
+    "pm25": 41.5,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q103217": {
+    "pm25": 17.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q29015": {
+    "pm25": 43,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q427488": {
+    "pm25": 39,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q20927": {
+    "pm25": 22.9,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q20921": {
+    "pm25": 22.6,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q3718": {
+    "pm25": 42,
+    "year": 2018,
+    "category": "Severe"
+  },
+  "Q74881": {
+    "pm25": 30,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q16557": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q75110": {
+    "pm25": 29,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q71227": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q57958": {
+    "pm25": 38,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q79875": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q304848": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q2973": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q497373": {
+    "pm25": 5.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q11568": {
+    "pm25": 9.1,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q72877": {
+    "pm25": 31,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q3050": {
+    "pm25": 10.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q75230": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q207752": {
+    "pm25": 16,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q71204": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q34739": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q598": {
+    "pm25": 21.9,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q171223": {
+    "pm25": 19,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q79860": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q162880": {
+    "pm25": 49,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q146307": {
+    "pm25": 18.6,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q27161": {
+    "pm25": 17.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q199528": {
+    "pm25": 81.5,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1353": {
+    "pm25": 114.5,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q339527": {
+    "pm25": 5.8,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q390583": {
+    "pm25": 6.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1898798": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q16554": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q163584": {
+    "pm25": 6.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q39709": {
+    "pm25": 8.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q72907": {
+    "pm25": 46,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1435": {
+    "pm25": 12.3,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q1296": {
+    "pm25": 10.9,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q12439": {
+    "pm25": 9.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q200119": {
+    "pm25": 39,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q425996": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1354": {
+    "pm25": 86.5,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q20986484": {
+    "pm25": 6.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q189633": {
+    "pm25": 29.8,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q7003": {
+    "pm25": 7.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q58324": {
+    "pm25": 17,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q59164": {
+    "pm25": 23,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q34820": {
+    "pm25": 56,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q3630": {
+    "pm25": 33.8,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q998798": {
+    "pm25": 11.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3861": {
+    "pm25": 38,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q384544": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q71323": {
+    "pm25": 45,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q373564": {
+    "pm25": 53,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q152027": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q29003": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q373101": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q59218": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q171943": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q425415": {
+    "pm25": 29,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q349982": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q426756": {
+    "pm25": 34,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q75026": {
+    "pm25": 43,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q171219": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3828": {
+    "pm25": 10,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q238375": {
+    "pm25": 22.5,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q1295": {
+    "pm25": 10.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q605167": {
+    "pm25": 11.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q651744": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1731": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q612": {
+    "pm25": 45.8,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q2100": {
+    "pm25": 14.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q485708": {
+    "pm25": 5.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q130212": {
+    "pm25": 13.2,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q193021": {
+    "pm25": 15.5,
+    "year": 2015,
+    "category": "Poor"
+  },
+  "Q5088": {
+    "pm25": 57,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q49229": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q83285": {
+    "pm25": 23.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q9365": {
+    "pm25": 71.5,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q1718": {
+    "pm25": 10.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q110732": {
+    "pm25": 16.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q206885": {
+    "pm25": 45.4,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q208262": {
+    "pm25": 8.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q160320": {
+    "pm25": 48.2,
+    "year": 2022,
+    "category": "Severe"
+  },
+  "Q18125": {
+    "pm25": 8.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q71355": {
+    "pm25": 36,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q23436": {
+    "pm25": 4.4,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q43387": {
+    "pm25": 15.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q3798": {
+    "pm25": 7.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q4024": {
+    "pm25": 10.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q152399": {
+    "pm25": 12.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q130483288": {
+    "pm25": 28.6,
+    "year": 2017,
+    "category": "Very Poor"
+  },
+  "Q16562": {
+    "pm25": 9.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q117181": {
+    "pm25": 38.8,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q104712": {
+    "pm25": 12.1,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q31916107": {
+    "pm25": 10.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q486877": {
+    "pm25": 8.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1884": {
+    "pm25": 10,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3037": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q178582": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q41876": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q6044732": {
+    "pm25": 20.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q1729": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q234061": {
+    "pm25": 7.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q30340": {
+    "pm25": 51,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q136217": {
+    "pm25": 26.3,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q122803": {
+    "pm25": 32.7,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q42053": {
+    "pm25": 29.9,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q105075": {
+    "pm25": 4.7,
+    "year": 2018,
+    "category": "Good"
+  },
+  "Q168866": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q862519": {
+    "pm25": 32,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q47034": {
+    "pm25": 7,
+    "year": 2013,
+    "category": "Acceptable"
+  },
+  "Q2066": {
+    "pm25": 11.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q36433": {
+    "pm25": 8.8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q617": {
+    "pm25": 15.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q5468": {
+    "pm25": 16.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1029159": {
+    "pm25": 16.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q818106": {
+    "pm25": 61,
+    "year": 2012,
+    "category": "Severe"
+  },
+  "Q171224": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q486459": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q30974": {
+    "pm25": 11.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q71305": {
+    "pm25": 38,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q52981": {
+    "pm25": 12.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q173985": {
+    "pm25": 36.5,
+    "year": 2013,
+    "category": "Severe"
+  },
+  "Q211950": {
+    "pm25": 7.8,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q571712": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q217698": {
+    "pm25": 47,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q34109": {
+    "pm25": 11,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q200663": {
+    "pm25": 160.6,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q331104": {
+    "pm25": 8.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q68695": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q989955": {
+    "pm25": 29.1,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q1022": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2044": {
+    "pm25": 12.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q220": {
+    "pm25": 11.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q490584": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q13464": {
+    "pm25": 11.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q13367": {
+    "pm25": 12.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q490732": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q81621": {
+    "pm25": 10.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q16558": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q79535": {
+    "pm25": 8.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q49268": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q23482": {
+    "pm25": 9.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1794": {
+    "pm25": 9.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2138": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q10498783": {
+    "pm25": 9.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2833": {
+    "pm25": 7.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q43301": {
+    "pm25": 13.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3834": {
+    "pm25": 10.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q426130": {
+    "pm25": 34,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q4045": {
+    "pm25": 37.4,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q11288342": {
+    "pm25": 12.7,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q3958": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q210493": {
+    "pm25": 30,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q34750": {
+    "pm25": 36,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q360584": {
+    "pm25": 50,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q487999": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q26175": {
+    "pm25": 15.5,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q170996": {
+    "pm25": 8.2,
+    "year": 2022,
+    "category": "Acceptable"
+  },
+  "Q103686": {
+    "pm25": 2.8,
+    "year": 2018,
+    "category": "Good"
+  },
+  "Q571808": {
+    "pm25": 32.6,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q571766": {
+    "pm25": 29.7,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q42131": {
+    "pm25": 20.1,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q363166": {
+    "pm25": 29.8,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q868527": {
+    "pm25": 56,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q57906": {
+    "pm25": 36,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1764": {
+    "pm25": 5.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q141844": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q199605": {
+    "pm25": 53,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q251329": {
+    "pm25": 178.2,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q1756617": {
+    "pm25": 95.3,
+    "year": 2018,
+    "category": "Severe"
+  },
+  "Q1792": {
+    "pm25": 12.5,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q207350": {
+    "pm25": 15.9,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q199712": {
+    "pm25": 13.6,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q2765": {
+    "pm25": 17.6,
+    "year": 2013,
+    "category": "Poor"
+  },
+  "Q207098": {
+    "pm25": 102.8,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q181578": {
+    "pm25": 21.4,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q3874": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q11471896": {
+    "pm25": 9.3,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q80349557": {
+    "pm25": 10.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q610238": {
+    "pm25": 13.4,
+    "year": 2013,
+    "category": "Moderate"
+  },
+  "Q201095": {
+    "pm25": 20.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q4093": {
+    "pm25": 4.9,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q105084": {
+    "pm25": 22.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q34713": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q107106": {
+    "pm25": 26.5,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q3033": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q140075": {
+    "pm25": 8.3,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q546": {
+    "pm25": 11.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q2183942": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q104731": {
+    "pm25": 14,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q157024": {
+    "pm25": 24.9,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q25287": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q184587": {
+    "pm25": 6.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q996616": {
+    "pm25": 11,
+    "year": 2010,
+    "category": "Moderate"
+  },
+  "Q836663": {
+    "pm25": 14.5,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q13298": {
+    "pm25": 15.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q21885994": {
+    "pm25": 10.8,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q94274": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q49238": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3543": {
+    "pm25": 10.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q205914": {
+    "pm25": 11.2,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q9022": {
+    "pm25": 25,
+    "year": 2018,
+    "category": "Very Poor"
+  },
+  "Q61306": {
+    "pm25": 11,
+    "year": 2018,
+    "category": "Moderate"
+  },
+  "Q427367": {
+    "pm25": 32,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q426237": {
+    "pm25": 25,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q192271": {
+    "pm25": 23,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q184409": {
+    "pm25": 15.2,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q13360": {
+    "pm25": 17,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1555": {
+    "pm25": 14,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q504114": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q647": {
+    "pm25": 9.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q363076": {
+    "pm25": 32,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q2861": {
+    "pm25": 9.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3120966": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q42112": {
+    "pm25": 16.1,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q604625": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q158467": {
+    "pm25": 53,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q41283": {
+    "pm25": 22.9,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q42119": {
+    "pm25": 18.5,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q800154": {
+    "pm25": 47.9,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q208863": {
+    "pm25": 8.8,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q2871": {
+    "pm25": 11.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q472675": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q6602": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q72818": {
+    "pm25": 28.2,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q570768": {
+    "pm25": 32,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q41621": {
+    "pm25": 16.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q58560": {
+    "pm25": 34,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q189823": {
+    "pm25": 14,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q57756": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q10661956": {
+    "pm25": 8.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q12460009": {
+    "pm25": 44,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q2814": {
+    "pm25": 11,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q26521": {
+    "pm25": 7.9,
+    "year": 2016,
+    "category": "Acceptable"
+  },
+  "Q2088687": {
+    "pm25": 65.8,
+    "year": 2012,
+    "category": "Severe"
+  },
+  "Q185125": {
+    "pm25": 9,
+    "year": 2010,
+    "category": "Acceptable"
+  },
+  "Q1055": {
+    "pm25": 10.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q133116": {
+    "pm25": 7.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q856860": {
+    "pm25": 7.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q495373": {
+    "pm25": 15.2,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1715": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1858": {
+    "pm25": 35.7,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q515573": {
+    "pm25": 40,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q200237": {
+    "pm25": 137,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q3926": {
+    "pm25": 23.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q33486": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q47264": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q1015690": {
+    "pm25": 7.6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q404301": {
+    "pm25": 57,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q416922": {
+    "pm25": 35.6,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q2966": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q715": {
+    "pm25": 8.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q25411": {
+    "pm25": 7.8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1757": {
+    "pm25": 6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q58724": {
+    "pm25": 52,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q144663": {
+    "pm25": 32,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q28996": {
+    "pm25": 47,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q2119": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3070": {
+    "pm25": 20,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q416669": {
+    "pm25": 43,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q198266": {
+    "pm25": 38,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q59205": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q270500": {
+    "pm25": 36.7,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q80561": {
+    "pm25": 39.2,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q160493": {
+    "pm25": 4.3,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q3185": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3104": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1000383": {
+    "pm25": 25,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q11485286": {
+    "pm25": 11,
+    "year": 2010,
+    "category": "Moderate"
+  },
+  "Q1854": {
+    "pm25": 23.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q535534": {
+    "pm25": 40,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1022953": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q192213": {
+    "pm25": 14.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q28994": {
+    "pm25": 18,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q404362": {
+    "pm25": 51,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q2910": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q16555": {
+    "pm25": 9.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q205697": {
+    "pm25": 65.5,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q36989": {
+    "pm25": 15.6,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q57818": {
+    "pm25": 45,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q360268": {
+    "pm25": 48,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q147187": {
+    "pm25": 54,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q404484": {
+    "pm25": 58,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q373023": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q180470": {
+    "pm25": 20,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q58273": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q360235": {
+    "pm25": 36,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q404636": {
+    "pm25": 48,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q36399": {
+    "pm25": 13.8,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q31916975": {
+    "pm25": 9.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q59173": {
+    "pm25": 20,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q604385": {
+    "pm25": 40,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q68744": {
+    "pm25": 18,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q21885987": {
+    "pm25": 12.4,
+    "year": 2013,
+    "category": "Moderate"
+  },
+  "Q75379": {
+    "pm25": 43,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q11720": {
+    "pm25": 42,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q999123": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q42622": {
+    "pm25": 46,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q42664": {
+    "pm25": 26,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q1361": {
+    "pm25": 42.1,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q46852": {
+    "pm25": 20.2,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1751207": {
+    "pm25": 12.3,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q483331": {
+    "pm25": 56.6,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q499470": {
+    "pm25": 34.5,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q180084": {
+    "pm25": 26,
+    "year": 2010,
+    "category": "Very Poor"
+  },
+  "Q11194": {
+    "pm25": 29.1,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q4812671": {
+    "pm25": 12.3,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q208097": {
+    "pm25": 69,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q42080": {
+    "pm25": 22.7,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q6346": {
+    "pm25": 10.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q66616": {
+    "pm25": 33.3,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q3004": {
+    "pm25": 10.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q211870": {
+    "pm25": 4.9,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q183199": {
+    "pm25": 19.9,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q194165": {
+    "pm25": 21.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1362": {
+    "pm25": 32.3,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q171031": {
+    "pm25": 25.2,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q841244": {
+    "pm25": 8,
+    "year": 2015,
+    "category": "Acceptable"
+  },
+  "Q2279529": {
+    "pm25": 29,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q129649": {
+    "pm25": 18.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q200878": {
+    "pm25": 31,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q28198": {
+    "pm25": 4.9,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q16568": {
+    "pm25": 7.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q66485": {
+    "pm25": 104.6,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q255455": {
+    "pm25": 32.7,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q1154": {
+    "pm25": 25,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q208473": {
+    "pm25": 18.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q826068": {
+    "pm25": 12.8,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q106274": {
+    "pm25": 16.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q42142": {
+    "pm25": 19.1,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q147934": {
+    "pm25": 19.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q26393": {
+    "pm25": 24.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q3150": {
+    "pm25": 9.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q42140": {
+    "pm25": 26.1,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q1016720": {
+    "pm25": 47,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q426996": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q72778": {
+    "pm25": 54,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q59209": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q59132": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q179608": {
+    "pm25": 26,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q205922": {
+    "pm25": 31,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q349973": {
+    "pm25": 26,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q187136": {
+    "pm25": 51,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q16666": {
+    "pm25": 31,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q68919": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q404429": {
+    "pm25": 56,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q57719": {
+    "pm25": 50,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q58178": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q532560": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q191805": {
+    "pm25": 14.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q26323": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q28979": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q360702": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q170247": {
+    "pm25": 35.8,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q532776": {
+    "pm25": 21.1,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q58210": {
+    "pm25": 26,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q211243": {
+    "pm25": 36,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q71247": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q372791": {
+    "pm25": 55.1,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q73045": {
+    "pm25": 42,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q216077": {
+    "pm25": 38,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q533432": {
+    "pm25": 34,
+    "year": 2018,
+    "category": "Very Poor"
+  },
+  "Q200019": {
+    "pm25": 82.6,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q186237": {
+    "pm25": 4.7,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q478302": {
+    "pm25": 5.1,
+    "year": 2016,
+    "category": "Acceptable"
+  },
+  "Q22690": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q288": {
+    "pm25": 9.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q151958": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q134620": {
+    "pm25": 4.8,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q5838": {
+    "pm25": 119.8,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q208318": {
+    "pm25": 89.6,
+    "year": 2013,
+    "category": "Severe"
+  },
+  "Q103659": {
+    "pm25": 6.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q15674": {
+    "pm25": 14.3,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q208471": {
+    "pm25": 55,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q167155": {
+    "pm25": 10.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q52842": {
+    "pm25": 18.9,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q103707": {
+    "pm25": 7.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q43453": {
+    "pm25": 12,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3894": {
+    "pm25": 60.2,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q855724": {
+    "pm25": 30,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q66568": {
+    "pm25": 40,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q41819": {
+    "pm25": 8.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q5247279": {
+    "pm25": 18.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q189697": {
+    "pm25": 24.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q8660": {
+    "pm25": 44.3,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q262579": {
+    "pm25": 19.3,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q3123558": {
+    "pm25": 31.7,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q127063": {
+    "pm25": 18.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q2670720": {
+    "pm25": 16.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q2865": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q155915": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q131638": {
+    "pm25": 27.8,
+    "year": 2017,
+    "category": "Very Poor"
+  },
+  "Q588": {
+    "pm25": 21.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q4115712": {
+    "pm25": 7.2,
+    "year": 2022,
+    "category": "Acceptable"
+  },
+  "Q157032": {
+    "pm25": 23.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q164234": {
+    "pm25": 10,
+    "year": 2010,
+    "category": "Moderate"
+  },
+  "Q48338": {
+    "pm25": 25.6,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q102397": {
+    "pm25": 23.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q58235": {
+    "pm25": 26,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q474868": {
+    "pm25": 17.3,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q605483": {
+    "pm25": 16.3,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q570884": {
+    "pm25": 34,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q126084": {
+    "pm25": 17.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q152449": {
+    "pm25": 14.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q152436": {
+    "pm25": 18.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q4044": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q651131": {
+    "pm25": 19.7,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q2978": {
+    "pm25": 10,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q232226": {
+    "pm25": 8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1014125": {
+    "pm25": 15.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q171714": {
+    "pm25": 26.3,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q180078": {
+    "pm25": 32,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q951495": {
+    "pm25": 29.8,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q588477": {
+    "pm25": 42,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q720001": {
+    "pm25": 27.9,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q876526": {
+    "pm25": 30,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q502212": {
+    "pm25": 32.9,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q243325": {
+    "pm25": 61.2,
+    "year": 2018,
+    "category": "Severe"
+  },
+  "Q1707": {
+    "pm25": 7.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1899": {
+    "pm25": 23.4,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q187895": {
+    "pm25": 31,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q206881": {
+    "pm25": 30.8,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q128147": {
+    "pm25": 8.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q202973": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q34692": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q206891": {
+    "pm25": 18,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q206903": {
+    "pm25": 12,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q208005": {
+    "pm25": 10.1,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q152602": {
+    "pm25": 17.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q174684": {
+    "pm25": 27,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q188806": {
+    "pm25": 7,
+    "year": 2010,
+    "category": "Acceptable"
+  },
+  "Q200166": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q585": {
+    "pm25": 11.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q155993": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q41753": {
+    "pm25": 11.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q776965": {
+    "pm25": 7.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q92212": {
+    "pm25": 17.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q48320": {
+    "pm25": 11,
+    "year": 2010,
+    "category": "Moderate"
+  },
+  "Q1800": {
+    "pm25": 31,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q26397": {
+    "pm25": 13.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1348": {
+    "pm25": 52.2,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q365": {
+    "pm25": 10.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q533985": {
+    "pm25": 24.7,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q270": {
+    "pm25": 16.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q25409": {
+    "pm25": 18.4,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q146342": {
+    "pm25": 12.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q62868": {
+    "pm25": 10.8,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q137271": {
+    "pm25": 15,
+    "year": 2012,
+    "category": "Poor"
+  },
+  "Q330531": {
+    "pm25": 81.7,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q239143": {
+    "pm25": 21,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q28729": {
+    "pm25": 15,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q1179637": {
+    "pm25": 24.8,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q145972": {
+    "pm25": 12.4,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q261892": {
+    "pm25": 15,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q2805": {
+    "pm25": 13.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1865": {
+    "pm25": 28.3,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q54452": {
+    "pm25": 34.6,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q1709": {
+    "pm25": 9.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q162279": {
+    "pm25": 4.4,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q3635276": {
+    "pm25": 24.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q188894": {
+    "pm25": 19.3,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q104725": {
+    "pm25": 17.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q34600": {
+    "pm25": 10.9,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q15470": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3476": {
+    "pm25": 9.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q141748": {
+    "pm25": 6,
+    "year": 2016,
+    "category": "Acceptable"
+  },
+  "Q24001084": {
+    "pm25": 11.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q82185": {
+    "pm25": 8.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q14467": {
+    "pm25": 29.4,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q1563": {
+    "pm25": 34.8,
+    "year": 2015,
+    "category": "Very Poor"
+  },
+  "Q214215": {
+    "pm25": 30,
+    "year": 2018,
+    "category": "Very Poor"
+  },
+  "Q260600": {
+    "pm25": 19.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1930": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q13372": {
+    "pm25": 9.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q128891": {
+    "pm25": 7.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q8673": {
+    "pm25": 27.4,
+    "year": 2010,
+    "category": "Very Poor"
+  },
+  "Q11739": {
+    "pm25": 123.9,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q28911": {
+    "pm25": 5.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q371640": {
+    "pm25": 47.4,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q864106": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q639452": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q494711": {
+    "pm25": 9.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q12375138": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2683": {
+    "pm25": 11.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q21414421": {
+    "pm25": 12.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q181854": {
+    "pm25": 5.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q33264": {
+    "pm25": 5.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q23768": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3920": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q141810": {
+    "pm25": 8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q42810": {
+    "pm25": 6.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1476": {
+    "pm25": 9.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q546635": {
+    "pm25": 6.9,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q237896": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q39121": {
+    "pm25": 8.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q83065": {
+    "pm25": 7.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q185632": {
+    "pm25": 13.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q266014": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q23995893": {
+    "pm25": 8.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q189128": {
+    "pm25": 20,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q426868": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q2938": {
+    "pm25": 10,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q139208": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q49241": {
+    "pm25": 9.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q249007": {
+    "pm25": 41.1,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q404817": {
+    "pm25": 52,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1721": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q45656": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q4469": {
+    "pm25": 28.1,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q496837": {
+    "pm25": 25.6,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q28260": {
+    "pm25": 7.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q4133": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q25413": {
+    "pm25": 13.1,
+    "year": 2016,
+    "category": "Moderate"
+  },
+  "Q126995": {
+    "pm25": 53,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q604517": {
+    "pm25": 34,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q33405": {
+    "pm25": 9.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q485918": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q24826": {
+    "pm25": 7.1,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q6761": {
+    "pm25": 8.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q437": {
+    "pm25": 15.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q580": {
+    "pm25": 17.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q214777": {
+    "pm25": 5.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q215633": {
+    "pm25": 22.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q92561": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q519810": {
+    "pm25": 18.7,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q42635": {
+    "pm25": 25,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q571652": {
+    "pm25": 28.6,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q68862": {
+    "pm25": 18,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q47571": {
+    "pm25": 10.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q65": {
+    "pm25": 11.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q16910": {
+    "pm25": 22.5,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q31844059": {
+    "pm25": 5.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q416988": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q43668": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2843": {
+    "pm25": 7.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q37333": {
+    "pm25": 16.9,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q47916": {
+    "pm25": 163.5,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q200123": {
+    "pm25": 87.2,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q622": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1640": {
+    "pm25": 11.2,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q6441": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q40898": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q404599": {
+    "pm25": 55,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q15174": {
+    "pm25": 19,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q362865": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q456": {
+    "pm25": 11.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1416753": {
+    "pm25": 44.7,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q219656": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q35484": {
+    "pm25": 44.5,
+    "year": 2022,
+    "category": "Severe"
+  },
+  "Q533157": {
+    "pm25": 26.1,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q1720": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q5806": {
+    "pm25": 38.4,
+    "year": 2022,
+    "category": "Severe"
+  },
+  "Q116450968": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q16135157": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q605209": {
+    "pm25": 23,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q2055274": {
+    "pm25": 41.1,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q3882": {
+    "pm25": 48.7,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q48370": {
+    "pm25": 4.5,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q37701": {
+    "pm25": 57.3,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q13939": {
+    "pm25": 11.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q38927": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q24012598": {
+    "pm25": 12.6,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q3869": {
+    "pm25": 9.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q103691": {
+    "pm25": 6.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2971": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q80517": {
+    "pm25": 9.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q27001": {
+    "pm25": 20.8,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q31925679": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q797782": {
+    "pm25": 10.9,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q59184": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q68614": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q61089": {
+    "pm25": 24.9,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q3141": {
+    "pm25": 7.1,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q2670975": {
+    "pm25": 25.6,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q16563": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q499189": {
+    "pm25": 11.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q165204": {
+    "pm25": 15,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q199440": {
+    "pm25": 25.5,
+    "year": 2018,
+    "category": "Very Poor"
+  },
+  "Q8652": {
+    "pm25": 6.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q12731752": {
+    "pm25": 27.1,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q2673020": {
+    "pm25": 10.3,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q425057": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q37836": {
+    "pm25": 9.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q991006": {
+    "pm25": 17,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q36091": {
+    "pm25": 7.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2280": {
+    "pm25": 13,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q50816": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q430776": {
+    "pm25": 15.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q204561": {
+    "pm25": 13.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q378821": {
+    "pm25": 20.6,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q180775": {
+    "pm25": 20.4,
+    "year": 2013,
+    "category": "Poor"
+  },
+  "Q225641": {
+    "pm25": 10.8,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q2758": {
+    "pm25": 9.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q457334": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q12886": {
+    "pm25": 7.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q7880": {
+    "pm25": 10.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q79815": {
+    "pm25": 9.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q637555": {
+    "pm25": 15.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1335": {
+    "pm25": 12,
+    "year": 2018,
+    "category": "Moderate"
+  },
+  "Q29364": {
+    "pm25": 7.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q330643": {
+    "pm25": 180.1,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q243319": {
+    "pm25": 23.3,
+    "year": 2011,
+    "category": "Poor"
+  },
+  "Q649": {
+    "pm25": 14,
+    "year": 2016,
+    "category": "Moderate"
+  },
+  "Q13418001": {
+    "pm25": 8.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q2082": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1156": {
+    "pm25": 43.4,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q2742": {
+    "pm25": 10.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q572951": {
+    "pm25": 23,
+    "year": 2010,
+    "category": "Poor"
+  },
+  "Q2768828": {
+    "pm25": 68.5,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1453196": {
+    "pm25": 105,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q1006277": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q1026190": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q24901650": {
+    "pm25": 10.5,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q1513": {
+    "pm25": 56.5,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q1012460": {
+    "pm25": 18.9,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q3870": {
+    "pm25": 13.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q721198": {
+    "pm25": 29.2,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q633036": {
+    "pm25": 22,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1012424": {
+    "pm25": 14,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q68534": {
+    "pm25": 19,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q12191": {
+    "pm25": 10.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q404763": {
+    "pm25": 51,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q466221": {
+    "pm25": 59.8,
+    "year": 2018,
+    "category": "Severe"
+  },
+  "Q2467": {
+    "pm25": 3.2,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q2570924": {
+    "pm25": 31.2,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q847610": {
+    "pm25": 25.6,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q61434": {
+    "pm25": 27,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q125434": {
+    "pm25": 14.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q206879": {
+    "pm25": 17.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q60": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q49145": {
+    "pm25": 8.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q34404": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1425428": {
+    "pm25": 7.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q52999": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q101254": {
+    "pm25": 8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q33959": {
+    "pm25": 10,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q194146": {
+    "pm25": 20.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q11503605": {
+    "pm25": 8.2,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q42807": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q178725": {
+    "pm25": 9,
+    "year": 2015,
+    "category": "Acceptable"
+  },
+  "Q41473": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q278204": {
+    "pm25": 112,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q768864": {
+    "pm25": 18.5,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q912253": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q175945": {
+    "pm25": 8.4,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q143782": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q848680": {
+    "pm25": 63.2,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q192240": {
+    "pm25": 11.5,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q626199": {
+    "pm25": 21.4,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q744239": {
+    "pm25": 7.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q130191": {
+    "pm25": 8.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q41262": {
+    "pm25": 8.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q104720": {
+    "pm25": 16.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q802": {
+    "pm25": 26.8,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q424984": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q2838": {
+    "pm25": 12.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q3042": {
+    "pm25": 9.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q52474": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q200078": {
+    "pm25": 14.3,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q328615": {
+    "pm25": 6.3,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q34863": {
+    "pm25": 10.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q102377": {
+    "pm25": 6.3,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q43199": {
+    "pm25": 8.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q633274": {
+    "pm25": 20,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q33935": {
+    "pm25": 21.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q16898113": {
+    "pm25": 15.8,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q184539": {
+    "pm25": 15.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q49233": {
+    "pm25": 7.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q6548": {
+    "pm25": 9.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q35765": {
+    "pm25": 12.2,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q4035": {
+    "pm25": 20.7,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q25797": {
+    "pm25": 35.1,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q211867": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1023140": {
+    "pm25": 26.2,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q2916": {
+    "pm25": 10,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q51059": {
+    "pm25": 33.8,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q103679": {
+    "pm25": 6.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q461287": {
+    "pm25": 12.9,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q47048": {
+    "pm25": 5.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q209338": {
+    "pm25": 7.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q82128": {
+    "pm25": 25.8,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q1006240": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q13972": {
+    "pm25": 3.4,
+    "year": 2022,
+    "category": "Good"
+  },
+  "Q56250654": {
+    "pm25": 6.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q6634626": {
+    "pm25": 83.3,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q6285": {
+    "pm25": 12,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q816809": {
+    "pm25": 8.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3571645": {
+    "pm25": 11.5,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1814480": {
+    "pm25": 23,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q3306": {
+    "pm25": 14,
+    "year": 2013,
+    "category": "Moderate"
+  },
+  "Q17151": {
+    "pm25": 10.1,
+    "year": 2022,
+    "category": "Moderate"
+  },
+  "Q83786": {
+    "pm25": 10,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q320015": {
+    "pm25": 9,
+    "year": 2014,
+    "category": "Acceptable"
+  },
+  "Q3360716": {
+    "pm25": 23,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q208162": {
+    "pm25": 101.2,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q80484": {
+    "pm25": 144.3,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q133123": {
+    "pm25": 15.8,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q40706": {
+    "pm25": 15.3,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q45779": {
+    "pm25": 14.8,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q107658630": {
+    "pm25": 4.3,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q271619": {
+    "pm25": 20.3,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q921155": {
+    "pm25": 15.2,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q472": {
+    "pm25": 66,
+    "year": 2022,
+    "category": "Severe"
+  },
+  "Q6730": {
+    "pm25": 8.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3183": {
+    "pm25": 7.4,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q13369": {
+    "pm25": 12.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q1113311": {
+    "pm25": 79.5,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q776930": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3046": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1345": {
+    "pm25": 9.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q16556": {
+    "pm25": 8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q203370": {
+    "pm25": 21,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q244652": {
+    "pm25": 25,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q844430": {
+    "pm25": 17,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q13329": {
+    "pm25": 20.5,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q404116": {
+    "pm25": 51,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q158004": {
+    "pm25": 21.3,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q330175": {
+    "pm25": 13,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q13375": {
+    "pm25": 12.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q187938": {
+    "pm25": 24,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q1342": {
+    "pm25": 9.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q179585": {
+    "pm25": 17.3,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q43382": {
+    "pm25": 9.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1023712": {
+    "pm25": 11.9,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q6616": {
+    "pm25": 9.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q6640": {
+    "pm25": 36.1,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q3370": {
+    "pm25": 7.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q8471": {
+    "pm25": 16.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q24014203": {
+    "pm25": 9.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q180233": {
+    "pm25": 6.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q643215": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q39178": {
+    "pm25": 13.4,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q16897338": {
+    "pm25": 10.8,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q6106": {
+    "pm25": 6.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q13629": {
+    "pm25": 6.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q72259": {
+    "pm25": 9.4,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q268": {
+    "pm25": 16.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q385669": {
+    "pm25": 7.4,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q323986": {
+    "pm25": 32.9,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q671288": {
+    "pm25": 7.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q13670": {
+    "pm25": 10.7,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q18383": {
+    "pm25": 6.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q23443": {
+    "pm25": 7.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q675576": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q51594": {
+    "pm25": 26.1,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q496765": {
+    "pm25": 23.3,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q36214": {
+    "pm25": 28.7,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q42763": {
+    "pm25": 66,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q1861984": {
+    "pm25": 21.2,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q1538": {
+    "pm25": 43.3,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q51599": {
+    "pm25": 4.6,
+    "year": 2019,
+    "category": "Good"
+  },
+  "Q3056514": {
+    "pm25": 13.8,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q16665897": {
+    "pm25": 9.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q496405": {
+    "pm25": 20,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q497341": {
+    "pm25": 54,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q59213": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q533764": {
+    "pm25": 39.4,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q152406": {
+    "pm25": 17,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q349979": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q2145": {
+    "pm25": 9,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q174744": {
+    "pm25": 21.9,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q2900": {
+    "pm25": 18.3,
+    "year": 2013,
+    "category": "Poor"
+  },
+  "Q59107": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q309164": {
+    "pm25": 17.7,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q107094": {
+    "pm25": 24.9,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q104740": {
+    "pm25": 18.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q2566481": {
+    "pm25": 43.1,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q11854": {
+    "pm25": 26.5,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q322155": {
+    "pm25": 72.4,
+    "year": 2018,
+    "category": "Severe"
+  },
+  "Q41087": {
+    "pm25": 8.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q192807": {
+    "pm25": 17.9,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q4582": {
+    "pm25": 25.9,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q2126436": {
+    "pm25": 31.7,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q1771398": {
+    "pm25": 44,
+    "year": 2012,
+    "category": "Severe"
+  },
+  "Q178373": {
+    "pm25": 20.5,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q475066": {
+    "pm25": 22,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q93230": {
+    "pm25": 107,
+    "year": 2010,
+    "category": "Severe"
+  },
+  "Q2352184": {
+    "pm25": 32,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q21496716": {
+    "pm25": 8.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q46135": {
+    "pm25": 6.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q23025": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q495361": {
+    "pm25": 11.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q939127": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q174": {
+    "pm25": 16.7,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q2720540": {
+    "pm25": 15.9,
+    "year": 2014,
+    "category": "Poor"
+  },
+  "Q2123": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q494693": {
+    "pm25": 8.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q49225": {
+    "pm25": 11.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q913390": {
+    "pm25": 9,
+    "year": 2015,
+    "category": "Acceptable"
+  },
+  "Q3085": {
+    "pm25": 8.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q188892": {
+    "pm25": 13.9,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q43421": {
+    "pm25": 7.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q52998": {
+    "pm25": 6.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1773": {
+    "pm25": 17.8,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q1647": {
+    "pm25": 9.1,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3846": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q8678": {
+    "pm25": 11.5,
+    "year": 2015,
+    "category": "Moderate"
+  },
+  "Q201051": {
+    "pm25": 18,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q49243": {
+    "pm25": 10.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q967688": {
+    "pm25": 27.5,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q6681": {
+    "pm25": 14.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q486479": {
+    "pm25": 6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q507517": {
+    "pm25": 16.3,
+    "year": 2013,
+    "category": "Poor"
+  },
+  "Q26563": {
+    "pm25": 7.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3692": {
+    "pm25": 41.6,
+    "year": 2022,
+    "category": "Severe"
+  },
+  "Q665489": {
+    "pm25": 12.5,
+    "year": 2013,
+    "category": "Moderate"
+  },
+  "Q160173": {
+    "pm25": 15.7,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q1724": {
+    "pm25": 9.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q18013": {
+    "pm25": 9.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q192501": {
+    "pm25": 25.5,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q209779": {
+    "pm25": 10,
+    "year": 2010,
+    "category": "Moderate"
+  },
+  "Q139229": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q163490": {
+    "pm25": 30,
+    "year": 2014,
+    "category": "Very Poor"
+  },
+  "Q1004192": {
+    "pm25": 4,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q42716": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q131575588": {
+    "pm25": 6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q316887": {
+    "pm25": 4.9,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q249884": {
+    "pm25": 5,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q134635": {
+    "pm25": 17,
+    "year": 2011,
+    "category": "Poor"
+  },
+  "Q116442617": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q47952": {
+    "pm25": 8.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q488125": {
+    "pm25": 5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q23337": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q53077": {
+    "pm25": 21,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q160450": {
+    "pm25": 17.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q975": {
+    "pm25": 8.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q680596": {
+    "pm25": 56.7,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q16552": {
+    "pm25": 9.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q19344": {
+    "pm25": 20.5,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q62": {
+    "pm25": 7.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q16553": {
+    "pm25": 6.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1245683": {
+    "pm25": 24.3,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q204271": {
+    "pm25": 11,
+    "year": 2018,
+    "category": "Moderate"
+  },
+  "Q3110": {
+    "pm25": 29,
+    "year": 2018,
+    "category": "Very Poor"
+  },
+  "Q260547": {
+    "pm25": 36,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1211183": {
+    "pm25": 11,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q82500": {
+    "pm25": 10.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q272093": {
+    "pm25": 28.1,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q15639": {
+    "pm25": 14,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q24014650": {
+    "pm25": 7.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q49244": {
+    "pm25": 4.9,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q643953": {
+    "pm25": 7.9,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q209016": {
+    "pm25": 13,
+    "year": 2018,
+    "category": "Moderate"
+  },
+  "Q23992498": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q81882": {
+    "pm25": 15,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q184403": {
+    "pm25": 17,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q967648": {
+    "pm25": 16.9,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q459690": {
+    "pm25": 12,
+    "year": 2015,
+    "category": "Moderate"
+  },
+  "Q192181": {
+    "pm25": 14.8,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q37951": {
+    "pm25": 6.8,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q168843": {
+    "pm25": 37,
+    "year": 2012,
+    "category": "Severe"
+  },
+  "Q58794": {
+    "pm25": 38.5,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q185332": {
+    "pm25": 21.8,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q463165": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3865": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q5083": {
+    "pm25": 6.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q503056": {
+    "pm25": 38.9,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q20929": {
+    "pm25": 23.4,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q500033": {
+    "pm25": 29.7,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q2674097": {
+    "pm25": 36,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q642018": {
+    "pm25": 7.3,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q42108": {
+    "pm25": 23.5,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q988677": {
+    "pm25": 14.9,
+    "year": 2014,
+    "category": "Moderate"
+  },
+  "Q55893348": {
+    "pm25": 10.8,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q524349": {
+    "pm25": 24.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q862105": {
+    "pm25": 38.9,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q386649": {
+    "pm25": 61,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q515983": {
+    "pm25": 30,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q42666": {
+    "pm25": 28,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q59189": {
+    "pm25": 18,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q197922": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q289693": {
+    "pm25": 29.2,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q139473": {
+    "pm25": 7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q404873": {
+    "pm25": 40,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q58401": {
+    "pm25": 58,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q174691": {
+    "pm25": 8.6,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q73020": {
+    "pm25": 37,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q83324": {
+    "pm25": 1.9,
+    "year": 2022,
+    "category": "Good"
+  },
+  "Q319813": {
+    "pm25": 18.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q11711": {
+    "pm25": 37,
+    "year": 2021,
+    "category": "Severe"
+  },
+  "Q18207676": {
+    "pm25": 19,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q5087": {
+    "pm25": 44,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q272800": {
+    "pm25": 16.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q334": {
+    "pm25": 12,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q606900": {
+    "pm25": 10.9,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q131335": {
+    "pm25": 6.1,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q92297": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q107401": {
+    "pm25": 21.2,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q105048": {
+    "pm25": 11.2,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q2880": {
+    "pm25": 15,
+    "year": 2013,
+    "category": "Moderate"
+  },
+  "Q237847": {
+    "pm25": 38.7,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q2942": {
+    "pm25": 11.2,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q795595": {
+    "pm25": 17,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q1004526": {
+    "pm25": 14.5,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q79848": {
+    "pm25": 9,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q21487155": {
+    "pm25": 8.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1663": {
+    "pm25": 9.1,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q187805": {
+    "pm25": 10.3,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q135615": {
+    "pm25": 6.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q131127": {
+    "pm25": 27,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q170115": {
+    "pm25": 112.9,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q126805": {
+    "pm25": 6,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q38022": {
+    "pm25": 8.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1549155": {
+    "pm25": 11.6,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q170415": {
+    "pm25": 34.6,
+    "year": 2022,
+    "category": "Very Poor"
+  },
+  "Q26772333": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1754": {
+    "pm25": 5.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q49240": {
+    "pm25": 11.9,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q894094": {
+    "pm25": 8.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q134902": {
+    "pm25": 7.4,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q21886170": {
+    "pm25": 7.9,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q57787": {
+    "pm25": 45,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q383434": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q349985": {
+    "pm25": 41,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q188304": {
+    "pm25": 6.4,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q104891": {
+    "pm25": 5.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q4629": {
+    "pm25": 36.7,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q38807": {
+    "pm25": 8.1,
+    "year": 2015,
+    "category": "Acceptable"
+  },
+  "Q23051": {
+    "pm25": 7.9,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q3130": {
+    "pm25": 11.3,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q393": {
+    "pm25": 12.9,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q81581": {
+    "pm25": 15.8,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q648696": {
+    "pm25": 12,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q217681": {
+    "pm25": 46,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1195207": {
+    "pm25": 11,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q51098": {
+    "pm25": 24.8,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q13077": {
+    "pm25": 21.2,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q37043": {
+    "pm25": 7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q1770": {
+    "pm25": 3.9,
+    "year": 2022,
+    "category": "Good"
+  },
+  "Q49255": {
+    "pm25": 7.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q40840": {
+    "pm25": 4.9,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q1338527": {
+    "pm25": 19,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q212984": {
+    "pm25": 3.5,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q186349": {
+    "pm25": 20.6,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q102350": {
+    "pm25": 19.6,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q269": {
+    "pm25": 42,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q206687": {
+    "pm25": 9.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q2999": {
+    "pm25": 8.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q343973": {
+    "pm25": 23.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q994": {
+    "pm25": 20,
+    "year": 2017,
+    "category": "Poor"
+  },
+  "Q3238": {
+    "pm25": 36,
+    "year": 2013,
+    "category": "Severe"
+  },
+  "Q182009": {
+    "pm25": 15.8,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q207972": {
+    "pm25": 15,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q846502": {
+    "pm25": 17.6,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q139190": {
+    "pm25": 9,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q1021162": {
+    "pm25": 32.6,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q34116": {
+    "pm25": 5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q75268": {
+    "pm25": 39,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q124739": {
+    "pm25": 20.5,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q25804": {
+    "pm25": 5.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q83404": {
+    "pm25": 22.5,
+    "year": 2022,
+    "category": "Poor"
+  },
+  "Q57866": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q183651": {
+    "pm25": 22.9,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q49239": {
+    "pm25": 8.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q209034": {
+    "pm25": 31,
+    "year": 2018,
+    "category": "Very Poor"
+  },
+  "Q51093": {
+    "pm25": 16.3,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q514608": {
+    "pm25": 43,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q360326": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q10853792": {
+    "pm25": 5.8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q41057": {
+    "pm25": 10.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q172": {
+    "pm25": 7.3,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q116170766": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q755149": {
+    "pm25": 5.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q47554": {
+    "pm25": 14.9,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q44160": {
+    "pm25": 7.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q190021": {
+    "pm25": 7,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q45301": {
+    "pm25": 23.5,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q25330": {
+    "pm25": 7.7,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q207754": {
+    "pm25": 25.8,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q3138": {
+    "pm25": 10.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q167715": {
+    "pm25": 34.9,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q158006": {
+    "pm25": 18,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q3806": {
+    "pm25": 9.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q18575": {
+    "pm25": 6.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q44989": {
+    "pm25": 9.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q79580": {
+    "pm25": 7.8,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q106915": {
+    "pm25": 3.8,
+    "year": 2017,
+    "category": "Good"
+  },
+  "Q200340": {
+    "pm25": 83.9,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q2790": {
+    "pm25": 12.3,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q816331": {
+    "pm25": 13,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q23430": {
+    "pm25": 60,
+    "year": 2019,
+    "category": "Severe"
+  },
+  "Q26040": {
+    "pm25": 8.7,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q41278": {
+    "pm25": 20.3,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q25286": {
+    "pm25": 4.3,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q18094": {
+    "pm25": 3.1,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q179665": {
+    "pm25": 23.5,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q125080": {
+    "pm25": 3.2,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q11909": {
+    "pm25": 26.8,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q23993852": {
+    "pm25": 11.4,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q160687": {
+    "pm25": 30,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q376903": {
+    "pm25": 12,
+    "year": 2018,
+    "category": "Moderate"
+  },
+  "Q208445": {
+    "pm25": 8.4,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q33986": {
+    "pm25": 13.7,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q72248": {
+    "pm25": 7.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q127623": {
+    "pm25": 7.2,
+    "year": 2013,
+    "category": "Acceptable"
+  },
+  "Q79980": {
+    "pm25": 106,
+    "year": 2017,
+    "category": "Severe"
+  },
+  "Q25412": {
+    "pm25": 4.7,
+    "year": 2020,
+    "category": "Good"
+  },
+  "Q103093": {
+    "pm25": 5.7,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q641": {
+    "pm25": 21.1,
+    "year": 2021,
+    "category": "Poor"
+  },
+  "Q2132": {
+    "pm25": 7.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q334197": {
+    "pm25": 10,
+    "year": 2018,
+    "category": "Moderate"
+  },
+  "Q187826": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q210886": {
+    "pm25": 13,
+    "year": 2018,
+    "category": "Moderate"
+  },
+  "Q216": {
+    "pm25": 5.3,
+    "year": 2022,
+    "category": "Acceptable"
+  },
+  "Q184345": {
+    "pm25": 14.1,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q49259": {
+    "pm25": 7.2,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q192155": {
+    "pm25": 5.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q200016": {
+    "pm25": 30.6,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q3619248": {
+    "pm25": 24,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q159610": {
+    "pm25": 10.3,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q200036": {
+    "pm25": 27.6,
+    "year": 2022,
+    "category": "Very Poor"
+  },
+  "Q276176": {
+    "pm25": 13.8,
+    "year": 2014,
+    "category": "Moderate"
+  },
+  "Q2363616": {
+    "pm25": 13.6,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q459600": {
+    "pm25": 11.3,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q200028": {
+    "pm25": 8.7,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q2003323": {
+    "pm25": 9.6,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q894095": {
+    "pm25": 10.5,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q61": {
+    "pm25": 7.5,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q404529": {
+    "pm25": 53,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q6855": {
+    "pm25": 8.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q23661": {
+    "pm25": 8.2,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q4011": {
+    "pm25": 10.1,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q212826": {
+    "pm25": 10.3,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q49266": {
+    "pm25": 11.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q208143": {
+    "pm25": 8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q659400": {
+    "pm25": 4.8,
+    "year": 2021,
+    "category": "Good"
+  },
+  "Q182625": {
+    "pm25": 8,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q2135": {
+    "pm25": 5.5,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q49227": {
+    "pm25": 9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q106681": {
+    "pm25": 18,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q187861": {
+    "pm25": 8.8,
+    "year": 2019,
+    "category": "Acceptable"
+  },
+  "Q49179": {
+    "pm25": 9.1,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q3852": {
+    "pm25": 11.6,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q496368": {
+    "pm25": 7.1,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q387396": {
+    "pm25": 16.4,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q52892": {
+    "pm25": 18.3,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q359990": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q71266": {
+    "pm25": 41,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q197379": {
+    "pm25": 24,
+    "year": 2019,
+    "category": "Poor"
+  },
+  "Q2107": {
+    "pm25": 9.9,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q221051": {
+    "pm25": 18,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q71373": {
+    "pm25": 30,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q215755": {
+    "pm25": 39,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q71284": {
+    "pm25": 52,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q71339": {
+    "pm25": 35,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q1023920": {
+    "pm25": 31.4,
+    "year": 2019,
+    "category": "Very Poor"
+  },
+  "Q362959": {
+    "pm25": 30,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q75150": {
+    "pm25": 41,
+    "year": 2020,
+    "category": "Severe"
+  },
+  "Q427557": {
+    "pm25": 27,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q499203": {
+    "pm25": 11,
+    "year": 2021,
+    "category": "Moderate"
+  },
+  "Q205942": {
+    "pm25": 13.8,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q37995": {
+    "pm25": 28,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q207030": {
+    "pm25": 30,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q3808": {
+    "pm25": 49,
+    "year": 2012,
+    "category": "Severe"
+  },
+  "Q383129": {
+    "pm25": 28.7,
+    "year": 2016,
+    "category": "Very Poor"
+  },
+  "Q182394": {
+    "pm25": 36,
+    "year": 2016,
+    "category": "Severe"
+  },
+  "Q349976": {
+    "pm25": 21,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q38283": {
+    "pm25": 10.9,
+    "year": 2019,
+    "category": "Moderate"
+  },
+  "Q42462": {
+    "pm25": 8.1,
+    "year": 2020,
+    "category": "Acceptable"
+  },
+  "Q210292": {
+    "pm25": 12.8,
+    "year": 2020,
+    "category": "Moderate"
+  },
+  "Q571918": {
+    "pm25": 33,
+    "year": 2020,
+    "category": "Very Poor"
+  },
+  "Q79820": {
+    "pm25": 9.3,
+    "year": 2021,
+    "category": "Acceptable"
+  },
+  "Q59233": {
+    "pm25": 22,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q26569": {
+    "pm25": 33,
+    "year": 2014,
+    "category": "Very Poor"
+  },
+  "Q146699": {
+    "pm25": 15.8,
+    "year": 2016,
+    "category": "Poor"
+  },
+  "Q148062": {
+    "pm25": 30.1,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q184046": {
+    "pm25": 34.7,
+    "year": 2021,
+    "category": "Very Poor"
+  },
+  "Q197402": {
+    "pm25": 37.5,
+    "year": 2018,
+    "category": "Severe"
+  },
+  "Q68814": {
+    "pm25": 20,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q197519": {
+    "pm25": 21.5,
+    "year": 2018,
+    "category": "Poor"
+  },
+  "Q59223": {
+    "pm25": 20,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q59095": {
+    "pm25": 19,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q393171": {
+    "pm25": 22.1,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q2734": {
+    "pm25": 16.7,
+    "year": 2020,
+    "category": "Poor"
+  },
+  "Q42113": {
+    "pm25": 31,
+    "year": 2019,
+    "category": "Very Poor"
+  }
+}

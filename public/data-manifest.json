@@ -129,7 +129,7 @@
   },
   "eurostat-cities": {
     "key": "qid",
-    "coverage": 512,
+    "coverage": 524,
     "region": "EU",
     "fields": [
       "eurostatCode",
@@ -149,34 +149,29 @@
       "rentHistory",
       "totalCompanies",
       "companiesHistory",
+      "sunshineHours",
+      "tempWarmest",
+      "tempColdest",
+      "rainfallMm",
       "pm10",
       "pm10History",
       "no2",
       "no2History",
-      "sunshineHours",
-      "sunshineHoursHistory",
-      "tempWarmest",
-      "tempWarmestHistory",
-      "tempColdest",
-      "tempColdestHistory",
-      "rainfallMm",
-      "rainfallMmHistory",
       "greenSpacePct",
       "greenSpacePctHistory",
-      "touristNights",
-      "touristNightsHistory",
-      "museumVisitors",
-      "museumVisitorsHistory",
-      "libraries",
-      "librariesHistory",
-      "cinemaSeatsPer1k",
-      "cinemaSeatsPer1kHistory",
+      "roadNoisePct",
+      "roadNoisePct55",
       "medianAge",
       "medianAgeHistory",
       "popChangePct",
       "popChangePctHistory",
       "ageDependency",
-      "ageDependencyHistory"
+      "touristNights",
+      "touristNightsHistory",
+      "museumVisitors",
+      "museumVisitorsHistory",
+      "libraries",
+      "cinemaSeatsPer1k"
     ],
     "updated": "2026-04"
   },
@@ -406,6 +401,47 @@
       "gsp_per_capita_aud",
       "unemployment_history",
       "gsp_history"
+    ],
+    "updated": "2026-04"
+  },
+  "who-airquality": {
+    "key": "qid",
+    "coverage": 1561,
+    "fields": [
+      "pm25",
+      "year",
+      "category"
+    ],
+    "updated": "2026-04"
+  },
+  "universities": {
+    "key": "qid",
+    "coverage": 1923,
+    "fields": [
+      "qid",
+      "name",
+      "founded",
+      "students"
+    ],
+    "updated": "2026-04"
+  },
+  "fbi-crime": {
+    "key": "qid",
+    "coverage": 245,
+    "region": "US",
+    "fields": [
+      "violentPer100k",
+      "propertyPer100k",
+      "year"
+    ],
+    "updated": "2026-04"
+  },
+  "eci-data": {
+    "key": "iso2",
+    "coverage": 196,
+    "fields": [
+      "eci",
+      "year"
     ],
     "updated": "2026-04"
   }

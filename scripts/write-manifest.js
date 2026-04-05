@@ -35,6 +35,10 @@ const usStates     = readJson('us-states.json');
 const eurostatReg  = readJson('eurostat-regions.json');
 const canadaProv   = readJson('canada-provinces.json');
 const australiaSt  = readJson('australia-states.json');
+const whoAirQual   = readJson('who-airquality.json');
+const universities = readJson('universities.json');
+const fbiCrime     = readJson('fbi-crime.json');
+const eciData      = readJson('eci-data.json');
 
 // Helper: first available field names from a sample entry
 const sampleFields = obj => obj ? Object.keys(Object.values(obj)[0] || {}) : [];
@@ -65,6 +69,10 @@ const manifest = {
   'eurostat-regions':     { key: 'nuts2', coverage: eurostatReg  ? Object.keys(eurostatReg).length  : 0,  region: 'EU', fields: ['name','country_iso2','unemployment_rate','gdp_pps_eu100','unemployment_history','gdp_pps_history'], updated: today },
   'canada-provinces':     { key: 'abbr',  coverage: canadaProv   ? Object.keys(canadaProv).length   : 0,  region: 'CA', fields: ['name','unemployment_rate','gdp_bn_cad','gdp_per_capita_cad','unemployment_history','gdp_history'], updated: today },
   'australia-states':     { key: 'abbr',  coverage: australiaSt  ? Object.keys(australiaSt).length  : 0,  region: 'AU', fields: ['name','unemployment_rate','gsp_bn_aud','gsp_per_capita_aud','unemployment_history','gsp_history'], updated: today },
+  'who-airquality':       { key: 'qid',   coverage: whoAirQual   ? Object.keys(whoAirQual).length   : 0,         fields: ['pm25','year','category'], updated: today },
+  'universities':         { key: 'qid',   coverage: universities ? Object.keys(universities).length : 0,         fields: ['qid','name','founded','students'], updated: today },
+  'fbi-crime':            { key: 'qid',   coverage: fbiCrime     ? Object.keys(fbiCrime).length     : 0,  region: 'US', fields: ['violentPer100k','propertyPer100k','year'], updated: today },
+  'eci-data':             { key: 'iso2',  coverage: eciData      ? Object.keys(eciData).length      : 0,         fields: ['eci','year'], updated: today },
 };
 
 const OUT = path.join(PUB, 'data-manifest.json');

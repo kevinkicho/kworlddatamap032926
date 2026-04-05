@@ -9,6 +9,14 @@
  *   urb_clivcon – Living conditions (median income EC3039V, poverty EC3065V,
  *                 homeownership SA1011I, rent/m² SA1049V)
  *   urb_cecfi   – Economy (total companies EC2021V)
+ *   urb_cenv    – Environment (PM10 EN1003V, NO2 EN1004V, road noise NO1025V)
+ *   urb_cgreen  – Green space (m²/inhabitant GR1010V)
+ *   urb_ctrans  – Transport (public transport TN1015V, cars/100 TN1020V)
+ *   urb_chealth – Health (hospital beds/100k HE1015V)
+ *   urb_cpopstr – Population structure (pop change PS3010I, median age PS1020V,
+ *                 foreign-born % FO1010V)
+ *   urb_ctour   – Tourism (overnight stays TO1010V)
+ *   urb_ccult   – Culture (museum visitors MU1010V, libraries LI1010V)
  *
  * Usage:
  *   node scripts/fetch-eurostat.js
@@ -299,11 +307,19 @@ async function main() {
     try { existing = JSON.parse(fs.readFileSync(OUTPUT_PATH, 'utf8')); } catch (_) {}
   }
 
-  // Fetch all three datasets
-  const [clmaJson, clivconJson, cecfiJson] = await Promise.all([
+  // Fetch all datasets (new ones with .catch so a missing dataset doesn't abort)
+  const safe = ds => fetchDataset(ds).catch(e => { console.warn(`  WARN: ${ds} failed — ${e.message}`); return null; });
+  const [clmaJson, clivconJson, cecfiJson, cenvJson, cgreenJson, ctransJson, chealthJson, cpopstrJson, ctourJson, ccultJson] = await Promise.all([
     fetchDataset('urb_clma'),
     fetchDataset('urb_clivcon'),
     fetchDataset('urb_cecfi'),
+    safe('urb_cenv'),
+    safe('urb_cgreen'),
+    safe('urb_ctrans'),
+    safe('urb_chealth'),
+    safe('urb_cpopstr'),
+    safe('urb_ctour'),
+    safe('urb_ccult'),
   ]);
 
   // Get city code → Eurostat name mapping (from clma which has broad coverage)
@@ -311,15 +327,38 @@ async function main() {
   const eurostatCodes = Object.keys(eurostatNames).filter(c => c.endsWith('C'));
   console.log(`Eurostat city codes (core cities): ${eurostatCodes.length}`);
 
+  // Helper: extract from optional dataset (returns empty Map if dataset is null)
+  const tryExtract = (ds, code) => ds ? extractAll(ds, code) : new Map();
+
   // Extract indicators (full time series)
   console.log('  Extracting indicators…');
-  const unemploymentMap   = extractAll(clmaJson,    'EC1020I');
-  const activityMap       = extractAll(clmaJson,    'EC1001I');
-  const medianIncomeMap   = extractAll(clivconJson, 'EC3039V');
-  const povertyMap        = extractAll(clivconJson, 'EC3065V');
-  const homeownershipMap  = extractAll(clivconJson, 'SA1011I');
-  const rentMap           = extractAll(clivconJson, 'SA1049V');
-  const companiesMap      = extractAll(cecfiJson,   'EC2021V');
+  const unemploymentMap    = extractAll(clmaJson,    'EC1020I');
+  const activityMap        = extractAll(clmaJson,    'EC1001I');
+  const medianIncomeMap    = extractAll(clivconJson, 'EC3039V');
+  const povertyMap         = extractAll(clivconJson, 'EC3065V');
+  const homeownershipMap   = extractAll(clivconJson, 'SA1011I');
+  const rentMap            = extractAll(clivconJson, 'SA1049V');
+  const companiesMap       = extractAll(cecfiJson,   'EC2021V');
+  // urb_cenv: correct indicator codes from Eurostat labels API
+  const sunshineMap        = tryExtract(cenvJson,    'EN1002V'); // sunshine hours/day
+  const tempWarmestMap     = tryExtract(cenvJson,    'EN1003V'); // avg temp warmest month °C
+  const tempColdestMap     = tryExtract(cenvJson,    'EN1004V'); // avg temp coldest month °C
+  const rainfallMap        = tryExtract(cenvJson,    'EN1005V'); // rainfall litre/m²
+  const pm10Map            = tryExtract(cenvJson,    'EN2027V'); // annual avg PM10 µg/m³
+  const no2Map             = tryExtract(cenvJson,    'EN2026V'); // annual avg NO2 µg/m³
+  const greenSpaceMap      = tryExtract(cenvJson,    'EN5205V'); // % green urban areas
+  const roadNoise65Map     = tryExtract(cenvJson,    'EN2033I'); // % exposed road noise >65dB day
+  const roadNoise55Map     = tryExtract(cenvJson,    'EN2035I'); // % exposed road noise >55dB night
+  // urb_cpopstr: correct codes
+  const medianAgeMap       = tryExtract(cpopstrJson, 'DE1073V'); // median population age
+  const popChangeMap       = tryExtract(cpopstrJson, 'DE1061I'); // population change over 1 year
+  const ageDependencyMap   = tryExtract(cpopstrJson, 'DE1058I'); // age dependency ratio
+  // urb_ctour: correct codes (culture + recreation + tourism)
+  const touristNightsMap   = tryExtract(ctourJson,   'CR2001V'); // total tourist nights
+  const museumVisitorsMap  = tryExtract(ctourJson,   'CR1007V'); // museum visitors/year
+  const librariesMap       = tryExtract(ctourJson,   'CR1010V'); // public libraries
+  const cinemaSeatsPer1kMap= tryExtract(ctourJson,   'CR1003I'); // cinema seats per 1000 residents
+  console.log(`    pm10:${pm10Map.size} no2:${no2Map.size} tempW:${tempWarmestMap.size} green:${greenSpaceMap.size} noise65:${roadNoise65Map.size} medAge:${medianAgeMap.size} tourist:${touristNightsMap.size} museum:${museumVisitorsMap.size}`);
 
   // ── Match Eurostat codes → our city QIDs ────────────────────────────────
   let matched = 0, unmatched = [];
@@ -353,13 +392,29 @@ async function main() {
     }
 
     // Build record
-    const unemp = unemploymentMap.get(code);
-    const act   = activityMap.get(code);
-    const inc   = medianIncomeMap.get(code);
-    const pov   = povertyMap.get(code);
-    const home  = homeownershipMap.get(code);
-    const rent  = rentMap.get(code);
-    const comp  = companiesMap.get(code);
+    const unemp   = unemploymentMap.get(code);
+    const act     = activityMap.get(code);
+    const inc     = medianIncomeMap.get(code);
+    const pov     = povertyMap.get(code);
+    const home    = homeownershipMap.get(code);
+    const rent    = rentMap.get(code);
+    const comp    = companiesMap.get(code);
+    const sunsh   = sunshineMap.get(code);
+    const tempW   = tempWarmestMap.get(code);
+    const tempC   = tempColdestMap.get(code);
+    const rain    = rainfallMap.get(code);
+    const pm10    = pm10Map.get(code);
+    const no2     = no2Map.get(code);
+    const green   = greenSpaceMap.get(code);
+    const noise65 = roadNoise65Map.get(code);
+    const noise55 = roadNoise55Map.get(code);
+    const medAge  = medianAgeMap.get(code);
+    const popChg  = popChangeMap.get(code);
+    const ageDep  = ageDependencyMap.get(code);
+    const tourist = touristNightsMap.get(code);
+    const museum  = museumVisitorsMap.get(code);
+    const lib     = librariesMap.get(code);
+    const cinema  = cinemaSeatsPer1kMap.get(code);
 
     // Determine best year (prefer labour market year)
     const year = unemp?.latest?.year || act?.latest?.year || inc?.latest?.year || pov?.latest?.year || null;
@@ -373,20 +428,50 @@ async function main() {
       eurostatCode: code,
       country: iso2,
       year,
-      unemploymentPct:       unemp?.latest ? +unemp.latest.val.toFixed(2)  : null,
-      unemploymentHistory:   hist(unemp, 2),
-      activityRate:          act?.latest   ? +act.latest.val.toFixed(2)    : null,
-      activityHistory:       hist(act, 2),
-      medianIncome:          inc?.latest   ? +inc.latest.val.toFixed(0)    : null,
-      medianIncomeHistory:   hist(inc, 0),
-      povertyPct:            pov?.latest   ? +pov.latest.val.toFixed(2)    : null,
-      povertyHistory:        hist(pov, 2),
-      homeownershipPct:      home?.latest  ? +home.latest.val.toFixed(2)   : null,
-      homeownershipHistory:  hist(home, 2),
-      rentPerSqm:            rent?.latest  ? +rent.latest.val.toFixed(2)   : null,
-      rentHistory:           hist(rent, 2),
-      totalCompanies:        comp?.latest  ? Math.round(comp.latest.val)   : null,
-      companiesHistory:      hist(comp, 0),
+      // Labour market
+      unemploymentPct:         unemp?.latest ? +unemp.latest.val.toFixed(2)  : null,
+      unemploymentHistory:     hist(unemp, 2),
+      activityRate:            act?.latest   ? +act.latest.val.toFixed(2)    : null,
+      activityHistory:         hist(act, 2),
+      // Living conditions
+      medianIncome:            inc?.latest   ? +inc.latest.val.toFixed(0)    : null,
+      medianIncomeHistory:     hist(inc, 0),
+      povertyPct:              pov?.latest   ? +pov.latest.val.toFixed(2)    : null,
+      povertyHistory:          hist(pov, 2),
+      homeownershipPct:        home?.latest  ? +home.latest.val.toFixed(2)   : null,
+      homeownershipHistory:    hist(home, 2),
+      rentPerSqm:              rent?.latest  ? +rent.latest.val.toFixed(2)   : null,
+      rentHistory:             hist(rent, 2),
+      // Economy
+      totalCompanies:          comp?.latest  ? Math.round(comp.latest.val)   : null,
+      companiesHistory:        hist(comp, 0),
+      // Climate (from urb_cenv)
+      sunshineHours:           sunsh?.latest  ? +sunsh.latest.val.toFixed(1)  : null,
+      tempWarmest:             tempW?.latest  ? +tempW.latest.val.toFixed(1)  : null,
+      tempColdest:             tempC?.latest  ? +tempC.latest.val.toFixed(1)  : null,
+      rainfallMm:              rain?.latest   ? +rain.latest.val.toFixed(0)   : null,
+      // Environment & air quality
+      pm10:                    pm10?.latest   ? +pm10.latest.val.toFixed(1)   : null,
+      pm10History:             hist(pm10, 1),
+      no2:                     no2?.latest    ? +no2.latest.val.toFixed(1)    : null,
+      no2History:              hist(no2, 1),
+      greenSpacePct:           green?.latest  ? +green.latest.val.toFixed(1)  : null,
+      greenSpacePctHistory:    hist(green, 1),
+      roadNoisePct:            noise65?.latest? +noise65.latest.val.toFixed(1): null,
+      roadNoisePct55:          noise55?.latest? +noise55.latest.val.toFixed(1): null,
+      // Demographics (from urb_cpopstr)
+      medianAge:               medAge?.latest ? +medAge.latest.val.toFixed(1) : null,
+      medianAgeHistory:        hist(medAge, 1),
+      popChangePct:            popChg?.latest ? +popChg.latest.val.toFixed(2) : null,
+      popChangePctHistory:     hist(popChg, 2),
+      ageDependency:           ageDep?.latest ? +ageDep.latest.val.toFixed(1) : null,
+      // Tourism & culture (from urb_ctour)
+      touristNights:           tourist?.latest ? Math.round(tourist.latest.val): null,
+      touristNightsHistory:    hist(tourist, 0),
+      museumVisitors:          museum?.latest  ? Math.round(museum.latest.val) : null,
+      museumVisitorsHistory:   hist(museum, 0),
+      libraries:               lib?.latest     ? Math.round(lib.latest.val)    : null,
+      cinemaSeatsPer1k:        cinema?.latest  ? +cinema.latest.val.toFixed(1) : null,
     };
 
     // Only keep if at least one real value
