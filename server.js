@@ -1,14 +1,23 @@
 require('dotenv').config();
-const express = require('express');
-const path    = require('path');
-const fs      = require('fs');
+const express     = require('express');
+const compression = require('compression');
+const path        = require('path');
+const fs          = require('fs');
 
 const app      = express();
 const PORT     = 3000;
 const OUT_FILE = path.join(__dirname, 'public', 'cities-full.json');
 
+app.use(compression());
 app.use(express.json({ limit: '64kb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders(res, filePath) {
+    // Allow browsers to cache large static JSON files for 1 hour
+    if (filePath.endsWith('.json')) {
+      res.setHeader('Cache-Control', 'public, max-age=3600');
+    }
+  }
+}));
 
 /**
  * POST /api/enrich

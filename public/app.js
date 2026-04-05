@@ -16,6 +16,53 @@ let companiesData = {};
 let _companiesLoaded = false;
 let _companiesLoading = null;  // in-flight promise
 
+// World GeoJSON (lazy — only needed when choropleth is toggled on)
+let _worldGeoLoaded = false;
+let _worldGeoLoading = null;
+async function _ensureWorldGeo() {
+  if (_worldGeoLoaded) return;
+  if (_worldGeoLoading) return _worldGeoLoading;
+  _worldGeoLoading = (async () => {
+    try {
+      const res = await fetch('/world-countries.json');
+      if (res.ok) {
+        worldGeo = await res.json();
+        _computeCountryCentroids();
+        console.log(`[lazy] World GeoJSON loaded (${worldGeo.features.length} features)`);
+      }
+    } catch (e) {
+      console.warn('[lazy] world-countries.json failed to load', e);
+    } finally {
+      _worldGeoLoaded = true;
+      _worldGeoLoading = null;
+    }
+  })();
+  return _worldGeoLoading;
+}
+
+// Eurostat Urban Audit (lazy — only needed when opening an EU city panel)
+let _eurostatLoaded = false;
+let _eurostatLoading = null;
+async function _ensureEurostat() {
+  if (_eurostatLoaded) return;
+  if (_eurostatLoading) return _eurostatLoading;
+  _eurostatLoading = (async () => {
+    try {
+      const res = await fetch('/eurostat-cities.json');
+      if (res.ok) {
+        eurostatCities = await res.json();
+        console.log(`[lazy] Eurostat data loaded (${Object.keys(eurostatCities).length} cities)`);
+      }
+    } catch (e) {
+      console.warn('[lazy] eurostat-cities.json failed to load', e);
+    } finally {
+      _eurostatLoaded = true;
+      _eurostatLoading = null;
+    }
+  })();
+  return _eurostatLoading;
+}
+
 async function _ensureCompanies() {
   if (_companiesLoaded) return;
   if (_companiesLoading) return _companiesLoading;
@@ -2387,6 +2434,10 @@ async function openWikiSidebar(qid, cityName) {
   // Find full city object
   const city = allCities.find(c => c.qid === qid);
 
+  // Lazy-load Eurostat data for EU cities (no-op if already loaded or non-EU)
+  const EU_ISOS = new Set(['AT','BE','BG','CY','CZ','DE','DK','EE','ES','FI','FR','GR','HR','HU','IE','IT','LT','LU','LV','MT','NL','PL','PT','RO','SE','SI','SK']);
+  if (city?.iso && EU_ISOS.has(city.iso)) _ensureEurostat();
+
   // If we already stored Wikipedia data (from a previous click or pre-fetch script),
   // render immediately — no API call needed.
   // Exception: if the cache pre-dates Wikidata P18 support (no Special:FilePath URL),
@@ -2632,15 +2683,15 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, noaaRes] = await Promise.all([
+    // world-countries.json (3.9 MB) is lazy-loaded on first choropleth toggle
+    // eurostat-cities.json (1.2 MB) is lazy-loaded on first EU city panel open
+    // companies.json (75 MB) is lazy-loaded on first use
+    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, noaaRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
-      fetch('/world-countries.json').catch(() => null),
-      // companies.json (75 MB) is lazy-loaded on first use — not fetched at startup
       fetch('/census-cities.json').catch(() => null),
       fetch('/census-business.json').catch(() => null),
       fetch('/bea-trade.json').catch(() => null),
-      fetch('/eurostat-cities.json').catch(() => null),
       fetch('/gawc-cities.json').catch(() => null),
       fetch('/japan-prefectures.json').catch(() => null),
       fetch('/airport-connectivity.json').catch(() => null),
@@ -2702,15 +2753,6 @@ async function init() {
         console.log(`[init] BEA trade data loaded (${Object.keys(beaTradeData).length} countries)`);
       } catch {
         console.warn('[init] bea-trade.json is malformed');
-      }
-    }
-
-    if (eurostatRes && eurostatRes.ok) {
-      try {
-        eurostatCities = await eurostatRes.json();
-        console.log(`[init] Eurostat Urban Audit data loaded (${Object.keys(eurostatCities).length} cities)`);
-      } catch {
-        console.warn('[init] eurostat-cities.json is malformed');
       }
     }
 
@@ -2780,28 +2822,11 @@ async function init() {
         console.log(`[init] NOAA climate data loaded (${Object.keys(noaaClimate).length} cities)`);
       } catch { console.warn('[init] noaa-climate.json is malformed'); }
     }
-    // ── Phase 5c: load world country borders GeoJSON (optional, for choropleth) ──
-    if (geoRes && geoRes.ok) {
-      try {
-        worldGeo = await geoRes.json();
-        console.log(`[init] World GeoJSON loaded (${worldGeo.features.length} features)`);
-        _computeCountryCentroids();
-      } catch {
-        console.warn('[init] world-countries.json is malformed — choropleth unavailable');
-      }
-    } else {
-      console.info('[init] world-countries.json not found — run "npm run fetch-world-geo" to enable choropleth');
-    }
-
     // ── Phase 6: apply overrides + build UI ──
     applyOverrides();
     rebuildMapLayer();
-    if (worldGeo && Object.keys(countryData).length) {
-      buildChoropleth();
-      map.off("click", _cpMapClickHandler);
-      map.on("click", _cpMapClickHandler);
-      initChoroControls();
-    }
+    map.off("click", _cpMapClickHandler);
+    map.on("click", _cpMapClickHandler);
     updateStats();
     showLoading(false);
 
@@ -3903,11 +3928,17 @@ async function _loadAndShowTrade(iso2, countryName) {
   openTradePanel(iso2, countryName, tradeCache[iso2]);
 }
 
-function toggleChoropleth() {
+let _choroControlsInited = false;
+async function toggleChoropleth() {
   choroOn = !choroOn;
   const btn = document.getElementById('choro-toggle-btn');
   if (choroOn) {
+    btn.textContent = 'Loading…';
+    btn.disabled = true;
+    await _ensureWorldGeo();
+    if (!_choroControlsInited) { initChoroControls(); _choroControlsInited = true; }
     btn.textContent = 'On';
+    btn.disabled = false;
     btn.classList.add('on');
     buildChoropleth();
   } else {
