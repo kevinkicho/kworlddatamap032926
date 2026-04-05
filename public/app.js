@@ -2716,6 +2716,12 @@ const WB_STAT_DEFS = {
   // Transparency & Freedom (TI CPI / Freedom House)
   wb_ti_cpi:              { label:'Corruption Index (TI CPI)',key:'ti_cpi_score',        fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
   wb_fh_score:            { label:'Freedom Score (FH)',       key:'fh_score',            fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
+  // Energy Mix (Ember / OWID)
+  wb_energy_wind_solar_pct: { label:'Wind & Solar (%)',    key:'energy_wind_solar_pct', fmt: v=>v.toFixed(1)+'%', higherBetter:true  },
+  wb_energy_hydro_pct:      { label:'Hydro (%)',           key:'energy_hydro_pct',      fmt: v=>v.toFixed(1)+'%', higherBetter:null  },
+  wb_energy_nuclear_pct:    { label:'Nuclear (%)',         key:'energy_nuclear_pct',    fmt: v=>v.toFixed(1)+'%', higherBetter:null  },
+  wb_energy_gas_pct:        { label:'Gas (%)',             key:'energy_gas_pct',        fmt: v=>v.toFixed(1)+'%', higherBetter:false },
+  wb_energy_coal_pct:       { label:'Coal (%)',            key:'energy_coal_pct',       fmt: v=>v.toFixed(1)+'%', higherBetter:false },
   eci:                 { label:'Economic Complexity Index', key:'eci',          fmt: v=>(v>0?'+':'')+v.toFixed(2), higherBetter:true, src:'eci' },
   wb_rd_spend_pct:     { label:'R&D Spending',        key:'rd_spend_pct',     fmt: v=>v.toFixed(1)+'%',        higherBetter:true,  src:'oecd' },
   wb_tax_revenue_pct:  { label:'Tax Revenue (central)',key:'tax_revenue_pct',  fmt: v=>v.toFixed(1)+'%',        higherBetter:null,  src:'oecd' },
@@ -4559,11 +4565,11 @@ function _renderCountryPanel(iso2) {
     // ── Energy Mix (Ember) ────────────────────────────────────────────
     (Number.isFinite(cd.energy_coal_pct)
       ? '<div class="cp-gauge-section-hdr">Energy Mix</div>' +
-        _cpGaugeRow('Wind & Solar', cd.energy_wind_solar_pct, 100, '%', 'cp-green', '', '') +
-        _cpGaugeRow('Hydro',        cd.energy_hydro_pct,      100, '%', 'cp-blue',  '', '') +
-        _cpGaugeRow('Nuclear',      cd.energy_nuclear_pct,    100, '%', '',          '', '') +
-        _cpGaugeRow('Gas',          cd.energy_gas_pct,        100, '%', 'cp-amber', '', '') +
-        _cpGaugeRow('Coal',         cd.energy_coal_pct,       100, '%', 'cp-red',   '', '')
+        _cpGaugeRow('Wind & Solar', cd.energy_wind_solar_pct, 100, '%', 'cp-green', 'wb_energy_wind_solar_pct', iso2) +
+        _cpGaugeRow('Hydro',        cd.energy_hydro_pct,      100, '%', 'cp-blue',  'wb_energy_hydro_pct',      iso2) +
+        _cpGaugeRow('Nuclear',      cd.energy_nuclear_pct,    100, '%', '',          'wb_energy_nuclear_pct',    iso2) +
+        _cpGaugeRow('Gas',          cd.energy_gas_pct,        100, '%', 'cp-amber', 'wb_energy_gas_pct',        iso2) +
+        _cpGaugeRow('Coal',         cd.energy_coal_pct,       100, '%', 'cp-red',   'wb_energy_coal_pct',       iso2)
       : '') +
     // ── OECD Innovation & Labor ───────────────────────────────────────
     (function() {
