@@ -52,6 +52,7 @@ async function _ensureEurostat() {
       if (res.ok) {
         eurostatCities = await res.json();
         console.log(`[lazy] Eurostat data loaded (${Object.keys(eurostatCities).length} cities)`);
+        if (_filterAvail.eurostat) rebuildMapLayer();
       }
     } catch (e) {
       console.warn('[lazy] eurostat-cities.json failed to load', e);
@@ -196,35 +197,35 @@ async function _ensureNobelCities() {
   return _nobelLoading;
 }
 
+// Returns 'match' if city passes all active filters, 'other' otherwise.
+// Does NOT encode any dim/hide behaviour — that is handled in rebuildMapLayer.
 function applyMapFilters(city) {
   const qid = city.qid;
-  // Availability checks
-  if (_filterAvail.airQuality   && !airQualityData[qid])   return _filterDimMode;
-  if (_filterAvail.metro        && !metroTransitData[qid])  return _filterDimMode;
-  if (_filterAvail.nobel        && !nobelCitiesData[qid])   return _filterDimMode;
-  if (_filterAvail.universities && !universitiesData[qid])  return _filterDimMode;
-  if (_filterAvail.airport      && !airportData[qid])       return _filterDimMode;
-  if (_filterAvail.eurostat     && !eurostatCities[qid])    return _filterDimMode;
-  if (_filterAvail.census       && !censusCities[qid])      return _filterDimMode;
-  // Value filters
+  if (_filterAvail.airQuality   && !airQualityData[qid])   return 'other';
+  if (_filterAvail.metro        && !metroTransitData[qid])  return 'other';
+  if (_filterAvail.nobel        && !nobelCitiesData[qid])   return 'other';
+  if (_filterAvail.universities && !universitiesData[qid])  return 'other';
+  if (_filterAvail.airport      && !airportData[qid])       return 'other';
+  if (_filterAvail.eurostat     && !eurostatCities[qid])    return 'other';
+  if (_filterAvail.census       && !censusCities[qid])      return 'other';
   if (_filterValue.nobel != null) {
-    if ((nobelCitiesData[qid]?.total ?? 0) < _filterValue.nobel) return _filterDimMode;
+    if ((nobelCitiesData[qid]?.total ?? 0) < _filterValue.nobel) return 'other';
   }
   if (_filterValue.universities != null) {
-    if ((universitiesData[qid]?.length ?? 0) < _filterValue.universities) return _filterDimMode;
+    if ((universitiesData[qid]?.length ?? 0) < _filterValue.universities) return 'other';
   }
   if (_filterValue.pop != null) {
     const p = city.pop || 0;
-    if (_filterValue.pop === 'small'  && p >= 100_000)    return _filterDimMode;
-    if (_filterValue.pop === 'medium' && (p < 100_000  || p >= 1_000_000))  return _filterDimMode;
-    if (_filterValue.pop === 'large'  && (p < 1_000_000 || p >= 10_000_000)) return _filterDimMode;
-    if (_filterValue.pop === 'mega'   && p < 10_000_000)  return _filterDimMode;
+    if (_filterValue.pop === 'small'  && p >= 100_000)                     return 'other';
+    if (_filterValue.pop === 'medium' && (p < 100_000  || p >= 1_000_000)) return 'other';
+    if (_filterValue.pop === 'large'  && (p < 1_000_000 || p >= 10_000_000)) return 'other';
+    if (_filterValue.pop === 'mega'   && p < 10_000_000)                   return 'other';
   }
   if (_filterValue.metro != null) {
-    if ((metroTransitData[qid]?.stations ?? 0) < _filterValue.metro) return _filterDimMode;
+    if ((metroTransitData[qid]?.stations ?? 0) < _filterValue.metro) return 'other';
   }
   if (_filterValue.aq != null) {
-    if ((airQualityData[qid]?.category ?? '') !== _filterValue.aq) return _filterDimMode;
+    if ((airQualityData[qid]?.category ?? '') !== _filterValue.aq) return 'other';
   }
   return 'match';
 }
@@ -286,6 +287,7 @@ function openFilterPanel() {
   _ensureUniversities();
   _ensureMetroTransit();
   _ensureNobelCities();
+  _ensureEurostat();
   document.getElementById('filter-panel').classList.add('open');
   document.getElementById('filter-fab').classList.add('active');
 }
@@ -293,6 +295,13 @@ function openFilterPanel() {
 function closeFilterPanel() {
   document.getElementById('filter-panel').classList.remove('open');
   document.getElementById('filter-fab').classList.remove('active');
+}
+
+function _updateDotControls() {
+  const active = _anyFilterActive() || !!_heatmapMetric;
+  document.querySelectorAll('#dot-controls-section button').forEach(b => {
+    b.disabled = !active;
+  });
 }
 
 function _updateFilterBadge() {
@@ -303,42 +312,116 @@ function _updateFilterBadge() {
   badge.style.display = n > 0 ? '' : 'none';
 }
 
-function setFilterDimMode(mode) {
-  _filterDimMode = mode;
-  document.querySelectorAll('#filter-dim-row .filter-mode-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.mode === mode);
+// ── Dot display controls ──────────────────────────────────────────────────────
+// Matched/affected cities: Show vs Dim vs Hide
+function setMatchedVis(mode) {  // 'show' | 'dim' | 'hide'
+  _matchedVisMode = mode;
+  document.querySelectorAll('[data-matched-vis]').forEach(b => {
+    b.classList.toggle('active', b.dataset.matchedVis === mode);
+  });
+  rebuildMapLayer();
+}
+
+// Matched/affected cities: color by population vs metric intensity
+function setMatchedColorMode(mode) {  // 'pop' | 'metric'
+  _matchedColorMode = mode;
+  document.querySelectorAll('[data-matched-col]').forEach(b => {
+    b.classList.toggle('active', b.dataset.matchedCol === mode);
+  });
+  _updateAvailIntensityStrips();
+  rebuildMapLayer();
+}
+
+// Other/non-affected cities: Show vs Dim vs Hide
+function setOtherVis(mode) {  // 'full' | 'dim' | 'hide'
+  _otherShowMode = mode;
+  document.querySelectorAll('[data-other-vis]').forEach(b => {
+    b.classList.toggle('active', b.dataset.otherVis === mode);
+  });
+  rebuildMapLayer();
+}
+
+// Other/non-affected cities: color by population vs ghost gray
+function setOtherColorMode(mode) {  // 'pop' | 'ghost'
+  _otherColorMode = mode;
+  document.querySelectorAll('[data-other-col]').forEach(b => {
+    b.classList.toggle('active', b.dataset.otherCol === mode);
   });
   rebuildMapLayer();
 }
 
 function clearAllFilters() {
+  // Clear heatmap first (removes layer + hides palette/sliders)
+  if (_heatmapMetric) clearHeatmap();
+
   Object.keys(_filterAvail).forEach(k => { _filterAvail[k] = false; });
   Object.keys(_filterValue).forEach(k => { _filterValue[k] = null; });
-  document.querySelectorAll('.filter-avail-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.filter-avail-btn').forEach(b => {
+    b.classList.remove('on');
+    b.textContent = 'off';
+  });
   document.querySelectorAll('.filter-bucket').forEach(b => {
     b.classList.toggle('active', b.dataset.val === 'null');
   });
+
+  // Reset dot controls to defaults
+  _matchedVisMode   = 'show';
+  _matchedColorMode = 'pop';
+  _otherShowMode    = 'dim';
+  _otherColorMode   = 'pop';
+  document.querySelectorAll('[data-matched-vis]').forEach(b =>
+    b.classList.toggle('active', b.dataset.matchedVis === 'show'));
+  document.querySelectorAll('[data-matched-col]').forEach(b =>
+    b.classList.toggle('active', b.dataset.matchedCol === 'pop'));
+  document.querySelectorAll('[data-other-vis]').forEach(b =>
+    b.classList.toggle('active', b.dataset.otherVis === 'dim'));
+  document.querySelectorAll('[data-other-col]').forEach(b =>
+    b.classList.toggle('active', b.dataset.otherCol === 'pop'));
+
+  // Reset heatmap parameters to defaults
+  _heatPalette    = 'warm';
+  _heatRadius     = 40;
+  _heatBlur       = 28;
+  _heatMinOpacity = 0.45;
+  document.querySelectorAll('[data-palette]').forEach(b =>
+    b.classList.toggle('active', b.dataset.palette === 'warm'));
+  const rSlider = document.getElementById('heat-radius-slider');
+  const bSlider = document.getElementById('heat-blur-slider');
+  const iSlider = document.getElementById('heat-intensity-slider');
+  if (rSlider) { rSlider.value = 40; document.getElementById('heat-radius-val').textContent = '40'; }
+  if (bSlider) { bSlider.value = 28; document.getElementById('heat-blur-val').textContent = '28'; }
+  if (iSlider) { iSlider.value = 45; document.getElementById('heat-intensity-val').textContent = '45%'; }
+
+  _updateAvailIntensityStrips();
   _updateFilterBadge();
   rebuildMapLayer();
 }
 
-function toggleAvailFilter(key) {
-  const wasAnyAvailOn = Object.values(_filterAvail).some(Boolean);
-  _filterAvail[key] = !_filterAvail[key];
-  const btn = document.querySelector(`.filter-avail-btn[data-key="${key}"]`);
-  if (btn) {
-    btn.classList.toggle('on', _filterAvail[key]);
-    btn.textContent = _filterAvail[key] ? 'ON' : 'off';
+async function toggleAvailFilter(key) {
+  const wasOn = _filterAvail[key];
+  // Availability filters are exclusive — turn all off first
+  Object.keys(_filterAvail).forEach(k => { _filterAvail[k] = false; });
+  document.querySelectorAll('.filter-avail-btn').forEach(b => {
+    b.classList.remove('on');
+    b.textContent = 'off';
+  });
+  // Toggle on if it wasn't already on (clicking active item turns it off)
+  if (!wasOn) {
+    _filterAvail[key] = true;
+    const btn = document.querySelector(`.filter-avail-btn[data-key="${key}"]`);
+    if (btn) { btn.classList.add('on'); btn.textContent = 'ON'; }
+    // Auto-switch other cities to Hide — availability matches a small subset
+    _otherShowMode = 'hide';
+    document.querySelectorAll('[data-other-vis]').forEach(b =>
+      b.classList.toggle('active', b.dataset.otherVis === 'hide'));
+    // Auto-switch matched cities to Intensity so the gradient is immediately visible
+    _matchedColorMode = 'metric';
+    document.querySelectorAll('[data-matched-col]').forEach(b =>
+      b.classList.toggle('active', b.dataset.matchedCol === 'metric'));
+    // Ensure data is loaded before rebuilding — Eurostat is lazy-loaded
+    if (key === 'eurostat') await _ensureEurostat();
   }
-  // Auto-switch to Hide when any availability filter is first turned on:
-  // availability filters typically match only a small fraction of cities, so
-  // hiding non-matching cities is far cleaner than dimming thousands of grey dots.
-  if (_filterAvail[key] && !wasAnyAvailOn) {
-    _filterDimMode = 'hide';
-    document.querySelectorAll('#filter-dim-row .filter-mode-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.mode === 'hide');
-    });
-  }
+  _updateAvailIntensityStrips();
   _updateFilterBadge();
   rebuildMapLayer();
 }
@@ -379,9 +462,9 @@ async function setHeatmapMetric(metric) {
     b.classList.toggle('active', b.dataset.metric === metric);
   });
 
-  // Show dot-mode row + parameter controls
-  const dotRow = document.getElementById('heat-dot-row');
-  if (dotRow) dotRow.style.display = 'flex';
+  // Show palette chooser + parameter controls
+  const palRow  = document.getElementById('heat-palette-row');
+  if (palRow)  palRow.style.display = 'block';
   const ctrlRow = document.getElementById('heat-controls-row');
   if (ctrlRow) ctrlRow.style.display = 'block';
 
@@ -395,20 +478,22 @@ async function setHeatmapMetric(metric) {
 function clearHeatmap() {
   _heatmapMetric = null;
   if (_heatmapLayer) { _heatmapLayer.remove(); _heatmapLayer = null; }
-  const dotRow = document.getElementById('heat-dot-row');
-  if (dotRow) dotRow.style.display = 'none';
+  const palRow  = document.getElementById('heat-palette-row');
+  if (palRow)  palRow.style.display = 'none';
   const ctrlRow = document.getElementById('heat-controls-row');
   if (ctrlRow) ctrlRow.style.display = 'none';
   document.querySelectorAll('.filter-heat-btn').forEach(b => b.classList.remove('active'));
   rebuildMapLayer();
 }
 
-function setHeatDotMode(mode) {
-  _heatDotMode = mode;
-  document.querySelectorAll('[data-dotmode]').forEach(b => {
-    b.classList.toggle('active', b.dataset.dotmode === mode);
+function setHeatPalette(name) {
+  _heatPalette = name;
+  document.querySelectorAll('[data-palette]').forEach(b => {
+    b.classList.toggle('active', b.dataset.palette === name);
   });
-  rebuildMapLayer();
+  _updateAvailIntensityStrips();
+  _refreshHeatLayer();
+  if (_matchedColorMode === 'metric') rebuildMapLayer();
 }
 
 function setHeatRadius(v) {
@@ -469,9 +554,9 @@ function _buildHeatPoints(metric) {
       raw.push({ lat: city.lat, lng: city.lng, val });
   }
   if (raw.length === 0) return [];
-  // 95th-percentile cap re-computed within the filtered subset (preserves relative contrast)
   const sorted = raw.map(r => r.val).sort((a, b) => a - b);
   const p95 = sorted[Math.floor(sorted.length * 0.95)] || sorted[sorted.length - 1];
+  _heatNormP95[metric] = p95;   // cache for _metricDotColor
   return raw.map(r => [r.lat, r.lng, Math.min(r.val / p95, 1.0)]);
 }
 
@@ -489,17 +574,144 @@ function _refreshHeatLayer() {
   }
 }
 
+// ── Palette system ────────────────────────────────────────────────────────────
+// Each palette entry: array of [stop, hexColor] pairs sorted ascending by stop.
+// 'warm' has per-metric colours; the others use a single _all scale.
+const HEAT_PALETTES = {
+  warm: {
+    nobel:        [[0,'#3b1f6e'],[0.35,'#7b2ff7'],[0.65,'#a371f7'],[1,'#e0ccff']],
+    universities: [[0,'#0d2b55'],[0.35,'#1f6feb'],[0.65,'#58a6ff'],[1,'#cce5ff']],
+    pop:          [[0,'#0a3020'],[0.35,'#20c997'],[0.65,'#3fb950'],[1,'#d1fadf']],
+    metro:        [[0,'#2e1c00'],[0.35,'#b87800'],[0.65,'#f0a500'],[1,'#ffe08a']],
+    aq:           [[0,'#1a4a1a'],[0.3,'#3fb950'],[0.55,'#f0a500'],[0.78,'#f85149'],[1,'#bc8cff']],
+  },
+  viridis: { _all: [[0,'#440154'],[0.25,'#31688e'],[0.5,'#35b779'],[0.75,'#90d743'],[1,'#fde725']] },
+  inferno: { _all: [[0,'#0d0221'],[0.25,'#56106e'],[0.5,'#bb3754'],[0.75,'#f98c09'],[1,'#fcffa4']] },
+  ocean:   { _all: [[0,'#03071e'],[0.25,'#1565c0'],[0.5,'#0097a7'],[0.75,'#80deea'],[1,'#e0f7fa']] },
+};
+
+// Interpolate between two hex colours at position t [0,1]
+function _lerpHex(c0, c1, t) {
+  const r0 = parseInt(c0.slice(1,3),16), g0 = parseInt(c0.slice(3,5),16), b0 = parseInt(c0.slice(5,7),16);
+  const r1 = parseInt(c1.slice(1,3),16), g1 = parseInt(c1.slice(3,5),16), b1 = parseInt(c1.slice(5,7),16);
+  return `rgb(${Math.round(r0+(r1-r0)*t)},${Math.round(g0+(g1-g0)*t)},${Math.round(b0+(b1-b0)*t)})`;
+}
+
+// Get the stop array for the current palette + metric
+function _getPaletteStops(metric) {
+  const pal = HEAT_PALETTES[_heatPalette] || HEAT_PALETTES.warm;
+  return pal[metric] || pal._all || HEAT_PALETTES.warm[metric] || HEAT_PALETTES.warm.pop;
+}
+
+// Returns true if city has a meaningful value for the given heatmap metric
+function _cityHasMetricData(city, metric) {
+  const qid = city.qid;
+  if (metric === 'nobel')        return (nobelCitiesData[qid]?.total   ?? 0) > 0;
+  if (metric === 'universities') return (universitiesData[qid]?.length ?? 0) > 0;
+  if (metric === 'pop')          return (city.pop || 0) > 0;
+  if (metric === 'metro')        return (metroTransitData[qid]?.stations ?? 0) > 0;
+  if (metric === 'aq')           return !!airQualityData[qid];
+  return false;
+}
+
+// Colour a dot by its metric intensity using the current palette
+function _metricDotColor(city, metric) {
+  const qid = city.qid;
+  let val = 0;
+  if (metric === 'nobel')        val = nobelCitiesData[qid]?.total      ?? 0;
+  if (metric === 'universities') val = universitiesData[qid]?.length    ?? 0;
+  if (metric === 'pop')          val = city.pop || 0;
+  if (metric === 'metro')        val = metroTransitData[qid]?.stations  ?? 0;
+  if (metric === 'aq')           val = airQualityData[qid]?.pm25        ?? 0;
+  const p95 = _heatNormP95[metric] || 1;
+  const t = Math.min(val / p95, 1.0);
+  const stops = _getPaletteStops(metric);
+  for (let i = 1; i < stops.length; i++) {
+    const [t0, c0] = stops[i - 1];
+    const [t1, c1] = stops[i];
+    if (t <= t1) return _lerpHex(c0, c1, (t - t0) / (t1 - t0 || 1));
+  }
+  return stops[stops.length - 1][1];
+}
+
+// Build a CSS linear-gradient string from a metric's palette stops
+function _buildMetricGradientCSS(metric) {
+  const stops = _getPaletteStops(metric);
+  const parts = stops.map(([t, c]) => `${c} ${Math.round(t * 100)}%`);
+  return `linear-gradient(to right, ${parts.join(', ')})`;
+}
+
+// Build a CSS linear-gradient from the population COLOR_STOPS (indigo→blue→cyan→green→amber→red)
+function _buildPopGradientCSS() {
+  const parts = COLOR_STOPS.map(([t, [r,g,b]]) => `rgb(${r},${g},${b}) ${Math.round(t*100)}%`);
+  return `linear-gradient(to right, ${parts.join(', ')})`;
+}
+
+// Show/update the intensity strip on the active availability row, hide all others.
+// When matched color mode is 'pop' shows the population rainbow; otherwise shows metric palette.
+function _updateAvailIntensityStrips() {
+  document.querySelectorAll('#filter-avail-list .filter-avail-row').forEach(row => {
+    const strip = row.querySelector('.avail-intensity-strip');
+    if (!strip) return;
+    const metric = row.dataset.metric;
+    const key    = row.querySelector('.filter-avail-btn')?.dataset.key;
+    const isOn   = key ? _filterAvail[key] : false;
+    if (isOn && metric) {
+      strip.style.background = _matchedColorMode === 'pop'
+        ? _buildPopGradientCSS()
+        : _buildMetricGradientCSS(metric);
+      strip.style.display = 'inline-block';
+    } else {
+      strip.style.display = 'none';
+    }
+  });
+}
+
+// Maps availability filter keys and value filter keys to their metric names
+const AVAIL_TO_METRIC = {
+  metro: 'metro', nobel: 'nobel', universities: 'universities',
+  airQuality: 'aq', airport: null, eurostat: null, census: null,
+};
+const VALUE_TO_METRIC = {
+  metro: 'metro', nobel: 'nobel', universities: 'universities', aq: 'aq', pop: 'pop',
+};
+
+// Returns the metric that should drive Intensity colouring:
+// heatmap metric takes priority, then active availability filter, then active value filter.
+function _activeIntensityMetric() {
+  if (_heatmapMetric) return _heatmapMetric;
+  const availKey = Object.keys(_filterAvail).find(k => _filterAvail[k]);
+  if (availKey) return AVAIL_TO_METRIC[availKey] || null;
+  const valKey = Object.keys(_filterValue).find(k => _filterValue[k] !== null);
+  return valKey ? (VALUE_TO_METRIC[valKey] || null) : null;
+}
+
+// Compute and cache the 95th-percentile normalisation value for a metric
+// without needing a full heatmap build. Safe to call multiple times.
+function _computeP95(metric) {
+  if (_heatNormP95[metric]) return;
+  const vals = [];
+  for (const city of allCities) {
+    const qid = city.qid;
+    let val = 0;
+    if (metric === 'nobel')        val = nobelCitiesData[qid]?.total      ?? 0;
+    if (metric === 'universities') val = universitiesData[qid]?.length    ?? 0;
+    if (metric === 'pop')          val = city.pop || 0;
+    if (metric === 'metro')        val = metroTransitData[qid]?.stations  ?? 0;
+    if (metric === 'aq')           val = airQualityData[qid]?.pm25        ?? 0;
+    if (val > 0) vals.push(val);
+  }
+  if (!vals.length) { _heatNormP95[metric] = 1; return; }
+  vals.sort((a, b) => a - b);
+  _heatNormP95[metric] = vals[Math.floor(vals.length * 0.95)] || vals[vals.length - 1];
+}
+
 function _heatGradient(metric) {
-  // Gradients tuned for visibility on dark map backgrounds (dark mode).
-  // Each stop: fraction [0–1] → CSS colour. Start from a visible (non-black) hue.
-  const gradients = {
-    nobel:        { 0: '#3b1f6e', 0.35: '#7b2ff7', 0.65: '#a371f7', 1: '#e0ccff' },
-    universities: { 0: '#0d2b55', 0.35: '#1f6feb', 0.65: '#58a6ff', 1: '#cce5ff' },
-    pop:          { 0: '#0a3020', 0.35: '#20c997', 0.65: '#3fb950', 1: '#d1fadf' },
-    metro:        { 0: '#2e1c00', 0.35: '#b87800', 0.65: '#f0a500', 1: '#ffe08a' },
-    aq:           { 0: '#1a4a1a', 0.3: '#3fb950', 0.55: '#f0a500', 0.78: '#f85149', 1: '#bc8cff' },
-  };
-  return gradients[metric] || gradients.pop;
+  // Convert palette stops array to the {stop: color} object Leaflet.heat expects
+  const stops = _getPaletteStops(metric);
+  const g = {};
+  for (const [t, c] of stops) g[t] = c;
+  return g;
 }
 
 // Map ISO-2 country code → Wikipedia language subdomain
@@ -975,25 +1187,81 @@ function rebuildMapLayer() {
   if (wikiLayer) map.removeLayer(wikiLayer);
   wikiLayer = L.layerGroup();
   let _filterMatchCount = 0;
+  const filterActive    = _anyFilterActive();
+  const heatActive      = !!_heatmapMetric;
+  // Resolve which metric drives Intensity colouring (heatmap > avail filter > value filter)
+  const intensityMetric = _matchedColorMode === 'metric' ? _activeIntensityMetric() : null;
+  if (intensityMetric) _computeP95(intensityMetric);
+
   allCities.forEach(function (city) {
-    // Apply map filters (availability + value)
-    const filterResult = _anyFilterActive() ? applyMapFilters(city) : 'match';
-    if (filterResult === 'hide') return;
-    const filterDim = filterResult === 'dim';
-
-    // Heatmap dot mode: when heatmap is active, optionally hide/dim dots
-    if (_heatmapMetric) {
-      if (_heatDotMode === 'hide') return;   // hide all dots when heatmap active
+    // ── Determine if city is "affected" (matched / in scope) ──────────────────
+    let affected = true;
+    if (filterActive || heatActive) {
+      const passesFilter = !filterActive || applyMapFilters(city) === 'match';
+      const hasMetric    = !heatActive   || _cityHasMetricData(city, _heatmapMetric);
+      affected = passesFilter && hasMetric;
     }
-    const heatDim = _heatmapMetric && _heatDotMode === 'dim';
-    if (!filterDim) _filterMatchCount++;
 
-    // Value-filter colour: when a value filter is active, colour matched cities by their metric
-    const valueCol  = (!filterDim && !heatDim && _anyFilterActive()) ? _valueFilterColor(city) : null;
-    const aqCol     = (!filterDim && !heatDim && !valueCol && cityAqMode) ? airQualityDotColor(city) : null;
-    const censusCol = aqCol ? null : (!filterDim && !heatDim && !valueCol ? censusDotColor(city) : null);
-    const color  = (filterDim || heatDim) ? '#30363d' : (valueCol || aqCol || censusCol || wikiCityColor(city.pop));
+    // ── Compute dot appearance ────────────────────────────────────────────────
+    let color, opacity, markerWeight;
     const radius = wikiCityRadius(city.pop);
+
+    if (!filterActive && !heatActive) {
+      // Normal mode — no filters or heatmap active
+      const aqCol     = cityAqMode ? airQualityDotColor(city) : null;
+      const censusCol = aqCol ? null : censusDotColor(city);
+      color       = aqCol || censusCol || wikiCityColor(city.pop);
+      opacity     = (aqCol || censusCol) ? 0.92 : wikiCityOpacity(city.pop);
+      markerWeight = 0.5;
+      _filterMatchCount++;
+    } else if (affected) {
+      _filterMatchCount++;
+      if (_matchedVisMode === 'hide') return;
+      if (_matchedVisMode === 'dim') {
+        markerWeight = 0.5;
+        if (intensityMetric) {
+          // Dim + Intensity: tinted dim — palette hue at reduced opacity
+          color   = _metricDotColor(city, intensityMetric);
+          opacity = 0.35;
+        } else {
+          color   = '#484f58';
+          opacity = 0.20;
+        }
+      } else {
+        markerWeight = 1.5;
+        opacity     = Math.max(0.85, wikiCityOpacity(city.pop));
+        if (intensityMetric) {
+          color = _metricDotColor(city, intensityMetric);
+        } else {
+          const valueCol  = filterActive ? _valueFilterColor(city) : null;
+          const aqCol     = (!valueCol && cityAqMode) ? airQualityDotColor(city) : null;
+          const censusCol = (!valueCol && !aqCol)     ? censusDotColor(city) : null;
+          color = valueCol || aqCol || censusCol || wikiCityColor(city.pop);
+          if (aqCol || censusCol) opacity = 0.92;
+        }
+      }
+    } else {
+      // Other / non-affected city
+      if (_otherShowMode === 'hide') return;
+      if (_otherShowMode === 'dim') {
+        color       = '#30363d';
+        opacity     = 0.13;
+        markerWeight = 0.5;
+      } else {  // 'full'
+        markerWeight = 0.5;
+        if (_otherColorMode === 'ghost') {
+          color   = '#30363d';
+          opacity = 0.20;
+        } else {
+          const aqCol     = cityAqMode ? airQualityDotColor(city) : null;
+          const censusCol = aqCol ? null : censusDotColor(city);
+          color   = aqCol || censusCol || wikiCityColor(city.pop);
+          opacity = (aqCol || censusCol) ? 0.92 : wikiCityOpacity(city.pop);
+        }
+      }
+    }
+
+    // ── Build tooltip ─────────────────────────────────────────────────────────
     const location = [city.admin, city.country].filter(Boolean).join(', ');
     let tip = `<strong>${escHtml(city.name)}</strong>`;
     if (location) tip += `<br/><span style="color:#8b949e;font-size:0.8em">${escHtml(location)}</span>`;
@@ -1006,24 +1274,21 @@ function rebuildMapLayer() {
     }
     if (city.qid) {
       const coCount = companiesData[city.qid]?.length || 0;
+      const coLabel = coCount > 0 ? `Corporations (${coCount})` : 'Corporations';
       tip += `<br/><span style="display:flex;gap:10px;margin-top:3px">`;
       tip += `<a href="#" onclick="event.preventDefault();openWikiSidebar('${city.qid}','${escAttr(city.name)}')" style="color:#58a6ff;font-size:0.8em">Wikipedia ↗</a>`;
-      if (coCount > 0)
-        tip += `<a href="#" onclick="event.preventDefault();openCorpPanel('${city.qid}','${escAttr(city.name)}')" style="color:#a371f7;font-size:0.8em">Corporations (${coCount}) ↗</a>`;
+      tip += `<a href="#" onclick="event.preventDefault();openCorpPanel('${city.qid}','${escAttr(city.name)}')" style="color:#a371f7;font-size:0.8em">${coLabel} ↗</a>`;
       tip += `</span>`;
     }
-    // When a filter is active and this city matches, boost visibility so it pops against dimmed cities
-    const isFilterMatch = _anyFilterActive() && !filterDim;
-    const baseOpacity = isFilterMatch ? Math.max(0.82, wikiCityOpacity(city.pop)) : wikiCityOpacity(city.pop);
-    const opacity = filterDim ? 0.13 : heatDim ? 0.15 : ((aqCol || censusCol) ? 0.92 : baseOpacity);
-    const markerWeight = (isFilterMatch && !heatDim) ? 1.5 : 0.5;
+
     L.circleMarker([city.lat, city.lng], {
       radius, fillColor: color, fillOpacity: opacity,
-      color, opacity: opacity, weight: markerWeight,
+      color, opacity, weight: markerWeight,
       pane: 'cityPane',
     }).bindPopup(tip, { maxWidth: 260, minWidth: 160 }).addTo(wikiLayer);
   });
   wikiLayer.addTo(map);
+  _updateDotControls();
   // Update filter footer count
   const matchEl = document.getElementById('filter-match-count');
   const totalEl = document.getElementById('filter-total-count');
@@ -1064,7 +1329,6 @@ function applyFilters() {
 }
 
 function sortFiltered() {
-  const edits = loadEdits();
   filtered.sort((a, b) => {
     let av, bv;
     if (sortCol === 'pop') { av = a.pop ?? -Infinity; bv = b.pop ?? -Infinity; }
@@ -2264,12 +2528,17 @@ let _filterAvail = {
 let _filterValue = {
   nobel: null, universities: null, pop: null, metro: null, aq: null,
 };
-let _filterDimMode = 'dim';  // 'dim' | 'hide'
+// ── Dot display state (unified for filter + heatmap) ─────────────────────────
+let _matchedVisMode   = 'show';   // 'show' | 'dim' | 'hide'
+let _matchedColorMode = 'pop';    // 'pop' | 'metric'
+let _otherShowMode   = 'dim';     // 'full' | 'dim' | 'hide'  (non-matched cities)
+let _otherColorMode  = 'pop';     // 'pop' | 'ghost'
 
 // ── Heatmap state ─────────────────────────────────────────────────────────────
 let _heatmapMetric = null;   // null | 'nobel' | 'universities' | 'pop' | 'metro' | 'aq'
 let _heatmapLayer  = null;   // Leaflet.heat layer instance
-let _heatDotMode   = 'dim';  // 'show' | 'dim' | 'hide'
+let _heatPalette   = 'warm'; // 'warm' | 'viridis' | 'inferno' | 'ocean'
+let _heatNormP95   = {};     // { metric: p95value } cached by _buildHeatPoints
 // User-tunable heatmap parameters (exposed via sliders in the filter panel)
 let _heatRadius     = 40;
 let _heatBlur       = 28;
@@ -3788,14 +4057,18 @@ async function init() {
   }).addTo(map);
 
   // Rebuild economic layer clusters whenever zoom changes; also adjust heatmap radius
+  let _econZoomDebounce = null;
   map.on('zoomend', () => {
-    if (econOn) buildEconLayer();
     if (_heatmapLayer && _heatmapMetric) {
       const z = map.getZoom();
       // Scale from user-set baseline; zoom-in shrinks radius so individual hotspots stay crisp
       const radius = Math.max(10, _heatRadius  - (z - 5) * 3);
       const blur   = Math.max(5,  _heatBlur    - (z - 5) * 2);
       _heatmapLayer.setOptions({ radius, blur, minOpacity: _heatMinOpacity });
+    }
+    if (econOn) {
+      clearTimeout(_econZoomDebounce);
+      _econZoomDebounce = setTimeout(() => buildEconLayer(), 150);
     }
   });
 
@@ -4015,6 +4288,8 @@ async function init() {
     initChoroControls();
     _choroControlsInited = true;
     updateStats();
+    // Pre-load companies in the background so Corporations button has counts by first click
+    _ensureCompanies().then(() => rebuildMapLayer()).catch(() => {});
     showLoading(false);
 
     // Trade year slider
