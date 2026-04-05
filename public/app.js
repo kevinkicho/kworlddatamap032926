@@ -16,189 +16,72 @@ let editingKey = null;    // _key of the city currently open in the modal
 
 // Companies data keyed by city QID
 let companiesData = {};
-let _companiesLoaded = false;
-let _companiesLoading = null;  // in-flight promise
 
-// World GeoJSON (lazy — only needed when choropleth is toggled on)
-let _worldGeoLoaded = false;
-let _worldGeoLoading = null;
-async function _ensureWorldGeo() {
-  if (_worldGeoLoaded) return;
-  if (_worldGeoLoading) return _worldGeoLoading;
-  _worldGeoLoading = (async () => {
-    try {
-      const res = await fetch('/world-countries.json');
-      if (res.ok) {
-        worldGeo = await res.json();
-        _computeCountryCentroids();
-        console.log(`[lazy] World GeoJSON loaded (${worldGeo.features.length} features)`);
+/**
+ * Creates a lazy data loader function.
+ * @param {string} url - URL to fetch (JSON)
+ * @param {function(data): void} assign - called with parsed data on success
+ * @param {function(): boolean} [shouldRebuild] - if provided and returns true after load, rebuildMapLayer() is called
+ * @returns {{ ensure: function(): Promise<void>, isLoaded: function(): boolean }}
+ */
+function createLazyLoader(url, assign, shouldRebuild) {
+  let loaded = false, loading = null;
+  async function ensure() {
+    if (loaded) return;
+    if (loading) return loading;
+    loading = (async () => {
+      try {
+        const res = await fetch(url);
+        if (res.ok) {
+          assign(await res.json());
+          console.log(`[lazy] ${url} loaded`);
+          if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
+        }
+      } catch (e) {
+        console.warn(`[lazy] ${url} failed`, e);
+      } finally {
+        loaded = true;
+        loading = null;
       }
-    } catch (e) {
-      console.warn('[lazy] world-countries.json failed to load', e);
-    } finally {
-      _worldGeoLoaded = true;
-      _worldGeoLoading = null;
-    }
-  })();
-  return _worldGeoLoading;
+    })();
+    return loading;
+  }
+  return { ensure, isLoaded: () => loaded };
 }
 
-// Eurostat Urban Audit (lazy — only needed when opening an EU city panel)
-let _eurostatLoaded = false;
-let _eurostatLoading = null;
-async function _ensureEurostat() {
-  if (_eurostatLoaded) return;
-  if (_eurostatLoading) return _eurostatLoading;
-  _eurostatLoading = (async () => {
-    try {
-      const res = await fetch('/eurostat-cities.json');
-      if (res.ok) {
-        eurostatCities = await res.json();
-        console.log(`[lazy] Eurostat data loaded (${Object.keys(eurostatCities).length} cities)`);
-        if (_filterAvail.eurostat) rebuildMapLayer();
-      }
-    } catch (e) {
-      console.warn('[lazy] eurostat-cities.json failed to load', e);
-    } finally {
-      _eurostatLoaded = true;
-      _eurostatLoading = null;
-    }
-  })();
-  return _eurostatLoading;
-}
+// ── Lazy dataset loaders ──────────────────────────────────────────────────────
+const _worldGeoLoader  = createLazyLoader('/world-countries.json',
+  d => { worldGeo = d; _computeCountryCentroids(); });
 
-async function _ensureCompanies() {
-  if (_companiesLoaded) return;
-  if (_companiesLoading) return _companiesLoading;
-  _companiesLoading = (async () => {
-    try {
-      const res = await fetch('/companies.json');
-      if (res.ok) {
-        companiesData = await res.json();
-        console.log(`[lazy] Companies loaded (${Object.keys(companiesData).length} cities)`);
-      }
-    } catch (e) {
-      console.warn('[lazy] companies.json failed to load', e);
-    } finally {
-      _companiesLoaded = true;
-      _companiesLoading = null;
-    }
-  })();
-  return _companiesLoading;
-}
+const _eurostatLoader  = createLazyLoader('/eurostat-cities.json',
+  d => { eurostatCities = d; },
+  () => _filterAvail.eurostat);
 
-// Universities (lazy — 724 KB, only needed on first city panel open)
-let _univLoaded = false, _univLoading = null;
-async function _ensureUniversities() {
-  if (_univLoaded) return;
-  if (_univLoading) return _univLoading;
-  _univLoading = (async () => {
-    try {
-      const res = await fetch('/universities.json');
-      if (res.ok) {
-        universitiesData = await res.json();
-        console.log(`[lazy] Universities loaded (${Object.keys(universitiesData).length} cities)`);
-        if (_filterAvail.universities || _filterValue.universities != null || _heatmapMetric === 'universities') rebuildMapLayer();
-      }
-    } catch (e) { console.warn('[lazy] universities.json failed', e); }
-    finally { _univLoaded = true; _univLoading = null; }
-  })();
-  return _univLoading;
-}
+const _companiesLoader = createLazyLoader('/companies.json',
+  d => { companiesData = d; });
 
-// NOAA climate (lazy — 664 KB, only needed for US city climate panels)
-let _noaaLoaded = false, _noaaLoading = null;
-async function _ensureNoaaClimate() {
-  if (_noaaLoaded) return;
-  if (_noaaLoading) return _noaaLoading;
-  _noaaLoading = (async () => {
-    try {
-      const res = await fetch('/noaa-climate.json');
-      if (res.ok) {
-        noaaClimate = await res.json();
-        console.log(`[lazy] NOAA climate loaded (${Object.keys(noaaClimate).length} cities)`);
-      }
-    } catch (e) { console.warn('[lazy] noaa-climate.json failed', e); }
-    finally { _noaaLoaded = true; _noaaLoading = null; }
-  })();
-  return _noaaLoading;
-}
+const _univLoader      = createLazyLoader('/universities.json',
+  d => { universitiesData = d; },
+  () => _filterAvail.universities || _filterValue.universities != null || _heatmapMetric === 'universities');
 
-// Airport connectivity (lazy — 214 KB, only needed on first city panel open)
-let _airportLoaded = false, _airportLoading = null;
-async function _ensureAirport() {
-  if (_airportLoaded) return;
-  if (_airportLoading) return _airportLoading;
-  _airportLoading = (async () => {
-    try {
-      const res = await fetch('/airport-connectivity.json');
-      if (res.ok) {
-        airportData = await res.json();
-        console.log(`[lazy] Airport data loaded (${Object.keys(airportData).length} cities)`);
-        if (_filterAvail.airport) rebuildMapLayer();
-      }
-    } catch (e) { console.warn('[lazy] airport-connectivity.json failed', e); }
-    finally { _airportLoaded = true; _airportLoading = null; }
-  })();
-  return _airportLoading;
-}
+const _noaaLoader      = createLazyLoader('/noaa-climate.json',
+  d => { noaaClimate = d; });
 
-// WHO air quality (lazy — 124 KB, needed on AQ toggle or city panel open)
-let _aqLoaded = false, _aqLoading = null;
-async function _ensureAirQuality() {
-  if (_aqLoaded) return;
-  if (_aqLoading) return _aqLoading;
-  _aqLoading = (async () => {
-    try {
-      const res = await fetch('/who-airquality.json');
-      if (res.ok) {
-        airQualityData = await res.json();
-        console.log(`[lazy] WHO air quality loaded (${Object.keys(airQualityData).length} cities)`);
-        if (_filterAvail.airQuality || _filterValue.aq != null || _heatmapMetric === 'aq') rebuildMapLayer();
-      }
-    } catch (e) { console.warn('[lazy] who-airquality.json failed', e); }
-    finally { _aqLoaded = true; _aqLoading = null; }
-  })();
-  return _aqLoading;
-}
+const _airportLoader   = createLazyLoader('/airport-connectivity.json',
+  d => { airportData = d; },
+  () => _filterAvail.airport);
 
-// Metro transit (lazy — 248 cities, ~18 KB)
-let _metroLoaded = false, _metroLoading = null;
-async function _ensureMetroTransit() {
-  if (_metroLoaded) return;
-  if (_metroLoading) return _metroLoading;
-  _metroLoading = (async () => {
-    try {
-      const res = await fetch('/metro-transit.json');
-      if (res.ok) {
-        metroTransitData = await res.json();
-        console.log(`[lazy] Metro transit loaded (${Object.keys(metroTransitData).length} cities)`);
-        if (_filterAvail.metro || _filterValue.metro != null || _heatmapMetric === 'metro') rebuildMapLayer();
-      }
-    } catch (e) { console.warn('[lazy] metro-transit.json failed', e); }
-    finally { _metroLoaded = true; _metroLoading = null; }
-  })();
-  return _metroLoading;
-}
+const _aqLoader        = createLazyLoader('/who-airquality.json',
+  d => { airQualityData = d; },
+  () => _filterAvail.airQuality || _filterValue.aq != null || _heatmapMetric === 'aq');
 
-// Nobel cities (lazy — 289 cities, ~12 KB)
-let _nobelLoaded = false, _nobelLoading = null;
-async function _ensureNobelCities() {
-  if (_nobelLoaded) return;
-  if (_nobelLoading) return _nobelLoading;
-  _nobelLoading = (async () => {
-    try {
-      const res = await fetch('/nobel-cities.json');
-      if (res.ok) {
-        nobelCitiesData = await res.json();
-        console.log(`[lazy] Nobel cities loaded (${Object.keys(nobelCitiesData).length} cities)`);
-        if (_filterAvail.nobel || _filterValue.nobel != null || _heatmapMetric === 'nobel') rebuildMapLayer();
-      }
-    } catch (e) { console.warn('[lazy] nobel-cities.json failed', e); }
-    finally { _nobelLoaded = true; _nobelLoading = null; }
-  })();
-  return _nobelLoading;
-}
+const _metroLoader     = createLazyLoader('/metro-transit.json',
+  d => { metroTransitData = d; },
+  () => _filterAvail.metro || _filterValue.metro != null || _heatmapMetric === 'metro');
+
+const _nobelLoader     = createLazyLoader('/nobel-cities.json',
+  d => { nobelCitiesData = d; },
+  () => _filterAvail.nobel || _filterValue.nobel != null || _heatmapMetric === 'nobel');
 
 // Returns 'match' if city passes all active filters, 'other' otherwise.
 // Does NOT encode any dim/hide behaviour — that is handled in rebuildMapLayer.
@@ -285,12 +168,12 @@ function toggleFilterPanel() {
 
 function openFilterPanel() {
   // Trigger lazy loads so availability filters have data ready
-  _ensureAirQuality();
-  _ensureAirport();
-  _ensureUniversities();
-  _ensureMetroTransit();
-  _ensureNobelCities();
-  _ensureEurostat();
+  _aqLoader.ensure();
+  _airportLoader.ensure();
+  _univLoader.ensure();
+  _metroLoader.ensure();
+  _nobelLoader.ensure();
+  _eurostatLoader.ensure();
   document.getElementById('filter-panel').classList.add('open');
   document.getElementById('filter-fab').classList.add('active');
 }
@@ -422,7 +305,7 @@ async function toggleAvailFilter(key) {
     document.querySelectorAll('[data-matched-col]').forEach(b =>
       b.classList.toggle('active', b.dataset.matchedCol === 'metric'));
     // Ensure data is loaded before rebuilding — Eurostat is lazy-loaded
-    if (key === 'eurostat') await _ensureEurostat();
+    if (key === 'eurostat') await _eurostatLoader.ensure();
   }
   _updateAvailIntensityStrips();
   _updateFilterBadge();
@@ -453,10 +336,10 @@ async function setHeatmapMetric(metric) {
     return;
   }
   // Ensure data is loaded for metrics that need lazy loading
-  if (metric === 'aq')            await _ensureAirQuality();
-  if (metric === 'metro')         await _ensureMetroTransit();
-  if (metric === 'nobel')         await _ensureNobelCities();
-  if (metric === 'universities')  await _ensureUniversities();
+  if (metric === 'aq')            await _aqLoader.ensure();
+  if (metric === 'metro')         await _metroLoader.ensure();
+  if (metric === 'nobel')         await _nobelLoader.ensure();
+  if (metric === 'universities')  await _univLoader.ensure();
 
   _heatmapMetric = metric;
 
@@ -2591,7 +2474,7 @@ async function toggleAqMode() {
   if (cityAqMode) {
     if (btn) { btn.textContent = 'Loading…'; btn.disabled = true; }
     if (fpBtn) { fpBtn.textContent = '🎨 Loading…'; fpBtn.disabled = true; }
-    await _ensureAirQuality();
+    await _aqLoader.ensure();
     if (btn) { btn.textContent = 'On'; btn.disabled = false; btn.classList.add('on'); }
     if (fpBtn) { fpBtn.textContent = '🎨 Color'; fpBtn.disabled = false; fpBtn.classList.add('active'); }
     if (leg) leg.style.display = '';
@@ -3814,12 +3697,12 @@ async function openWikiSidebar(qid, cityName) {
   const city = allCities.find(c => c.qid === qid);
 
   // Lazy-load data on demand (no-op if already loaded)
-  _ensureUniversities();
-  _ensureAirport();
-  _ensureAirQuality();
+  _univLoader.ensure();
+  _airportLoader.ensure();
+  _aqLoader.ensure();
   const EU_ISOS = new Set(['AT','BE','BG','CY','CZ','DE','DK','EE','ES','FI','FR','GR','HR','HU','IE','IT','LT','LU','LV','MT','NL','PL','PT','RO','SE','SI','SK']);
-  if (city?.iso && EU_ISOS.has(city.iso)) _ensureEurostat();
-  if (city?.iso === 'US') _ensureNoaaClimate();
+  if (city?.iso && EU_ISOS.has(city.iso)) _eurostatLoader.ensure();
+  if (city?.iso === 'US') _noaaLoader.ensure();
 
   // If we already stored Wikipedia data (from a previous click or pre-fetch script),
   // render immediately — no API call needed.
@@ -4277,7 +4160,7 @@ async function init() {
     _choroControlsInited = true;
     updateStats();
     // Pre-load companies in the background so Corporations button has counts by first click
-    _ensureCompanies().then(() => rebuildMapLayer()).catch(() => {});
+    _companiesLoader.ensure().then(() => rebuildMapLayer()).catch(() => {});
     showLoading(false);
 
     // Trade year slider
@@ -5573,7 +5456,7 @@ async function toggleChoropleth() {
   if (choroOn) {
     btn.textContent = 'Loading…';
     btn.disabled = true;
-    await _ensureWorldGeo();
+    await _worldGeoLoader.ensure();
     if (!_choroControlsInited) { initChoroControls(); _choroControlsInited = true; }
     btn.textContent = 'On';
     btn.disabled = false;
@@ -5630,7 +5513,7 @@ async function toggleEconLayer() {
     btn.textContent = 'On';
     btn.classList.add('on');
     _drawEconColorRamp();
-    await _ensureCompanies();
+    await _companiesLoader.ensure();
     buildEconLayer();
   } else {
     btn.textContent = 'Off';
@@ -6022,7 +5905,7 @@ async function openCorpPanel(qid, cityName) {
   document.getElementById('corp-sort').value = 'revenue';
   document.getElementById('corp-panel').classList.add('open');
   document.getElementById('wiki-sidebar').classList.add('corp-open');
-  await _ensureCompanies();
+  await _companiesLoader.ensure();
   renderCorpList();
 }
 
@@ -6037,7 +5920,7 @@ async function openCorpPanelCluster(cityPoints, title) {
   document.getElementById('corp-sort').value = 'revenue';
   document.getElementById('corp-panel').classList.add('open');
   document.getElementById('wiki-sidebar').classList.add('corp-open');
-  await _ensureCompanies();
+  await _companiesLoader.ensure();
   corpOverrideList = cityPoints.flatMap(p => companiesData[p.qid] || []);
   renderCorpList();
 }
