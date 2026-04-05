@@ -1225,7 +1225,16 @@
     "renewable_energy_pct": 20,
     "renewable_energy_pct_year": "2022",
     "health_spend_gdp": 14.986,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 1.721,
+    "whr_rank": 143,
+    "whr_year": 2024,
+    "whr_gdp": 0.628,
+    "whr_social": 0,
+    "whr_health": 0.242,
+    "whr_freedom": 0,
+    "whr_generosity": 0.091,
+    "whr_corruption": 0.088
   },
   "A9": {
     "name": "Africa",
@@ -2619,7 +2628,16 @@
     "health_spend_gdp": 7.052,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.092,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.304,
+    "whr_rank": 87,
+    "whr_year": 2024,
+    "whr_gdp": 1.438,
+    "whr_social": 0.924,
+    "whr_health": 0.638,
+    "whr_freedom": 0.69,
+    "whr_generosity": 0.138,
+    "whr_corruption": 0.049
   },
   "AD": {
     "name": "Andorra",
@@ -3826,7 +3844,16 @@
     "health_spend_gdp": 4.971,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.894,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 6.733,
+    "whr_rank": 22,
+    "whr_year": 2024,
+    "whr_gdp": 1.983,
+    "whr_social": 1.164,
+    "whr_health": 0.563,
+    "whr_freedom": 0.815,
+    "whr_generosity": 0.209,
+    "whr_corruption": 0.258
   },
   "AR": {
     "name": "Argentina",
@@ -4542,7 +4569,16 @@
     "health_spend_gdp": 10.27,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.898,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.188,
+    "whr_rank": 48,
+    "whr_year": 2024,
+    "whr_gdp": 1.562,
+    "whr_social": 1.381,
+    "whr_health": 0.585,
+    "whr_freedom": 0.681,
+    "whr_generosity": 0.087,
+    "whr_corruption": 0.08
   },
   "AM": {
     "name": "Armenia",
@@ -5142,7 +5178,16 @@
     "health_spend_gdp": 9.321,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.439,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.455,
+    "whr_rank": 82,
+    "whr_year": 2024,
+    "whr_gdp": 1.444,
+    "whr_social": 1.154,
+    "whr_health": 0.603,
+    "whr_freedom": 0.65,
+    "whr_generosity": 0.051,
+    "whr_corruption": 0.173
   },
   "AS": {
     "name": "American Samoa",
@@ -6937,7 +6982,16 @@
     "health_spend_gdp": 10.399,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.059,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.057,
+    "whr_rank": 10,
+    "whr_year": 2024,
+    "whr_gdp": 1.854,
+    "whr_social": 1.461,
+    "whr_health": 0.692,
+    "whr_freedom": 0.756,
+    "whr_generosity": 0.225,
+    "whr_corruption": 0.323
   },
   "AT": {
     "name": "Austria",
@@ -8014,7 +8068,16 @@
     "health_spend_gdp": 11.833,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.277,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.905,
+    "whr_rank": 14,
+    "whr_year": 2024,
+    "whr_gdp": 1.885,
+    "whr_social": 1.336,
+    "whr_health": 0.696,
+    "whr_freedom": 0.703,
+    "whr_generosity": 0.214,
+    "whr_corruption": 0.305
   },
   "AZ": {
     "name": "Azerbaijan",
@@ -8664,7 +8727,16 @@
     "health_spend_gdp": 4.271,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.664,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.893,
+    "whr_rank": 101,
+    "whr_year": 2024,
+    "whr_gdp": 1.433,
+    "whr_social": 0.876,
+    "whr_health": 0.496,
+    "whr_freedom": 0.668,
+    "whr_generosity": 0.112,
+    "whr_corruption": 0.199
   },
   "BI": {
     "name": "Burundi",
@@ -10397,7 +10469,16 @@
     "health_spend_gdp": 10.804,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.278,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.894,
+    "whr_rank": 16,
+    "whr_year": 2024,
+    "whr_gdp": 1.868,
+    "whr_social": 1.44,
+    "whr_health": 0.69,
+    "whr_freedom": 0.729,
+    "whr_generosity": 0.17,
+    "whr_corruption": 0.311
   },
   "BJ": {
     "name": "Benin",
@@ -10991,7 +11072,16 @@
     "health_spend_gdp": 3.337,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.23,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.377,
+    "whr_rank": 116,
+    "whr_year": 2024,
+    "whr_gdp": 0.914,
+    "whr_social": 0.128,
+    "whr_health": 0.284,
+    "whr_freedom": 0.567,
+    "whr_generosity": 0.112,
+    "whr_corruption": 0.252
   },
   "BF": {
     "name": "Burkina Faso",
@@ -11585,7 +11675,16 @@
     "health_spend_gdp": 7.799,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.328,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.548,
+    "whr_rank": 110,
+    "whr_year": 2024,
+    "whr_gdp": 0.756,
+    "whr_social": 0.685,
+    "whr_health": 0.274,
+    "whr_freedom": 0.483,
+    "whr_generosity": 0.173,
+    "whr_corruption": 0.179
   },
   "BD": {
     "name": "Bangladesh",
@@ -12201,7 +12300,16 @@
     "health_spend_gdp": 2.17,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.034,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 3.886,
+    "whr_rank": 129,
+    "whr_year": 2024,
+    "whr_gdp": 1.122,
+    "whr_social": 0.249,
+    "whr_health": 0.513,
+    "whr_freedom": 0.775,
+    "whr_generosity": 0.14,
+    "whr_corruption": 0.167
   },
   "BG": {
     "name": "Bulgaria",
@@ -12916,7 +13024,16 @@
     "health_spend_gdp": 7.919,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.501,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 5.463,
+    "whr_rank": 81,
+    "whr_year": 2024,
+    "whr_gdp": 1.629,
+    "whr_social": 1.469,
+    "whr_health": 0.567,
+    "whr_freedom": 0.62,
+    "whr_generosity": 0.083,
+    "whr_corruption": 0.006
   },
   "B1": {
     "name": "IBRD countries classified as high income",
@@ -13623,7 +13740,16 @@
     "health_spend_gdp": 3.996,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.888,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.959,
+    "whr_rank": 62,
+    "whr_year": 2024,
+    "whr_gdp": null,
+    "whr_social": null,
+    "whr_health": null,
+    "whr_freedom": null,
+    "whr_generosity": null,
+    "whr_corruption": null
   },
   "BS": {
     "name": "Bahamas, The",
@@ -15041,7 +15167,16 @@
     "health_spend_gdp": 8.922,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.246,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.877,
+    "whr_rank": 65,
+    "whr_year": 2024,
+    "whr_gdp": 1.465,
+    "whr_social": 1.318,
+    "whr_health": 0.587,
+    "whr_freedom": 0.621,
+    "whr_generosity": 0.246,
+    "whr_corruption": 0
   },
   "B2": {
     "name": "Latin America & the Caribbean (IBRD-only countries)",
@@ -17214,7 +17349,16 @@
     "health_spend_gdp": 6.919,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 8.316,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.784,
+    "whr_rank": 73,
+    "whr_year": 2024,
+    "whr_gdp": 1.217,
+    "whr_social": 1.179,
+    "whr_health": 0.488,
+    "whr_freedom": 0.719,
+    "whr_generosity": 0.1,
+    "whr_corruption": 0.061
   },
   "BR": {
     "name": "Brazil",
@@ -17909,7 +18053,16 @@
     "health_spend_gdp": 9.731,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.619,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.272,
+    "whr_rank": 44,
+    "whr_year": 2024,
+    "whr_gdp": 1.43,
+    "whr_social": 1.269,
+    "whr_health": 0.548,
+    "whr_freedom": 0.685,
+    "whr_generosity": 0.13,
+    "whr_corruption": 0.142
   },
   "BB": {
     "name": "Barbados",
@@ -20692,7 +20845,16 @@
     "renewable_energy_pct": 27.4,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 6.256,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 3.383,
+    "whr_rank": 137,
+    "whr_year": 2024,
+    "whr_gdp": 1.445,
+    "whr_social": 0.969,
+    "whr_health": 0.241,
+    "whr_freedom": 0.567,
+    "whr_generosity": 0.014,
+    "whr_corruption": 0.082
   },
   "C9": {
     "name": "Sub-Saharan Africa (IFC classification)",
@@ -22449,7 +22611,16 @@
     "health_spend_gdp": 11.31,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.88,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.9,
+    "whr_rank": 15,
+    "whr_year": 2024,
+    "whr_gdp": 1.84,
+    "whr_social": 1.459,
+    "whr_health": 0.701,
+    "whr_freedom": 0.73,
+    "whr_generosity": 0.23,
+    "whr_corruption": 0.368
   },
   "C4": {
     "name": "East Asia and the Pacific (IFC classification)",
@@ -23655,7 +23826,16 @@
     "health_spend_gdp": 11.691,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.924,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.06,
+    "whr_rank": 9,
+    "whr_year": 2024,
+    "whr_gdp": 1.97,
+    "whr_social": 1.425,
+    "whr_health": 0.747,
+    "whr_freedom": 0.759,
+    "whr_generosity": 0.173,
+    "whr_corruption": 0.498
   },
   "JG": {
     "name": "Channel Islands",
@@ -24564,7 +24744,16 @@
     "health_spend_gdp": 10.531,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.898,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.36,
+    "whr_rank": 38,
+    "whr_year": 2024,
+    "whr_gdp": 1.616,
+    "whr_social": 1.369,
+    "whr_health": 0.673,
+    "whr_freedom": 0.651,
+    "whr_generosity": 0.117,
+    "whr_corruption": 0.075
   },
   "CN": {
     "name": "China",
@@ -25250,7 +25439,16 @@
     "health_spend_gdp": 5.944,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.001,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.973,
+    "whr_rank": 60,
+    "whr_year": 2024,
+    "whr_gdp": 1.497,
+    "whr_social": 1.239,
+    "whr_health": 0.629,
+    "whr_freedom": 0.704,
+    "whr_generosity": 0.132,
+    "whr_corruption": 0.164
   },
   "CI": {
     "name": "Cote d'Ivoire",
@@ -25822,7 +26020,16 @@
     "health_spend_gdp": 3.432,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.426,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.08,
+    "whr_rank": 96,
+    "whr_year": 2024,
+    "whr_gdp": 1.08,
+    "whr_social": 0.578,
+    "whr_health": 0.288,
+    "whr_freedom": 0.547,
+    "whr_generosity": 0.12,
+    "whr_corruption": 0.164
   },
   "C6": {
     "name": "Latin America and the Caribbean (IFC classification)",
@@ -26388,7 +26595,16 @@
     "health_spend_gdp": 4.555,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.839,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.874,
+    "whr_rank": 104,
+    "whr_year": 2024,
+    "whr_gdp": 0.943,
+    "whr_social": 0.856,
+    "whr_health": 0.288,
+    "whr_freedom": 0.521,
+    "whr_generosity": 0.126,
+    "whr_corruption": 0.06
   },
   "CD": {
     "name": "Congo, Dem. Rep.",
@@ -26952,7 +27168,16 @@
     "health_spend_gdp": 3.685,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.845,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 3.295,
+    "whr_rank": 139,
+    "whr_year": 2024,
+    "whr_gdp": 0.534,
+    "whr_social": 0.665,
+    "whr_health": 0.262,
+    "whr_freedom": 0.473,
+    "whr_generosity": 0.189,
+    "whr_corruption": 0.072
   },
   "CG": {
     "name": "Congo, Rep.",
@@ -27581,7 +27806,16 @@
     "health_spend_gdp": 3.297,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.34,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.221,
+    "whr_rank": 89,
+    "whr_year": 2024,
+    "whr_gdp": 0.892,
+    "whr_social": 0.622,
+    "whr_health": 0.306,
+    "whr_freedom": 0.523,
+    "whr_generosity": 0.124,
+    "whr_corruption": 0.138
   },
   "CO": {
     "name": "Colombia",
@@ -28407,7 +28641,16 @@
     "renewable_energy_pct": 29.7,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 8.141,
-    "health_spend_gdp_year": "2024"
+    "health_spend_gdp_year": "2024",
+    "whr_score": 5.695,
+    "whr_rank": 78,
+    "whr_year": 2024,
+    "whr_gdp": 1.437,
+    "whr_social": 1.241,
+    "whr_health": 0.648,
+    "whr_freedom": 0.644,
+    "whr_generosity": 0.072,
+    "whr_corruption": 0.059
   },
   "KM": {
     "name": "Comoros",
@@ -29075,7 +29318,16 @@
     "health_spend_gdp": 6.552,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.341,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 3.566,
+    "whr_rank": 132,
+    "whr_year": 2024,
+    "whr_gdp": 0.896,
+    "whr_social": 0.328,
+    "whr_health": 0.37,
+    "whr_freedom": 0.172,
+    "whr_generosity": 0.128,
+    "whr_corruption": 0.16
   },
   "CV": {
     "name": "Cabo Verde",
@@ -30636,7 +30888,16 @@
     "health_spend_gdp": 6.866,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.248,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 6.955,
+    "whr_rank": 12,
+    "whr_year": 2024,
+    "whr_gdp": 1.561,
+    "whr_social": 1.373,
+    "whr_health": 0.661,
+    "whr_freedom": 0.797,
+    "whr_generosity": 0.109,
+    "whr_corruption": 0.123
   },
   "C8": {
     "name": "South Asia (IFC classification)",
@@ -31838,7 +32099,16 @@
     "health_spend_gdp": 8.119,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.736,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.068,
+    "whr_rank": 50,
+    "whr_year": 2024,
+    "whr_gdp": 1.794,
+    "whr_social": 1.217,
+    "whr_health": 0.744,
+    "whr_freedom": 0.529,
+    "whr_generosity": 0.124,
+    "whr_corruption": 0.049
   },
   "CZ": {
     "name": "Czechia",
@@ -32732,7 +33002,16 @@
     "health_spend_gdp": 8.507,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.303,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.822,
+    "whr_rank": 18,
+    "whr_year": 2024,
+    "whr_gdp": 1.783,
+    "whr_social": 1.511,
+    "whr_health": 0.638,
+    "whr_freedom": 0.787,
+    "whr_generosity": 0.177,
+    "whr_corruption": 0.068
   },
   "D4": {
     "name": "East Asia & Pacific (IDA-eligible countries)",
@@ -33794,7 +34073,16 @@
     "health_spend_gdp": 12.267,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.239,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.719,
+    "whr_rank": 24,
+    "whr_year": 2024,
+    "whr_gdp": 1.871,
+    "whr_social": 1.39,
+    "whr_health": 0.702,
+    "whr_freedom": 0.7,
+    "whr_generosity": 0.174,
+    "whr_corruption": 0.368
   },
   "DJ": {
     "name": "Djibouti",
@@ -36006,7 +36294,16 @@
     "health_spend_gdp": 9.388,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 6.356,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.583,
+    "whr_rank": 2,
+    "whr_year": 2024,
+    "whr_gdp": 1.908,
+    "whr_social": 1.52,
+    "whr_health": 0.699,
+    "whr_freedom": 0.823,
+    "whr_generosity": 0.204,
+    "whr_corruption": 0.548
   },
   "N6": {
     "name": "IDA countries in Sub-Saharan Africa not classified as fragile situations ",
@@ -36731,7 +37028,16 @@
     "health_spend_gdp": 4.599,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.761,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.823,
+    "whr_rank": 69,
+    "whr_year": 2024,
+    "whr_gdp": 1.517,
+    "whr_social": 1.272,
+    "whr_health": 0.511,
+    "whr_freedom": 0.73,
+    "whr_generosity": 0.086,
+    "whr_corruption": 0.196
   },
   "D5": {
     "name": "South Asia (IDA-eligible countries)",
@@ -37530,7 +37836,16 @@
     "health_spend_gdp": 4.351,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.61,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.364,
+    "whr_rank": 85,
+    "whr_year": 2024,
+    "whr_gdp": 1.324,
+    "whr_social": 1.191,
+    "whr_health": 0.568,
+    "whr_freedom": 0.247,
+    "whr_generosity": 0.091,
+    "whr_corruption": 0.2
   },
   "4E": {
     "name": "East Asia & Pacific (excluding high income)",
@@ -38781,7 +39096,16 @@
     "health_spend_gdp": 7.562,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.894,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.725,
+    "whr_rank": 74,
+    "whr_year": 2024,
+    "whr_gdp": 1.315,
+    "whr_social": 1.151,
+    "whr_health": 0.64,
+    "whr_freedom": 0.606,
+    "whr_generosity": 0.087,
+    "whr_corruption": 0.078
   },
   "EG": {
     "name": "Egypt, Arab Rep.",
@@ -39491,7 +39815,16 @@
     "renewable_energy_pct": 6.1,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 4.884,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 3.977,
+    "whr_rank": 127,
+    "whr_year": 2024,
+    "whr_gdp": 1.37,
+    "whr_social": 0.996,
+    "whr_health": 0.488,
+    "whr_freedom": 0.49,
+    "whr_generosity": 0.025,
+    "whr_corruption": 0.259
   },
   "XC": {
     "name": "Euro area",
@@ -41127,7 +41460,16 @@
     "health_spend_gdp": 9.221,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.586,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.421,
+    "whr_rank": 36,
+    "whr_year": 2024,
+    "whr_gdp": 1.766,
+    "whr_social": 1.471,
+    "whr_health": 0.729,
+    "whr_freedom": 0.619,
+    "whr_generosity": 0.119,
+    "whr_corruption": 0.177
   },
   "EE": {
     "name": "Estonia",
@@ -41800,7 +42142,16 @@
     "health_spend_gdp": 7.836,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.207,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.448,
+    "whr_rank": 34,
+    "whr_year": 2024,
+    "whr_gdp": 1.752,
+    "whr_social": 1.527,
+    "whr_health": 0.657,
+    "whr_freedom": 0.805,
+    "whr_generosity": 0.166,
+    "whr_corruption": 0.401
   },
   "ET": {
     "name": "Ethiopia",
@@ -42460,7 +42811,16 @@
     "health_spend_gdp": 2.803,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.298,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 3.861,
+    "whr_rank": 130,
+    "whr_year": 2024,
+    "whr_gdp": 0.792,
+    "whr_social": 0.915,
+    "whr_health": 0.42,
+    "whr_freedom": 0.441,
+    "whr_generosity": 0.27,
+    "whr_corruption": 0.101
   },
   "EU": {
     "name": "European Union",
@@ -43815,7 +44175,16 @@
     "health_spend_gdp": 10.474,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.376,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.741,
+    "whr_rank": 1,
+    "whr_year": 2024,
+    "whr_gdp": 1.844,
+    "whr_social": 1.572,
+    "whr_health": 0.695,
+    "whr_freedom": 0.859,
+    "whr_generosity": 0.142,
+    "whr_corruption": 0.546
   },
   "FJ": {
     "name": "Fiji",
@@ -45731,7 +46100,16 @@
     "health_spend_gdp": 11.535,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.324,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.609,
+    "whr_rank": 27,
+    "whr_year": 2024,
+    "whr_gdp": 1.818,
+    "whr_social": 1.348,
+    "whr_health": 0.727,
+    "whr_freedom": 0.65,
+    "whr_generosity": 0.112,
+    "whr_corruption": 0.281
   },
   "FO": {
     "name": "Faroe Islands",
@@ -46977,7 +47355,16 @@
     "health_spend_gdp": 3.134,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.316,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.106,
+    "whr_rank": 95,
+    "whr_year": 2024,
+    "whr_gdp": 1.403,
+    "whr_social": 1.038,
+    "whr_health": 0.344,
+    "whr_freedom": 0.516,
+    "whr_generosity": 0.045,
+    "whr_corruption": 0.1
   },
   "GB": {
     "name": "United Kingdom",
@@ -48121,7 +48508,16 @@
     "health_spend_gdp": 11.133,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.907,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 6.749,
+    "whr_rank": 20,
+    "whr_year": 2024,
+    "whr_gdp": 1.822,
+    "whr_social": 1.326,
+    "whr_health": 0.672,
+    "whr_freedom": 0.713,
+    "whr_generosity": 0.267,
+    "whr_corruption": 0.351
   },
   "GE": {
     "name": "Georgia",
@@ -48749,7 +49145,16 @@
     "health_spend_gdp": 6.858,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.98,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 5.185,
+    "whr_rank": 91,
+    "whr_year": 2024,
+    "whr_gdp": 1.467,
+    "whr_social": 0.99,
+    "whr_health": 0.524,
+    "whr_freedom": 0.68,
+    "whr_generosity": 0,
+    "whr_corruption": 0.174
   },
   "GH": {
     "name": "Ghana",
@@ -49417,7 +49822,16 @@
     "health_spend_gdp": 2.947,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.91,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 4.289,
+    "whr_rank": 120,
+    "whr_year": 2024,
+    "whr_gdp": 1.077,
+    "whr_social": 0.747,
+    "whr_health": 0.36,
+    "whr_freedom": 0.623,
+    "whr_generosity": 0.183,
+    "whr_corruption": 0.028
   },
   "GI": {
     "name": "Gibraltar",
@@ -50096,7 +50510,16 @@
     "health_spend_gdp": 3.694,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.725,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.023,
+    "whr_rank": 97,
+    "whr_year": 2024,
+    "whr_gdp": 0.831,
+    "whr_social": 0.622,
+    "whr_health": 0.236,
+    "whr_freedom": 0.521,
+    "whr_generosity": 0.21,
+    "whr_corruption": 0.107
   },
   "GM": {
     "name": "Gambia, The",
@@ -50638,7 +51061,16 @@
     "health_spend_gdp": 2.893,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.808,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.485,
+    "whr_rank": 112,
+    "whr_year": 2024,
+    "whr_gdp": 0.75,
+    "whr_social": 0.684,
+    "whr_health": 0.33,
+    "whr_freedom": 0.459,
+    "whr_generosity": 0.324,
+    "whr_corruption": 0.048
   },
   "GW": {
     "name": "Guinea-Bissau",
@@ -53065,7 +53497,16 @@
     "health_spend_gdp": 8.394,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.375,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 5.934,
+    "whr_rank": 64,
+    "whr_year": 2024,
+    "whr_gdp": 1.684,
+    "whr_social": 1.276,
+    "whr_health": 0.696,
+    "whr_freedom": 0.337,
+    "whr_generosity": 0.018,
+    "whr_corruption": 0.093
   },
   "GD": {
     "name": "Grenada",
@@ -54358,7 +54799,16 @@
     "health_spend_gdp": 6.802,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.106,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.287,
+    "whr_rank": 42,
+    "whr_year": 2024,
+    "whr_gdp": 1.26,
+    "whr_social": 1.169,
+    "whr_health": 0.467,
+    "whr_freedom": 0.735,
+    "whr_generosity": 0.105,
+    "whr_corruption": 0.078
   },
   "GU": {
     "name": "Guam",
@@ -55929,7 +56379,16 @@
     "renewable_energy_pct": 0.4,
     "renewable_energy_pct_year": "2021",
     "education_spend_gdp": 3.808,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 5.316,
+    "whr_rank": 86,
+    "whr_year": 2024,
+    "whr_gdp": 1.909,
+    "whr_social": 1.184,
+    "whr_health": 0.857,
+    "whr_freedom": 0.485,
+    "whr_generosity": 0.147,
+    "whr_corruption": 0.402
   },
   "HN": {
     "name": "Honduras",
@@ -56749,7 +57208,16 @@
     "health_spend_gdp": 7.71,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.55,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.968,
+    "whr_rank": 61,
+    "whr_year": 2024,
+    "whr_gdp": 1.091,
+    "whr_social": 1.035,
+    "whr_health": 0.502,
+    "whr_freedom": 0.72,
+    "whr_generosity": 0.175,
+    "whr_corruption": 0.081
   },
   "XE": {
     "name": "Heavily indebted poor countries (HIPC)",
@@ -57535,7 +58003,16 @@
     "health_spend_gdp": 7.147,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.092,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 5.942,
+    "whr_rank": 63,
+    "whr_year": 2024,
+    "whr_gdp": 1.71,
+    "whr_social": 1.445,
+    "whr_health": 0.637,
+    "whr_freedom": 0.469,
+    "whr_generosity": 0.064,
+    "whr_corruption": 0.043
   },
   "HT": {
     "name": "Haiti",
@@ -59117,7 +59594,16 @@
     "health_spend_gdp": 6.369,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.813,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.017,
+    "whr_rank": 56,
+    "whr_year": 2024,
+    "whr_gdp": 1.722,
+    "whr_social": 1.528,
+    "whr_health": 0.596,
+    "whr_freedom": 0.581,
+    "whr_generosity": 0.123,
+    "whr_corruption": 0.067
   },
   "ZB": {
     "name": "IBRD, including blend",
@@ -60310,7 +60796,16 @@
     "health_spend_gdp": 2.702,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.275,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.568,
+    "whr_rank": 80,
+    "whr_year": 2024,
+    "whr_gdp": 1.361,
+    "whr_social": 1.184,
+    "whr_health": 0.472,
+    "whr_freedom": 0.779,
+    "whr_generosity": 0.399,
+    "whr_corruption": 0.055
   },
   "XI": {
     "name": "IDA only",
@@ -61182,7 +61677,16 @@
     "health_spend_gdp": 3.339,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.099,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 4.054,
+    "whr_rank": 126,
+    "whr_year": 2024,
+    "whr_gdp": 1.166,
+    "whr_social": 0.653,
+    "whr_health": 0.417,
+    "whr_freedom": 0.767,
+    "whr_generosity": 0.174,
+    "whr_corruption": 0.122
   },
   "XY": {
     "name": "Not classified",
@@ -62188,7 +62692,16 @@
     "health_spend_gdp": 6.854,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 2.905,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 6.838,
+    "whr_rank": 17,
+    "whr_year": 2024,
+    "whr_gdp": 2.129,
+    "whr_social": 1.39,
+    "whr_health": 0.7,
+    "whr_freedom": 0.758,
+    "whr_generosity": 0.205,
+    "whr_corruption": 0.418
   },
   "IR": {
     "name": "Iran, Islamic Rep.",
@@ -62944,7 +63457,16 @@
     "health_spend_gdp": 6.025,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.824,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.923,
+    "whr_rank": 100,
+    "whr_year": 2024,
+    "whr_gdp": 1.435,
+    "whr_social": 1.136,
+    "whr_health": 0.571,
+    "whr_freedom": 0.366,
+    "whr_generosity": 0.235,
+    "whr_corruption": 0.123
   },
   "IQ": {
     "name": "Iraq",
@@ -63358,7 +63880,16 @@
     "renewable_energy_pct": 1.1,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 5.533,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 5.166,
+    "whr_rank": 92,
+    "whr_year": 2024,
+    "whr_gdp": 1.249,
+    "whr_social": 0.996,
+    "whr_health": 0.498,
+    "whr_freedom": 0.425,
+    "whr_generosity": 0.141,
+    "whr_corruption": 0.048
   },
   "IS": {
     "name": "Iceland",
@@ -64248,7 +64779,16 @@
     "health_spend_gdp": 8.984,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 7.289,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.525,
+    "whr_rank": 3,
+    "whr_year": 2024,
+    "whr_gdp": 1.881,
+    "whr_social": 1.617,
+    "whr_health": 0.718,
+    "whr_freedom": 0.819,
+    "whr_generosity": 0.258,
+    "whr_corruption": 0.182
   },
   "IL": {
     "name": "Israel",
@@ -64986,7 +65526,16 @@
     "health_spend_gdp": 7.098,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.935,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.341,
+    "whr_rank": 5,
+    "whr_year": 2024,
+    "whr_gdp": 1.803,
+    "whr_social": 1.513,
+    "whr_health": 0.74,
+    "whr_freedom": 0.641,
+    "whr_generosity": 0.153,
+    "whr_corruption": 0.193
   },
   "IT": {
     "name": "Italy",
@@ -66068,7 +66617,16 @@
     "health_spend_gdp": 8.444,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.07,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.324,
+    "whr_rank": 41,
+    "whr_year": 2024,
+    "whr_gdp": 1.8,
+    "whr_social": 1.328,
+    "whr_health": 0.72,
+    "whr_freedom": 0.513,
+    "whr_generosity": 0.112,
+    "whr_corruption": 0.074
   },
   "JM": {
     "name": "Jamaica",
@@ -66836,7 +67394,16 @@
     "health_spend_gdp": 7.605,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.514,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 5.842,
+    "whr_rank": 67,
+    "whr_year": 2024,
+    "whr_gdp": 1.28,
+    "whr_social": 1.324,
+    "whr_health": 0.567,
+    "whr_freedom": 0.647,
+    "whr_generosity": 0.089,
+    "whr_corruption": 0.028
   },
   "JO": {
     "name": "Jordan",
@@ -67651,7 +68218,16 @@
     "health_spend_gdp": 7.66,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.515,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.186,
+    "whr_rank": 125,
+    "whr_year": 2024,
+    "whr_gdp": 1.262,
+    "whr_social": 0.983,
+    "whr_health": 0.594,
+    "whr_freedom": 0.593,
+    "whr_generosity": 0.059,
+    "whr_corruption": 0.189
   },
   "JP": {
     "name": "Japan",
@@ -68795,7 +69371,16 @@
     "health_spend_gdp": 10.74,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.336,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 6.06,
+    "whr_rank": 51,
+    "whr_year": 2024,
+    "whr_gdp": 1.786,
+    "whr_social": 1.354,
+    "whr_health": 0.785,
+    "whr_freedom": 0.632,
+    "whr_generosity": 0.023,
+    "whr_corruption": 0.219
   },
   "KZ": {
     "name": "Kazakhstan",
@@ -69409,7 +69994,16 @@
     "health_spend_gdp": 3.767,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.85,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.188,
+    "whr_rank": 49,
+    "whr_year": 2024,
+    "whr_gdp": 1.622,
+    "whr_social": 1.457,
+    "whr_health": 0.556,
+    "whr_freedom": 0.733,
+    "whr_generosity": 0.149,
+    "whr_corruption": 0.12
   },
   "KE": {
     "name": "Kenya",
@@ -70035,7 +70629,16 @@
     "health_spend_gdp": 4.352,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.022,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 4.47,
+    "whr_rank": 114,
+    "whr_year": 2024,
+    "whr_gdp": 1.037,
+    "whr_social": 0.895,
+    "whr_health": 0.353,
+    "whr_freedom": 0.519,
+    "whr_generosity": 0.282,
+    "whr_corruption": 0.069
   },
   "KG": {
     "name": "Kyrgyz Republic",
@@ -70679,7 +71282,16 @@
     "health_spend_gdp": 4.503,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.827,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.714,
+    "whr_rank": 75,
+    "whr_year": 2024,
+    "whr_gdp": 1.054,
+    "whr_social": 1.477,
+    "whr_health": 0.588,
+    "whr_freedom": 0.834,
+    "whr_generosity": 0.225,
+    "whr_corruption": 0.03
   },
   "KH": {
     "name": "Cambodia",
@@ -71229,7 +71841,16 @@
     "health_spend_gdp": 4.617,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.181,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.341,
+    "whr_rank": 119,
+    "whr_year": 2024,
+    "whr_gdp": 1.011,
+    "whr_social": 1.019,
+    "whr_health": 0.442,
+    "whr_freedom": 0.863,
+    "whr_generosity": 0.17,
+    "whr_corruption": 0.071
   },
   "KI": {
     "name": "Kiribati",
@@ -73531,7 +74152,16 @@
     "health_spend_gdp": 8.677,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.814,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.058,
+    "whr_rank": 52,
+    "whr_year": 2024,
+    "whr_gdp": 1.815,
+    "whr_social": 1.178,
+    "whr_health": 0.77,
+    "whr_freedom": 0.555,
+    "whr_generosity": 0.126,
+    "whr_corruption": 0.158
   },
   "KW": {
     "name": "Kuwait",
@@ -74037,7 +74667,16 @@
     "health_spend_gdp": 4.963,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.436,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 6.951,
+    "whr_rank": 13,
+    "whr_year": 2024,
+    "whr_gdp": 1.845,
+    "whr_social": 1.364,
+    "whr_health": 0.661,
+    "whr_freedom": 0.827,
+    "whr_generosity": 0.2,
+    "whr_corruption": 0.172
   },
   "XJ": {
     "name": "Latin America & Caribbean (excluding high income)",
@@ -74684,7 +75323,16 @@
     "health_spend_gdp": 1.327,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.234,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.139,
+    "whr_rank": 94,
+    "whr_year": 2024,
+    "whr_gdp": 1.208,
+    "whr_social": 0.846,
+    "whr_health": 0.423,
+    "whr_freedom": 0.796,
+    "whr_generosity": 0.17,
+    "whr_corruption": 0.167
   },
   "LB": {
     "name": "Lebanon",
@@ -75380,7 +76028,16 @@
     "health_spend_gdp": 5.575,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.225,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 2.707,
+    "whr_rank": 142,
+    "whr_year": 2024,
+    "whr_gdp": 1.377,
+    "whr_social": 0.577,
+    "whr_health": 0.556,
+    "whr_freedom": 0.173,
+    "whr_generosity": 0.068,
+    "whr_corruption": 0.029
   },
   "LR": {
     "name": "Liberia",
@@ -75844,7 +76501,16 @@
     "health_spend_gdp": 13.006,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.267,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.269,
+    "whr_rank": 121,
+    "whr_year": 2024,
+    "whr_gdp": 0.619,
+    "whr_social": 0.673,
+    "whr_health": 0.301,
+    "whr_freedom": 0.546,
+    "whr_generosity": 0.178,
+    "whr_corruption": 0.075
   },
   "LY": {
     "name": "Libya",
@@ -76314,7 +76980,16 @@
     "renewable_energy_pct": 3.1,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 7.805,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 5.866,
+    "whr_rank": 66,
+    "whr_year": 2024,
+    "whr_gdp": 1.526,
+    "whr_social": 1.1,
+    "whr_health": 0.55,
+    "whr_freedom": 0.592,
+    "whr_generosity": 0.111,
+    "whr_corruption": 0.204
   },
   "LC": {
     "name": "St. Lucia",
@@ -78499,7 +79174,16 @@
     "health_spend_gdp": 3.683,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.828,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 3.898,
+    "whr_rank": 128,
+    "whr_year": 2024,
+    "whr_gdp": 1.361,
+    "whr_social": 1.179,
+    "whr_health": 0.586,
+    "whr_freedom": 0.583,
+    "whr_generosity": 0.144,
+    "whr_corruption": 0.031
   },
   "XN": {
     "name": "Lower middle income",
@@ -79377,7 +80061,16 @@
     "health_spend_gdp": 12.612,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.623,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 3.186,
+    "whr_rank": 141,
+    "whr_year": 2024,
+    "whr_gdp": 0.771,
+    "whr_social": 0.851,
+    "whr_health": 0,
+    "whr_freedom": 0.523,
+    "whr_generosity": 0.082,
+    "whr_corruption": 0.085
   },
   "V3": {
     "name": "Late-demographic dividend",
@@ -80113,7 +80806,16 @@
     "health_spend_gdp": 7.595,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.253,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.818,
+    "whr_rank": 19,
+    "whr_year": 2024,
+    "whr_gdp": 1.766,
+    "whr_social": 1.454,
+    "whr_health": 0.598,
+    "whr_freedom": 0.533,
+    "whr_generosity": 0.044,
+    "whr_corruption": 0.116
   },
   "LU": {
     "name": "Luxembourg",
@@ -80894,7 +81596,16 @@
     "health_spend_gdp": 5.891,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 3.706,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.122,
+    "whr_rank": 8,
+    "whr_year": 2024,
+    "whr_gdp": 2.141,
+    "whr_social": 1.355,
+    "whr_health": 0.708,
+    "whr_freedom": 0.801,
+    "whr_generosity": 0.146,
+    "whr_corruption": 0.432
   },
   "LV": {
     "name": "Latvia",
@@ -81551,7 +82262,16 @@
     "health_spend_gdp": 7.278,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.319,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.234,
+    "whr_rank": 46,
+    "whr_year": 2024,
+    "whr_gdp": 1.7,
+    "whr_social": 1.508,
+    "whr_health": 0.564,
+    "whr_freedom": 0.666,
+    "whr_generosity": 0.127,
+    "whr_corruption": 0.078
   },
   "MO": {
     "name": "Macao SAR, China",
@@ -82489,7 +83209,16 @@
     "health_spend_gdp": 6.064,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.021,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.795,
+    "whr_rank": 107,
+    "whr_year": 2024,
+    "whr_gdp": 1.213,
+    "whr_social": 0.471,
+    "whr_health": 0.495,
+    "whr_freedom": 0.631,
+    "whr_generosity": 0.042,
+    "whr_corruption": 0.082
   },
   "MC": {
     "name": "Monaco",
@@ -83274,7 +84003,16 @@
     "health_spend_gdp": 6.736,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.625,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.816,
+    "whr_rank": 71,
+    "whr_year": 2024,
+    "whr_gdp": 1.385,
+    "whr_social": 1.277,
+    "whr_health": 0.542,
+    "whr_freedom": 0.695,
+    "whr_generosity": 0.077,
+    "whr_corruption": 0.044
   },
   "M1": {
     "name": "Middle East (developing only)",
@@ -83944,7 +84682,16 @@
     "health_spend_gdp": 3.428,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.048,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.228,
+    "whr_rank": 123,
+    "whr_year": 2024,
+    "whr_gdp": 0.628,
+    "whr_social": 0.823,
+    "whr_health": 0.333,
+    "whr_freedom": 0.25,
+    "whr_generosity": 0.172,
+    "whr_corruption": 0.123
   },
   "MV": {
     "name": "Maldives",
@@ -85643,7 +86390,16 @@
     "health_spend_gdp": 5.504,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.066,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.678,
+    "whr_rank": 25,
+    "whr_year": 2024,
+    "whr_gdp": 1.521,
+    "whr_social": 1.241,
+    "whr_health": 0.544,
+    "whr_freedom": 0.722,
+    "whr_generosity": 0.086,
+    "whr_corruption": 0.127
   },
   "MH": {
     "name": "Marshall Islands",
@@ -86856,7 +87612,16 @@
     "renewable_energy_pct": 19.5,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 7.427,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 5.369,
+    "whr_rank": 84,
+    "whr_year": 2024,
+    "whr_gdp": 1.475,
+    "whr_social": 1.277,
+    "whr_health": 0.569,
+    "whr_freedom": 0.58,
+    "whr_generosity": 0.194,
+    "whr_corruption": 0.015
   },
   "ML": {
     "name": "Mali",
@@ -87398,7 +88163,16 @@
     "health_spend_gdp": 3.813,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.185,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.232,
+    "whr_rank": 122,
+    "whr_year": 2024,
+    "whr_gdp": 0.747,
+    "whr_social": 0.688,
+    "whr_health": 0.267,
+    "whr_freedom": 0.586,
+    "whr_generosity": 0.12,
+    "whr_corruption": 0.09
   },
   "MT": {
     "name": "Malta",
@@ -88144,7 +88918,16 @@
     "health_spend_gdp": 8.843,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.72,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.346,
+    "whr_rank": 40,
+    "whr_year": 2024,
+    "whr_gdp": 1.827,
+    "whr_social": 1.444,
+    "whr_health": 0.707,
+    "whr_freedom": 0.727,
+    "whr_generosity": 0.25,
+    "whr_corruption": 0.125
   },
   "MM": {
     "name": "Myanmar",
@@ -88634,7 +89417,16 @@
     "renewable_energy_pct": 62.9,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 4.457,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 4.354,
+    "whr_rank": 118,
+    "whr_year": 2024,
+    "whr_gdp": 0.978,
+    "whr_social": 0.988,
+    "whr_health": 0.436,
+    "whr_freedom": 0.45,
+    "whr_generosity": 0.401,
+    "whr_corruption": 0.174
   },
   "XQ": {
     "name": "Middle East, North Africa, Afghanistan & Pakistan (excluding high income)",
@@ -89183,7 +89975,16 @@
     "renewable_energy_pct": 39.6,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 9.655,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 5.707,
+    "whr_rank": 76,
+    "whr_year": 2024,
+    "whr_gdp": 1.571,
+    "whr_social": 1.318,
+    "whr_health": 0.587,
+    "whr_freedom": 0.632,
+    "whr_generosity": 0.11,
+    "whr_corruption": 0.132
   },
   "MN": {
     "name": "Mongolia",
@@ -89823,7 +90624,16 @@
     "health_spend_gdp": 6.072,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.658,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.696,
+    "whr_rank": 77,
+    "whr_year": 2024,
+    "whr_gdp": 1.353,
+    "whr_social": 1.511,
+    "whr_health": 0.4,
+    "whr_freedom": 0.501,
+    "whr_generosity": 0.237,
+    "whr_corruption": 0.055
   },
   "MP": {
     "name": "Northern Mariana Islands",
@@ -90546,7 +91356,16 @@
     "health_spend_gdp": 8.501,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.976,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 5.216,
+    "whr_rank": 90,
+    "whr_year": 2024,
+    "whr_gdp": 0.56,
+    "whr_social": 0.883,
+    "whr_health": 0.156,
+    "whr_freedom": 0.728,
+    "whr_generosity": 0.158,
+    "whr_corruption": 0.196
   },
   "MR": {
     "name": "Mauritania",
@@ -91028,7 +91847,16 @@
     "health_spend_gdp": 4.343,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.715,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.505,
+    "whr_rank": 111,
+    "whr_year": 2024,
+    "whr_gdp": 1.078,
+    "whr_social": 0.705,
+    "whr_health": 0.4,
+    "whr_freedom": 0.343,
+    "whr_generosity": 0.133,
+    "whr_corruption": 0.198
   },
   "MU": {
     "name": "Mauritius",
@@ -91760,7 +92588,16 @@
     "health_spend_gdp": 5.565,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.09,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 5.816,
+    "whr_rank": 70,
+    "whr_year": 2024,
+    "whr_gdp": 1.57,
+    "whr_social": 1.358,
+    "whr_health": 0.49,
+    "whr_freedom": 0.641,
+    "whr_generosity": 0.123,
+    "whr_corruption": 0.118
   },
   "MW": {
     "name": "Malawi",
@@ -92289,7 +93126,16 @@
     "health_spend_gdp": 6.535,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.749,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 3.421,
+    "whr_rank": 136,
+    "whr_year": 2024,
+    "whr_gdp": 0.617,
+    "whr_social": 0.41,
+    "whr_health": 0.349,
+    "whr_freedom": 0.571,
+    "whr_generosity": 0.135,
+    "whr_corruption": 0.136
   },
   "MY": {
     "name": "Malaysia",
@@ -93089,7 +93935,16 @@
     "health_spend_gdp": 3.958,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.515,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.975,
+    "whr_rank": 59,
+    "whr_year": 2024,
+    "whr_gdp": 1.646,
+    "whr_social": 1.143,
+    "whr_health": 0.54,
+    "whr_freedom": 0.829,
+    "whr_generosity": 0.226,
+    "whr_corruption": 0.119
   },
   "XU": {
     "name": "North America",
@@ -93779,7 +94634,16 @@
     "health_spend_gdp": 9.483,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 9.084,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 4.832,
+    "whr_rank": 106,
+    "whr_year": 2024,
+    "whr_gdp": 1.266,
+    "whr_social": 1.212,
+    "whr_health": 0.307,
+    "whr_freedom": 0.47,
+    "whr_generosity": 0.069,
+    "whr_corruption": 0.061
   },
   "NC": {
     "name": "New Caledonia",
@@ -94468,7 +95332,16 @@
     "health_spend_gdp": 4.049,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.074,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.556,
+    "whr_rank": 109,
+    "whr_year": 2024,
+    "whr_gdp": 0.573,
+    "whr_social": 0.677,
+    "whr_health": 0.293,
+    "whr_freedom": 0.615,
+    "whr_generosity": 0.145,
+    "whr_corruption": 0.147
   },
   "NG": {
     "name": "Nigeria",
@@ -95072,7 +95945,16 @@
     "health_spend_gdp": 4.191,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 0.319,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.881,
+    "whr_rank": 102,
+    "whr_year": 2024,
+    "whr_gdp": 1.042,
+    "whr_social": 1.075,
+    "whr_health": 0.256,
+    "whr_freedom": 0.566,
+    "whr_generosity": 0.201,
+    "whr_corruption": 0.019
   },
   "NI": {
     "name": "Nicaragua",
@@ -95820,7 +96702,16 @@
     "health_spend_gdp": 8.299,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.866,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.284,
+    "whr_rank": 43,
+    "whr_year": 2024,
+    "whr_gdp": 1.097,
+    "whr_social": 1.263,
+    "whr_health": 0.542,
+    "whr_freedom": 0.793,
+    "whr_generosity": 0.133,
+    "whr_corruption": 0.251
   },
   "NL": {
     "name": "Netherlands",
@@ -96960,7 +97851,16 @@
     "health_spend_gdp": 10.006,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.179,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.319,
+    "whr_rank": 6,
+    "whr_year": 2024,
+    "whr_gdp": 1.901,
+    "whr_social": 1.462,
+    "whr_health": 0.706,
+    "whr_freedom": 0.725,
+    "whr_generosity": 0.247,
+    "whr_corruption": 0.372
   },
   "NO": {
     "name": "Norway",
@@ -98101,7 +99001,16 @@
     "health_spend_gdp": 9.429,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.456,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.302,
+    "whr_rank": 7,
+    "whr_year": 2024,
+    "whr_gdp": 1.952,
+    "whr_social": 1.517,
+    "whr_health": 0.704,
+    "whr_freedom": 0.835,
+    "whr_generosity": 0.224,
+    "whr_corruption": 0.484
   },
   "NP": {
     "name": "Nepal",
@@ -98643,7 +99552,16 @@
     "health_spend_gdp": 6.158,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.688,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 5.158,
+    "whr_rank": 93,
+    "whr_year": 2024,
+    "whr_gdp": 0.965,
+    "whr_social": 0.99,
+    "whr_health": 0.443,
+    "whr_freedom": 0.653,
+    "whr_generosity": 0.209,
+    "whr_corruption": 0.115
   },
   "6X": {
     "name": "Non-resource rich Sub-Saharan Africa countries",
@@ -100120,7 +101038,16 @@
     "health_spend_gdp": 10.062,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.276,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 7.029,
+    "whr_rank": 11,
+    "whr_year": 2024,
+    "whr_gdp": 1.81,
+    "whr_social": 1.527,
+    "whr_health": 0.673,
+    "whr_freedom": 0.746,
+    "whr_generosity": 0.226,
+    "whr_corruption": 0.48
   },
   "OE": {
     "name": "OECD members",
@@ -101740,7 +102667,16 @@
     "health_spend_gdp": 2.52,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 1.947,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.657,
+    "whr_rank": 108,
+    "whr_year": 2024,
+    "whr_gdp": 1.069,
+    "whr_social": 0.6,
+    "whr_health": 0.321,
+    "whr_freedom": 0.542,
+    "whr_generosity": 0.144,
+    "whr_corruption": 0.074
   },
   "PA": {
     "name": "Panama",
@@ -102528,7 +103464,16 @@
     "health_spend_gdp": 8.33,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.472,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.358,
+    "whr_rank": 39,
+    "whr_year": 2024,
+    "whr_gdp": 1.702,
+    "whr_social": 1.392,
+    "whr_health": 0.633,
+    "whr_freedom": 0.72,
+    "whr_generosity": 0.063,
+    "whr_corruption": 0.043
   },
   "PE": {
     "name": "Peru",
@@ -103268,7 +104213,16 @@
     "health_spend_gdp": 5.638,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.235,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.841,
+    "whr_rank": 68,
+    "whr_year": 2024,
+    "whr_gdp": 1.371,
+    "whr_social": 1.18,
+    "whr_health": 0.662,
+    "whr_freedom": 0.615,
+    "whr_generosity": 0.078,
+    "whr_corruption": 0.029
   },
   "PH": {
     "name": "Philippines",
@@ -104060,7 +105014,16 @@
     "health_spend_gdp": 5.101,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.969,
-    "education_spend_gdp_year": "2025"
+    "education_spend_gdp_year": "2025",
+    "whr_score": 6.048,
+    "whr_rank": 53,
+    "whr_year": 2024,
+    "whr_gdp": 1.232,
+    "whr_social": 1.146,
+    "whr_health": 0.441,
+    "whr_freedom": 0.826,
+    "whr_generosity": 0.099,
+    "whr_corruption": 0.136
   },
   "PW": {
     "name": "Palau",
@@ -106117,7 +107080,16 @@
     "health_spend_gdp": 8.064,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.314,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.442,
+    "whr_rank": 35,
+    "whr_year": 2024,
+    "whr_gdp": 1.738,
+    "whr_social": 1.417,
+    "whr_health": 0.639,
+    "whr_freedom": 0.6,
+    "whr_generosity": 0.081,
+    "whr_corruption": 0.175
   },
   "V1": {
     "name": "Pre-demographic dividend",
@@ -107487,7 +108459,16 @@
     "health_spend_gdp": 10.241,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 4.552,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.03,
+    "whr_rank": 55,
+    "whr_year": 2024,
+    "whr_gdp": 1.728,
+    "whr_social": 1.368,
+    "whr_health": 0.699,
+    "whr_freedom": 0.757,
+    "whr_generosity": 0.047,
+    "whr_corruption": 0.035
   },
   "PY": {
     "name": "Paraguay",
@@ -108335,7 +109316,16 @@
     "health_spend_gdp": 8.357,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.406,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.977,
+    "whr_rank": 57,
+    "whr_year": 2024,
+    "whr_gdp": 1.398,
+    "whr_social": 1.408,
+    "whr_health": 0.549,
+    "whr_freedom": 0.788,
+    "whr_generosity": 0.131,
+    "whr_corruption": 0.065
   },
   "PS": {
     "name": "West Bank and Gaza",
@@ -108461,7 +109451,16 @@
     "health_spend_gdp": 10.733,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.434,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 4.879,
+    "whr_rank": 103,
+    "whr_year": 2024,
+    "whr_gdp": null,
+    "whr_social": null,
+    "whr_health": null,
+    "whr_freedom": null,
+    "whr_generosity": null,
+    "whr_corruption": null
   },
   "S2": {
     "name": "Pacific island small states",
@@ -110151,7 +111150,16 @@
     "health_spend_gdp": 5.709,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.279,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.491,
+    "whr_rank": 32,
+    "whr_year": 2024,
+    "whr_gdp": 1.699,
+    "whr_social": 1.236,
+    "whr_health": 0.583,
+    "whr_freedom": 0.717,
+    "whr_generosity": 0.041,
+    "whr_corruption": 0.006
   },
   "R6": {
     "name": "Resource rich Sub-Saharan Africa countries",
@@ -110828,7 +111836,16 @@
     "health_spend_gdp": 7.044,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.165,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.785,
+    "whr_rank": 72,
+    "whr_year": 2024,
+    "whr_gdp": 1.642,
+    "whr_social": 1.351,
+    "whr_health": 0.531,
+    "whr_freedom": 0.551,
+    "whr_generosity": 0.138,
+    "whr_corruption": 0.121
   },
   "RW": {
     "name": "Rwanda",
@@ -112263,7 +113280,16 @@
     "health_spend_gdp": 5.687,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.115,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.594,
+    "whr_rank": 28,
+    "whr_year": 2024,
+    "whr_gdp": 1.842,
+    "whr_social": 1.361,
+    "whr_health": 0.511,
+    "whr_freedom": 0.787,
+    "whr_generosity": 0.114,
+    "whr_corruption": 0.188
   },
   "SD": {
     "name": "Sudan",
@@ -113653,7 +114679,16 @@
     "health_spend_gdp": 4.323,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.163,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.969,
+    "whr_rank": 99,
+    "whr_year": 2024,
+    "whr_gdp": 0.927,
+    "whr_social": 0.751,
+    "whr_health": 0.392,
+    "whr_freedom": 0.607,
+    "whr_generosity": 0.152,
+    "whr_corruption": 0.069
   },
   "SG": {
     "name": "Singapore",
@@ -114471,7 +115506,16 @@
     "health_spend_gdp": 4.492,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.191,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 6.523,
+    "whr_rank": 30,
+    "whr_year": 2024,
+    "whr_gdp": 2.118,
+    "whr_social": 1.361,
+    "whr_health": 0.769,
+    "whr_freedom": 0.743,
+    "whr_generosity": 0.168,
+    "whr_corruption": 0.575
   },
   "SB": {
     "name": "Solomon Islands",
@@ -115642,7 +116686,16 @@
     "health_spend_gdp": 4.719,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.625,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 3.245,
+    "whr_rank": 140,
+    "whr_year": 2024,
+    "whr_gdp": 0.654,
+    "whr_social": 0.566,
+    "whr_health": 0.253,
+    "whr_freedom": 0.469,
+    "whr_generosity": 0.181,
+    "whr_corruption": 0.053
   },
   "SV": {
     "name": "El Salvador",
@@ -116426,7 +117479,16 @@
     "health_spend_gdp": 9.287,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.172,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.469,
+    "whr_rank": 33,
+    "whr_year": 2024,
+    "whr_gdp": 1.265,
+    "whr_social": 1.08,
+    "whr_health": 0.549,
+    "whr_freedom": 0.816,
+    "whr_generosity": 0.083,
+    "whr_corruption": 0.253
   },
   "SM": {
     "name": "San Marino",
@@ -117806,7 +118868,16 @@
     "health_spend_gdp": 8.031,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.404,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.411,
+    "whr_rank": 37,
+    "whr_year": 2024,
+    "whr_gdp": 1.538,
+    "whr_social": 1.391,
+    "whr_health": 0.585,
+    "whr_freedom": 0.663,
+    "whr_generosity": 0.2,
+    "whr_corruption": 0.101
   },
   "ZF": {
     "name": "Sub-Saharan Africa (excluding high income)",
@@ -120548,7 +121619,16 @@
     "health_spend_gdp": 7.353,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.655,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.257,
+    "whr_rank": 45,
+    "whr_year": 2024,
+    "whr_gdp": 1.706,
+    "whr_social": 1.54,
+    "whr_health": 0.638,
+    "whr_freedom": 0.566,
+    "whr_generosity": 0.096,
+    "whr_corruption": 0.058
   },
   "SI": {
     "name": "Slovenia",
@@ -121229,7 +122309,16 @@
     "health_spend_gdp": 9.876,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 5.281,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.743,
+    "whr_rank": 21,
+    "whr_year": 2024,
+    "whr_gdp": 1.786,
+    "whr_social": 1.502,
+    "whr_health": 0.695,
+    "whr_freedom": 0.789,
+    "whr_generosity": 0.157,
+    "whr_corruption": 0.131
   },
   "SE": {
     "name": "Sweden",
@@ -122321,7 +123410,16 @@
     "health_spend_gdp": 11.215,
     "health_spend_gdp_year": "2024",
     "education_spend_gdp": 7.319,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 7.344,
+    "whr_rank": 4,
+    "whr_year": 2024,
+    "whr_gdp": 1.878,
+    "whr_social": 1.501,
+    "whr_health": 0.724,
+    "whr_freedom": 0.838,
+    "whr_generosity": 0.221,
+    "whr_corruption": 0.524
   },
   "SZ": {
     "name": "Eswatini",
@@ -122971,7 +124069,16 @@
     "health_spend_gdp": 7.498,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.031,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 3.502,
+    "whr_rank": 135,
+    "whr_year": 2024,
+    "whr_gdp": 1.255,
+    "whr_social": 0.925,
+    "whr_health": 0.176,
+    "whr_freedom": 0.284,
+    "whr_generosity": 0.059,
+    "whr_corruption": 0.116
   },
   "SX": {
     "name": "Sint Maarten (Dutch part)",
@@ -125012,7 +126119,16 @@
     "health_spend_gdp": 4.997,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.201,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.471,
+    "whr_rank": 113,
+    "whr_year": 2024,
+    "whr_gdp": 0.603,
+    "whr_social": 0.805,
+    "whr_health": 0.199,
+    "whr_freedom": 0.411,
+    "whr_generosity": 0.218,
+    "whr_corruption": 0.113
   },
   "T4": {
     "name": "East Asia & Pacific (IDA & IBRD countries)",
@@ -125796,7 +126912,16 @@
     "health_spend_gdp": 6.108,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.143,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.214,
+    "whr_rank": 124,
+    "whr_year": 2024,
+    "whr_gdp": 0.758,
+    "whr_social": 0.586,
+    "whr_health": 0.32,
+    "whr_freedom": 0.453,
+    "whr_generosity": 0.127,
+    "whr_corruption": 0.156
   },
   "TH": {
     "name": "Thailand",
@@ -126532,7 +127657,16 @@
     "health_spend_gdp": 4.538,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.521,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.976,
+    "whr_rank": 58,
+    "whr_year": 2024,
+    "whr_gdp": 1.484,
+    "whr_social": 1.347,
+    "whr_health": 0.62,
+    "whr_freedom": 0.756,
+    "whr_generosity": 0.283,
+    "whr_corruption": 0.024
   },
   "TJ": {
     "name": "Tajikistan",
@@ -127098,7 +128232,16 @@
     "health_spend_gdp": 7.438,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.437,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.281,
+    "whr_rank": 88,
+    "whr_year": 2024,
+    "whr_gdp": null,
+    "whr_social": null,
+    "whr_health": null,
+    "whr_freedom": null,
+    "whr_generosity": null,
+    "whr_corruption": null
   },
   "TM": {
     "name": "Turkmenistan",
@@ -130589,7 +131732,16 @@
     "health_spend_gdp": 7.985,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.734,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 4.422,
+    "whr_rank": 115,
+    "whr_year": 2024,
+    "whr_gdp": 1.306,
+    "whr_social": 0.955,
+    "whr_health": 0.579,
+    "whr_freedom": 0.254,
+    "whr_generosity": 0.024,
+    "whr_corruption": 0.018
   },
   "TR": {
     "name": "Turkiye",
@@ -131329,7 +132481,16 @@
     "health_spend_gdp": 4.275,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.096,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 4.975,
+    "whr_rank": 98,
+    "whr_year": 2024,
+    "whr_gdp": 1.702,
+    "whr_social": 1.175,
+    "whr_health": 0.631,
+    "whr_freedom": 0.202,
+    "whr_generosity": 0.068,
+    "whr_corruption": 0.115
   },
   "TV": {
     "name": "Tuvalu",
@@ -132325,7 +133486,16 @@
     "health_spend_gdp": 3.052,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 3.155,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 3.781,
+    "whr_rank": 131,
+    "whr_year": 2024,
+    "whr_gdp": 0.82,
+    "whr_social": 0.706,
+    "whr_health": 0.38,
+    "whr_freedom": 0.709,
+    "whr_generosity": 0.191,
+    "whr_corruption": 0.257
   },
   "UG": {
     "name": "Uganda",
@@ -132897,7 +134067,16 @@
     "health_spend_gdp": 4.236,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.561,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 4.372,
+    "whr_rank": 117,
+    "whr_year": 2024,
+    "whr_gdp": 0.772,
+    "whr_social": 1.151,
+    "whr_health": 0.373,
+    "whr_freedom": 0.587,
+    "whr_generosity": 0.178,
+    "whr_corruption": 0.054
   },
   "UA": {
     "name": "Ukraine",
@@ -133559,7 +134738,16 @@
     "health_spend_gdp": 8.203,
     "health_spend_gdp_year": "2021",
     "education_spend_gdp": 5.14,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 4.873,
+    "whr_rank": 105,
+    "whr_year": 2024,
+    "whr_gdp": 1.35,
+    "whr_social": 1.315,
+    "whr_health": 0.513,
+    "whr_freedom": 0.631,
+    "whr_generosity": 0.285,
+    "whr_corruption": 0.025
   },
   "XT": {
     "name": "Upper middle income",
@@ -134404,7 +135592,16 @@
     "health_spend_gdp": 9.019,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.811,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.611,
+    "whr_rank": 26,
+    "whr_year": 2024,
+    "whr_gdp": 1.596,
+    "whr_social": 1.431,
+    "whr_health": 0.592,
+    "whr_freedom": 0.775,
+    "whr_generosity": 0.106,
+    "whr_corruption": 0.22
   },
   "US": {
     "name": "United States",
@@ -135380,7 +136577,16 @@
     "health_spend_gdp": 16.694,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.42,
-    "education_spend_gdp_year": "2021"
+    "education_spend_gdp_year": "2021",
+    "whr_score": 6.725,
+    "whr_rank": 23,
+    "whr_year": 2024,
+    "whr_gdp": 1.939,
+    "whr_social": 1.392,
+    "whr_health": 0.542,
+    "whr_freedom": 0.586,
+    "whr_generosity": 0.223,
+    "whr_corruption": 0.169
   },
   "UZ": {
     "name": "Uzbekistan",
@@ -136028,7 +137234,16 @@
     "health_spend_gdp": 6.743,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 5.473,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 6.195,
+    "whr_rank": 47,
+    "whr_year": 2024,
+    "whr_gdp": 1.212,
+    "whr_social": 1.394,
+    "whr_health": 0.539,
+    "whr_freedom": 0.835,
+    "whr_generosity": 0.251,
+    "whr_corruption": 0.215
   },
   "VC": {
     "name": "St. Vincent and the Grenadines",
@@ -137356,7 +138571,16 @@
     "health_spend_gdp": 3.776,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 0.003,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 5.607,
+    "whr_rank": 79,
+    "whr_year": 2024,
+    "whr_gdp": 0,
+    "whr_social": 1.321,
+    "whr_health": 0.491,
+    "whr_freedom": 0.518,
+    "whr_generosity": 0.192,
+    "whr_corruption": 0.086
   },
   "VG": {
     "name": "British Virgin Islands",
@@ -138228,7 +139452,16 @@
     "health_spend_gdp": 4.561,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 2.887,
-    "education_spend_gdp_year": "2022"
+    "education_spend_gdp_year": "2022",
+    "whr_score": 6.043,
+    "whr_rank": 54,
+    "whr_year": 2024,
+    "whr_gdp": 1.331,
+    "whr_social": 1.267,
+    "whr_health": 0.539,
+    "whr_freedom": 0.843,
+    "whr_generosity": 0.094,
+    "whr_corruption": 0.16
   },
   "VU": {
     "name": "Vanuatu",
@@ -139650,7 +140883,16 @@
     "wgi_political_stability": -0.323,
     "wgi_political_stability_year": "2023",
     "wgi_regulatory_quality": -0.295,
-    "wgi_regulatory_quality_year": "2023"
+    "wgi_regulatory_quality_year": "2023",
+    "whr_score": 6.561,
+    "whr_rank": 29,
+    "whr_year": 2024,
+    "whr_gdp": 1.364,
+    "whr_social": 1.277,
+    "whr_health": 0.599,
+    "whr_freedom": 0.739,
+    "whr_generosity": 0.254,
+    "whr_corruption": 0.073
   },
   "A5": {
     "name": "Sub-Saharan Africa excluding South Africa and Nigeria",
@@ -140173,7 +141415,16 @@
     "renewable_energy_pct": 3.7,
     "renewable_energy_pct_year": "2021",
     "health_spend_gdp": 9.696,
-    "health_spend_gdp_year": "2023"
+    "health_spend_gdp_year": "2023",
+    "whr_score": 3.561,
+    "whr_rank": 133,
+    "whr_year": 2024,
+    "whr_gdp": 0.671,
+    "whr_social": 1.281,
+    "whr_health": 0.293,
+    "whr_freedom": 0.362,
+    "whr_generosity": 0.08,
+    "whr_corruption": 0.113
   },
   "ZA": {
     "name": "South Africa",
@@ -141151,7 +142402,16 @@
     "health_spend_gdp": 8.91,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 6.021,
-    "education_spend_gdp_year": "2024"
+    "education_spend_gdp_year": "2024",
+    "whr_score": 5.422,
+    "whr_rank": 83,
+    "whr_year": 2024,
+    "whr_gdp": 1.389,
+    "whr_social": 1.369,
+    "whr_health": 0.322,
+    "whr_freedom": 0.537,
+    "whr_generosity": 0.078,
+    "whr_corruption": 0.034
   },
   "ZM": {
     "name": "Zambia",
@@ -141691,7 +142951,16 @@
     "health_spend_gdp": 5.978,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 4.074,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 3.502,
+    "whr_rank": 134,
+    "whr_year": 2024,
+    "whr_gdp": 0.899,
+    "whr_social": 0.809,
+    "whr_health": 0.264,
+    "whr_freedom": 0.727,
+    "whr_generosity": 0.168,
+    "whr_corruption": 0.109
   },
   "ZW": {
     "name": "Zimbabwe",
@@ -142195,7 +143464,16 @@
     "health_spend_gdp": 2.926,
     "health_spend_gdp_year": "2023",
     "education_spend_gdp": 0.385,
-    "education_spend_gdp_year": "2023"
+    "education_spend_gdp_year": "2023",
+    "whr_score": 3.341,
+    "whr_rank": 138,
+    "whr_year": 2024,
+    "whr_gdp": 0.748,
+    "whr_social": 0.85,
+    "whr_health": 0.232,
+    "whr_freedom": 0.487,
+    "whr_generosity": 0.096,
+    "whr_corruption": 0.131
   },
   "TW": {
     "govt_debt_gdp": 20.9,
@@ -142903,6 +144181,15 @@
     "ti_cpi_year": 2023,
     "fh_score": 94,
     "fh_status": "Free",
-    "fh_year": 2024
+    "fh_year": 2024,
+    "whr_score": 6.503,
+    "whr_rank": 31,
+    "whr_year": 2024,
+    "whr_gdp": 1.842,
+    "whr_social": 1.346,
+    "whr_health": 0.65,
+    "whr_freedom": 0.649,
+    "whr_generosity": 0.068,
+    "whr_corruption": 0.202
   }
 }
