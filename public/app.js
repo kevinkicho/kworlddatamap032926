@@ -4948,6 +4948,11 @@ function _buildTrendTabs(iso2) {
     tabs.push({ key:'bea_imports', label:'← US Imp' });
   }
 
+  // Ember: coal phase-out history
+  if (cd.energy_coal_pct_history && cd.energy_coal_pct_history.length > 0) {
+    tabs.push({ key: 'energy_coal_pct', label: 'Coal %' });
+  }
+
   var trendEl = document.getElementById('cp-trend');
   if (!trendEl || tabs.length === 0) { if (trendEl) trendEl.style.display = 'none'; return; }
 
@@ -4994,12 +4999,14 @@ function _switchTrendTab(iso2, key) {
     rd_spend_history:   "R&D spending (% of GDP)",
     tertiary_history:   "Tertiary enrollment (%)",
     tax_revenue_history:"Tax revenue — central govt (% GDP)",
+    energy_coal_pct:    "Coal share of electricity (%)",
   };
 
   // ── resolve points by data source ────────────────────────────────
   var points = null;
   var isTimestamp = false;
   var color = "#388bfd";
+  if (key === 'energy_coal_pct') color = '#8B4513';
 
   if (key === 'ecb_bond_10y') {
     var h = ecbBonds[iso2] && ecbBonds[iso2].bond_yield_10y_history;
