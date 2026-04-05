@@ -3328,7 +3328,7 @@ function _renderCountryPanel(iso2) {
       (typeof _buildRankChips === "function" ? _buildRankChips(iso2) : "") +
     "</div>";
 
-  document.getElementById("cp-trend").textContent = "";
+  _buildTrendTabs(iso2);
 }
 
 // ── _buildRadar ───────────────────────────────────────────────────────
@@ -3489,9 +3489,69 @@ function _buildRankChips(iso2) {
   "</div>";
 }
 
+// ── _buildTrendTabs — populate #cp-trend for a country ───────────────
+function _buildTrendTabs(iso2) {
+  var cd          = countryData[iso2] || {};
+  var isEurozone  = !!(ecbData.eurozone_countries && ecbData.eurozone_countries.includes(iso2));
+  var isJP        = iso2 === 'JP';
+  var hasBea      = !!(beaTradeData[iso2] && beaTradeData[iso2].length > 0);
+
+  // countryData annual history tabs (only include if data exists)
+  var tabs = [
+    { key:'gdp_per_capita',     label:'GDP/cap'   },
+    { key:'cpi_inflation',      label:'Inflation' },
+    { key:'unemployment_rate',  label:'Unemploy'  },
+    { key:'govt_debt_gdp',      label:'Debt/GDP'  },
+    { key:'fiscal_balance_gdp', label:'Fiscal'    },
+    { key:'life_expectancy',    label:'Life exp'  },
+  ].filter(function(d) { return cd[d.key + '_history'] && cd[d.key + '_history'].length > 0; });
+
+  // Bond yield — prefer country-specific ECB source for eurozone
+  if (isEurozone && ecbBonds[iso2] && ecbBonds[iso2].bond_yield_10y_history && ecbBonds[iso2].bond_yield_10y_history.length > 0) {
+    tabs.push({ key:'ecb_bond_10y', label:'Bond 10Y' });
+  } else if (cd.bond_yield_10y_history && cd.bond_yield_10y_history.length > 0) {
+    tabs.push({ key:'bond_yield_10y', label:'Bond 10Y' });
+  }
+
+  // Eurozone: ECB rates + Euribor
+  if (isEurozone) {
+    if (ecbData.ecb_deposit_rate_history && ecbData.ecb_deposit_rate_history.length > 0) {
+      tabs.push({ key:'ecb_deposit_rate', label:'ECB Rate' });
+    }
+    if (ecbData.euribor_3m_history && ecbData.euribor_3m_history.length > 0) {
+      tabs.push({ key:'euribor_3m', label:'Euribor 3M' });
+    }
+  }
+
+  // Japan: JGB yields
+  if (isJP && bojData.JP) {
+    if (bojData.JP.bond_yield_10y_history && bojData.JP.bond_yield_10y_history.length > 0)
+      tabs.push({ key:'jgb_10y', label:'JGB 10Y' });
+  }
+
+  // BEA bilateral trade with the US
+  if (hasBea) {
+    tabs.push({ key:'bea_exports', label:'→ US Exp' });
+    tabs.push({ key:'bea_imports', label:'← US Imp' });
+  }
+
+  var trendEl = document.getElementById('cp-trend');
+  if (!trendEl || tabs.length === 0) { if (trendEl) trendEl.style.display = 'none'; return; }
+
+  var html = '<div class="cp-tab-strip">' +
+    tabs.map(function(d, i) {
+      return '<button class="cp-tab' + (i === 0 ? ' active' : '') + '" onclick="_switchTrendTab(' +
+        JSON.stringify(iso2) + ',' + JSON.stringify(d.key) + ')">' + escHtml(d.label) + '</button>';
+    }).join('') +
+    '</div><div id="cp-chart-area"></div>';
+
+  trendEl.innerHTML = html;
+  trendEl.style.display = '';
+  _switchTrendTab(iso2, tabs[0].key);
+}
+
 // ── _switchTrendTab ───────────────────────────────────────────────────
 function _switchTrendTab(iso2, key) {
-  if (!countryData[iso2]) return;
   var cd = countryData[iso2] || {};
 
   // update active tab UI
@@ -3503,51 +3563,90 @@ function _switchTrendTab(iso2, key) {
   var chartArea = document.getElementById("cp-chart-area");
   if (!chartArea) return;
 
-  var isFred  = key === "bond_yield_10y";
-  var histKey = key + "_history";
-  var raw     = cd[histKey];
-
-  if (!raw || !raw.length) {
-    chartArea.innerHTML = "<div class=\"cp-no-data\">No historical data available</div>";
-    return;
-  }
-
-  var points;
-  if (isFred) {
-    // FRED format: [["YYYY-MM", value], ...]
-    points = raw
-      .map(function(row) { return { t: new Date(row[0] + "-01").getTime(), v: row[1] }; })
-      .filter(function(p) { return Number.isFinite(p.v); });
-  } else {
-    // World Bank / IMF format: [[year, value], ...]
-    points = raw
-      .map(function(row) { return { t: row[0], v: row[1] }; })
-      .filter(function(p) { return Number.isFinite(p.v); });
-  }
-
-  if (!points.length) {
-    chartArea.innerHTML = "<div class=\"cp-no-data\">No historical data available</div>";
-    return;
-  }
-
   var chartLabels = {
-    gdp_per_capita:    "GDP per capita (USD)",
-    govt_debt_gdp:     "Govt debt (% of GDP)",
-    cpi_inflation:     "CPI inflation (%)",
-    life_expectancy:   "Life expectancy (yrs)",
-    unemployment_rate: "Unemployment (%)",
-    bond_yield_10y:    "10-yr bond yield (%)"
+    gdp_per_capita:     "GDP per capita (USD)",
+    govt_debt_gdp:      "Govt debt (% of GDP)",
+    cpi_inflation:      "CPI inflation (%)",
+    life_expectancy:    "Life expectancy (yrs)",
+    unemployment_rate:  "Unemployment (%)",
+    fiscal_balance_gdp: "Fiscal balance (% GDP)",
+    bond_yield_10y:     "10-yr bond yield (%)",
+    ecb_bond_10y:       "10-yr sovereign yield (%)",
+    ecb_deposit_rate:   "ECB deposit rate (%)",
+    euribor_3m:         "Euribor 3M (%)",
+    jgb_10y:            "JGB 10Y yield (%)",
+    bea_exports:        "US goods exports (USD bn)",
+    bea_imports:        "US goods imports (USD bn)",
   };
 
-  // inject canvas and render after layout pass (display:block forces correct sizing)
+  // ── resolve points by data source ────────────────────────────────
+  var points = null;
+  var isTimestamp = false;
+  var color = "#388bfd";
+
+  if (key === 'ecb_bond_10y') {
+    var h = ecbBonds[iso2] && ecbBonds[iso2].bond_yield_10y_history;
+    if (h && h.length) {
+      isTimestamp = true;
+      points = h.map(function(r) { return { t: new Date(r[0] + '-01').getTime(), v: r[1] }; });
+    }
+  } else if (key === 'euribor_3m') {
+    var h = ecbData.euribor_3m_history;
+    if (h && h.length) {
+      isTimestamp = true;
+      points = h.map(function(r) { return { t: new Date(r[0] + '-01').getTime(), v: r[1] }; });
+    }
+  } else if (key === 'ecb_deposit_rate') {
+    var h = ecbData.ecb_deposit_rate_history;
+    if (h && h.length) {
+      isTimestamp = true;
+      points = h.map(function(r) { return { t: new Date(r[0] + '-01').getTime(), v: r[1] }; });
+    }
+  } else if (key === 'jgb_10y') {
+    var h = bojData.JP && bojData.JP.bond_yield_10y_history;
+    if (h && h.length) {
+      isTimestamp = true;
+      points = h.map(function(r) { return { t: new Date(r[0] + '-01').getTime(), v: r[1] }; });
+    }
+  } else if (key === 'bea_exports' || key === 'bea_imports') {
+    var arr = beaTradeData[iso2];
+    color = key === 'bea_exports' ? "#3fb950" : "#f85149";
+    if (arr && arr.length) {
+      var field = key === 'bea_exports' ? 'expGds' : 'impGds';
+      points = arr
+        .map(function(r) { return { t: r.year, v: r[field] > 0 ? r[field] / 1e9 : null }; })
+        .filter(function(p) { return p.v !== null && Number.isFinite(p.v); });
+    }
+  } else if (key === 'bond_yield_10y') {
+    // FRED monthly format
+    var raw = cd.bond_yield_10y_history;
+    if (raw && raw.length) {
+      isTimestamp = true;
+      points = raw.map(function(r) { return { t: new Date(r[0] + '-01').getTime(), v: r[1] }; })
+                  .filter(function(p) { return Number.isFinite(p.v); });
+    }
+  } else {
+    // World Bank / IMF annual format
+    var raw = cd[key + '_history'];
+    if (raw && raw.length) {
+      points = raw.map(function(r) { return { t: r[0], v: r[1] }; })
+                  .filter(function(p) { return Number.isFinite(p.v); });
+    }
+  }
+
+  if (!points || !points.length) {
+    chartArea.innerHTML = "<div class=\"cp-no-data\">No historical data available</div>";
+    return;
+  }
+
   chartArea.innerHTML = "<canvas id=\"cp-iy-canvas\" style=\"width:100%;height:144px;display:block;\"></canvas>";
   var canvas = document.getElementById("cp-iy-canvas");
   requestAnimationFrame(function() {
     _IYChart(canvas, points, {
-      isTimestamp:  isFred,
-      label:        chartLabels[key] || key,
-      color:        "#388bfd",
-      fillOpacity:  0.15
+      isTimestamp: isTimestamp,
+      label:       chartLabels[key] || key,
+      color:       color,
+      fillOpacity: 0.15
     });
   });
 }

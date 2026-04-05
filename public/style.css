@@ -1273,8 +1273,8 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 .cp-chip-sub { font-size: 0.62rem; color: #484f58; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cp-rank-chips { display: flex; flex-direction: column; gap: 5px; }
 
-/* trend tabs (hidden — indicators already shown in gauge section) */
-#cp-trend { display: none; }
+/* trend tabs — shown when _buildTrendTabs populates them */
+#cp-trend { display: none; border-top: 1px solid #21262d; }
 .cp-tab-strip {
   display: flex; gap: 2px; padding: 6px 10px 0; overflow-x: auto;
   background: #161b22; border-bottom: 1px solid #21262d;
