@@ -1026,10 +1026,16 @@ const CHORO_INDICATORS = [
 const LS_EDITS = 'wcm_edits';
 const LS_DELETED = 'wcm_deleted';
 
-function loadEdits() { try { return JSON.parse(localStorage.getItem(LS_EDITS) || '{}'); } catch { return {}; } }
+let _editsCache = null;
+function loadEdits() {
+  if (_editsCache !== null) return _editsCache;
+  try { _editsCache = JSON.parse(localStorage.getItem(LS_EDITS) || '{}'); }
+  catch { _editsCache = {}; }
+  return _editsCache;
+}
 function loadDeleted() { try { return new Set(JSON.parse(localStorage.getItem(LS_DELETED) || '[]')); } catch { return new Set(); } }
 
-function saveEditsStore(edits) { localStorage.setItem(LS_EDITS, JSON.stringify(edits)); }
+function saveEditsStore(edits) { localStorage.setItem(LS_EDITS, JSON.stringify(edits)); _editsCache = null; }
 function saveDeletedStore(del) { localStorage.setItem(LS_DELETED, JSON.stringify([...del])); }
 
 // ── Schema validation ─────────────────────────────────────────────────────────
@@ -1461,6 +1467,7 @@ function deleteCity() {
 function resetAll() {
   if (!confirm('Reset all your edits and deletions? The original dataset will be restored.')) return;
   localStorage.removeItem(LS_EDITS);
+  _editsCache = null;
   localStorage.removeItem(LS_DELETED);
   refresh();
 }
