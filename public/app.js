@@ -540,17 +540,22 @@ function _passesMetricValueFilter(metric, city) {
   }
 }
 
+// Returns the raw numeric value of `metric` for a city (0 if unavailable).
+function _cityMetricValue(city, metric) {
+  const qid = city.qid;
+  if (metric === 'nobel')        return nobelCitiesData[qid]?.total      ?? 0;
+  if (metric === 'universities') return universitiesData[qid]?.length    ?? 0;
+  if (metric === 'pop')          return city.pop || 0;
+  if (metric === 'metro')        return metroTransitData[qid]?.stations  ?? 0;
+  if (metric === 'aq')           return airQualityData[qid]?.pm25        ?? 0;
+  return 0;
+}
+
 function _buildHeatPoints(metric) {
   const raw = [];
   for (const city of allCities) {
-    const qid = city.qid;
-    let val = null;
-    if (metric === 'nobel')             val = nobelCitiesData[qid]?.total ?? 0;
-    else if (metric === 'universities') val = universitiesData[qid]?.length ?? 0;
-    else if (metric === 'pop')          val = city.pop || 0;
-    else if (metric === 'metro')        val = metroTransitData[qid]?.stations ?? 0;
-    else if (metric === 'aq')           val = airQualityData[qid]?.pm25 ?? null;
-    if (val !== null && val > 0 && _passesMetricValueFilter(metric, city))
+    const val = _cityMetricValue(city, metric);
+    if (val > 0 && _passesMetricValueFilter(metric, city))
       raw.push({ lat: city.lat, lng: city.lng, val });
   }
   if (raw.length === 0) return [];
@@ -605,26 +610,14 @@ function _getPaletteStops(metric) {
 
 // Returns true if city has a meaningful value for the given heatmap metric
 function _cityHasMetricData(city, metric) {
-  const qid = city.qid;
-  if (metric === 'nobel')        return (nobelCitiesData[qid]?.total   ?? 0) > 0;
-  if (metric === 'universities') return (universitiesData[qid]?.length ?? 0) > 0;
-  if (metric === 'pop')          return (city.pop || 0) > 0;
-  if (metric === 'metro')        return (metroTransitData[qid]?.stations ?? 0) > 0;
-  if (metric === 'aq')           return !!airQualityData[qid];
-  return false;
+  return _cityMetricValue(city, metric) > 0;
 }
 
 // Colour a dot by its metric intensity using the current palette
 function _metricDotColor(city, metric) {
-  const qid = city.qid;
-  let val = 0;
-  if (metric === 'nobel')        val = nobelCitiesData[qid]?.total      ?? 0;
-  if (metric === 'universities') val = universitiesData[qid]?.length    ?? 0;
-  if (metric === 'pop')          val = city.pop || 0;
-  if (metric === 'metro')        val = metroTransitData[qid]?.stations  ?? 0;
-  if (metric === 'aq')           val = airQualityData[qid]?.pm25        ?? 0;
-  const p95 = _heatNormP95[metric] || 1;
-  const t = Math.min(val / p95, 1.0);
+  const val  = _cityMetricValue(city, metric);
+  const p95  = _heatNormP95[metric] || 1;
+  const t    = Math.min(val / p95, 1.0);
   const stops = _getPaletteStops(metric);
   for (let i = 1; i < stops.length; i++) {
     const [t0, c0] = stops[i - 1];
@@ -690,17 +683,7 @@ function _activeIntensityMetric() {
 // without needing a full heatmap build. Safe to call multiple times.
 function _computeP95(metric) {
   if (_heatNormP95[metric]) return;
-  const vals = [];
-  for (const city of allCities) {
-    const qid = city.qid;
-    let val = 0;
-    if (metric === 'nobel')        val = nobelCitiesData[qid]?.total      ?? 0;
-    if (metric === 'universities') val = universitiesData[qid]?.length    ?? 0;
-    if (metric === 'pop')          val = city.pop || 0;
-    if (metric === 'metro')        val = metroTransitData[qid]?.stations  ?? 0;
-    if (metric === 'aq')           val = airQualityData[qid]?.pm25        ?? 0;
-    if (val > 0) vals.push(val);
-  }
+  const vals = allCities.map(c => _cityMetricValue(c, metric)).filter(v => v > 0);
   if (!vals.length) { _heatNormP95[metric] = 1; return; }
   vals.sort((a, b) => a - b);
   _heatNormP95[metric] = vals[Math.floor(vals.length * 0.95)] || vals[vals.length - 1];
