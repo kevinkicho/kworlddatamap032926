@@ -1,6 +1,6 @@
 # World Data Map
 
-An interactive world map that layers city demographics, corporate headquarters, national economic indicators, governance scores, US trade flows, real estate data, climate normals, and live FX rates into a single explorable interface.
+An interactive world map that layers city demographics, corporate headquarters, national economic indicators, governance scores, US trade flows, real estate data, climate normals, heatmaps, and live FX rates into a single explorable interface.
 
 **Live demo:** https://kevinkicho.github.io/kworlddatamap032926
 
@@ -14,6 +14,25 @@ An interactive world map that layers city demographics, corporate headquarters, 
 - ~14,000 cities worldwide (10k+ population floor, 34 settlement types from Wikidata)
 - Click any dot → Wikipedia sidebar with summary, photos, key facts, climate chart
 - Colour-coded by population on a log scale; filter and sort via the Explore Cities panel
+
+### Filter & Heatmap panel
+A unified filter sidebar (FAB button, bottom-right) with:
+
+**Availability filters** — show only cities that have data for a given dataset:
+- Air Quality (WHO PM2.5), Metro System, Nobel Laureates, Universities
+- Selecting one auto-switches other cities to hidden and matched cities to intensity colouring
+
+**Value filters** — threshold sliders:
+- Population, Air Quality index, Metro stations, Nobel count, University count
+
+**Heatmap** — gradient overlay for any metric:
+- 4 colour palettes: Warm, Viridis, Inferno, Ocean
+- Radius / Blur / Intensity sliders
+- Dot intensity mode: matched city dots colour by metric value (p95-normalised)
+
+**Dot controls** — independent vis/colour settings for matched vs other cities:
+- Matched: Show / Dim / Hide × Pop colour / Intensity colour
+- Other: Full / Dim / Hide × Pop colour / Ghost
 
 ### Choropleth layer
 - Colours entire countries by World Bank development indicators
@@ -33,7 +52,7 @@ Click any country border → full data panel with left/right columns:
 - Transparency & Freedom: TI Corruption Perceptions Index, Freedom House status
 
 **Right column:**
-- Radar chart (6 economic axes)
+- Radar chart (6 economic axes) with world-average polygon
 - Rank chips: GDP/cap, HDI, TI CPI, Rule of Law, Anti-Corruption, Renewables, Internet, Life Expectancy, Urban %, Electricity
 - Regional sub-rank within Europe & Central Asia, East Asia & Pacific, etc.
 
@@ -65,6 +84,7 @@ Click any country border → full data panel with left/right columns:
 | Economy | Revenue/market cap for HQ'd companies | ~9k cities |
 | Census | ACS 2023 income, poverty, housing, education | 470 US cities |
 | Eurostat | Labour market, living conditions, company count | 512 European cities |
+| NOAA Climate | 1991–2020 US climate normals | 447 US cities |
 
 ### Stats distribution panel
 - Click any gauge row or rank chip → histogram + neighbour list slides in
@@ -101,7 +121,11 @@ All data is pre-fetched by Node.js scripts and committed as JSON — **the app m
 | Company market caps | Wikidata wbgetentities (P2226) | None | Supplemental one-time fetch |
 | Wikipedia infoboxes (companies) | [Wikipedia MediaWiki API](https://en.wikipedia.org/w/api.php) | None | Revenue, employees, key people |
 | Analyst ratings & fundamentals | Yahoo Finance quoteSummary (`/v1/finance/`) | None* | 83 companies; session cookie required |
-| World city tiers (GaWC 2024) | [GaWC dataset](https://www.lboro.ac.uk/gawc/world2024.html) | None | 278 cities re-keyed to QIDs |
+| World city tiers (GaWC 2024) | [GaWC dataset](https://www.lboro.ac.uk/gawc/world2024.html) | None | 305 cities keyed by Wikidata QID |
+| Nobel laureate cities | [Wikidata SPARQL](https://query.wikidata.org/sparql) | None | 289 cities — counts by prize category |
+| Universities by city | [Wikidata SPARQL](https://query.wikidata.org/sparql) | None | 1,923 cities — university counts |
+| Metro/transit systems | Wikidata SPARQL (P81, P1192) | None | 248 cities — lines + station counts |
+| WHO Air Quality | [WHO ambient air quality data](https://www.who.int/data/gho/data/themes/air-pollution) | None | 1,561 cities — PM2.5 annual mean |
 
 \* Yahoo Finance uses a session cookie + crumb, not a formal key — but usage terms apply.
 
@@ -133,6 +157,7 @@ All data is pre-fetched by Node.js scripts and committed as JSON — **the app m
 | Bilateral trade flows | [BEA ITA API](https://apps.bea.gov/api/) | **Required** | 57 countries, annual 1999–2025 |
 | Home values (ZHVI) | [Zillow Research CSV](https://www.zillow.com/research/data/) | None | 448 US cities, annual history to 2000 |
 | Rent index (ZORI) | [Zillow Research CSV](https://www.zillow.com/research/data/) | None | 448 US cities, annual history |
+| NOAA climate normals | [NOAA CDO API](https://www.ncdc.noaa.gov/cdo-web/api) | **Required** | 447 US cities — 1991–2020 monthly normals |
 
 ### European & Japan data
 
@@ -179,19 +204,18 @@ All data is pre-fetched by Node.js scripts and committed as JSON — **the app m
 | GeoNames | City alternative names, admin hierarchy, timezone | Free API with registration |
 | UN Comtrade | Bilateral merchandise trade (HS codes) by country pair | Free tier: 100 req/hr |
 | OEC (Observatory of Economic Complexity) | Economic complexity index, product space, trade | Free API available |
-| NOAA/NCEI Climate Normals | 1991–2020 normals for US stations | Free; overlaps with Open-Meteo |
-| FBI Crime Data API | US city-level crime statistics (UCR/NIBRS) | Free; coverage varies by agency |
 | Global Carbon Project | Country CO₂ emissions with fossil/land-use breakdown | Annual CSV download |
 
 ---
 
 ## API keys required
 
-Only two data sources require API keys. Set them in a `.env` file:
+Three data sources require API keys. Set them in a `.env` file:
 
 ```env
 FRED_API_KEY=your_key_here      # Free at https://fred.stlouisfed.org/docs/api/api_key.html
 BEA_API_KEY=your_key_here       # Free at https://apps.bea.gov/api/signup/
+NOAA_TOKEN=your_token_here      # Free at https://www.ncdc.noaa.gov/cdo-web/token
 ```
 
 All other data sources (World Bank, IMF, Census, Eurostat, Wikidata, Wikipedia, Open-Meteo, OpenFlights, Zillow, UNDP, Frankfurter) require **no API key**.
@@ -233,10 +257,10 @@ node scripts/enrich-freedom-scores.js
 # Central bank rates + credit ratings (static data, instant)
 node scripts/enrich-country-central-banks.js
 
-# IMF fiscal data, no key (~15 seconds)
+# IMF fiscal data → merges into country-data.json, no key (~15 seconds)
 npm run fetch-imf
 
-# Bond yields — FRED/OECD, requires FRED_API_KEY (~2 minutes)
+# Bond yields → merges into country-data.json, requires FRED_API_KEY (~2 minutes)
 npm run fetch-fred
 
 # US Census — ACS + CBP + ABS + Decennial (~20 seconds)
@@ -260,10 +284,25 @@ node scripts/fetch-zillow.js
 # Airport connectivity — OpenFlights (~10 seconds)
 node scripts/fetch-openflights.js
 
-# Climate normals — Open-Meteo ERA5 (~5 minutes for 400 cities)
+# Climate normals — Open-Meteo ERA5 (~5 minutes for ~150 cities)
 node scripts/fetch-climate.js
 
-# World city tiers — GaWC 2024 (data file already in public/)
+# NOAA US climate normals — requires NOAA_TOKEN (~10 minutes)
+node scripts/fetch-noaa-climate.js
+
+# WHO air quality — PM2.5 annual means (~30 seconds)
+node scripts/fetch-who-airquality.js
+
+# Nobel laureate cities — Wikidata SPARQL (~10 seconds)
+node scripts/fetch-nobel-cities.js
+
+# Universities by city — Wikidata SPARQL (~15 seconds)
+node scripts/fetch-wikidata-universities.js
+
+# Metro/transit systems — Wikidata SPARQL (~15 seconds)
+node scripts/fetch-metro-transit.js
+
+# GaWC world city tiers (data file already in public/)
 node scripts/migrate-gawc.js
 
 # Auto-generate data manifest
@@ -279,11 +318,11 @@ Each checkpoint-enabled script resumes from where it left off. Add `--fresh` to 
 ```
 public/
   index.html                  # app shell + panel HTML
-  app.js                      # ~5,300-line frontend
+  app.js                      # ~7,500-line frontend (vanilla JS)
   style.css                   # all styles
   cities-full.json            # ~14k city records with climate, infobox data
-  companies.json              # ~9k companies keyed by city QID
-  country-data.json           # World Bank + IMF + WGI + HDI + TI + FH + CB data
+  companies.json              # ~9k companies keyed by city QID (history as [[year,val]] tuples)
+  country-data.json           # World Bank + IMF + FRED + WGI + HDI + TI + FH + CB data
   world-countries.json        # GeoJSON country borders (Natural Earth)
   census-cities.json          # ACS 2023, 470 US cities
   census-business.json        # CBP 2022, 473 US cities
@@ -293,7 +332,12 @@ public/
   zillow-cities.json          # Zillow ZHVI + ZORI, 448 US cities
   airport-connectivity.json   # OpenFlights, 1,175 cities
   climate-extra.json          # Open-Meteo ERA5, ~150 cities
-  gawc-cities.json            # GaWC 2024 tiers, 278 cities
+  noaa-climate.json           # NOAA 1991–2020 normals, 447 US cities
+  gawc-cities.json            # GaWC 2024 tiers, 305 cities (QID-keyed)
+  who-airquality.json         # WHO PM2.5 annual mean, 1,561 cities
+  metro-transit.json          # Metro/transit systems, 248 cities
+  nobel-cities.json           # Nobel laureate counts by city, 289 cities
+  universities.json           # University counts by city, 1,923 cities
   data-manifest.json          # auto-generated file registry
 
 scripts/
@@ -312,8 +356,8 @@ scripts/
   fetch-hdi.js                # UNDP HDR CSV → HDI scores + ranks
   enrich-freedom-scores.js    # Static TI CPI 2023 + Freedom House 2024
   enrich-country-central-banks.js  # Static CB rates + credit ratings
-  fetch-imf.js                # IMF DataMapper → fiscal data
-  fetch-fred.js               # FRED API → 10-yr bond yields
+  fetch-imf.js                # IMF DataMapper → fiscal data (merges into country-data.json)
+  fetch-fred.js               # FRED API → 10-yr bond yields (merges into country-data.json)
   fetch-census-fips.js        # Census Geocoder → FIPS codes
   fetch-census-data.js        # Census ACS API → income, housing, education
   fetch-census-business.js    # Census CBP/ABS/Decennial → business patterns
@@ -324,24 +368,37 @@ scripts/
   fetch-zillow.js             # Zillow Research CSV → home values + rent
   fetch-openflights.js        # OpenFlights GitHub → airport routes
   fetch-climate.js            # Open-Meteo ERA5 → climate normals
+  fetch-noaa-climate.js       # NOAA CDO API → US climate normals
+  fetch-who-airquality.js     # WHO ambient air quality → PM2.5 by city
+  fetch-metro-transit.js      # Wikidata SPARQL → metro/transit systems
+  fetch-nobel-cities.js       # Wikidata SPARQL → Nobel laureate counts
+  fetch-wikidata-universities.js  # Wikidata SPARQL → university counts
   fetch-world-geo.js          # world-atlas CDN → GeoJSON borders
   migrate-gawc.js             # GaWC data → QID-keyed JSON
+  migrate-country-data.js     # One-time: merged imf-fiscal + fred-yields → country-data
+  migrate-companies-history.js  # One-time: converted history objects → [[year,val]] tuples
   write-manifest.js           # Generates data-manifest.json
 
 lib/
   pure-utils.cjs              # Pure functions extracted for unit testing
 
 tests/
-  pure-utils.test.js          # 139 unit tests (node:test, zero deps)
+  pure-utils.test.js          # Core utility tests
+  migrate-country-data.test.js
+  migrate-gawc.test.js
+  migrate-companies-history.test.js
+  test-rank-chips.test.js
+  test-trend-tab.test.js
+  # 139 tests total (node:test, zero extra dependencies)
 ```
 
 ---
 
 ## Tech stack
 
-- **Frontend:** Leaflet.js, vanilla JS/HTML/CSS, dark GitHub-inspired theme
+- **Frontend:** Leaflet.js, Leaflet.heat, vanilla JS/HTML/CSS, dark GitHub-inspired theme
 - **Map tiles:** CARTO Dark Matter (OpenStreetMap data)
-- **Data pipeline:** Node.js — 35 scripts calling 20+ APIs
+- **Data pipeline:** Node.js — 40+ scripts calling 20+ APIs
 - **Testing:** Node.js built-in `node:test` — 139 tests, zero extra dependencies
 - **Hosting:** Fully static — no backend required after data build
 
