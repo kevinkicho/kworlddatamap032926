@@ -5004,30 +5004,42 @@ function _buildEnergyRadar(iso2) {
     }).join(" ");
   }
 
-  // world max per axis (so each axis scales to the leader, not a fixed 100%)
-  var maxVals = axes.map(function(a) {
-    var mx = 0;
+  // Percentile ranking per axis — relative to all countries with data
+  // This ensures every country gets a visible, meaningful polygon shape
+  var sortedByAxis = axes.map(function(a) {
+    var vals = [];
     for (var k in countryData) {
       var v = countryData[k][a.key];
-      if (Number.isFinite(v) && v > mx) mx = v;
+      if (Number.isFinite(v)) vals.push(v);
     }
-    return mx || 1;
+    vals.sort(function(x, y) { return x - y; });
+    return vals;
   });
 
-  // world-average per axis (live average across countryData)
+  function percentile(axisIdx, val) {
+    if (!Number.isFinite(val)) return 0;
+    var sorted = sortedByAxis[axisIdx];
+    if (!sorted.length) return 0;
+    // Find position using bisect
+    var lo = 0, hi = sorted.length;
+    while (lo < hi) {
+      var mid = (lo + hi) >> 1;
+      if (sorted[mid] < val) lo = mid + 1; else hi = mid;
+    }
+    return sorted.length > 1 ? lo / (sorted.length - 1) : 0.5;
+  }
+
+  // world-average percentile per axis (median = ~0.5 for each)
   var avgScores = axes.map(function(a, i) {
-    var sum = 0, count = 0;
-    for (var k in countryData) {
-      var v = countryData[k][a.key];
-      if (Number.isFinite(v)) { sum += v; count++; }
-    }
-    return count > 0 ? Math.min(1, (sum / count) / maxVals[i]) : 0;
+    var sorted = sortedByAxis[i];
+    if (!sorted.length) return 0;
+    var medianVal = sorted[Math.floor(sorted.length / 2)];
+    return percentile(i, medianVal);
   });
 
-  // country scores
+  // country scores as percentiles
   var countryScores = axes.map(function(a, i) {
-    var v = cd[a.key];
-    return Number.isFinite(v) ? Math.min(1, v / maxVals[i]) : 0;
+    return percentile(i, cd[a.key]);
   });
 
   // grid rings at 25 / 50 / 75 / 100 %
