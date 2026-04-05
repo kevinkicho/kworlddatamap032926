@@ -2237,6 +2237,301 @@ function _eurostatSparkline(history, color, W, H) {
  * or null if no data is available.
  * Checks US states, Canadian provinces, Australian states in order.
  */
+// Static mapping: (iso, adminField) → NUTS-2 code.
+// admin fields come from Wikidata and may be provinces, districts, or regions.
+const ADMIN_TO_NUTS2 = {
+  // ── Germany ── (Regierungsbezirke and Bundesländer → NUTS-2)
+  DE: {
+    'Stuttgart Government Region':'DE11','Karlsruhe Government Region':'DE12',
+    'Freiburg Government Region':'DE13','Tübingen Government Region':'DE14',
+    'Upper Bavaria':'DE21','Lower Bavaria':'DE22','Upper Palatinate':'DE23',
+    'Upper Franconia':'DE24','Middle Franconia':'DE25','Lower Franconia':'DE26',
+    'Swabia':'DE27','Munich':'DE21','Berlin':'DE30','Brandenburg':'DE40',
+    'Bremen':'DE50','Hamburg':'DE60',
+    'Darmstadt Government Region':'DE71','Gießen':'DE72','Kassel Government Region':'DE73',
+    'Mecklenburg-Vorpommern':'DE80',
+    'Braunschweig Government Region':'DE91','Hannover Region':'DE92','Lüneburg':'DE93','Weser-Ems':'DE94',
+    'Düsseldorf Government Region':'DEA1','Cologne Government Region':'DEA2',
+    'Aachen cities region':'DEA2',
+    'Münster Government Region':'DEA3','Detmold Government Region':'DEA4','Arnsberg Government Region':'DEA5',
+    'Koblenz':'DEB1','Trier':'DEB2','Rheinhessen-Pfalz':'DEB3',
+    'Regionalverband Saarbrücken':'DEC0','Saarland':'DEC0',
+    'Dresden':'DED2','Chemnitz':'DED4','Leipzig':'DED5',
+    'Saxony-Anhalt':'DEE0','Schleswig-Holstein':'DEF0','Thuringia':'DEG0',
+    // Districts/cities mapping to enclosing NUTS-2
+    'Neukölln':'DE30','Spandau':'DE30',    // Berlin districts
+    'Paderborn District':'DEA4',           // Detmold region
+    'Rhein-Kreis Neuss':'DEA1',            // Düsseldorf region
+    'Recklinghausen':'DEA5','Wesel':'DEA5','Unna':'DEA5', // Arnsberg adjacent
+    'Gütersloh':'DEA4','Lippe':'DEA4','Minden-Lübbecke District':'DEA4',
+    'Siegen-Wittgenstein':'DEA5','Ennepe-Ruhr-Kreis':'DEA5','Märkischer Kreis':'DEA5',
+    'Rhein-Sieg District':'DEA2','Rhein-Erft District':'DEA2','Düren district':'DEA2',
+    'Esslingen District':'DE11','Ludwigsburg District':'DE11','Böblingen district':'DE11',
+    'Reutlingen':'DE14','Tübingen District':'DE14','Zollernalbkreis':'DE14',
+    'Schwarzwald-Baar district':'DE13','Ortenau':'DE13','Lörrach VVG':'DE13',
+    'Karlsruhe Government Region':'DE12','Konstanz':'DE12',
+    'Göttingen district':'DE91','Hildesheim':'DE91',
+    'Stade District':'DE93','Lüneburg':'DE93',
+    'Cuxhaven district':'DE94','County of Bentheim':'DE94',
+    'Hochsauerlandkreis':'DEA5',
+    'District of Freising':'DE21', // Upper Bavaria
+    'district Heidenheim':'DE11', // Stuttgart region
+    'Mecklenburgische Seenplatte District':'DE80',
+    'Marburg-Biedenkopf':'DE72', // Gießen area
+    'Gießen':'DE72',
+  },
+  // ── France ── (département → NUTS-2 historical region)
+  FR: {
+    'Grand Paris':'FR10','Seine-Saint-Denis':'FR10','Val-de-Marne':'FR10',
+    'Hauts-de-Seine':'FR10','Val-d\'Oise':'FR10',
+    'arrondissement of Boulogne-Billancourt':'FR10','arrondissement of Nanterre':'FR10',
+    'Centre-Val de Loire':'FRB0','Indre-et-Loire':'FRB0','Loiret':'FRB0','Loir-et-Cher':'FRB0',
+    'Côte-d\'Or':'FRC1','Bourgogne-Franche-Comté':'FRC1',
+    'Doubs':'FRC2','Franche-Comté':'FRC2',
+    'Calvados':'FRD1','Basse-Normandie':'FRD1',
+    'Seine-Maritime':'FRD2','Haute-Normandie':'FRD2',
+    'Nord':'FRE1','Pas-de-Calais':'FRE1','arrondissement of Lille':'FRE1',
+    'Somme':'FRE2','Picardie':'FRE2',
+    'Bas-Rhin':'FRF1','Haut-Rhin':'FRF1','Alsace':'FRF1',
+    'Marne':'FRF2','Champagne-Ardenne':'FRF2',
+    'Moselle':'FRF3','Meurthe-et-Moselle':'FRF3','Lorraine':'FRF3',
+    'Loire-Atlantique':'FRG0','Sarthe':'FRG0','Maine-et-Loire':'FRG0',
+    'Ille-et-Vilaine':'FRH0','Finistère':'FRH0','Bretagne':'FRH0',
+    'Gironde':'FRI1','Aquitaine':'FRI1',
+    'Haute-Vienne':'FRI2','Limousin':'FRI2',
+    'Vienne':'FRI3','Charente-Maritime':'FRI3','Poitou-Charentes':'FRI3',
+    'Hérault':'FRJ1','Pyrénées-Orientales':'FRJ1','Languedoc-Roussillon':'FRJ1',
+    'Haute-Garonne':'FRJ2','Midi-Pyrénées':'FRJ2','arrondissement of Pau':'FRJ2',
+    'Puy-de-Dôme':'FRK1','Auvergne':'FRK1',
+    'Isère':'FRK2','Haute-Savoie':'FRK2','Savoie':'FRK2','Loire':'FRK2',
+    'Metropolis of Lyon':'FRK2','Urban Community of Lyon':'FRK2','Auvergne-Rhône-Alpes':'FRK2',
+    'Bouches-du-Rhône':'FRL0','Alpes-Maritimes':'FRL0','Var':'FRL0','Vaucluse':'FRL0',
+    'Provence-Alpes-Côte d\'Azur':'FRL0',
+    'Corse-du-Sud':'FRM0','Corse':'FRM0',
+    'Martinique':'FRY2','French Guiana':'FRY3','Réunion':'FRY4',
+  },
+  // ── Italy ── (Province/Metropolitan City → NUTS-2 region)
+  IT: {
+    'Metropolitan City of Turin':'ITC1','Province of Novara':'ITC1','Province of Alessandria':'ITC1',
+    'Province of Cuneo':'ITC1','Province of Asti':'ITC1','Piemonte':'ITC1',
+    'Liguria':'ITC3','Metropolitan City of Genoa':'ITC3','Province of Savona':'ITC3','Province of Imperia':'ITC3',
+    'Lombardia':'ITC4','Metropolitan City of Milan':'ITC4','Province of Brescia':'ITC4',
+    'Province of Monza and Brianza':'ITC4','Province of Bergamo':'ITC4',
+    'Province of Como':'ITC4','Province of Varese':'ITC4','Province of Cremona':'ITC4',
+    'Abruzzo':'ITF1','Province of Pescara':'ITF1','Province of L\'Aquila':'ITF1',
+    'Campania':'ITF3','Metropolitan City of Naples':'ITF3','Province of Salerno':'ITF3',
+    'Province of Caserta':'ITF3','Avellino':'ITF3',
+    'Puglia':'ITF4','Metropolitan City of Bari':'ITF4','Province of Taranto':'ITF4',
+    'Province of Foggia':'ITF4','Province of Barletta-Andria-Trani':'ITF4','province of Lecce':'ITF4',
+    'Province of Brindisi':'ITF4',
+    'Basilicata':'ITF5','province of Potenza':'ITF5',
+    'Calabria':'ITF6','Metropolitan City of Reggio Calabria':'ITF6','Province of Catanzaro':'ITF6',
+    'Province of Crotone':'ITF6',
+    'Sicilia':'ITG1','Metropolitan City of Palermo':'ITG1','Metropolitan City of Catania':'ITG1',
+    'Metropolitan City of Messina':'ITG1','Free Municipal Consortium of Syracuse':'ITG1',
+    'Free municipal consortium of Agrigento':'ITG1',
+    'Sardegna':'ITG2','Province of Sassari':'ITG2',
+    'South Tyrol':'ITH1',
+    'Veneto':'ITH3','Metropolitan City of Venice':'ITH3','Province of Verona':'ITH3',
+    'Province of Padua':'ITH3','Province of Vicenza':'ITH3','Province of Treviso':'ITH3',
+    'Friuli-Venezia Giulia':'ITH4','regional decentralization entity of Trieste':'ITH4',
+    'regional decentralization entity of Udine':'ITH4',
+    'Emilia-Romagna':'ITH5','Metropolitan City of Bologna':'ITH5','Province of Parma':'ITH5',
+    'Province of Modena':'ITH5','Province of Reggio Emilia':'ITH5','Province of Ravenna':'ITH5',
+    'Province of Rimini':'ITH5','Province of Ferrara':'ITH5','Province of Forlì-Cesena':'ITH5',
+    'Province of Piacenza':'ITH5',
+    'Toscana':'ITI1','Metropolitan City of Florence':'ITI1','Province of Prato':'ITI1',
+    'Province of Livorno':'ITI1','Province of Lucca':'ITI1','Province of Pisa':'ITI1',
+    'Province of Massa-Carrara':'ITI1','Province of Siena':'ITI1',
+    'Umbria':'ITI2','province of Perugia':'ITI2','province of Terni':'ITI2',
+    'Marche':'ITI3','Province of Ancona':'ITI3',
+    'Lazio':'ITI4','Metropolitan City of Rome':'ITI4','Province of Latina':'ITI4',
+  },
+  // ── Spain ── (autonomous community / province → NUTS-2)
+  ES: {
+    'Galicia':'ES11','Principado de Asturias':'ES12','Xixón':'ES12','Uviéu':'ES12',
+    'Cantabria':'ES13','Santander':'ES13',
+    'País Vasco':'ES21','Greater Bilbao':'ES21',
+    'Comunidad Foral de Navarra':'ES22',
+    'La Rioja':'ES23','Logroño':'ES23',
+    'Aragón':'ES24','Zaragoza':'ES24','Huesca':'ES24',
+    'Community of Madrid':'ES30','Madrid':'ES30','Alcalá de Henares':'ES30',
+    'Getafe':'ES30','Pinto':'ES30','Mairena del Aljarafe':'ES30',
+    'Castile and León':'ES41','Valladolid':'ES41','Salamanca':'ES41',
+    'León':'ES41','Palencia':'ES41','Zamora':'ES41','Segovia Province':'ES41','Province of Ávila':'ES41',
+    'Castile–La Mancha':'ES42','Guadalajara':'ES42','Ciudad Real':'ES42','Cuenca':'ES42','Albacete':'ES42',
+    'Talavera de la Reina':'ES42',
+    'Extremadura':'ES43','Province of Badajoz':'ES43','Badajoz':'ES43','Cáceres':'ES43','Mérida':'ES43',
+    'Cataluña':'ES51','Barcelonès':'ES51','Girona':'ES51','Tarragona':'ES51',
+    'Vallès Occidental':'ES51','Baix Llobregat':'ES51','Vic':'ES51',
+    'Comunitat Valenciana':'ES52','Valencia':'ES52','Province of Alicante':'ES52',
+    'Castellón':'ES52','Horta Sud':'ES52','Torrevieja':'ES52','Gandia':'ES52','Elche':'ES52','Elda':'ES52',
+    'Illes Balears':'ES53','Mallorca':'ES53','Ibiza':'ES53',
+    'Andalucía':'ES61','Seville':'ES61','Seville Province':'ES61','Málaga':'ES61','Córdoba':'ES61',
+    'Almería':'ES61','Cádiz':'ES61','Jaén':'ES61','Fuengirola':'ES61',
+    'Torremolinos':'ES61','Chiclana de la Frontera':'ES61','Estepona':'ES61','Utrera':'ES61',
+    'Región de Murcia':'ES62','Murcia':'ES62',
+    'Canary Islands':'ES70','Santa Cruz de Tenerife Province':'ES70','Santa Cruz de Tenerife':'ES70',
+    'Las Palmas':'ES70',
+    'Ourense':'ES11',
+  },
+  // ── Poland ── (voivodeship → NUTS-2)
+  PL: {
+    'Lesser Poland Voivodeship':'PL21','Silesian Voivodeship':'PL22',
+    'Greater Poland Voivodeship':'PL41','West Pomeranian Voivodeship':'PL42',
+    'Lubusz Voivodeship':'PL43','Lower Silesian Voivodeship':'PL51','Opole Voivodeship':'PL52',
+    'Kuyavian-Pomeranian Voivodeship':'PL61','Warmian-Masurian Voivodeship':'PL62',
+    'Pomeranian Voivodeship':'PL63',
+    'Łódź Voivodeship':'PL71','Świętokrzyskie Voivodeship':'PL72',
+    'Lublin Voivodeship':'PL81','Podkarpackie Voivodeship':'PL82','Podlaskie Voivodeship':'PL84',
+    'Masovian Voivodeship':'PL91', // Warsaw metro; rest is PL92 but PL91 is close enough
+  },
+  // ── Austria ── (Bundesland → NUTS-2)
+  AT: {
+    'Burgenland':'AT11','Lower Austria':'AT12','Vienna':'AT13','Carinthia':'AT21',
+    'Styria':'AT22','Upper Austria':'AT31','Salzburg':'AT32','Tyrol':'AT33',
+    'Vorarlberg':'AT34','Dornbirn District':'AT34',
+  },
+  // ── Netherlands ── (Dutch & English province names → NUTS-2; iso=null in cities data)
+  NL: {
+    'Groningen':'NL11','Friesland':'NL12','Drenthe':'NL13',
+    'Overijssel':'NL21','Gelderland':'NL22','Flevoland':'NL23',
+    'Utrecht':'NL31','Noord-Holland':'NL32','Zuid-Holland':'NL33',
+    'Zeeland':'NL34','Noord-Brabant':'NL41','Limburg':'NL42',
+    // English names used in cities data
+    'North Holland':'NL32','South Holland':'NL33','North Brabant':'NL41',
+    'Amsterdam':'NL32','Rotterdam':'NL33','Breda':'NL41',
+    'The Hague':'NL33','Scheveningen':'NL33',
+  },
+  // ── Belgium ── (arrondissement → NUTS-2 province)
+  BE: {
+    'Arrondissement of Brussels-Capital':'BE10',
+    'Arrondissement of Antwerp':'BE21','Arrondissement of Ghent':'BE23',
+    'Arrondissement of Bruges':'BE25','Arrondissement of Liège':'BE33',
+    'Belgium':'BE10', // fallback for Brussels
+  },
+  // ── Sweden ── (county and municipality → NUTS-2)
+  SE: {
+    'Stockholm':'SE11','Stockholm County':'SE11',
+    'Uppsala Municipality':'SE12','Uppsala County':'SE12','Östra Mellansverige':'SE12',
+    'Östergötland County':'SE12','Södermanland County':'SE12',
+    'Jönköping County':'SE21','Kronoberg County':'SE21','Kalmar County':'SE21','Gotland County':'SE21',
+    'Skåne County':'SE22','Halland County':'SE22','Blekinge County':'SE22','Sydsverige':'SE22',
+    'Gothenburg Municipality':'SE23','Västra Götaland County':'SE23','Värmland County':'SE31',
+    'Göteborg':'SE23','Gothenburg':'SE23',
+    'Norra Mellansverige':'SE31','Gävleborg County':'SE31',
+    'Örebro County':'SE12',
+  },
+  // ── Finland ── (sub-region → NUTS-2)
+  FI: {
+    'Uusimaa':'FI1B','Helsinki-Uusimaa':'FI1B','Porvoo':'FI1B',
+    'Southwest Finland':'FI19','Pirkanmaa':'FI19','Central Finland':'FI19',
+    'Satakunta':'FI19','Kanta-Häme':'FI19','Ostrobothnia':'FI19',
+    'South Ostrobothnia':'FI19','Central Ostrobothnia':'FI19','Päijät-Häme':'FI1C',
+    'Kymenlaakso':'FI1C','South Karelia':'FI1C','South Savo':'FI1C','Etelä-Suomi':'FI1C',
+    'North Ostrobothnia':'FI1D','North Savo':'FI1D','North Karelia':'FI1D',
+    'Lapland':'FI1D','Kainuu':'FI1D','Pohjois- ja Itä-Suomi':'FI1D',
+  },
+  // ── Romania ── (county → NUTS-2 development region)
+  RO: {
+    'Cluj County':'RO11','Bihor County':'RO11','Maramureș County':'RO11',
+    'Brașov County':'RO12','Sibiu County':'RO12','Mureș County':'RO12','Alba County':'RO12',
+    'Iași County':'RO21','Bacău County':'RO21','Suceava County':'RO21','Neamț County':'RO21',
+    'Constanța County':'RO22','Galați County':'RO22','Brăila County':'RO22','Buzău County':'RO22',
+    'Prahova County':'RO31','Argeș County':'RO31','Dâmbovița County':'RO31',
+    'Dolj County':'RO41','Gorj County':'RO41','Mehedinți County':'RO41',
+    'Timiș County':'RO42','Arad County':'RO42','Caraș-Severin County':'RO42',
+    'Romania':'RO32', // Bucharest-Ilfov region fallback
+    'Oradea':'RO11', // city admin
+  },
+  // ── Hungary ──
+  HU: {
+    'Csongrád-Csanád County':'HU33','Dél-Alföld':'HU33',
+    'Miskolc District':'HU31','Észak-Magyarország':'HU31',
+    'Pécs District':'HU23','Dél-Dunántúl':'HU23',
+    'Nyíregyháza District':'HU32','Észak-Alföld':'HU32',
+    'Kecskemét District':'HU33',
+    'Székesfehérvár District':'HU21','Közép-Dunántúl':'HU21',
+  },
+  // ── Czech Republic ──
+  CZ: {
+    'Czech Republic':'CZ01', // Prague (CZ01 = Praha) as fallback
+    'Brno-City District':'CZ06','Ostrava-City District':'CZ08',
+    'Plzeň-City District':'CZ03','Liberec District':'CZ05',
+    'Olomouc District':'CZ07','Pardubice District':'CZ05',
+    'Ústí nad Labem District':'CZ04','Kladno District':'CZ02',
+    'Chomutov District':'CZ04','Děčín District':'CZ04',
+    'Teplice District':'CZ04','Karlovy Vary District':'CZ04',
+    'Mladá Boleslav District':'CZ02',
+  },
+  // ── Slovakia ──
+  SK: {
+    'Bratislava Region':'SK01','Košice Region':'SK04',
+    'Prešov Region':'SK04','Žilina District':'SK03',
+    'Nitra District':'SK02','Banská Bystrica District':'SK03',
+  },
+  // ── Denmark ── (municipality → NUTS-2 region)
+  DK: {
+    'Capital Region of Denmark':'DK01','Helsingør Municipality':'DK01',
+    'Roskilde Municipality':'DK02','Næstved Municipality':'DK02',
+    'Odense Municipality':'DK03','Esbjerg Municipality':'DK03',
+    'Kolding Municipality':'DK03','Vejle Municipality':'DK03',
+    'Aarhus Municipality':'DK04','Horsens Municipality':'DK04',
+    'Randers Municipality':'DK04','Silkeborg Municipality':'DK04','Herning Municipality':'DK04',
+    'Aalborg Municipality':'DK05','Frederiksberg Municipality':'DK01',
+  },
+  // ── Portugal ──
+  PT: {
+    'Porto':'PT11','Braga':'PT11',
+  },
+  // ── Greece ──
+  EL: {
+    'Athens Municipality':'EL30','Piraeus Municipality':'EL30','Piraeus Regional Unit':'EL30',
+    'Thessaloniki Municipality':'EL52',
+    'Municipality of Patras':'EL65','Larissa Municipality':'EL61',
+  },
+  // ── Croatia ──
+  HR: {
+    'Split-Dalmatia County':'HR03','Primorje-Gorski Kotar County':'HR03',
+    'Zadar County':'HR03','Osijek-Baranja County':'HR04',
+  },
+  // ── Lithuania ──
+  LT: {
+    'Vilnius City Municipality':'LT01','Kaunas City Municipality':'LT02',
+    'Klaipeda City Municipality':'LT02','Šiauliai City Municipality':'LT01',
+    'Panevėžys City Municipality':'LT01','Alytus City Municipality':'LT02',
+  },
+  // ── Ireland ──
+  IE: {
+    'Dublin City':'IE06','County Cork':'IE05',
+    'Galway City':'IE04','County Limerick':'IE05','County Waterford':'IE05',
+  },
+  // ── Norway ── (municipality → NUTS-2 statistical region)
+  NO: {
+    'Oslo Municipality':'NO08','Oslo':'NO08','Akershus':'NO08',
+    'Bergen':'NO0A','Bergen Municipality':'NO0A','Vestlandet':'NO0A',
+    'Trondheim':'NO06','Trondheim Municipality':'NO06','Trøndelag':'NO06',
+    'Stavanger':'NO09','Stavanger Municipality':'NO09','Rogaland':'NO09',
+    'Kristiansand Municipality':'NO09',
+    'Tromsø Municipality':'NO07','Tromsø':'NO07',
+  },
+  // ── Bulgaria ──
+  BG: {
+    'Stolichna Municipality':'BG41','Sofia City Province':'BG41',
+    'Plovdiv Province':'BG42','Stara Zagora Province':'BG42',
+    'Varna Province':'BG33','Burgas Province':'BG34',
+    'Ruse Province':'BG32','Pleven Province':'BG31','Sliven Province':'BG34',
+    'Burgas':'BG34','Stara Zagora':'BG42','Ruse':'BG32','Pleven':'BG31','Sliven':'BG34',
+  },
+  // ── Slovenia ──
+  SI: {
+    'Ljubljana City Municipality':'SI04','Maribor City Municipality':'SI03',
+  },
+};
+
+// Countries with a single NUTS-2 region — any city maps trivially
+const SINGLE_NUTS2 = { CY:'CY00', EE:'EE00', LU:'LU00', LV:'LV00', MT:'MT00', IS:'IS00' };
+
 function _getRegionData(city) {
   if (city.iso === 'US') {
     // Primary: extract state from census placeName (e.g. "Phoenix city, Arizona")
@@ -2258,6 +2553,68 @@ function _getRegionData(city) {
     const abbr = AU_STATE_TO_ABBR[city.admin];
     if (abbr && australiaStates[abbr]) return { abbr, label: australiaStates[abbr].name || city.admin, src: 'au', data: australiaStates[abbr] };
   }
+  // EU / EEA cities → NUTS-2 via static mapping
+  if (Object.keys(eurostatRegions).length) {
+    // QID overrides for cities where admin field is the country name
+    const QID_NUTS2 = {
+      Q64:'DE30',      // Berlin
+      Q1055:'DE60',    // Hamburg
+      Q1741:'AT13',    // Vienna
+      Q216:'LT01',     // Vilnius
+      Q19660:'RO32',   // Bucharest
+      Q1085:'CZ01',    // Prague
+      Q1435:'HR05',    // Zagreb
+      Q585:'NO08',     // Oslo
+      Q26793:'NO0A',   // Bergen
+      Q25804:'NO06',   // Trondheim
+      Q472:'BG41',     // Sofia
+      Q437:'SI04',     // Ljubljana
+      Q240:'BE10',     // Brussels-Capital Region
+      Q2079:'DED5',    // Leipzig (Saxony)
+      Q1731:'DED2',    // Dresden (Saxony)
+      Q2211:'SE22',    // Malmö (Lomma Municipality)
+      Q1754:'SE11',    // Stockholm city
+    };
+    if (QID_NUTS2[city.qid] && eurostatRegions[QID_NUTS2[city.qid]]) {
+      const r = eurostatRegions[QID_NUTS2[city.qid]];
+      return { abbr: QID_NUTS2[city.qid], label: r.name, src: 'eu', data: r };
+    }
+    // Single-region countries
+    const singleCode = SINGLE_NUTS2[city.iso];
+    if (singleCode && eurostatRegions[singleCode]) {
+      const r = eurostatRegions[singleCode];
+      return { abbr: singleCode, label: r.name, src: 'eu', data: r };
+    }
+    // Sweden: many entries have admin=Sweden; fall back to name-based county lookup
+    if (city.iso === 'SE' && city.admin === 'Sweden' && city.name) {
+      const SE_COUNTY_NUTS2 = {
+        'Stockholm County':'SE11','Uppsala County':'SE12','Södermanland County':'SE12',
+        'Östergötland County':'SE12','Örebro County':'SE12',
+        'Jönköping County':'SE21','Kronoberg County':'SE21','Kalmar County':'SE21',
+        'Gotland County':'SE21',
+        'Skåne County':'SE22','Halland County':'SE22','Blekinge County':'SE22',
+        'Västra Götaland County':'SE23',
+        'Värmland County':'SE31','Gävleborg County':'SE31','Dalarna County':'SE31',
+        'Västernorrland County':'SE32','Jämtland County':'SE32',
+        'Västerbotten County':'SE33','Norrbotten County':'SE33','Västmanland County':'SE12',
+      };
+      const code = SE_COUNTY_NUTS2[city.name];
+      if (code && eurostatRegions[code]) {
+        const r = eurostatRegions[code];
+        return { abbr: code, label: r.name, src: 'eu', data: r };
+      }
+    }
+    // Netherlands cities store iso=null — use country field instead
+    const isoKey = city.iso || (city.country === 'Netherlands' ? 'NL' : null);
+    const countryMap = isoKey && ADMIN_TO_NUTS2[isoKey];
+    if (countryMap) {
+      const code = countryMap[city.admin];
+      if (code && eurostatRegions[code]) {
+        const r = eurostatRegions[code];
+        return { abbr: code, label: r.name, src: 'eu', data: r };
+      }
+    }
+  }
   return null;
 }
 
@@ -2270,7 +2627,12 @@ function _buildRegionHtml(region) {
   if (Number.isFinite(d.unemployment_rate)) {
     rows += `<tr><td class="wi-lbl">Unemployment</td><td class="wi-val">${d.unemployment_rate.toFixed(1)}%</td></tr>`;
   }
-  // Per-capita income / PCPI (US) or equivalent
+  // EU NUTS-2: GDP relative to EU average (PPS index where EU=100)
+  if (Number.isFinite(d.gdp_pps_eu100)) {
+    const year = d.gdp_pps_year ? ` (${d.gdp_pps_year})` : '';
+    rows += `<tr><td class="wi-lbl">GDP vs EU avg</td><td class="wi-val">${d.gdp_pps_eu100}% of EU${year}</td></tr>`;
+  }
+  // Per-capita income / PCPI (US)
   if (Number.isFinite(d.pcpi)) {
     rows += `<tr><td class="wi-lbl">Income per capita</td><td class="wi-val">$${Math.round(d.pcpi).toLocaleString()}</td></tr>`;
   }
@@ -2283,6 +2645,9 @@ function _buildRegionHtml(region) {
   }
   if (Number.isFinite(d.gsp_bn_aud)) {
     rows += `<tr><td class="wi-lbl">State GSP</td><td class="wi-val">A$${d.gsp_bn_aud.toFixed(0)}B</td></tr>`;
+  }
+  if (Number.isFinite(d.gsp_per_capita_aud)) {
+    rows += `<tr><td class="wi-lbl">Income per capita</td><td class="wi-val">A$${Math.round(d.gsp_per_capita_aud).toLocaleString()}</td></tr>`;
   }
 
   if (!rows) return '';
