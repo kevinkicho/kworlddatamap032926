@@ -734,10 +734,23 @@ function fmtNum(n) { return n == null ? '—' : n.toLocaleString(); }
 function rebuildMapLayer() {
   if (wikiLayer) map.removeLayer(wikiLayer);
   wikiLayer = L.layerGroup();
+  let _filterMatchCount = 0;
   allCities.forEach(function (city) {
-    const aqCol     = cityAqMode ? airQualityDotColor(city) : null;
-    const censusCol = aqCol ? null : censusDotColor(city);
-    const color = aqCol || censusCol || wikiCityColor(city.pop);
+    // Apply map filters (availability + value)
+    const filterResult = _anyFilterActive() ? applyMapFilters(city) : 'match';
+    if (filterResult === 'hide') return;
+    const filterDim = filterResult === 'dim';
+    if (!filterDim) _filterMatchCount++;
+
+    // Heatmap dot mode: when heatmap is active, optionally hide/dim dots
+    if (_heatmapMetric) {
+      if (_heatDotMode === 'hide') return;   // hide all dots when heatmap active
+    }
+    const heatDim = _heatmapMetric && _heatDotMode === 'dim';
+
+    const aqCol     = (!filterDim && !heatDim && cityAqMode) ? airQualityDotColor(city) : null;
+    const censusCol = aqCol ? null : (!filterDim && !heatDim ? censusDotColor(city) : null);
+    const color  = (filterDim || heatDim) ? '#30363d' : (aqCol || censusCol || wikiCityColor(city.pop));
     const radius = wikiCityRadius(city.pop);
     const location = [city.admin, city.country].filter(Boolean).join(', ');
     let tip = `<strong>${escHtml(city.name)}</strong>`;
@@ -757,7 +770,7 @@ function rebuildMapLayer() {
         tip += `<a href="#" onclick="event.preventDefault();openCorpPanel('${city.qid}','${escAttr(city.name)}')" style="color:#a371f7;font-size:0.8em">Corporations (${coCount}) ↗</a>`;
       tip += `</span>`;
     }
-    const opacity = (aqCol || censusCol) ? 0.92 : wikiCityOpacity(city.pop);
+    const opacity = filterDim ? 0.13 : heatDim ? 0.15 : ((aqCol || censusCol) ? 0.92 : wikiCityOpacity(city.pop));
     L.circleMarker([city.lat, city.lng], {
       radius, fillColor: color, fillOpacity: opacity,
       color, opacity: opacity, weight: 0.5,
@@ -765,6 +778,11 @@ function rebuildMapLayer() {
     }).bindPopup(tip, { maxWidth: 260, minWidth: 160 }).addTo(wikiLayer);
   });
   wikiLayer.addTo(map);
+  // Update filter footer count
+  const matchEl = document.getElementById('filter-match-count');
+  const totalEl = document.getElementById('filter-total-count');
+  if (matchEl) matchEl.textContent = _anyFilterActive() ? _filterMatchCount.toLocaleString() : allCities.length.toLocaleString();
+  if (totalEl) totalEl.textContent = _anyFilterActive() ? `of ${allCities.length.toLocaleString()}` : '';
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
