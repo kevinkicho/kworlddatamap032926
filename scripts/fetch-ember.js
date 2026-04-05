@@ -93,20 +93,18 @@ function resolveIso2(raw) {
 
 function buildHistory(yearValueMap) {
   return Object.entries(yearValueMap)
-    .map(([yr, v]) => [Number(yr), v])
-    .filter(([yr, v]) => yr >= 2000 && v != null && Number.isFinite(Number(v)))
+    .map(([yr, v]) => [Number(yr), +Number(v).toFixed(2)])
+    .filter(([yr, v]) => yr >= 2000 && Number.isFinite(v))
     .sort((a, b) => a[0] - b[0]);
 }
 
 const VARS = ['Coal', 'Gas', 'Nuclear', 'Hydro', 'Wind and Solar'];
 
 const OWID_VAR_MAP = {
-  coal_share_elec:        'Coal',
-  gas_share_elec:         'Gas',
-  nuclear_share_elec:     'Nuclear',
-  hydro_share_elec:       'Hydro',
-  wind_share_elec:        '_Wind',
-  solar_share_elec:       '_Solar',
+  coal_share_elec:    'Coal',
+  gas_share_elec:     'Gas',
+  nuclear_share_elec: 'Nuclear',
+  hydro_share_elec:   'Hydro',
 };
 
 function processEmberRows(rows) {
@@ -132,6 +130,8 @@ function processOwid(rows) {
     if (!iso2) continue;
     const year = parseInt(row['year'] || row['Year']);
     if (isNaN(year) || year < 2000) continue;
+
+    // 1:1 variable mappings
     for (const [col, variable] of Object.entries(OWID_VAR_MAP)) {
       const v = parseFloat(row[col]);
       if (isNaN(v)) continue;
@@ -139,14 +139,14 @@ function processOwid(rows) {
       if (!byCountry[iso2][variable]) byCountry[iso2][variable] = {};
       byCountry[iso2][variable][year] = +v.toFixed(2);
     }
-    // Combine wind + solar into 'Wind and Solar'
+
+    // Wind and Solar combined from two separate OWID columns
     const wind  = parseFloat(row['wind_share_elec']);
     const solar = parseFloat(row['solar_share_elec']);
-    if (!isNaN(wind) || !isNaN(solar)) {
-      const combined = (isNaN(wind) ? 0 : wind) + (isNaN(solar) ? 0 : solar);
+    if (!isNaN(wind) && !isNaN(solar)) {
       if (!byCountry[iso2]) byCountry[iso2] = {};
       if (!byCountry[iso2]['Wind and Solar']) byCountry[iso2]['Wind and Solar'] = {};
-      byCountry[iso2]['Wind and Solar'][year] = +combined.toFixed(2);
+      byCountry[iso2]['Wind and Solar'][year] = +(wind + solar).toFixed(2);
     }
   }
   return byCountry;
@@ -165,11 +165,21 @@ function latestValue(varMap) {
 function buildResult(byCountry) {
   const result = {};
   for (const [iso2, variables] of Object.entries(byCountry)) {
-    const coalYears = variables['Coal']
-      ? Object.keys(variables['Coal']).map(Number).sort((a, b) => b - a)
-      : [];
-    if (!coalYears.length) continue;
-    const latestYear = coalYears[0];
+    // Find the latest year each variable has data; energy_year = max across all
+    const latestByVar = {};
+    for (const v of VARS) {
+      if (!variables[v]) continue;
+      const years = Object.keys(variables[v]).map(Number).sort((a, b) => b - a);
+      if (years.length) latestByVar[v] = years[0];
+    }
+    if (!Object.keys(latestByVar).length) continue;
+    const energyYear = Math.max(...Object.values(latestByVar));
+
+    // For each variable, use its own latest value (not necessarily the global latest year)
+    const get = (v) => {
+      if (!variables[v] || latestByVar[v] == null) return null;
+      return variables[v][latestByVar[v]];
+    };
 
     result[iso2] = {
       energy_coal_pct:       latestValue(variables['Coal']),
@@ -177,7 +187,7 @@ function buildResult(byCountry) {
       energy_nuclear_pct:    latestValue(variables['Nuclear']),
       energy_hydro_pct:      latestValue(variables['Hydro']),
       energy_wind_solar_pct: latestValue(variables['Wind and Solar']),
-      energy_year:           latestYear,
+      energy_year:           energyYear,
       energy_coal_pct_history: buildHistory(variables['Coal'] || {}),
     };
   }

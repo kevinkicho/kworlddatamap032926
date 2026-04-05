@@ -129440,7 +129440,7 @@
     "energy_gas_pct": 92.15,
     "energy_nuclear_pct": 0,
     "energy_hydro_pct": null,
-    "energy_wind_solar_pct": 2.15,
+    "energy_wind_solar_pct": null,
     "energy_year": 2024,
     "energy_coal_pct_history": [
       [

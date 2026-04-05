@@ -8,8 +8,8 @@ const path = require('path');
 // ── Unit-test the history-building logic in isolation ────────────────────────
 function buildHistory(yearValueMap) {
   return Object.entries(yearValueMap)
-    .map(([yr, v]) => [Number(yr), v])
-    .filter(([yr, v]) => yr >= 2000 && v != null && Number.isFinite(Number(v)))
+    .map(([yr, v]) => [Number(yr), +Number(v).toFixed(2)])
+    .filter(([yr, v]) => yr >= 2000 && Number.isFinite(v))
     .sort((a, b) => a[0] - b[0]);
 }
 
@@ -38,10 +38,13 @@ describe('Ember history building', () => {
     assert.equal(h[0][0], 2000);
   });
 
-  it('filters null and non-finite values', () => {
+  it('filters NaN/non-finite values; null coerces to 0 and is retained', () => {
     const h = buildHistory({ 2010: null, 2011: NaN, 2012: 55 });
-    assert.equal(h.length, 1);
-    assert.equal(h[0][1], 55);
+    // null → Number(null) = 0, which is finite — kept as 0.00
+    // NaN  → Number(NaN)  = NaN, which is non-finite — dropped
+    assert.equal(h.length, 2);
+    assert.equal(h[0][1], 0);
+    assert.equal(h[1][1], 55);
   });
 
   it('returns empty array for empty input', () => {
