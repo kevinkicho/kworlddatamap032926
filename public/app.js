@@ -4649,8 +4649,9 @@ function _renderCountryPanel(iso2) {
   document.getElementById("cp-body").innerHTML =
     "<div class=\"cp-left-col\">" + gaugeHtml + "</div>" +
     "<div class=\"cp-right-col\">" +
-      (typeof _buildRadar     === "function" ? _buildRadar(iso2)     : "") +
-      (typeof _buildRankChips === "function" ? _buildRankChips(iso2) : "") +
+      (typeof _buildRadar      === "function" ? _buildRadar(iso2)      : "") +
+      (typeof _buildRankChips  === "function" ? _buildRankChips(iso2)  : "") +
+      (typeof _buildEnergyRadar === "function" ? _buildEnergyRadar(iso2) : "") +
     "</div>";
 
   _buildTrendTabs(iso2);
@@ -4811,6 +4812,95 @@ function _buildRadar(iso2) {
       "<polygon points=\"" + polyPts(countryScores) + "\"" +
            " fill=\"#388bfd\" fill-opacity=\"0.2\" stroke=\"#388bfd\" stroke-width=\"1.5\"/>" +
     "</svg>" +
+  "</div>";
+}
+
+// ── _buildEnergyRadar ─────────────────────────────────────────────────
+function _buildEnergyRadar(iso2) {
+  var cd = countryData[iso2];
+  if (!cd || !Number.isFinite(cd.energy_year)) return "";
+
+  // 5 axes (pentagon) — values are % of electricity generation
+  var axes = [
+    { key: "energy_wind_solar_pct", label: "Wind/Solar" },
+    { key: "energy_hydro_pct",      label: "Hydro"      },
+    { key: "energy_nuclear_pct",    label: "Nuclear"    },
+    { key: "energy_gas_pct",        label: "Gas"        },
+    { key: "energy_coal_pct",       label: "Coal"       }
+  ];
+
+  var n = axes.length;
+  var cx = 90, cy = 92, R = 65;
+
+  // polar → cartesian, angle 0 = top, clockwise
+  function pt(angle, r) {
+    return { x: cx + r * Math.sin(angle), y: cy - r * Math.cos(angle) };
+  }
+
+  // build SVG polygon points string from array of 0..1 scores
+  function polyPts(scores) {
+    return scores.map(function(s, i) {
+      var p = pt(2 * Math.PI * i / n, s * R);
+      return p.x.toFixed(2) + "," + p.y.toFixed(2);
+    }).join(" ");
+  }
+
+  // world-average per axis (live average across countryData)
+  var avgScores = axes.map(function(a) {
+    var sum = 0, count = 0;
+    for (var k in countryData) {
+      var v = countryData[k][a.key];
+      if (Number.isFinite(v)) { sum += v; count++; }
+    }
+    return count > 0 ? Math.min(1, (sum / count) / 100) : 0;
+  });
+
+  // country scores
+  var countryScores = axes.map(function(a) {
+    var v = cd[a.key];
+    return Number.isFinite(v) ? Math.min(1, v / 100) : 0;
+  });
+
+  // grid rings at 25 / 50 / 75 / 100 %
+  var rings = "";
+  [0.25, 0.5, 0.75, 1.0].forEach(function(frac) {
+    var pts = axes.map(function(_, i) {
+      var p = pt(2 * Math.PI * i / n, frac * R);
+      return p.x.toFixed(2) + "," + p.y.toFixed(2);
+    }).join(" ");
+    rings += "<polygon points=\"" + pts + "\" fill=\"none\" stroke=\"#30363d\" stroke-width=\"0.5\"/>";
+  });
+
+  // axis lines and labels
+  var axisLines = "";
+  var axisLabels = "";
+  axes.forEach(function(a, i) {
+    var outer = pt(2 * Math.PI * i / n, R);
+    axisLines += "<line x1=\"" + cx + "\" y1=\"" + cy + "\" x2=\"" + outer.x.toFixed(2) + "\" y2=\"" + outer.y.toFixed(2) + "\" stroke=\"#30363d\" stroke-width=\"0.5\"/>";
+
+    var lp = pt(2 * Math.PI * i / n, R + 14);
+    axisLabels += "<text x=\"" + lp.x.toFixed(2) + "\" y=\"" + lp.y.toFixed(2) +
+                  "\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-size=\"7\" fill=\"#8b949e\">" +
+                  escHtml(a.label) + "</text>";
+  });
+
+  // renewable ratio for fill colour: blend blue→green based on % clean
+  var cleanPct = (cd.energy_wind_solar_pct || 0) + (cd.energy_hydro_pct || 0) + (cd.energy_nuclear_pct || 0);
+  var fillColor = cleanPct >= 60 ? "#2ea043" : cleanPct >= 30 ? "#388bfd" : "#d29922";
+
+  var svgW = 180, svgH = 200;
+  return "<div class=\"cp-radar-section\">" +
+    "<div class=\"cp-radar-title\">Energy Mix (" + cd.energy_year + ")</div>" +
+    "<div class=\"cp-radar-wrap\">" +
+      "<svg width=\"" + svgW + "\" height=\"" + svgH + "\" viewBox=\"0 0 " + svgW + " " + svgH + "\"" +
+           " xmlns=\"http://www.w3.org/2000/svg\">" +
+        rings + axisLines + axisLabels +
+        "<polygon points=\"" + polyPts(avgScores) + "\"" +
+             " fill=\"none\" stroke=\"#8b949e\" stroke-width=\"1\" stroke-dasharray=\"3,2\" opacity=\"0.5\"/>" +
+        "<polygon points=\"" + polyPts(countryScores) + "\"" +
+             " fill=\"" + fillColor + "\" fill-opacity=\"0.2\" stroke=\"" + fillColor + "\" stroke-width=\"1.5\"/>" +
+      "</svg>" +
+    "</div>" +
   "</div>";
 }
 

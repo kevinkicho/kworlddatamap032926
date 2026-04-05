@@ -1338,6 +1338,8 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 /* radar chart */
 .cp-radar-wrap { display: flex; justify-content: center; }
 .cp-radar-wrap svg { display: block; }
+.cp-radar-section { margin-top: 12px; }
+.cp-radar-title { font-size: 11px; font-weight: 600; color: #8b949e; text-align: center; margin-bottom: 2px; }
 
 /* rank chips */
 .cp-rank-hdr { font-size: 0.65rem; color: #484f58; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
@@ -1539,13 +1541,6 @@ td.cmp-metric { color: #8b949e; }
 }
 #filter-panel-close:hover { color: #e6edf3; }
 
-#heat-dot-row,
-#filter-dim-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 14px; border-bottom: 1px solid #21262d;
-  flex-shrink: 0;
-}
-#heat-dot-row { background: #0d1117; }
 .filter-row-label { font-size: 0.75rem; color: #8b949e; white-space: nowrap; }
 .filter-btn-group { display: flex; gap: 4px; }
 .filter-mode-btn {
@@ -1653,4 +1648,108 @@ td.cmp-metric { color: #8b949e; }
 .heat-ctrl-val {
   font-size: 0.68rem; color: #8b949e;
   width: 32px; text-align: right; font-variant-numeric: tabular-nums;
+}
+
+/* ── Dot display controls ── */
+#dot-controls-section {
+  border-bottom: 1px solid #21262d;
+  padding: 8px 14px 10px;
+  background: #0a0f14;
+  flex-shrink: 0;
+}
+.dot-ctrl-group {
+  margin-bottom: 7px;
+}
+.dot-ctrl-group:last-child { margin-bottom: 0; }
+.dot-ctrl-label {
+  display: block;
+  font-size: 0.68rem;
+  color: #6e7681;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.dot-ctrl-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ── Heatmap palette chooser ── */
+#heat-palette-row {
+  padding: 8px 14px 10px;
+  border-bottom: 1px solid #21262d;
+  background: #0a0f14;
+  flex-shrink: 0;
+}
+#heat-palette-row .filter-row-label {
+  display: block;
+  font-size: 0.68rem;
+  color: #6e7681;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.palette-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.palette-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  padding: 3px 8px 3px 5px;
+  font-size: 0.7rem;
+  color: #8b949e;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.palette-chip:hover { border-color: #58a6ff; color: #e6edf3; }
+.palette-chip.active { border-color: #58a6ff; color: #e6edf3; background: #0d1f33; }
+
+.palette-strip {
+  display: inline-block;
+  width: 32px;
+  height: 8px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.warm-strip    { background: linear-gradient(to right, #3b1f6e, #7b2ff7, #a371f7, #e0ccff); }
+.viridis-strip { background: linear-gradient(to right, #440154, #31688e, #35b779, #fde725); }
+.inferno-strip { background: linear-gradient(to right, #0d0221, #56106e, #bb3754, #fcffa4); }
+.ocean-strip   { background: linear-gradient(to right, #03071e, #1565c0, #0097a7, #e0f7fa); }
+
+.dot-ctrl-sep {
+  color: #30363d;
+  font-size: 0.75rem;
+  align-self: center;
+  padding: 0 1px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Dot controls — disabled when no filter or heatmap is active */
+#dot-controls-section button:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+#dot-controls-section button:disabled.active {
+  background: none;
+  border-color: #30363d;
+  color: #484f58;
+}
+
+/* Intensity gradient strip shown inline when an availability filter is ON */
+.avail-intensity-strip {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  margin: 0 6px;
+  min-width: 40px;
 }
