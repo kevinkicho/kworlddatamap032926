@@ -1296,6 +1296,12 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
   text-transform: uppercase; letter-spacing: 0.05em;
   padding: 6px 0 4px; border-top: 1px solid #21262d;
 }
+.region-spark-wrap { margin-top: 6px; border-top: 1px solid #21262d; padding-top: 4px; }
+.region-spark-hdr {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 2px 0 1px; font-size: 0.68rem; color: #8b949e;
+}
+.region-spark-range { font-size: 0.61rem; color: #484f58; }
 
 /* Trade partners row in country panel */
 .cp-trade-row { align-items: center; }

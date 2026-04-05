@@ -31,6 +31,10 @@ const comtrade     = readJson('comtrade-partners.json');
 const noaaClimate  = readJson('noaa-climate.json');
 const japan        = readJson('japan-prefectures.json');
 const censusB      = readJson('census-business.json');
+const usStates     = readJson('us-states.json');
+const eurostatReg  = readJson('eurostat-regions.json');
+const canadaProv   = readJson('canada-provinces.json');
+const australiaSt  = readJson('australia-states.json');
 
 // Helper: first available field names from a sample entry
 const sampleFields = obj => obj ? Object.keys(Object.values(obj)[0] || {}) : [];
@@ -57,6 +61,10 @@ const manifest = {
   'noaa-climate':         { key: 'qid',   coverage: noaaClimate  ? Object.keys(noaaClimate).length  : 0,  region: 'US', fields: ['months','source','station'], updated: today },
   'japan-prefectures':    { key: 'name',  coverage: japan        ? Object.keys(japan).length        : 0,  region: 'JP', fields: sampleFields(japan), updated: today },
   'census-business':      { key: 'qid',   coverage: censusB      ? Object.keys(censusB).length      : 0,  region: 'US', fields: sampleFields(censusB), updated: today },
+  'us-states':            { key: 'abbr',  coverage: usStates     ? Object.keys(usStates).length     : 0,  region: 'US', fields: ['unemployment_rate','pcpi','unemployment_history','pcpi_history'], updated: today },
+  'eurostat-regions':     { key: 'nuts2', coverage: eurostatReg  ? Object.keys(eurostatReg).length  : 0,  region: 'EU', fields: ['name','country_iso2','unemployment_rate','gdp_pps_eu100','unemployment_history','gdp_pps_history'], updated: today },
+  'canada-provinces':     { key: 'abbr',  coverage: canadaProv   ? Object.keys(canadaProv).length   : 0,  region: 'CA', fields: ['name','unemployment_rate','gdp_bn_cad','gdp_per_capita_cad','unemployment_history','gdp_history'], updated: today },
+  'australia-states':     { key: 'abbr',  coverage: australiaSt  ? Object.keys(australiaSt).length  : 0,  region: 'AU', fields: ['name','unemployment_rate','gsp_bn_aud','gsp_per_capita_aud','unemployment_history','gsp_history'], updated: today },
 };
 
 const OUT = path.join(PUB, 'data-manifest.json');

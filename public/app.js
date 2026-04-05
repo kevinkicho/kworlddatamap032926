@@ -1673,16 +1673,42 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   const regionInfo  = _getRegionData(city);
   const regionHtml  = regionInfo ? _buildRegionHtml(regionInfo) : '';
 
-  if (infoEl) infoEl.innerHTML = `
-    ${carouselHtml}
-    <div class="wiki-city-header">
-      <div class="wiki-city-name">${escHtml(city.name)}</div>
-      ${city.desc ? `<div class="wiki-city-desc">${escHtml(city.desc)}</div>` : ''}
-    </div>
-    ${infoChips}
-    ${(govSec || linksSec || wbSec) ? `<table class="wiki-info-table">${govSec}${linksSec}${wbSec}</table>` : ''}
-    ${regionHtml}
-  `;
+  if (infoEl) {
+    infoEl.innerHTML = `
+      ${carouselHtml}
+      <div class="wiki-city-header">
+        <div class="wiki-city-name">${escHtml(city.name)}</div>
+        ${city.desc ? `<div class="wiki-city-desc">${escHtml(city.desc)}</div>` : ''}
+      </div>
+      ${infoChips}
+      ${(govSec || linksSec || wbSec) ? `<table class="wiki-info-table">${govSec}${linksSec}${wbSec}</table>` : ''}
+      ${regionHtml}
+    `;
+    // Mount region sparkline charts after innerHTML is set
+    infoEl.querySelectorAll('.region-spark[data-region-pts]').forEach(el => {
+      try {
+        const pts   = JSON.parse(el.dataset.regionPts);
+        const color = el.dataset.regionColor || '#58a6ff';
+        const src   = el.dataset.regionSrc   || 'pct';
+        const yFmt  = src === 'pct'    ? v => v.toFixed(1) + '%'
+                    : src === 'eu_gdp' ? v => v.toFixed(0) + '%'
+                    : src === 'pcpi'   ? v => '$' + Math.round(v).toLocaleString()
+                    : src === 'cad_gdp'? v => 'CA$' + v.toFixed(0) + 'B'
+                    : src === 'aud_gsp'? v => 'A$' + v.toFixed(0) + 'B'
+                    : v => String(v);
+        // Detect monthly YYYY-MM strings vs integer years
+        const isMonthly = pts.length > 0 && typeof pts[0][0] === 'string' && pts[0][0].includes('-');
+        const mapped = isMonthly
+          ? pts.map(h => ({ t: new Date(h[0] + '-01').getTime(), v: h[1] }))
+          : pts.map(h => ({ t: h[0], v: h[1] }));
+        const xFmt = isMonthly ? t => new Date(t).getFullYear() : t => String(t);
+        _IYChart(el, mapped, {
+          color, height: 44, isTimestamp: isMonthly,
+          autoColor: false, yFmt, xFmt,
+        });
+      } catch (_) {}
+    });
+  }
   if (economyEl)  economyEl.innerHTML  = hasCensus   ? buildEconomyHtml(censusData, businessData, city.qid)
                                        : hasEurostat ? buildEurostatHtml(eurostatData, city.qid)
                                        : hasJapan    ? buildJapanPrefHtml(japanPref.data, japanPref.name, city.qid)
@@ -2625,7 +2651,8 @@ function _buildRegionHtml(region) {
 
   // Unemployment rate
   if (Number.isFinite(d.unemployment_rate)) {
-    rows += `<tr><td class="wi-lbl">Unemployment</td><td class="wi-val">${d.unemployment_rate.toFixed(1)}%</td></tr>`;
+    const yr = d.unemployment_year ? ` (${d.unemployment_year})` : '';
+    rows += `<tr><td class="wi-lbl">Unemployment</td><td class="wi-val">${d.unemployment_rate.toFixed(1)}%${yr}</td></tr>`;
   }
   // EU NUTS-2: GDP relative to EU average (PPS index where EU=100)
   if (Number.isFinite(d.gdp_pps_eu100)) {
@@ -2651,9 +2678,31 @@ function _buildRegionHtml(region) {
   }
 
   if (!rows) return '';
+
+  // Build sparkline placeholders — mounted after innerHTML insertion
+  const _spark = (hist, color, src, label) => {
+    const pts = (hist || []).filter(h => Array.isArray(h) && h[1] != null && isFinite(h[1]));
+    if (pts.length < 2) return '';
+    const minV = Math.min(...pts.map(h => h[1]));
+    const maxV = Math.max(...pts.map(h => h[1]));
+    const range = `${minV.toFixed(src === 'eu_gdp' ? 0 : 1)} – ${maxV.toFixed(src === 'eu_gdp' ? 0 : 1)}`;
+    return `<div class="region-spark-wrap">
+      <div class="region-spark-hdr"><span>${escHtml(label)}</span><span class="region-spark-range">${escHtml(range)}</span></div>
+      <div class="region-spark" data-region-pts="${escHtml(JSON.stringify(pts))}" data-region-color="${escHtml(color)}" data-region-src="${src}" style="height:44px"></div>
+    </div>`;
+  };
+
+  let sparks = '';
+  sparks += _spark(d.unemployment_history, '#e3b341', 'pct',    'Unemployment history');
+  sparks += _spark(d.pcpi_history,          '#3fb950', 'pcpi',   'Income per capita history');
+  sparks += _spark(d.gdp_pps_history,       '#58a6ff', 'eu_gdp', 'GDP vs EU avg (%)');
+  sparks += _spark(d.gdp_history,           '#3fb950', 'cad_gdp','Provincial GDP (CA$B)');
+  sparks += _spark(d.gsp_history,           '#3fb950', 'aud_gsp','State GSP (A$B)');
+
   return `<div class="region-stats-block">
     <div class="region-stats-hdr">📍 ${escHtml(region.label)}</div>
     <table class="wiki-info-table">${rows}</table>
+    ${sparks}
   </div>`;
 }
 

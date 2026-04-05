@@ -354,5 +354,59 @@
       "countyName"
     ],
     "updated": "2026-04"
+  },
+  "us-states": {
+    "key": "abbr",
+    "coverage": 51,
+    "region": "US",
+    "fields": [
+      "unemployment_rate",
+      "pcpi",
+      "unemployment_history",
+      "pcpi_history"
+    ],
+    "updated": "2026-04"
+  },
+  "eurostat-regions": {
+    "key": "nuts2",
+    "coverage": 351,
+    "region": "EU",
+    "fields": [
+      "name",
+      "country_iso2",
+      "unemployment_rate",
+      "gdp_pps_eu100",
+      "unemployment_history",
+      "gdp_pps_history"
+    ],
+    "updated": "2026-04"
+  },
+  "canada-provinces": {
+    "key": "abbr",
+    "coverage": 13,
+    "region": "CA",
+    "fields": [
+      "name",
+      "unemployment_rate",
+      "gdp_bn_cad",
+      "gdp_per_capita_cad",
+      "unemployment_history",
+      "gdp_history"
+    ],
+    "updated": "2026-04"
+  },
+  "australia-states": {
+    "key": "abbr",
+    "coverage": 8,
+    "region": "AU",
+    "fields": [
+      "name",
+      "unemployment_rate",
+      "gsp_bn_aud",
+      "gsp_per_capita_aud",
+      "unemployment_history",
+      "gsp_history"
+    ],
+    "updated": "2026-04"
   }
 }
