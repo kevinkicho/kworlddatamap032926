@@ -83,6 +83,185 @@ async function _ensureCompanies() {
   return _companiesLoading;
 }
 
+// Universities (lazy — 724 KB, only needed on first city panel open)
+let _univLoaded = false, _univLoading = null;
+async function _ensureUniversities() {
+  if (_univLoaded) return;
+  if (_univLoading) return _univLoading;
+  _univLoading = (async () => {
+    try {
+      const res = await fetch('/universities.json');
+      if (res.ok) {
+        universitiesData = await res.json();
+        console.log(`[lazy] Universities loaded (${Object.keys(universitiesData).length} cities)`);
+      }
+    } catch (e) { console.warn('[lazy] universities.json failed', e); }
+    finally { _univLoaded = true; _univLoading = null; }
+  })();
+  return _univLoading;
+}
+
+// NOAA climate (lazy — 664 KB, only needed for US city climate panels)
+let _noaaLoaded = false, _noaaLoading = null;
+async function _ensureNoaaClimate() {
+  if (_noaaLoaded) return;
+  if (_noaaLoading) return _noaaLoading;
+  _noaaLoading = (async () => {
+    try {
+      const res = await fetch('/noaa-climate.json');
+      if (res.ok) {
+        noaaClimate = await res.json();
+        console.log(`[lazy] NOAA climate loaded (${Object.keys(noaaClimate).length} cities)`);
+      }
+    } catch (e) { console.warn('[lazy] noaa-climate.json failed', e); }
+    finally { _noaaLoaded = true; _noaaLoading = null; }
+  })();
+  return _noaaLoading;
+}
+
+// Airport connectivity (lazy — 214 KB, only needed on first city panel open)
+let _airportLoaded = false, _airportLoading = null;
+async function _ensureAirport() {
+  if (_airportLoaded) return;
+  if (_airportLoading) return _airportLoading;
+  _airportLoading = (async () => {
+    try {
+      const res = await fetch('/airport-connectivity.json');
+      if (res.ok) {
+        airportData = await res.json();
+        console.log(`[lazy] Airport data loaded (${Object.keys(airportData).length} cities)`);
+      }
+    } catch (e) { console.warn('[lazy] airport-connectivity.json failed', e); }
+    finally { _airportLoaded = true; _airportLoading = null; }
+  })();
+  return _airportLoading;
+}
+
+// WHO air quality (lazy — 124 KB, needed on AQ toggle or city panel open)
+let _aqLoaded = false, _aqLoading = null;
+async function _ensureAirQuality() {
+  if (_aqLoaded) return;
+  if (_aqLoading) return _aqLoading;
+  _aqLoading = (async () => {
+    try {
+      const res = await fetch('/who-airquality.json');
+      if (res.ok) {
+        airQualityData = await res.json();
+        console.log(`[lazy] WHO air quality loaded (${Object.keys(airQualityData).length} cities)`);
+      }
+    } catch (e) { console.warn('[lazy] who-airquality.json failed', e); }
+    finally { _aqLoaded = true; _aqLoading = null; }
+  })();
+  return _aqLoading;
+}
+
+// Metro transit (lazy — 248 cities, ~18 KB)
+let _metroLoaded = false, _metroLoading = null;
+async function _ensureMetroTransit() {
+  if (_metroLoaded) return;
+  if (_metroLoading) return _metroLoading;
+  _metroLoading = (async () => {
+    try {
+      const res = await fetch('/metro-transit.json');
+      if (res.ok) {
+        metroTransitData = await res.json();
+        console.log(`[lazy] Metro transit loaded (${Object.keys(metroTransitData).length} cities)`);
+      }
+    } catch (e) { console.warn('[lazy] metro-transit.json failed', e); }
+    finally { _metroLoaded = true; _metroLoading = null; }
+  })();
+  return _metroLoading;
+}
+
+// Nobel cities (lazy — 289 cities, ~12 KB)
+let _nobelLoaded = false, _nobelLoading = null;
+async function _ensureNobelCities() {
+  if (_nobelLoaded) return;
+  if (_nobelLoading) return _nobelLoading;
+  _nobelLoading = (async () => {
+    try {
+      const res = await fetch('/nobel-cities.json');
+      if (res.ok) {
+        nobelCitiesData = await res.json();
+        console.log(`[lazy] Nobel cities loaded (${Object.keys(nobelCitiesData).length} cities)`);
+      }
+    } catch (e) { console.warn('[lazy] nobel-cities.json failed', e); }
+    finally { _nobelLoaded = true; _nobelLoading = null; }
+  })();
+  return _nobelLoading;
+}
+
+function applyMapFilters(city) {
+  const qid = city.qid;
+  // Availability checks
+  if (_filterAvail.airQuality   && !airQualityData[qid])   return _filterDimMode;
+  if (_filterAvail.metro        && !metroTransitData[qid])  return _filterDimMode;
+  if (_filterAvail.nobel        && !nobelCitiesData[qid])   return _filterDimMode;
+  if (_filterAvail.universities && !universitiesData[qid])  return _filterDimMode;
+  if (_filterAvail.airport      && !airportData[qid])       return _filterDimMode;
+  if (_filterAvail.eurostat     && !eurostatCities[qid])    return _filterDimMode;
+  if (_filterAvail.census       && !censusCities[qid])      return _filterDimMode;
+  // Value filters
+  if (_filterValue.nobel != null) {
+    if ((nobelCitiesData[qid]?.total ?? 0) < _filterValue.nobel) return _filterDimMode;
+  }
+  if (_filterValue.universities != null) {
+    if ((universitiesData[qid]?.length ?? 0) < _filterValue.universities) return _filterDimMode;
+  }
+  if (_filterValue.pop != null) {
+    const p = city.pop || 0;
+    if (_filterValue.pop === 'small'  && p >= 100_000)    return _filterDimMode;
+    if (_filterValue.pop === 'medium' && (p < 100_000  || p >= 1_000_000))  return _filterDimMode;
+    if (_filterValue.pop === 'large'  && (p < 1_000_000 || p >= 10_000_000)) return _filterDimMode;
+    if (_filterValue.pop === 'mega'   && p < 10_000_000)  return _filterDimMode;
+  }
+  if (_filterValue.metro != null) {
+    if ((metroTransitData[qid]?.stations ?? 0) < _filterValue.metro) return _filterDimMode;
+  }
+  if (_filterValue.aq != null) {
+    if ((airQualityData[qid]?.category ?? '') !== _filterValue.aq) return _filterDimMode;
+  }
+  return 'match';
+}
+
+function _filterCount() {
+  return Object.values(_filterAvail).filter(Boolean).length +
+         Object.values(_filterValue).filter(v => v !== null).length;
+}
+
+function _anyFilterActive() { return _filterCount() > 0; }
+
+function _buildHeatPoints(metric) {
+  // Gather raw values
+  const raw = [];
+  for (const city of allCities) {
+    const qid = city.qid;
+    let val = null;
+    if (metric === 'nobel')            val = nobelCitiesData[qid]?.total ?? 0;
+    else if (metric === 'universities') val = universitiesData[qid]?.length ?? 0;
+    else if (metric === 'pop')          val = city.pop || 0;
+    else if (metric === 'metro')        val = metroTransitData[qid]?.stations ?? 0;
+    else if (metric === 'aq')           val = airQualityData[qid]?.pm25 ?? null;
+    if (val !== null && val > 0) raw.push({ lat: city.lat, lng: city.lng, val });
+  }
+  if (raw.length === 0) return [];
+  // 95th-percentile cap to prevent outlier washout
+  const sorted = raw.map(r => r.val).sort((a, b) => a - b);
+  const p95 = sorted[Math.floor(sorted.length * 0.95)] || sorted[sorted.length - 1];
+  return raw.map(r => [r.lat, r.lng, Math.min(r.val / p95, 1.0)]);
+}
+
+function _heatGradient(metric) {
+  const gradients = {
+    nobel:        { 0.2: '#1a1a4e', 0.5: '#7b2ff7', 1: '#bc8cff' },
+    universities: { 0.2: '#0d2b4e', 0.5: '#1f6feb', 1: '#a5d6ff' },
+    pop:          { 0.2: '#0d3b2e', 0.5: '#20c997', 1: '#e6fffa' },
+    metro:        { 0.2: '#2d1a00', 0.5: '#f0a500', 1: '#fff3cd' },
+    aq:           { 0.0: '#3fb950', 0.4: '#f0a500', 0.7: '#f85149', 1: '#bc8cff' },
+  };
+  return gradients[metric] || gradients.pop;
+}
+
 // Map ISO-2 country code → Wikipedia language subdomain
 // Used to prefer the local-language Wikipedia article over English
 const ISO_TO_WIKI_LANG = {
@@ -556,14 +735,20 @@ function rebuildMapLayer() {
   if (wikiLayer) map.removeLayer(wikiLayer);
   wikiLayer = L.layerGroup();
   allCities.forEach(function (city) {
-    const censusCol = censusDotColor(city);
-    const color = censusCol || wikiCityColor(city.pop);
+    const aqCol     = cityAqMode ? airQualityDotColor(city) : null;
+    const censusCol = aqCol ? null : censusDotColor(city);
+    const color = aqCol || censusCol || wikiCityColor(city.pop);
     const radius = wikiCityRadius(city.pop);
     const location = [city.admin, city.country].filter(Boolean).join(', ');
     let tip = `<strong>${escHtml(city.name)}</strong>`;
     if (location) tip += `<br/><span style="color:#8b949e;font-size:0.8em">${escHtml(location)}</span>`;
     if (city.desc) tip += `<br/><span style="color:#c9d1d9;font-size:0.8em;font-style:italic">${escHtml(city.desc)}</span>`;
     tip += `<br/>Population: <strong>${fmtPop(city.pop)}</strong>`;
+    if (cityAqMode && city.qid) {
+      const aq = airQualityData[city.qid];
+      if (aq) tip += `<br/><span style="color:${color};font-weight:600">${aq.pm25} µg/m³ PM2.5</span> <span style="color:#8b949e;font-size:0.8em">(${escHtml(aq.category)}, ${aq.year})</span>`;
+      else    tip += `<br/><span style="color:#484f58;font-size:0.8em">No PM2.5 data</span>`;
+    }
     if (city.qid) {
       const coCount = companiesData[city.qid]?.length || 0;
       tip += `<br/><span style="display:flex;gap:10px;margin-top:3px">`;
@@ -572,7 +757,7 @@ function rebuildMapLayer() {
         tip += `<a href="#" onclick="event.preventDefault();openCorpPanel('${city.qid}','${escAttr(city.name)}')" style="color:#a371f7;font-size:0.8em">Corporations (${coCount}) ↗</a>`;
       tip += `</span>`;
     }
-    const opacity = censusCol ? 0.92 : wikiCityOpacity(city.pop);
+    const opacity = (aqCol || censusCol) ? 0.92 : wikiCityOpacity(city.pop);
     L.circleMarker([city.lat, city.lng], {
       radius, fillColor: color, fillOpacity: opacity,
       color, opacity: opacity, weight: 0.5,
@@ -1443,6 +1628,8 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
       const badge = `<span style="background:${col}22;color:${col};border:1px solid ${col}55;border-radius:4px;padding:1px 5px;font-size:0.75em;font-weight:600">${escHtml(aq.category)}</span>`;
       return infoChip('Air Quality', `<span style="color:${col};font-weight:700">${aq.pm25}</span><span style="color:#8b949e;font-size:0.78em"> µg/m³ PM2.5</span> ${badge} <span style="color:#484f58;font-size:0.72em">${aq.year}</span>`, true, false, 'who_pm25');
     })()}
+    ${(() => { const m = metroTransitData[city.qid]; if (!m) return ''; const parts = []; if (m.lines) parts.push(`<span style="color:#e6edf3;font-weight:600">${m.lines}</span><span style="color:#8b949e;font-size:0.78em"> lines</span>`); if (m.stations) parts.push(`<span style="color:#e6edf3;font-weight:600">${m.stations}</span><span style="color:#8b949e;font-size:0.78em"> stations</span>`); if (m.opened) parts.push(`<span style="color:#484f58;font-size:0.72em">since ${m.opened}</span>`); return infoChip('Metro', `🚇 ${parts.join(' · ')} <span style="color:#8b949e;font-size:0.73em">${escHtml(m.name)}</span>`, true, false, 'metroStations'); })()}
+    ${(() => { const n = nobelCitiesData[city.qid]; if (!n) return ''; const cats = Object.entries(n.byPrize||{}).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span title="${escHtml(k)}" style="font-size:0.8em">${v}×${escHtml(k.slice(0,3))}</span>`).join(' '); return infoChip('Nobels', `<span style="color:#f0a500;font-weight:700">${n.total}</span> <span style="color:#8b949e;font-size:0.78em">laureates</span> <span style="color:#6e7681;font-size:0.76em">(${cats})</span>`, true, false, 'nobelLaureates'); })()}
     ${(() => {
       const ca = climateAnnual(getCityClimate(city));
       if (!ca) return '';
@@ -1770,9 +1957,10 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
        </a>`
     : '';
 
+  const cmpBtn = `<button class="wiki-cmp-btn" onclick="openComparePanel('${escHtml(city.qid)}')">Compare</button>`;
   footer.innerHTML = (wikiLink || siteLink)
-    ? wikiLink + siteLink + `<span class="wiki-cache-note">${fromCache ? 'Cached \u00b7 ' : ''}Data from Wikipedia &amp; Wikidata</span>`
-    : '';
+    ? wikiLink + siteLink + cmpBtn + `<span class="wiki-cache-note">${fromCache ? 'Cached \u00b7 ' : ''}Data from Wikipedia &amp; Wikidata</span>`
+    : cmpBtn;
 }
 
 function toggleExtract() {
@@ -1801,6 +1989,24 @@ let airQualityData  = {};  // city QID → {pm25, year, category}
 let universitiesData= {};  // city QID → [{qid, name, founded, students}]
 let fbiCrimeData    = {};  // city QID → {violentPer100k, propertyPer100k, year}
 let eciData         = {};  // ISO2 → {eci, year}
+let metroTransitData= {};  // city QID → {name, lines, stations, opened}
+let nobelCitiesData = {};  // city QID → {total, byPrize: {Physics, Chemistry, ...}}
+
+// ── Filter panel state ────────────────────────────────────────────────────────
+let _filterAvail = {
+  airQuality: false, metro: false, nobel: false,
+  universities: false, airport: false, eurostat: false, census: false,
+};
+let _filterValue = {
+  nobel: null, universities: null, pop: null, metro: null, aq: null,
+};
+let _filterDimMode = 'dim';  // 'dim' | 'hide'
+
+// ── Heatmap state ─────────────────────────────────────────────────────────────
+let _heatmapMetric = null;   // null | 'nobel' | 'universities' | 'pop' | 'metro' | 'aq'
+let _heatmapLayer  = null;   // Leaflet.heat layer instance
+let _heatDotMode   = 'dim';  // 'show' | 'dim' | 'hide'
+
 let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
 let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
@@ -1823,6 +2029,56 @@ const ISO2_TO_ISO3 = { US:"USA", GB:"GBR", DE:"DEU", FR:"FRA", JP:"JPN",
   MY:"MYS", TH:"THA", VN:"VNM", PH:"PHL", PK:"PAK", BD:"BGD" };
 
 let censusColorMetric = null;  // null = off, or key like 'medianIncome'
+let cityAqMode = false;        // when true, color dots by WHO PM2.5
+
+const AQ_STOPS = [
+  { min: 50, color: '#bc8cff', label: 'Severe'    },
+  { min: 25, color: '#f85149', label: 'Very Poor' },
+  { min: 15, color: '#ffa657', label: 'Poor'      },
+  { min: 10, color: '#f0a500', label: 'Moderate'  },
+  { min:  5, color: '#58a6ff', label: 'Acceptable'},
+  { min:  0, color: '#3fb950', label: 'Good'      },
+];
+
+function airQualityDotColor(city) {
+  const aq = airQualityData[city.qid];
+  if (!aq) return '#21262d';   // no data → near-black
+  const pm = aq.pm25;
+  for (const s of AQ_STOPS) { if (pm >= s.min) return s.color; }
+  return '#3fb950';
+}
+
+async function toggleAqMode() {
+  cityAqMode = !cityAqMode;
+  const btn  = document.getElementById('aq-toggle-btn');
+  const leg  = document.getElementById('aq-legend-wrap');
+  const cov  = document.getElementById('aq-coverage');
+  if (cityAqMode) {
+    btn.textContent = 'Loading…';
+    btn.disabled = true;
+    await _ensureAirQuality();
+    btn.textContent = 'On';
+    btn.disabled = false;
+    btn.classList.add('on');
+    leg.style.display = '';
+    const covered = Object.keys(airQualityData).length;
+    if (cov) cov.textContent = covered + ' cities';
+    // Turn off census coloring while in AQ mode
+    if (censusColorMetric) { setCensusColorMetric(''); document.getElementById('census-metric-select').value = ''; }
+  } else {
+    btn.textContent = 'Off';
+    btn.classList.remove('on');
+    leg.style.display = 'none';
+    if (cov) cov.textContent = '';
+  }
+  rebuildMapLayer();
+  const legendTitle = document.getElementById('wiki-legend-title');
+  if (legendTitle) {
+    legendTitle.textContent = cityAqMode
+      ? 'Cities colored by WHO PM2.5 annual mean · click dot for details'
+      : allCities.length.toLocaleString() + ' cities on map · circle size and color = population';
+  }
+}
 
 // GaWC tier → numeric score (Alpha++=12 … Sufficiency=1)
 const GAWC_TIER_SCORE = {
@@ -1994,6 +2250,10 @@ const CITY_STAT_DEFS = {
                       fmt: v => v.toFixed(1) + '°C', higherBetter:null },
   coldestMonthTemp: { label:'Coldest Month Avg °C', key: c => { const a = climateAnnual(getCityClimate(c)); return a ? a.coldestTemp : null; },
                       fmt: v => v.toFixed(1) + '°C', higherBetter:null },
+  metroStations:    { label:'Metro Stations',     key: c => metroTransitData[c.qid]?.stations ?? null,
+                      fmt: v => fmtNum(v) + ' stations', higherBetter:true },
+  nobelLaureates:   { label:'Nobel Laureates',    key: c => nobelCitiesData[c.qid]?.total ?? null,
+                      fmt: v => String(v), higherBetter:true },
 };
 
 // Country-level World Bank stats — iso2 used as identifier (not city qid)
@@ -3017,9 +3277,13 @@ async function openWikiSidebar(qid, cityName) {
   // Find full city object
   const city = allCities.find(c => c.qid === qid);
 
-  // Lazy-load Eurostat data for EU cities (no-op if already loaded or non-EU)
+  // Lazy-load data on demand (no-op if already loaded)
+  _ensureUniversities();
+  _ensureAirport();
+  _ensureAirQuality();
   const EU_ISOS = new Set(['AT','BE','BG','CY','CZ','DE','DK','EE','ES','FI','FR','GR','HR','HU','IE','IT','LT','LU','LV','MT','NL','PL','PT','RO','SE','SI','SK']);
   if (city?.iso && EU_ISOS.has(city.iso)) _ensureEurostat();
+  if (city?.iso === 'US') _ensureNoaaClimate();
 
   // If we already stored Wikipedia data (from a previous click or pre-fetch script),
   // render immediately — no API call needed.
@@ -3266,10 +3530,15 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    // world-countries.json (3.9 MB) is lazy-loaded on first choropleth toggle
-    // eurostat-cities.json (1.2 MB) is lazy-loaded on first EU city panel open
-    // companies.json (75 MB) is lazy-loaded on first use
-    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, noaaRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes, airQualRes, univRes, fbiRes, eciRes] = await Promise.all([
+    // Lazy-loaded on demand (not at startup):
+    //   universities.json    724 KB — on first city panel open
+    //   noaa-climate.json    664 KB — on first US city panel open
+    //   airport-connectivity 214 KB — on first city panel open
+    //   who-airquality.json  124 KB — on AQ toggle or city panel open
+    //   eurostat-cities.json   1 MB — on first EU city panel open
+    //   world-countries.json   4 MB — on first choropleth toggle
+    //   companies.json        75 MB — on first company lookup
+    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes, fbiRes, eciRes, metroRes, nobelRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/census-cities.json').catch(() => null),
@@ -3277,7 +3546,6 @@ async function init() {
       fetch('/bea-trade.json').catch(() => null),
       fetch('/gawc-cities.json').catch(() => null),
       fetch('/japan-prefectures.json').catch(() => null),
-      fetch('/airport-connectivity.json').catch(() => null),
       fetch('/zillow-cities.json').catch(() => null),
       fetch('/climate-extra.json').catch(() => null),
       fetch('/ecb-data.json').catch(() => null),
@@ -3285,15 +3553,14 @@ async function init() {
       fetch('/boj-yields.json').catch(() => null),
       fetch('/oecd-country.json').catch(() => null),
       fetch('/comtrade-partners.json').catch(() => null),
-      fetch('/noaa-climate.json').catch(() => null),
       fetch('/us-states.json').catch(() => null),
       fetch('/eurostat-regions.json').catch(() => null),
       fetch('/canada-provinces.json').catch(() => null),
       fetch('/australia-states.json').catch(() => null),
-      fetch('/who-airquality.json').catch(() => null),
-      fetch('/universities.json').catch(() => null),
       fetch('/fbi-crime.json').catch(() => null),
       fetch('/eci-data.json').catch(() => null),
+      fetch('/metro-transit.json').catch(() => null),
+      fetch('/nobel-cities.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -3359,12 +3626,6 @@ async function init() {
         console.log(`[init] Japan prefecture data loaded (${Object.keys(japanPrefData).length} prefectures)`);
       } catch { console.warn('[init] japan-prefectures.json is malformed'); }
     }
-    if (airportRes && airportRes.ok) {
-      try {
-        airportData = await airportRes.json();
-        console.log(`[init] Airport connectivity loaded (${Object.keys(airportData).length} cities)`);
-      } catch { console.warn('[init] airport-connectivity.json is malformed'); }
-    }
     if (zillowRes && zillowRes.ok) {
       try {
         zillowData = await zillowRes.json();
@@ -3407,12 +3668,6 @@ async function init() {
         console.log(`[init] Comtrade data loaded (${Object.keys(comtradeData).length} countries)`);
       } catch { console.warn('[init] comtrade-partners.json is malformed'); }
     }
-    if (noaaRes && noaaRes.ok) {
-      try {
-        noaaClimate = await noaaRes.json();
-        console.log(`[init] NOAA climate data loaded (${Object.keys(noaaClimate).length} cities)`);
-      } catch { console.warn('[init] noaa-climate.json is malformed'); }
-    }
     if (usStatesRes && usStatesRes.ok) {
       try {
         usStatesData = await usStatesRes.json();
@@ -3437,18 +3692,6 @@ async function init() {
         console.log(`[init] Australia states loaded (${Object.keys(australiaStates).length})`);
       } catch { console.warn('[init] australia-states.json is malformed'); }
     }
-    if (airQualRes && airQualRes.ok) {
-      try {
-        airQualityData = await airQualRes.json();
-        console.log(`[init] WHO air quality loaded (${Object.keys(airQualityData).length} cities)`);
-      } catch { console.warn('[init] who-airquality.json is malformed'); }
-    }
-    if (univRes && univRes.ok) {
-      try {
-        universitiesData = await univRes.json();
-        console.log(`[init] Universities loaded (${Object.keys(universitiesData).length} cities)`);
-      } catch { console.warn('[init] universities.json is malformed'); }
-    }
     if (fbiRes && fbiRes.ok) {
       try {
         fbiCrimeData = await fbiRes.json();
@@ -3461,11 +3704,25 @@ async function init() {
         console.log(`[init] ECI data loaded (${Object.keys(eciData).length} countries)`);
       } catch { console.warn('[init] eci-data.json is malformed'); }
     }
+    if (metroRes && metroRes.ok) {
+      try {
+        metroTransitData = await metroRes.json();
+        console.log(`[init] Metro transit loaded (${Object.keys(metroTransitData).length} cities)`);
+      } catch { console.warn('[init] metro-transit.json is malformed'); }
+    }
+    if (nobelRes && nobelRes.ok) {
+      try {
+        nobelCitiesData = await nobelRes.json();
+        console.log(`[init] Nobel laureates loaded (${Object.keys(nobelCitiesData).length} cities)`);
+      } catch { console.warn('[init] nobel-cities.json is malformed'); }
+    }
     // ── Phase 6: apply overrides + build UI ──
     applyOverrides();
     rebuildMapLayer();
     map.off("click", _cpMapClickHandler);
     map.on("click", _cpMapClickHandler);
+    // AQ bar always visible; data is lazy-loaded on first toggle
+    document.getElementById('aq-bar').style.display = '';
     // Choropleth controls are always visible; GeoJSON is lazy-loaded on first toggle
     initChoroControls();
     _choroControlsInited = true;
@@ -6492,6 +6749,189 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
     if (_errEl) _errEl.innerHTML = `<div class="wiki-error">Could not load Wikipedia article.<br/><a href="${escAttr(wikiUrl)}" target="_blank" rel="noopener">Open Wikipedia directly ↗</a></div>`;
   }
 }
+
+// ── City Comparison Panel ────────────────────────────────────────────────────
+let _cmpCityA = null;  // city object for left column
+let _cmpCityB = null;  // city object for right column
+
+function openComparePanel(qidA) {
+  _cmpCityA = allCities.find(c => c.qid === qidA) || null;
+  _cmpCityB = null;
+  const panel = document.getElementById('compare-panel');
+  panel.style.display = '';
+  document.getElementById('compare-col-a').textContent = _cmpCityA ? _cmpCityA.name : '—';
+  document.getElementById('compare-col-b').textContent = '—';
+  document.getElementById('compare-tbody').innerHTML = '';
+  document.getElementById('compare-search-input').value = '';
+  document.getElementById('compare-search-results').innerHTML = '';
+  setTimeout(() => document.getElementById('compare-search-input').focus(), 50);
+}
+
+function closeComparePanel() {
+  document.getElementById('compare-panel').style.display = 'none';
+  _cmpCityA = null; _cmpCityB = null;
+}
+
+function _renderComparison() {
+  if (!_cmpCityA || !_cmpCityB) return;
+  const a = _cmpCityA, b = _cmpCityB;
+  document.getElementById('compare-col-a').textContent = a.name;
+  document.getElementById('compare-col-b').textContent = b.name;
+
+  const rows = [];
+  const fmtN = v => v != null ? fmtNum(Math.round(v)) : null;
+
+  function metricRow(label, va, vb, fmt, higherBetter, unit = '') {
+    if (va == null && vb == null) return;
+    const fva = va != null ? fmt(va) + unit : '—';
+    const fvb = vb != null ? fmt(vb) + unit : '—';
+    let clsA = '', clsB = '';
+    if (va != null && vb != null && va !== vb && higherBetter != null) {
+      if (higherBetter) {
+        clsA = va > vb ? 'cmp-better' : 'cmp-worse';
+        clsB = vb > va ? 'cmp-better' : 'cmp-worse';
+      } else {
+        clsA = va < vb ? 'cmp-better' : 'cmp-worse';
+        clsB = vb < va ? 'cmp-better' : 'cmp-worse';
+      }
+    }
+    rows.push(`<tr><td class="cmp-metric">${escHtml(label)}</td><td class="cmp-val ${clsA}">${fva}</td><td class="cmp-val ${clsB}">${fvb}</td></tr>`);
+  }
+
+  function sectionRow(label) {
+    rows.push(`<tr class="cmp-section"><td colspan="3">${label}</td></tr>`);
+  }
+
+  // ── General ──
+  sectionRow('City');
+  metricRow('Country', a.country, b.country, v => escHtml(v), null);
+  metricRow('Population', a.pop, b.pop, fmtN, true);
+  metricRow('Metro pop.', a.pop_metro, b.pop_metro, fmtN, true);
+  metricRow('Area', a.area_km2, b.area_km2, v => fmtNum(Math.round(v)) + ' km²', null);
+  metricRow('Founded', a.founded, b.founded, v => v < 0 ? Math.abs(v) + ' BC' : String(v), false);
+  metricRow('Elevation', a.elev_m, b.elev_m, v => fmtNum(Math.round(v)) + ' m', null);
+
+  // ── Climate (annual from city data) ──
+  const caA = climateAnnual(getCityClimate(a)), caB = climateAnnual(getCityClimate(b));
+  if (caA || caB) {
+    sectionRow('Climate');
+    metricRow('Avg Temp', caA?.avgTemp ?? null, caB?.avgTemp ?? null, v => v.toFixed(1) + '°C', null);
+    metricRow('Hottest month', caA?.hottestTemp ?? null, caB?.hottestTemp ?? null, v => v.toFixed(1) + '°C', null);
+    metricRow('Coldest month', caA?.coldestTemp ?? null, caB?.coldestTemp ?? null, v => v.toFixed(1) + '°C', null);
+    metricRow('Rainfall/yr', caA?.precipMm ?? null, caB?.precipMm ?? null, v => fmtNum(Math.round(v)) + ' mm', null);
+    metricRow('Sunshine', caA?.sunHours ?? null, caB?.sunHours ?? null, v => fmtNum(Math.round(v)) + ' hrs/yr', null);
+  }
+
+  // ── Air quality ──
+  const aqA = airQualityData[a.qid], aqB = airQualityData[b.qid];
+  if (aqA || aqB) {
+    sectionRow('Air Quality (WHO)');
+    metricRow('PM2.5 annual mean', aqA?.pm25 ?? null, aqB?.pm25 ?? null, v => v.toFixed(1) + ' µg/m³', false);
+  }
+
+  // ── Country context (World Bank) ──
+  const wbA = a.iso ? countryData[a.iso] : null;
+  const wbB = b.iso ? countryData[b.iso] : null;
+  if (wbA || wbB) {
+    sectionRow('Country (World Bank)');
+    metricRow('GDP per capita', wbA?.gdp_per_capita ?? null, wbB?.gdp_per_capita ?? null, v => '$' + Math.round(v).toLocaleString(), true);
+    metricRow('Life expectancy', wbA?.life_expectancy ?? null, wbB?.life_expectancy ?? null, v => v.toFixed(1) + ' yrs', true);
+    metricRow('HDI', wbA?.hdi ?? null, wbB?.hdi ?? null, v => v.toFixed(3), true);
+    metricRow('Internet access', wbA?.internet_pct ?? null, wbB?.internet_pct ?? null, v => v.toFixed(1) + '%', true);
+    metricRow('Income inequality (Gini)', wbA?.gini ?? null, wbB?.gini ?? null, v => v.toFixed(1), false);
+    const eciA = a.iso ? eciData[a.iso] : null;
+    const eciB = b.iso ? eciData[b.iso] : null;
+    metricRow('Economic Complexity (ECI)', eciA?.eci ?? null, eciB?.eci ?? null, v => (v > 0 ? '+' : '') + v.toFixed(2), true);
+  }
+
+  // ── Education & Research ──
+  const uniA = universitiesData[a.qid], uniB = universitiesData[b.qid];
+  const nbA  = nobelCitiesData[a.qid],  nbB  = nobelCitiesData[b.qid];
+  if (uniA || uniB || nbA || nbB) {
+    sectionRow('Education & Research');
+    metricRow('Universities', uniA?.length ?? null, uniB?.length ?? null, v => String(v), true);
+    metricRow('Nobel Laureates', nbA?.total ?? null, nbB?.total ?? null, v => String(v), true);
+  }
+
+  // ── Connectivity & Transit ──
+  const airA = airportData[a.qid], airB = airportData[b.qid];
+  const gawcA = gawcCities[a.qid], gawcB = gawcCities[b.qid];
+  const metA = metroTransitData[a.qid], metB = metroTransitData[b.qid];
+  if (airA || airB || gawcA || gawcB || metA || metB) {
+    sectionRow('Connectivity & Transit');
+    metricRow('Direct air routes', airA?.directDestinations ?? null, airB?.directDestinations ?? null, v => fmtNum(v) + ' destinations', true);
+    if (gawcA || gawcB) metricRow('World City tier', gawcA?.tier ?? null, gawcB?.tier ?? null, v => escHtml(v), null);
+    metricRow('Metro stations', metA?.stations ?? null, metB?.stations ?? null, v => fmtNum(v), true);
+    metricRow('Metro lines', metA?.lines ?? null, metB?.lines ?? null, v => String(v), true);
+  }
+
+  // ── Eurostat (EU cities) ──
+  const esA = eurostatCities[a.qid], esB = eurostatCities[b.qid];
+  if (esA || esB) {
+    sectionRow('City Stats (Eurostat)');
+    metricRow('Unemployment', esA?.unemploymentPct ?? null, esB?.unemploymentPct ?? null, v => v.toFixed(1) + '%', false);
+    metricRow('Median income', esA?.medianIncome ?? null, esB?.medianIncome ?? null, v => '€' + fmtNum(Math.round(v)), true);
+    metricRow('Poverty rate', esA?.povertyPct ?? null, esB?.povertyPct ?? null, v => v.toFixed(1) + '%', false);
+    metricRow('Tourist nights', esA?.touristNights ?? null, esB?.touristNights ?? null, v => fmtNum(v), true);
+    metricRow('PM10', esA?.pm10 ?? null, esB?.pm10 ?? null, v => v.toFixed(1) + ' µg/m³', false);
+    metricRow('Green urban land', esA?.greenSpacePct ?? null, esB?.greenSpacePct ?? null, v => v.toFixed(1) + '%', true);
+    metricRow('Median age', esA?.medianAge ?? null, esB?.medianAge ?? null, v => v.toFixed(1) + ' yrs', null);
+  }
+
+  // ── Census (US cities) ──
+  const csA = a.iso === 'US' ? censusCities[a.qid] : null;
+  const csB = b.iso === 'US' ? censusCities[b.qid] : null;
+  const crA = fbiCrimeData[a.qid], crB = fbiCrimeData[b.qid];
+  if (csA || csB || crA || crB) {
+    sectionRow('City Stats (US Census / FBI)');
+    metricRow('Median income', csA?.medianIncome ?? null, csB?.medianIncome ?? null, v => '$' + fmtNum(Math.round(v)), true);
+    metricRow('Poverty rate', csA?.povertyPct ?? null, csB?.povertyPct ?? null, v => v.toFixed(1) + '%', false);
+    metricRow('Unemployment', csA?.unemploymentPct ?? null, csB?.unemploymentPct ?? null, v => v.toFixed(1) + '%', false);
+    metricRow('Median home value', csA?.medianHomeValue ?? null, csB?.medianHomeValue ?? null, v => '$' + fmtNum(Math.round(v)), true);
+    metricRow('Violent crime', crA?.violentPer100k ?? null, crB?.violentPer100k ?? null, v => v.toFixed(0) + '/100k', false);
+    metricRow('Property crime', crA?.propertyPer100k ?? null, crB?.propertyPer100k ?? null, v => v.toFixed(0) + '/100k', false);
+  }
+
+  document.getElementById('compare-tbody').innerHTML = rows.join('');
+}
+
+// ── Compare panel search ──────────────────────────────────────────────────────
+(function initCompareSearch() {
+  const input   = document.getElementById('compare-search-input');
+  const results = document.getElementById('compare-search-results');
+
+  function search(q) {
+    results.innerHTML = '';
+    if (!q || q.length < 1) return;
+    const ql = q.toLowerCase();
+    const ranked = allCities
+      .filter(c => c.name.toLowerCase().includes(ql))
+      .sort((a, b) => {
+        const an = a.name.toLowerCase(), bn = b.name.toLowerCase();
+        const sa = an === ql ? 0 : an.startsWith(ql) ? 1 : 2;
+        const sb = bn === ql ? 0 : bn.startsWith(ql) ? 1 : 2;
+        return sa !== sb ? sa - sb : (b.pop || 0) - (a.pop || 0);
+      })
+      .slice(0, 8);
+    ranked.forEach(city => {
+      const li = document.createElement('li');
+      li.className = 'csr-item';
+      li.innerHTML = `<span class="csr-name">${escHtml(city.name)}</span><span class="csr-country"> · ${escHtml(city.country || city.iso || '')}</span>`;
+      li.addEventListener('mousedown', e => { e.preventDefault(); selectCity(city); });
+      results.appendChild(li);
+    });
+  }
+
+  function selectCity(city) {
+    _cmpCityB = city;
+    input.value = city.name;
+    results.innerHTML = '';
+    _renderComparison();
+  }
+
+  input.addEventListener('input', () => search(input.value.trim()));
+  input.addEventListener('blur',  () => setTimeout(() => { results.innerHTML = ''; }, 150));
+})();
 
 // ── City search ──────────────────────────────────────────────────────────────
 (function initCitySearch() {
