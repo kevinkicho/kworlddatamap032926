@@ -3518,9 +3518,20 @@ function _buildTrendTabs(iso2) {
     if (ecbData.ecb_deposit_rate_history && ecbData.ecb_deposit_rate_history.length > 0) {
       tabs.push({ key:'ecb_deposit_rate', label:'ECB Rate' });
     }
+    if (ecbData.ecb_mro_rate_history && ecbData.ecb_mro_rate_history.length > 0) {
+      tabs.push({ key:'ecb_mro_rate', label:'ECB MRO' });
+    }
     if (ecbData.euribor_3m_history && ecbData.euribor_3m_history.length > 0) {
       tabs.push({ key:'euribor_3m', label:'Euribor 3M' });
     }
+  }
+
+  // OECD annual history (from oecd-country.json)
+  var od = oecdData[iso2];
+  if (od) {
+    if (od.rd_spend_history    && od.rd_spend_history.length > 0)    tabs.push({ key:'rd_spend_history',    label:'R&D spend'    });
+    if (od.tertiary_history    && od.tertiary_history.length > 0)    tabs.push({ key:'tertiary_history',    label:'Tertiary edu' });
+    if (od.tax_revenue_history && od.tax_revenue_history.length > 0) tabs.push({ key:'tax_revenue_history', label:'Tax revenue'  });
   }
 
   // Japan: JGB yields
@@ -3573,10 +3584,14 @@ function _switchTrendTab(iso2, key) {
     bond_yield_10y:     "10-yr bond yield (%)",
     ecb_bond_10y:       "10-yr sovereign yield (%)",
     ecb_deposit_rate:   "ECB deposit rate (%)",
+    ecb_mro_rate:       "ECB MRO / refi rate (%)",
     euribor_3m:         "Euribor 3M (%)",
     jgb_10y:            "JGB 10Y yield (%)",
     bea_exports:        "US goods exports (USD bn)",
     bea_imports:        "US goods imports (USD bn)",
+    rd_spend_history:   "R&D spending (% of GDP)",
+    tertiary_history:   "Tertiary enrollment (%)",
+    tax_revenue_history:"Tax revenue — central govt (% GDP)",
   };
 
   // ── resolve points by data source ────────────────────────────────
@@ -3596,11 +3611,12 @@ function _switchTrendTab(iso2, key) {
       isTimestamp = true;
       points = h.map(function(r) { return { t: new Date(r[0] + '-01').getTime(), v: r[1] }; });
     }
-  } else if (key === 'ecb_deposit_rate') {
-    var h = ecbData.ecb_deposit_rate_history;
+  } else if (key === 'ecb_deposit_rate' || key === 'ecb_mro_rate') {
+    // ECB rates are event-based with YYYY-MM-DD dates (one entry per decision)
+    var h = key === 'ecb_deposit_rate' ? ecbData.ecb_deposit_rate_history : ecbData.ecb_mro_rate_history;
     if (h && h.length) {
       isTimestamp = true;
-      points = h.map(function(r) { return { t: new Date(r[0] + '-01').getTime(), v: r[1] }; });
+      points = h.map(function(r) { return { t: new Date(r[0]).getTime(), v: r[1] }; });
     }
   } else if (key === 'jgb_10y') {
     var h = bojData.JP && bojData.JP.bond_yield_10y_history;
@@ -3616,6 +3632,14 @@ function _switchTrendTab(iso2, key) {
       points = arr
         .map(function(r) { return { t: r.year, v: r[field] > 0 ? r[field] / 1e9 : null }; })
         .filter(function(p) { return p.v !== null && Number.isFinite(p.v); });
+    }
+  } else if (key === 'rd_spend_history' || key === 'tertiary_history' || key === 'tax_revenue_history') {
+    // OECD annual history sourced from World Bank
+    var od = oecdData[iso2];
+    var raw = od && od[key];
+    if (raw && raw.length) {
+      points = raw.map(function(r) { return { t: r[0], v: r[1] }; })
+                  .filter(function(p) { return Number.isFinite(p.v); });
     }
   } else if (key === 'bond_yield_10y') {
     // FRED monthly format
