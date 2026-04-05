@@ -4649,9 +4649,8 @@ function _renderCountryPanel(iso2) {
   document.getElementById("cp-body").innerHTML =
     "<div class=\"cp-left-col\">" + gaugeHtml + "</div>" +
     "<div class=\"cp-right-col\">" +
-      (typeof _buildRadar      === "function" ? _buildRadar(iso2)      : "") +
+      (typeof _buildRadarCard  === "function" ? _buildRadarCard(iso2)  : "") +
       (typeof _buildRankChips  === "function" ? _buildRankChips(iso2)  : "") +
-      (typeof _buildEnergyRadar === "function" ? _buildEnergyRadar(iso2) : "") +
     "</div>";
 
   _buildTrendTabs(iso2);
@@ -4902,6 +4901,38 @@ function _buildEnergyRadar(iso2) {
       "</svg>" +
     "</div>" +
   "</div>";
+}
+
+// ── _buildRadarCard ───────────────────────────────────────────────────
+// Wraps the economic + energy radars into a single tabbed card.
+function _buildRadarCard(iso2) {
+  var econHtml   = typeof _buildRadar       === "function" ? _buildRadar(iso2)       : "";
+  var energyHtml = typeof _buildEnergyRadar === "function" ? _buildEnergyRadar(iso2) : "";
+
+  // If only one panel has content, render it without tabs
+  if (!econHtml && !energyHtml) return "";
+  if (!energyHtml) return econHtml;
+  if (!econHtml)   return energyHtml;
+
+  return "<div class=\"cp-radar-card\">" +
+    "<div class=\"cp-radar-tabs\">" +
+      "<button class=\"cp-radar-tab cp-radar-tab-active\" onclick=\"_switchRadarTab(this,'economy')\">Economy</button>" +
+      "<button class=\"cp-radar-tab\" onclick=\"_switchRadarTab(this,'energy')\">Energy</button>" +
+    "</div>" +
+    "<div class=\"cp-radar-pane\" data-pane=\"economy\">" + econHtml + "</div>" +
+    "<div class=\"cp-radar-pane cp-radar-pane-hidden\" data-pane=\"energy\">" + energyHtml + "</div>" +
+  "</div>";
+}
+
+function _switchRadarTab(btn, pane) {
+  var card = btn;
+  while (card && !card.classList.contains("cp-radar-card")) card = card.parentElement;
+  if (!card) return;
+  card.querySelectorAll(".cp-radar-tab").forEach(function(b) { b.classList.remove("cp-radar-tab-active"); });
+  card.querySelectorAll(".cp-radar-pane").forEach(function(p) { p.classList.add("cp-radar-pane-hidden"); });
+  btn.classList.add("cp-radar-tab-active");
+  var target = card.querySelector("[data-pane=\"" + pane + "\"]");
+  if (target) target.classList.remove("cp-radar-pane-hidden");
 }
 
 // ── _buildRankChips ───────────────────────────────────────────────────
