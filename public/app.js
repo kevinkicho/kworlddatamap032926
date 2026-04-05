@@ -231,6 +231,134 @@ function _filterCount() {
 
 function _anyFilterActive() { return _filterCount() > 0; }
 
+// ── Filter panel controls ──────────────────────────────────────────────────────
+function toggleFilterPanel() {
+  const panel = document.getElementById('filter-panel');
+  if (panel.classList.contains('open')) closeFilterPanel();
+  else openFilterPanel();
+}
+
+function openFilterPanel() {
+  // Trigger lazy loads so availability filters have data ready
+  _ensureAirQuality();
+  _ensureAirport();
+  _ensureUniversities();
+  document.getElementById('filter-panel').classList.add('open');
+  document.getElementById('filter-fab').classList.add('active');
+}
+
+function closeFilterPanel() {
+  document.getElementById('filter-panel').classList.remove('open');
+  document.getElementById('filter-fab').classList.remove('active');
+}
+
+function _updateFilterBadge() {
+  const badge = document.getElementById('filter-fab-badge');
+  const n = _filterCount();
+  if (!badge) return;
+  badge.textContent = n;
+  badge.style.display = n > 0 ? '' : 'none';
+}
+
+function setFilterDimMode(mode) {
+  _filterDimMode = mode;
+  document.querySelectorAll('.filter-mode-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  rebuildMapLayer();
+}
+
+function clearAllFilters() {
+  Object.keys(_filterAvail).forEach(k => { _filterAvail[k] = false; });
+  Object.keys(_filterValue).forEach(k => { _filterValue[k] = null; });
+  document.querySelectorAll('.filter-avail-btn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.filter-bucket').forEach(b => {
+    b.classList.toggle('active', b.dataset.val === 'null');
+  });
+  _updateFilterBadge();
+  rebuildMapLayer();
+}
+
+function toggleAvailFilter(key) {
+  _filterAvail[key] = !_filterAvail[key];
+  const btn = document.querySelector(`.filter-avail-btn[data-key="${key}"]`);
+  if (btn) {
+    btn.classList.toggle('on', _filterAvail[key]);
+    btn.textContent = _filterAvail[key] ? 'ON' : 'off';
+  }
+  _updateFilterBadge();
+  rebuildMapLayer();
+}
+
+function setValueFilter(metric, value) {
+  _filterValue[metric] = value;
+  const row = document.querySelector(`.filter-bucket-row[data-metric="${metric}"]`);
+  if (row) {
+    row.querySelectorAll('.filter-bucket').forEach(btn => {
+      const bval = btn.dataset.val === 'null' ? null : btn.dataset.val;
+      const numVal = bval !== null && !isNaN(Number(bval)) ? Number(bval) : bval;
+      btn.classList.toggle('active', numVal === value);
+    });
+  }
+  _updateFilterBadge();
+  rebuildMapLayer();
+}
+
+// ── Heatmap controls ──────────────────────────────────────────────────────────
+async function setHeatmapMetric(metric) {
+  // If same metric clicked again, toggle off
+  if (_heatmapMetric === metric) {
+    clearHeatmap();
+    return;
+  }
+  // Ensure data is loaded for metrics that need lazy loading
+  if (metric === 'aq')            await _ensureAirQuality();
+  if (metric === 'metro')         await _ensureMetroTransit();
+  if (metric === 'nobel')         await _ensureNobelCities();
+  if (metric === 'universities')  await _ensureUniversities();
+
+  _heatmapMetric = metric;
+
+  // Update toggle button active states
+  document.querySelectorAll('.filter-heat-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.metric === metric);
+  });
+
+  // Show dot-mode row
+  const dotRow = document.getElementById('heat-dot-row');
+  if (dotRow) dotRow.style.display = 'flex';
+
+  // Build points and create/replace heat layer
+  const points = _buildHeatPoints(metric);
+  if (_heatmapLayer) { _heatmapLayer.remove(); _heatmapLayer = null; }
+  if (points.length > 0 && typeof L !== 'undefined' && L.heatLayer) {
+    _heatmapLayer = L.heatLayer(points, {
+      radius: 35, blur: 25, maxZoom: 10, max: 1.0,
+      gradient: _heatGradient(metric),
+    }).addTo(map);
+  }
+
+  // Rebuild dots to apply dim/hide mode
+  rebuildMapLayer();
+}
+
+function clearHeatmap() {
+  _heatmapMetric = null;
+  if (_heatmapLayer) { _heatmapLayer.remove(); _heatmapLayer = null; }
+  const dotRow = document.getElementById('heat-dot-row');
+  if (dotRow) dotRow.style.display = 'none';
+  document.querySelectorAll('.filter-heat-btn').forEach(b => b.classList.remove('active'));
+  rebuildMapLayer();
+}
+
+function setHeatDotMode(mode) {
+  _heatDotMode = mode;
+  document.querySelectorAll('[data-dotmode]').forEach(b => {
+    b.classList.toggle('active', b.dataset.dotmode === mode);
+  });
+  rebuildMapLayer();
+}
+
 function _buildHeatPoints(metric) {
   // Gather raw values
   const raw = [];
@@ -3525,8 +3653,16 @@ async function init() {
     subdomains: 'abcd', maxZoom: 20,
   }).addTo(map);
 
-  // Rebuild economic layer clusters whenever zoom changes
-  map.on('zoomend', () => { if (econOn) buildEconLayer(); });
+  // Rebuild economic layer clusters whenever zoom changes; also adjust heatmap radius
+  map.on('zoomend', () => {
+    if (econOn) buildEconLayer();
+    if (_heatmapLayer && _heatmapMetric) {
+      const z = map.getZoom();
+      const radius = Math.max(15, 35 - (z - 5) * 3);
+      const blur   = Math.max(10, 25 - (z - 5) * 2);
+      _heatmapLayer.setOptions({ radius, blur });
+    }
+  });
 
   // Normal map click → close trade panel + country popup
   map.on('click', () => { if (!_drawActive) { closeTradePanelFn(); closeCountryPopup(); } });
