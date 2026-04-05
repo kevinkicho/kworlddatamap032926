@@ -22,6 +22,8 @@
     "fetch-yahoo-financials": "node scripts/fetch-yahoo.js --financials",
     "fetch-fred": "node scripts/fetch-fred.js",
     "fetch-imf": "node scripts/fetch-imf.js",
+    "fetch-whr": "node scripts/fetch-whr.js",
+    "fetch-ember": "node scripts/fetch-ember.js",
     "test": "node --test tests/*.test.js"
   },
   "keywords": [],
