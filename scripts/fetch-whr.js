@@ -109,14 +109,14 @@ async function main() {
   for (const row of rows) {
     const name = row['Country name'] || row['country name'] || row['COUNTRY'];
     if (!name || typeof name !== 'string') continue;
-    rank++;
 
     const iso2 = lookup[name.trim().toLowerCase()];
     if (iso2 === null) continue;
     if (!iso2) { unmatched.push(name); continue; }
+    rank++;
 
     if (!cd[iso2]) cd[iso2] = {};
-    cd[iso2].whr_score      = num(row['Ladder score']                                 || row['Life Ladder']);
+    cd[iso2].whr_score      = num(row['Ladder score']                                 ?? row['Life Ladder']);
     cd[iso2].whr_rank       = rank;
     cd[iso2].whr_year       = 2024;
     cd[iso2].whr_gdp        = num(row['Explained by: Log GDP per capita']);

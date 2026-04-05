@@ -66,9 +66,11 @@ describe('WHR name matching', () => {
   });
 
   it('override wins over cd.name (case-insensitive)', () => {
-    const cdWithUS = { ...mockCd, US: { name: 'United States' } };
+    // cd maps 'America' → 'US'; override should map 'united states' → 'US' independently
+    const cdWithUS = { ...mockCd, US: { name: 'America' } };
     const l = buildNameLookup(cdWithUS, NAME_OVERRIDES);
-    assert.equal(l['united states'], 'US');
+    assert.equal(l['united states'], 'US',  'override should match WHR name');
+    assert.equal(l['america'],       'US',  'cd.name path should still work');
   });
 });
 
