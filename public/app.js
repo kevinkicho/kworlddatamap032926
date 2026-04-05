@@ -2757,6 +2757,12 @@ function _statSourceAttr(metric) {
     wb_tertiary_pct: 'OECD · Education at a Glance',
     wb_pisa_reading: 'OECD · PISA 2022',
     wb_min_wage_usd_ppp: 'OECD · Minimum Wage Database',
+    wb_avg_wage_usd: 'OECD · Average Annual Wages (USD PPP)',
+    wb_labour_prod: 'OECD · Level of GDP per Capita and Productivity',
+    wb_gender_pay_gap: 'OECD · Gender Pay Gap (median earnings)',
+    wb_social_spend_gdp: 'OECD · Social Expenditure Database (SOCX)',
+    wb_youth_unemployment: 'World Bank · WDI (SL.UEM.1524.ZS)',
+    wb_poverty_rate_oecd: 'OECD · Income Distribution Database (IDD)',
     eci: 'Observatory of Economic Complexity · Atlas',
     // Census
     population: 'U.S. Census Bureau · ACS 2023',
@@ -2857,6 +2863,12 @@ const WB_STAT_DEFS = {
   wb_tertiary_pct:     { label:'Tertiary Education',   key:'tertiary_pct',     fmt: v=>v.toFixed(1)+'%',        higherBetter:true,  src:'oecd' },
   wb_pisa_reading:     { label:'PISA Reading Score',   key:'pisa_reading',     fmt: v=>Math.round(v)+' pts',    higherBetter:true,  src:'oecd' },
   wb_min_wage_usd_ppp: { label:'Min Wage ($/hr PPP)',  key:'min_wage_usd_ppp', fmt: v=>'$'+v.toFixed(2)+'/hr',  higherBetter:true,  src:'oecd' },
+  wb_avg_wage_usd:     { label:'Average Wage ($/yr PPP)', key:'avg_wage_usd',    fmt: v=>'$'+Math.round(v).toLocaleString(), higherBetter:true,  src:'oecd' },
+  wb_labour_prod:      { label:'Labour Productivity ($/hr)', key:'labour_productivity', fmt: v=>'$'+v.toFixed(1)+'/hr', higherBetter:true, src:'oecd' },
+  wb_gender_pay_gap:   { label:'Gender Pay Gap (%)',   key:'gender_pay_gap',   fmt: v=>v.toFixed(1)+'%',        higherBetter:false, src:'oecd' },
+  wb_social_spend_gdp: { label:'Social Spending (% GDP)', key:'social_spend_gdp', fmt: v=>v.toFixed(1)+'%',    higherBetter:null,  src:'oecd' },
+  wb_youth_unemployment:{ label:'Youth Unemployment 15-24', key:'youth_unemployment', fmt: v=>v.toFixed(1)+'%', higherBetter:false, src:'oecd' },
+  wb_poverty_rate_oecd:{ label:'Poverty Rate (50% median)', key:'poverty_rate_oecd', fmt: v=>v.toFixed(1)+'%',  higherBetter:false, src:'oecd' },
 };
 
 // Company-level stats — company QID used as identifier; values converted to USD for fair ranking
@@ -4716,6 +4728,25 @@ function _renderCountryPanel(iso2) {
       if (Number.isFinite(od.pisa_reading))    rows += _cpGaugeRow('PISA reading',  od.pisa_reading,    maxPisa, 'pts', 'cp-blue', 'wb_pisa_reading',    iso2);
       if (Number.isFinite(od.min_wage_usd_ppp)) rows += _cpGaugeRow('Min wage',     od.min_wage_usd_ppp, maxWage, '$/hr PPP', 'cp-blue', 'wb_min_wage_usd_ppp', iso2);
       return rows ? '<div class="cp-gauge-section-hdr">Innovation &amp; Labor (OECD)</div>' + rows : '';
+    })() +
+    // ── OECD Social & Wages ──────────────────────────────────────────
+    (function() {
+      var od = oecdData[iso2];
+      if (!od) return '';
+      var rows = '';
+      var maxWage = _cpOecdMax('avg_wage_usd');
+      var maxProd = _cpOecdMax('labour_productivity');
+      var maxGap  = _cpOecdMax('gender_pay_gap');
+      var maxSoc  = _cpOecdMax('social_spend_gdp');
+      var maxYu   = _cpOecdMax('youth_unemployment');
+      var maxPov  = _cpOecdMax('poverty_rate_oecd');
+      if (Number.isFinite(od.avg_wage_usd))       rows += _cpGaugeRow('Avg wage',       od.avg_wage_usd,       maxWage, '$/yr', 'cp-blue',  'wb_avg_wage_usd',      iso2);
+      if (Number.isFinite(od.labour_productivity)) rows += _cpGaugeRow('Productivity',   od.labour_productivity, maxProd, '$/hr', 'cp-blue',  'wb_labour_prod',       iso2);
+      if (Number.isFinite(od.gender_pay_gap))      rows += _cpGaugeRow('Gender pay gap', od.gender_pay_gap,     maxGap,  '%',    'cp-amber',  'wb_gender_pay_gap',    iso2);
+      if (Number.isFinite(od.social_spend_gdp))    rows += _cpGaugeRow('Social spend',   od.social_spend_gdp,   maxSoc,  '% GDP','',          'wb_social_spend_gdp',  iso2);
+      if (Number.isFinite(od.youth_unemployment))  rows += _cpGaugeRow('Youth unemp',    od.youth_unemployment, maxYu,   '%',    'cp-red',    'wb_youth_unemployment',iso2);
+      if (Number.isFinite(od.poverty_rate_oecd))   rows += _cpGaugeRow('Poverty rate',   od.poverty_rate_oecd,  maxPov,  '%',    'cp-red',    'wb_poverty_rate_oecd', iso2);
+      return rows ? '<div class="cp-gauge-section-hdr">Social &amp; Wages (OECD)</div>' + rows : '';
     })() +
     // ── ECB (Eurozone only) ───────────────────────────────────────────
     (function() {

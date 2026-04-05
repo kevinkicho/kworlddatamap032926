@@ -15,7 +15,9 @@
         2021,
         0.697916312422648
       ]
-    ]
+    ],
+    "youth_unemployment": 25.5,
+    "youth_unemp_year": 2025
   },
   "1W": {
     "rd_spend_pct": 2.67,
@@ -229,7 +231,9 @@
         2023,
         13.8480893482949
       ]
-    ]
+    ],
+    "youth_unemployment": 13.4,
+    "youth_unemp_year": 2025
   },
   "4E": {
     "rd_spend_pct": 2.508,
@@ -423,7 +427,9 @@
         2023,
         8.2487656818632
       ]
-    ]
+    ],
+    "youth_unemployment": 13.1,
+    "youth_unemp_year": 2025
   },
   "7E": {
     "rd_spend_pct": 0.823,
@@ -621,7 +627,9 @@
         2024,
         18.1808826161551
       ]
-    ]
+    ],
+    "youth_unemployment": 13.7,
+    "youth_unemp_year": 2025
   },
   "8S": {
     "rd_spend_pct": 0.629,
@@ -915,7 +923,9 @@
         2022,
         6.75408406349519
       ]
-    ]
+    ],
+    "youth_unemployment": 15.4,
+    "youth_unemp_year": 2025
   },
   "AD": {
     "tax_revenue_pct": 13.947,
@@ -1169,7 +1179,9 @@
         2024,
         0.64751617298844
       ]
-    ]
+    ],
+    "youth_unemployment": 6.5,
+    "youth_unemp_year": 2025
   },
   "AF": {
     "tax_revenue_pct": 9.898,
@@ -1311,7 +1323,9 @@
         2017,
         9.8984508955205
       ]
-    ]
+    ],
+    "youth_unemployment": 16.8,
+    "youth_unemp_year": 2025
   },
   "AG": {
     "tertiary_pct": 14.69,
@@ -1517,7 +1531,9 @@
         2023,
         17.8021587949933
       ]
-    ]
+    ],
+    "youth_unemployment": 25.6,
+    "youth_unemp_year": 2025
   },
   "AM": {
     "rd_spend_pct": 0.181,
@@ -1875,7 +1891,9 @@
         2024,
         22.3660356799158
       ]
-    ]
+    ],
+    "youth_unemployment": 26.2,
+    "youth_unemp_year": 2025
   },
   "AO": {
     "rd_spend_pct": 0.032,
@@ -2069,7 +2087,9 @@
         2024,
         7.74436374420001
       ]
-    ]
+    ],
+    "youth_unemployment": 27.2,
+    "youth_unemp_year": 2025
   },
   "AR": {
     "rd_spend_pct": 0.549,
@@ -2325,7 +2345,9 @@
         2023,
         9.92889407586128
       ]
-    ]
+    ],
+    "youth_unemployment": 19.2,
+    "youth_unemp_year": 2025
   },
   "AT": {
     "rd_spend_pct": 3.2,
@@ -2727,7 +2749,19 @@
         2023,
         25.640680066923
       ]
-    ]
+    ],
+    "avg_wage_usd": 58585,
+    "avg_wage_year": 2023,
+    "labour_productivity": 77.2,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 12.8,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 26.7,
+    "social_spend_year": 2022,
+    "youth_unemployment": 11,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 9.1,
+    "poverty_rate_year": 2021
   },
   "AU": {
     "rd_spend_pct": 1.855,
@@ -3043,7 +3077,19 @@
         2022,
         23.5614929509239
       ]
-    ]
+    ],
+    "avg_wage_usd": 59408,
+    "avg_wage_year": 2023,
+    "labour_productivity": 66.2,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 12.2,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 17.3,
+    "social_spend_year": 2022,
+    "youth_unemployment": 9.6,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 12.4,
+    "poverty_rate_year": 2020
   },
   "AW": {
     "tertiary_pct": 19.6,
@@ -3409,7 +3455,9 @@
         2023,
         17.7860607300996
       ]
-    ]
+    ],
+    "youth_unemployment": 13.1,
+    "youth_unemp_year": 2025
   },
   "B8": {
     "rd_spend_pct": 1.313,
@@ -3643,7 +3691,9 @@
         2022,
         17.8337439912465
       ]
-    ]
+    ],
+    "youth_unemployment": 14.5,
+    "youth_unemp_year": 2025
   },
   "BA": {
     "rd_spend_pct": 0.192,
@@ -3911,7 +3961,13 @@
         2024,
         20.3059477554195
       ]
-    ]
+    ],
+    "youth_unemployment": 28.2,
+    "youth_unemp_year": 2025
+  },
+  "BB": {
+    "youth_unemployment": 18.5,
+    "youth_unemp_year": 2025
   },
   "BD": {
     "tax_revenue_pct": 7.642,
@@ -4181,7 +4237,9 @@
         2021,
         7.64236300887138
       ]
-    ]
+    ],
+    "youth_unemployment": 9.4,
+    "youth_unemp_year": 2025
   },
   "BE": {
     "rd_spend_pct": 3.405,
@@ -4517,7 +4575,19 @@
         2022,
         22.7983120173893
       ]
-    ]
+    ],
+    "avg_wage_usd": 60481,
+    "avg_wage_year": 2023,
+    "labour_productivity": 83.5,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 3.8,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 28.9,
+    "social_spend_year": 2022,
+    "youth_unemployment": 17.8,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 7.5,
+    "poverty_rate_year": 2021
   },
   "BF": {
     "rd_spend_pct": 0.251,
@@ -4883,7 +4953,9 @@
         2023,
         18.5514879980901
       ]
-    ]
+    ],
+    "youth_unemployment": 6.4,
+    "youth_unemp_year": 2025
   },
   "BG": {
     "rd_spend_pct": 0.754,
@@ -5239,7 +5311,13 @@
         2023,
         20.5146095521809
       ]
-    ]
+    ],
+    "social_spend_gdp": 38,
+    "social_spend_year": 2022,
+    "youth_unemployment": 10.2,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 17.9,
+    "poverty_rate_year": 2023
   },
   "BH": {
     "tax_revenue_pct": 2.823,
@@ -5535,7 +5613,9 @@
         2020,
         2.82317547820215
       ]
-    ]
+    ],
+    "youth_unemployment": 5.4,
+    "youth_unemp_year": 2025
   },
   "BI": {
     "rd_spend_pct": 0.213,
@@ -5813,7 +5893,9 @@
         2021,
         12.6333374627504
       ]
-    ]
+    ],
+    "youth_unemployment": 1.7,
+    "youth_unemp_year": 2025
   },
   "BJ": {
     "tertiary_pct": 3.85,
@@ -6023,7 +6105,9 @@
         2022,
         10.2350101470947
       ]
-    ]
+    ],
+    "youth_unemployment": 2.9,
+    "youth_unemp_year": 2025
   },
   "BM": {
     "rd_spend_pct": 0.225,
@@ -6249,11 +6333,15 @@
         2023,
         36.4182725443167
       ]
-    ]
+    ],
+    "youth_unemployment": 18.2,
+    "youth_unemp_year": 2025
   },
   "BO": {
     "tertiary_pct": 20.12,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "youth_unemployment": 5,
+    "youth_unemp_year": 2025
   },
   "BR": {
     "rd_spend_pct": 1.145,
@@ -6459,7 +6547,11 @@
         2024,
         15.4102340842559
       ]
-    ]
+    ],
+    "youth_unemployment": 14,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 31.1,
+    "poverty_rate_year": 2022
   },
   "BS": {
     "tax_revenue_pct": 16.198,
@@ -6657,7 +6749,9 @@
         2023,
         16.1980053499047
       ]
-    ]
+    ],
+    "youth_unemployment": 19.2,
+    "youth_unemp_year": 2025
   },
   "BT": {
     "tax_revenue_pct": 12.285,
@@ -6907,7 +7001,9 @@
         2020,
         12.2846363802964
       ]
-    ]
+    ],
+    "youth_unemployment": 17.1,
+    "youth_unemp_year": 2025
   },
   "BW": {
     "tax_revenue_pct": 22.488,
@@ -7217,7 +7313,9 @@
         2024,
         22.4882379320016
       ]
-    ]
+    ],
+    "youth_unemployment": 46,
+    "youth_unemp_year": 2025
   },
   "BY": {
     "rd_spend_pct": 0.578,
@@ -7661,7 +7759,9 @@
         2023,
         12.70106334387
       ]
-    ]
+    ],
+    "youth_unemployment": 9.2,
+    "youth_unemp_year": 2025
   },
   "BZ": {
     "tax_revenue_pct": 21.347,
@@ -7895,7 +7995,9 @@
         2017,
         21.346693969945
       ]
-    ]
+    ],
+    "youth_unemployment": 19.3,
+    "youth_unemp_year": 2025
   },
   "CA": {
     "rd_spend_pct": 1.701,
@@ -8243,7 +8345,19 @@
         2024,
         14.2302331833719
       ]
-    ]
+    ],
+    "avg_wage_usd": 59050,
+    "avg_wage_year": 2023,
+    "labour_productivity": 60.2,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 16.7,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 17.3,
+    "social_spend_year": 2022,
+    "youth_unemployment": 13.8,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 10,
+    "poverty_rate_year": 2021
   },
   "CD": {
     "tax_revenue_pct": 10.662,
@@ -8509,7 +8623,9 @@
         2022,
         10.6622824617649
       ]
-    ]
+    ],
+    "youth_unemployment": 7.8,
+    "youth_unemp_year": 2025
   },
   "CF": {
     "tax_revenue_pct": 8.206,
@@ -8691,7 +8807,9 @@
         2021,
         8.20629230003801
       ]
-    ]
+    ],
+    "youth_unemployment": 10.1,
+    "youth_unemp_year": 2025
   },
   "CG": {
     "rd_spend_pct": 0.383,
@@ -8789,7 +8907,9 @@
         2021,
         6.50908825854792
       ]
-    ]
+    ],
+    "youth_unemployment": 40.5,
+    "youth_unemp_year": 2025
   },
   "CH": {
     "rd_spend_pct": 3.306,
@@ -9145,7 +9265,19 @@
         2023,
         9.00355781857989
       ]
-    ]
+    ],
+    "avg_wage_usd": 72993,
+    "avg_wage_year": 2023,
+    "labour_productivity": 85.7,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 14,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 16.2,
+    "social_spend_year": 2022,
+    "youth_unemployment": 9,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 9.2,
+    "poverty_rate_year": 2020
   },
   "CI": {
     "rd_spend_pct": 0.07,
@@ -9403,7 +9535,9 @@
         2023,
         13.0371915904877
       ]
-    ]
+    ],
+    "youth_unemployment": 4,
+    "youth_unemp_year": 2025
   },
   "CL": {
     "rd_spend_pct": 0.36,
@@ -9783,7 +9917,19 @@
         2023,
         17.7194011337982
       ]
-    ]
+    ],
+    "avg_wage_usd": 27585,
+    "avg_wage_year": 2023,
+    "labour_productivity": 33.1,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 10.4,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 14,
+    "social_spend_year": 2022,
+    "youth_unemployment": 21.6,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 16.5,
+    "poverty_rate_year": 2020
   },
   "CM": {
     "tax_revenue_pct": 11.342,
@@ -10037,7 +10183,9 @@
         2021,
         11.3415157268484
       ]
-    ]
+    ],
+    "youth_unemployment": 6.5,
+    "youth_unemp_year": 2025
   },
   "CN": {
     "rd_spend_pct": 2.555,
@@ -10441,7 +10589,11 @@
         2023,
         7.6382330077989
       ]
-    ]
+    ],
+    "youth_unemployment": 15.8,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 26.7,
+    "poverty_rate_year": 2011
   },
   "CO": {
     "rd_spend_pct": 0.289,
@@ -10717,7 +10869,19 @@
         2024,
         15.2812370381266
       ]
-    ]
+    ],
+    "avg_wage_usd": 14412,
+    "avg_wage_year": 2023,
+    "labour_productivity": 18.8,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 3.9,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 13.3,
+    "social_spend_year": 2022,
+    "youth_unemployment": 17.7,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 18.5,
+    "poverty_rate_year": 2021
   },
   "CR": {
     "rd_spend_pct": 0.338,
@@ -11077,7 +11241,13 @@
         2023,
         13.9115296586432
       ]
-    ]
+    ],
+    "social_spend_gdp": 12,
+    "social_spend_year": 2022,
+    "youth_unemployment": 19.9,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 17,
+    "poverty_rate_year": 2021
   },
   "CU": {
     "rd_spend_pct": 0.36,
@@ -11407,7 +11577,9 @@
         2024,
         43.1040700506779
       ]
-    ]
+    ],
+    "youth_unemployment": 4.3,
+    "youth_unemp_year": 2025
   },
   "CV": {
     "tax_revenue_pct": 18.386,
@@ -11477,7 +11649,9 @@
         2020,
         18.3857032911625
       ]
-    ]
+    ],
+    "youth_unemployment": 28.4,
+    "youth_unemp_year": 2025
   },
   "CW": {
     "tertiary_pct": 30.17,
@@ -11895,7 +12069,9 @@
         2023,
         23.2663088788842
       ]
-    ]
+    ],
+    "youth_unemployment": 12.7,
+    "youth_unemp_year": 2025
   },
   "CZ": {
     "rd_spend_pct": 1.964,
@@ -12237,7 +12413,19 @@
         2022,
         12.6419883935481
       ]
-    ]
+    ],
+    "avg_wage_usd": 34248,
+    "avg_wage_year": 2023,
+    "labour_productivity": 46.7,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 12.7,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 19.4,
+    "social_spend_year": 2022,
+    "youth_unemployment": 9.2,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 5.7,
+    "poverty_rate_year": 2021
   },
   "DE": {
     "rd_spend_pct": 3.132,
@@ -12615,7 +12803,19 @@
         2023,
         10.6356015557046
       ]
-    ]
+    ],
+    "avg_wage_usd": 58940,
+    "avg_wage_year": 2023,
+    "labour_productivity": 76,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 13.5,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 26.7,
+    "social_spend_year": 2022,
+    "youth_unemployment": 6.9,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 10.9,
+    "poverty_rate_year": 2021
   },
   "DJ": {
     "tertiary_pct": 7.06,
@@ -12709,7 +12909,9 @@
         2011,
         5.16012001037598
       ]
-    ]
+    ],
+    "youth_unemployment": 76.8,
+    "youth_unemp_year": 2025
   },
   "DK": {
     "rd_spend_pct": 2.891,
@@ -13139,7 +13341,19 @@
         2023,
         31.5935489663634
       ]
-    ]
+    ],
+    "avg_wage_usd": 64127,
+    "avg_wage_year": 2023,
+    "labour_productivity": 88.2,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 5,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 28,
+    "social_spend_year": 2022,
+    "youth_unemployment": 11.7,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 6.1,
+    "poverty_rate_year": 2021
   },
   "DM": {
     "tertiary_pct": 6.84,
@@ -13441,7 +13655,9 @@
         2024,
         14.7034417622704
       ]
-    ]
+    ],
+    "youth_unemployment": 12.3,
+    "youth_unemp_year": 2025
   },
   "DZ": {
     "rd_spend_pct": 0.479,
@@ -13609,7 +13825,9 @@
         2024,
         54.4283410150344
       ]
-    ]
+    ],
+    "youth_unemployment": 29.4,
+    "youth_unemp_year": 2025
   },
   "EC": {
     "tax_revenue_pct": 13.089,
@@ -13695,7 +13913,9 @@
         2022,
         13.0891981797338
       ]
-    ]
+    ],
+    "youth_unemployment": 8.2,
+    "youth_unemp_year": 2025
   },
   "EE": {
     "rd_spend_pct": 1.782,
@@ -14043,7 +14263,19 @@
         2023,
         21.3289742256328
       ]
-    ]
+    ],
+    "avg_wage_usd": 33691,
+    "avg_wage_year": 2023,
+    "labour_productivity": 43.3,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 17.7,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 17.9,
+    "social_spend_year": 2022,
+    "youth_unemployment": 19.7,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 11.6,
+    "poverty_rate_year": 2021
   },
   "EG": {
     "rd_spend_pct": 1.034,
@@ -14343,11 +14575,17 @@
         2025,
         38.0398346509947
       ]
-    ]
+    ],
+    "youth_unemployment": 18.3,
+    "youth_unemp_year": 2025
   },
   "EL": {
     "tertiary_pct": 35.2,
     "tertiary_pct_year": 2024
+  },
+  "ER": {
+    "youth_unemployment": 10.2,
+    "youth_unemp_year": 2025
   },
   "ES": {
     "rd_spend_pct": 1.435,
@@ -14743,7 +14981,19 @@
         2023,
         14.9983875932141
       ]
-    ]
+    ],
+    "avg_wage_usd": 42859,
+    "avg_wage_year": 2023,
+    "labour_productivity": 57.6,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 8.5,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 24.7,
+    "social_spend_year": 2022,
+    "youth_unemployment": 24.7,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 14,
+    "poverty_rate_year": 2021
   },
   "ET": {
     "rd_spend_pct": 0.274,
@@ -15057,7 +15307,9 @@
         2024,
         3.39819259746301
       ]
-    ]
+    ],
+    "youth_unemployment": 5.4,
+    "youth_unemp_year": 2025
   },
   "EU": {
     "rd_spend_pct": 2.244,
@@ -15379,7 +15631,13 @@
         2023,
         19.5665622951586
       ]
-    ]
+    ],
+    "youth_unemployment": 16.2,
+    "youth_unemp_year": 2025
+  },
+  "F1": {
+    "youth_unemployment": 11.2,
+    "youth_unemp_year": 2025
   },
   "FI": {
     "rd_spend_pct": 2.965,
@@ -15809,7 +16067,19 @@
         2023,
         25.3756670380578
       ]
-    ]
+    ],
+    "avg_wage_usd": 51572,
+    "avg_wage_year": 2023,
+    "labour_productivity": 72.4,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 16.2,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 29,
+    "social_spend_year": 2022,
+    "youth_unemployment": 21.5,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 6.5,
+    "poverty_rate_year": 2021
   },
   "FJ": {
     "tax_revenue_pct": 20.538,
@@ -16039,7 +16309,9 @@
         2023,
         20.5379880712802
       ]
-    ]
+    ],
+    "youth_unemployment": 15.2,
+    "youth_unemp_year": 2025
   },
   "FM": {
     "tax_revenue_pct": 7.031,
@@ -16527,7 +16799,19 @@
         2023,
         23.0769652594876
       ]
-    ]
+    ],
+    "avg_wage_usd": 52764,
+    "avg_wage_year": 2023,
+    "labour_productivity": 71,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 11.6,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 31.6,
+    "social_spend_year": 2022,
+    "youth_unemployment": 18.9,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 8.4,
+    "poverty_rate_year": 2021
   },
   "GA": {
     "tax_revenue_pct": 9.49,
@@ -16573,7 +16857,9 @@
         2021,
         9.49032554345705
       ]
-    ]
+    ],
+    "youth_unemployment": 36.3,
+    "youth_unemp_year": 2025
   },
   "GB": {
     "rd_spend_pct": 2.897,
@@ -17005,7 +17291,19 @@
         2024,
         26.9583697121296
       ]
-    ]
+    ],
+    "avg_wage_usd": 53985,
+    "avg_wage_year": 2023,
+    "labour_productivity": 65.3,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 14.5,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 21.2,
+    "social_spend_year": 2022,
+    "youth_unemployment": 14.6,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 11.7,
+    "poverty_rate_year": 2021
   },
   "GD": {
     "tertiary_pct": 7.92,
@@ -17391,7 +17689,9 @@
         2024,
         24.2581681897327
       ]
-    ]
+    ],
+    "youth_unemployment": 30.3,
+    "youth_unemp_year": 2025
   },
   "GH": {
     "tax_revenue_pct": 12.298,
@@ -17621,7 +17921,9 @@
         2022,
         12.2975358068104
       ]
-    ]
+    ],
+    "youth_unemployment": 5.8,
+    "youth_unemp_year": 2025
   },
   "GM": {
     "rd_spend_pct": 0.069,
@@ -17675,7 +17977,9 @@
         2024,
         13.4765901565552
       ]
-    ]
+    ],
+    "youth_unemployment": 10.9,
+    "youth_unemp_year": 2025
   },
   "GN": {
     "tertiary_pct": 6.21,
@@ -17821,7 +18125,9 @@
         2014,
         10.8547201156616
       ]
-    ]
+    ],
+    "youth_unemployment": 7,
+    "youth_unemp_year": 2025
   },
   "GQ": {
     "tax_revenue_pct": 6.596,
@@ -17895,7 +18201,9 @@
         2022,
         6.5959868261885
       ]
-    ]
+    ],
+    "youth_unemployment": 15.7,
+    "youth_unemp_year": 2025
   },
   "GR": {
     "rd_spend_pct": 1.486,
@@ -18283,7 +18591,19 @@
         2023,
         26.6941129395794
       ]
-    ]
+    ],
+    "avg_wage_usd": 28167,
+    "avg_wage_year": 2023,
+    "labour_productivity": 37.3,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 7,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 23.5,
+    "social_spend_year": 2022,
+    "youth_unemployment": 21.4,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 12.1,
+    "poverty_rate_year": 2021
   },
   "GT": {
     "rd_spend_pct": 0.059,
@@ -18613,7 +18933,13 @@
         2023,
         11.5678620103716
       ]
-    ]
+    ],
+    "youth_unemployment": 4.8,
+    "youth_unemp_year": 2025
+  },
+  "GU": {
+    "youth_unemployment": 13.8,
+    "youth_unemp_year": 2025
   },
   "GW": {
     "tax_revenue_pct": 8.642,
@@ -18663,7 +18989,9 @@
         2023,
         8.64191716838539
       ]
-    ]
+    ],
+    "youth_unemployment": 2.8,
+    "youth_unemp_year": 2025
   },
   "GY": {
     "tertiary_pct": 4.47,
@@ -18789,7 +19117,9 @@
         2024,
         26.4315792489043
       ]
-    ]
+    ],
+    "youth_unemployment": 24.9,
+    "youth_unemp_year": 2025
   },
   "HK": {
     "rd_spend_pct": 1.103,
@@ -18901,7 +19231,9 @@
         2023,
         1.10339
       ]
-    ]
+    ],
+    "youth_unemployment": 9,
+    "youth_unemp_year": 2025
   },
   "HN": {
     "rd_spend_pct": 0.06,
@@ -19195,7 +19527,9 @@
         2020,
         15.0661315517441
       ]
-    ]
+    ],
+    "youth_unemployment": 8.5,
+    "youth_unemp_year": 2025
   },
   "HR": {
     "rd_spend_pct": 1.403,
@@ -19531,7 +19865,13 @@
         2023,
         21.1834528152976
       ]
-    ]
+    ],
+    "social_spend_gdp": 0.1,
+    "social_spend_year": 2021,
+    "youth_unemployment": 16.5,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 30.7,
+    "poverty_rate_year": 2023
   },
   "HT": {
     "tertiary_pct": 4.53,
@@ -19573,7 +19913,9 @@
         1986,
         1.05140995979309
       ]
-    ]
+    ],
+    "youth_unemployment": 37.5,
+    "youth_unemp_year": 2025
   },
   "HU": {
     "rd_spend_pct": 1.395,
@@ -19963,7 +20305,19 @@
         2022,
         23.4285893294636
       ]
-    ]
+    ],
+    "avg_wage_usd": 28879,
+    "avg_wage_year": 2023,
+    "labour_productivity": 39.8,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 10.3,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 19.4,
+    "social_spend_year": 2022,
+    "youth_unemployment": 14.2,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 8.4,
+    "poverty_rate_year": 2021
   },
   "ID": {
     "rd_spend_pct": 0.281,
@@ -20223,7 +20577,9 @@
         2023,
         44.8813034886441
       ]
-    ]
+    ],
+    "youth_unemployment": 13,
+    "youth_unemp_year": 2025
   },
   "IE": {
     "rd_spend_pct": 0.963,
@@ -20647,7 +21003,19 @@
         2022,
         16.7926964316008
       ]
-    ]
+    ],
+    "avg_wage_usd": 55781,
+    "avg_wage_year": 2023,
+    "labour_productivity": 132,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 9.6,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 14.4,
+    "social_spend_year": 2022,
+    "youth_unemployment": 10.5,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 7.7,
+    "poverty_rate_year": 2021
   },
   "IL": {
     "rd_spend_pct": 6.019,
@@ -21079,7 +21447,19 @@
         2023,
         22.1364060336696
       ]
-    ]
+    ],
+    "avg_wage_usd": 44156,
+    "avg_wage_year": 2023,
+    "labour_productivity": 53.6,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 25.4,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 16.3,
+    "social_spend_year": 2022,
+    "youth_unemployment": 6,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 16.9,
+    "poverty_rate_year": 2021
   },
   "IN": {
     "rd_spend_pct": 0.646,
@@ -21477,7 +21857,11 @@
         2022,
         6.73444285965496
       ]
-    ]
+    ],
+    "youth_unemployment": 16,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 17.7,
+    "poverty_rate_year": 2011
   },
   "IQ": {
     "rd_spend_pct": 0.041,
@@ -21663,7 +22047,9 @@
         2019,
         1.34459361823375
       ]
-    ]
+    ],
+    "youth_unemployment": 32,
+    "youth_unemp_year": 2025
   },
   "IR": {
     "rd_spend_pct": 0.727,
@@ -21869,7 +22255,9 @@
         2022,
         58.6677703857422
       ]
-    ]
+    ],
+    "youth_unemployment": 21.9,
+    "youth_unemp_year": 2025
   },
   "IS": {
     "rd_spend_pct": 2.6,
@@ -22285,7 +22673,17 @@
         2023,
         23.1751062205462
       ]
-    ]
+    ],
+    "avg_wage_usd": 79473,
+    "avg_wage_year": 2023,
+    "labour_productivity": 69.5,
+    "labour_prod_year": 2023,
+    "social_spend_gdp": 17,
+    "social_spend_year": 2022,
+    "youth_unemployment": 8.7,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 5.2,
+    "poverty_rate_year": 2021
   },
   "IT": {
     "rd_spend_pct": 1.39,
@@ -22711,7 +23109,23 @@
         2023,
         24.7080453637277
       ]
-    ]
+    ],
+    "avg_wage_usd": 44893,
+    "avg_wage_year": 2023,
+    "labour_productivity": 62.5,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 5.6,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 28.2,
+    "social_spend_year": 2022,
+    "youth_unemployment": 20.5,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 13.4,
+    "poverty_rate_year": 2021
+  },
+  "JG": {
+    "youth_unemployment": 14.1,
+    "youth_unemp_year": 2025
   },
   "JM": {
     "tax_revenue_pct": 23.674,
@@ -22953,7 +23367,9 @@
         2020,
         23.6736609376178
       ]
-    ]
+    ],
+    "youth_unemployment": 10.8,
+    "youth_unemp_year": 2025
   },
   "JO": {
     "rd_spend_pct": 0.695,
@@ -23201,7 +23617,9 @@
         2023,
         17.0491301941353
       ]
-    ]
+    ],
+    "youth_unemployment": 38.9,
+    "youth_unemp_year": 2025
   },
   "JP": {
     "rd_spend_pct": 3.405,
@@ -23369,7 +23787,19 @@
         2023,
         64.8912200927734
       ]
-    ]
+    ],
+    "avg_wage_usd": 44010,
+    "avg_wage_year": 2023,
+    "labour_productivity": 52.3,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 21.3,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 24.9,
+    "social_spend_year": 2022,
+    "youth_unemployment": 3.9,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 15.7,
+    "poverty_rate_year": 2018
   },
   "KE": {
     "rd_spend_pct": 0.809,
@@ -23551,7 +23981,9 @@
         2023,
         14.0631113817639
       ]
-    ]
+    ],
+    "youth_unemployment": 15.2,
+    "youth_unemp_year": 2025
   },
   "KG": {
     "rd_spend_pct": 0.059,
@@ -23875,7 +24307,9 @@
         2024,
         20.3821895007982
       ]
-    ]
+    ],
+    "youth_unemployment": 8.2,
+    "youth_unemp_year": 2025
   },
   "KH": {
     "tax_revenue_pct": 12.204,
@@ -24133,7 +24567,9 @@
         2023,
         12.203542053066
       ]
-    ]
+    ],
+    "youth_unemployment": 0.7,
+    "youth_unemp_year": 2025
   },
   "KI": {
     "tax_revenue_pct": 17.717,
@@ -24265,7 +24701,9 @@
         2017,
         18.8190281456697
       ]
-    ]
+    ],
+    "youth_unemployment": 8.8,
+    "youth_unemp_year": 2025
   },
   "KN": {
     "tax_revenue_pct": 15.042,
@@ -24368,6 +24806,10 @@
         15.0423826463699
       ]
     ]
+  },
+  "KP": {
+    "youth_unemployment": 7.9,
+    "youth_unemp_year": 2025
   },
   "KR": {
     "rd_spend_pct": 5.211,
@@ -24799,7 +25241,19 @@
         2023,
         14.5990999081076
       ]
-    ]
+    ],
+    "avg_wage_usd": 48922,
+    "avg_wage_year": 2023,
+    "labour_productivity": 47.4,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 31.2,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 14.8,
+    "social_spend_year": 2022,
+    "youth_unemployment": 6.7,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 15.3,
+    "poverty_rate_year": 2021
   },
   "KW": {
     "rd_spend_pct": 0.098,
@@ -25071,7 +25525,9 @@
         2021,
         51.8967176944636
       ]
-    ]
+    ],
+    "youth_unemployment": 15.1,
+    "youth_unemp_year": 2025
   },
   "KZ": {
     "rd_spend_pct": 0.145,
@@ -25399,7 +25855,9 @@
         2023,
         11.892477417904
       ]
-    ]
+    ],
+    "youth_unemployment": 3.8,
+    "youth_unemp_year": 2025
   },
   "LA": {
     "tax_revenue_pct": 12.113,
@@ -25649,7 +26107,9 @@
         2022,
         12.1129327823146
       ]
-    ]
+    ],
+    "youth_unemployment": 2.4,
+    "youth_unemp_year": 2025
   },
   "LB": {
     "tax_revenue_pct": 5.685,
@@ -25913,7 +26373,9 @@
         2021,
         5.68479554527678
       ]
-    ]
+    ],
+    "youth_unemployment": 22.7,
+    "youth_unemp_year": 2023
   },
   "LC": {
     "tax_revenue_pct": 18.225,
@@ -26123,7 +26585,9 @@
         2017,
         18.2251165686921
       ]
-    ]
+    ],
+    "youth_unemployment": 20.3,
+    "youth_unemp_year": 2025
   },
   "LI": {
     "rd_spend_pct": 5.868,
@@ -26457,7 +26921,9 @@
         2023,
         9.92189093067548
       ]
-    ]
+    ],
+    "youth_unemployment": 18.6,
+    "youth_unemp_year": 2025
   },
   "LR": {
     "tertiary_pct": 5.06,
@@ -26511,7 +26977,9 @@
         2012,
         10.838520055325
       ]
-    ]
+    ],
+    "youth_unemployment": 2.3,
+    "youth_unemp_year": 2025
   },
   "LS": {
     "tax_revenue_pct": 37.283,
@@ -26849,7 +27317,9 @@
         2024,
         37.2829803739764
       ]
-    ]
+    ],
+    "youth_unemployment": 24.7,
+    "youth_unemp_year": 2025
   },
   "LT": {
     "rd_spend_pct": 1.053,
@@ -27201,7 +27671,19 @@
         2023,
         21.418435814263
       ]
-    ]
+    ],
+    "avg_wage_usd": 37020,
+    "avg_wage_year": 2023,
+    "labour_productivity": 46.9,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 9.5,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 16.4,
+    "social_spend_year": 2022,
+    "youth_unemployment": 13.8,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 12.8,
+    "poverty_rate_year": 2021
   },
   "LU": {
     "rd_spend_pct": 0.977,
@@ -27581,7 +28063,19 @@
         2023,
         26.8469729272694
       ]
-    ]
+    ],
+    "avg_wage_usd": 78015,
+    "avg_wage_year": 2023,
+    "labour_productivity": 98.9,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 0.7,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 22.4,
+    "social_spend_year": 2022,
+    "youth_unemployment": 21.5,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 5.9,
+    "poverty_rate_year": 2023
   },
   "LV": {
     "rd_spend_pct": 0.764,
@@ -27925,7 +28419,23 @@
         2023,
         16.6322142422569
       ]
-    ]
+    ],
+    "avg_wage_usd": 31239,
+    "avg_wage_year": 2023,
+    "labour_productivity": 38.1,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 20.1,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 16.5,
+    "social_spend_year": 2022,
+    "youth_unemployment": 12.9,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 12.2,
+    "poverty_rate_year": 2021
+  },
+  "LY": {
+    "youth_unemployment": 50.1,
+    "youth_unemp_year": 2025
   },
   "MA": {
     "tax_revenue_pct": 20.744,
@@ -28057,7 +28567,9 @@
         2023,
         20.7438772425044
       ]
-    ]
+    ],
+    "youth_unemployment": 21.9,
+    "youth_unemp_year": 2025
   },
   "MD": {
     "rd_spend_pct": 0.223,
@@ -28337,7 +28849,9 @@
         2023,
         18.5850270257317
       ]
-    ]
+    ],
+    "youth_unemployment": 4.2,
+    "youth_unemp_year": 2025
   },
   "ME": {
     "rd_spend_pct": 0.363,
@@ -28497,7 +29011,9 @@
         2023,
         55.1743011474609
       ]
-    ]
+    ],
+    "youth_unemployment": 24.4,
+    "youth_unemp_year": 2025
   },
   "MG": {
     "rd_spend_pct": 0.013,
@@ -28895,7 +29411,9 @@
         2023,
         9.61487095893803
       ]
-    ]
+    ],
+    "youth_unemployment": 5.2,
+    "youth_unemp_year": 2025
   },
   "MH": {
     "tax_revenue_pct": 17.156,
@@ -29273,7 +29791,9 @@
         2023,
         17.7577976514035
       ]
-    ]
+    ],
+    "youth_unemployment": 28.8,
+    "youth_unemp_year": 2025
   },
   "ML": {
     "rd_spend_pct": 0.174,
@@ -29535,7 +30055,9 @@
         2020,
         11.9520025009648
       ]
-    ]
+    ],
+    "youth_unemployment": 3.9,
+    "youth_unemp_year": 2025
   },
   "MM": {
     "rd_spend_pct": 0.024,
@@ -29873,7 +30395,9 @@
         2019,
         6.01765247726484
       ]
-    ]
+    ],
+    "youth_unemployment": 9.8,
+    "youth_unemp_year": 2025
   },
   "MN": {
     "rd_spend_pct": 0.084,
@@ -30337,7 +30861,9 @@
         2024,
         16.854871862883
       ]
-    ]
+    ],
+    "youth_unemployment": 11.7,
+    "youth_unemp_year": 2025
   },
   "MO": {
     "rd_spend_pct": 0.264,
@@ -30553,7 +31079,9 @@
         2023,
         22.9306249864095
       ]
-    ]
+    ],
+    "youth_unemployment": 6.8,
+    "youth_unemp_year": 2025
   },
   "MR": {
     "rd_spend_pct": 0.01,
@@ -30563,7 +31091,9 @@
         2018,
         0.01019
       ]
-    ]
+    ],
+    "youth_unemployment": 22.9,
+    "youth_unemp_year": 2025
   },
   "MT": {
     "rd_spend_pct": 0.604,
@@ -30963,7 +31493,9 @@
         2023,
         21.4831065249643
       ]
-    ]
+    ],
+    "youth_unemployment": 8.4,
+    "youth_unemp_year": 2025
   },
   "MU": {
     "rd_spend_pct": 0.234,
@@ -31351,7 +31883,9 @@
         2024,
         20.5324115436094
       ]
-    ]
+    ],
+    "youth_unemployment": 17.4,
+    "youth_unemp_year": 2025
   },
   "MV": {
     "tax_revenue_pct": 19.453,
@@ -31557,7 +32091,9 @@
         2021,
         19.453248279288
       ]
-    ]
+    ],
+    "youth_unemployment": 15.7,
+    "youth_unemp_year": 2025
   },
   "MW": {
     "tax_revenue_pct": 13.504,
@@ -31791,7 +32327,9 @@
         2022,
         13.5038573905772
       ]
-    ]
+    ],
+    "youth_unemployment": 6.9,
+    "youth_unemp_year": 2025
   },
   "MX": {
     "rd_spend_pct": 0.268,
@@ -32197,7 +32735,19 @@
         2023,
         14.1935866614195
       ]
-    ]
+    ],
+    "avg_wage_usd": 16685,
+    "avg_wage_year": 2023,
+    "labour_productivity": 23.3,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 12.5,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 7.8,
+    "social_spend_year": 2022,
+    "youth_unemployment": 5.7,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 16.6,
+    "poverty_rate_year": 2020
   },
   "MY": {
     "rd_spend_pct": 0.951,
@@ -32561,7 +33111,9 @@
         2023,
         12.5648395418319
       ]
-    ]
+    ],
+    "youth_unemployment": 12,
+    "youth_unemp_year": 2025
   },
   "MZ": {
     "tax_revenue_pct": 21.853,
@@ -32771,7 +33323,9 @@
         2024,
         21.8525035902837
       ]
-    ]
+    ],
+    "youth_unemployment": 11.6,
+    "youth_unemp_year": 2025
   },
   "NA": {
     "rd_spend_pct": 0.646,
@@ -33021,11 +33575,15 @@
         2023,
         32.9629020947691
       ]
-    ]
+    ],
+    "youth_unemployment": 38,
+    "youth_unemp_year": 2025
   },
   "NC": {
     "tertiary_pct": 15.19,
-    "tertiary_pct_year": 2019
+    "tertiary_pct_year": 2019,
+    "youth_unemployment": 33.1,
+    "youth_unemp_year": 2025
   },
   "NE": {
     "tertiary_pct": 0.97,
@@ -33167,7 +33725,9 @@
         2019,
         4.15170730347346
       ]
-    ]
+    ],
+    "youth_unemployment": 0.5,
+    "youth_unemp_year": 2025
   },
   "NG": {
     "rd_spend_pct": 0.284,
@@ -33269,7 +33829,9 @@
         2011,
         9.74153350922586
       ]
-    ]
+    ],
+    "youth_unemployment": 5.3,
+    "youth_unemp_year": 2025
   },
   "NI": {
     "tax_revenue_pct": 19.942,
@@ -33411,7 +33973,9 @@
         2023,
         19.9424179242094
       ]
-    ]
+    ],
+    "youth_unemployment": 9.5,
+    "youth_unemp_year": 2025
   },
   "NL": {
     "rd_spend_pct": 2.255,
@@ -33821,7 +34385,19 @@
         2023,
         25.2540392502664
       ]
-    ]
+    ],
+    "avg_wage_usd": 63225,
+    "avg_wage_year": 2023,
+    "labour_productivity": 77.1,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 12.1,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 18.8,
+    "social_spend_year": 2022,
+    "youth_unemployment": 8.8,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 8.3,
+    "poverty_rate_year": 2021
   },
   "NO": {
     "rd_spend_pct": 1.558,
@@ -34239,7 +34815,19 @@
         2023,
         27.0526715460901
       ]
-    ]
+    ],
+    "avg_wage_usd": 60555,
+    "avg_wage_year": 2023,
+    "labour_productivity": 100.9,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 4.6,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 25.3,
+    "social_spend_year": 2022,
+    "youth_unemployment": 13.4,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 8.4,
+    "poverty_rate_year": 2021
   },
   "NP": {
     "tax_revenue_pct": 13.945,
@@ -34541,7 +35129,9 @@
         2023,
         13.9448572554799
       ]
-    ]
+    ],
+    "youth_unemployment": 20.6,
+    "youth_unemp_year": 2025
   },
   "NR": {
     "tax_revenue_pct": 44.347,
@@ -34853,7 +35443,19 @@
         2023,
         30.6677718688638
       ]
-    ]
+    ],
+    "avg_wage_usd": 49754,
+    "avg_wage_year": 2023,
+    "labour_productivity": 49.7,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 8.6,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 18.9,
+    "social_spend_year": 2022,
+    "youth_unemployment": 14.4,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 10.9,
+    "poverty_rate_year": 2021
   },
   "OE": {
     "rd_spend_pct": 3.022,
@@ -35181,7 +35783,9 @@
         2023,
         15.6457436324952
       ]
-    ]
+    ],
+    "youth_unemployment": 11.6,
+    "youth_unemp_year": 2025
   },
   "OM": {
     "rd_spend_pct": 0.367,
@@ -35315,7 +35919,9 @@
         2021,
         43.8433613964625
       ]
-    ]
+    ],
+    "youth_unemployment": 13.9,
+    "youth_unemp_year": 2025
   },
   "PA": {
     "rd_spend_pct": 0.158,
@@ -35671,7 +36277,9 @@
         2021,
         7.46060570161025
       ]
-    ]
+    ],
+    "youth_unemployment": 19.8,
+    "youth_unemp_year": 2025
   },
   "PE": {
     "rd_spend_pct": 0.162,
@@ -35965,7 +36573,15 @@
         2021,
         15.9243395223169
       ]
-    ]
+    ],
+    "social_spend_gdp": 0.1,
+    "social_spend_year": 2023,
+    "youth_unemployment": 9.5,
+    "youth_unemp_year": 2025
+  },
+  "PF": {
+    "youth_unemployment": 36.6,
+    "youth_unemp_year": 2025
   },
   "PG": {
     "rd_spend_pct": 0.032,
@@ -36119,7 +36735,9 @@
         2023,
         15.9347989235859
       ]
-    ]
+    ],
+    "youth_unemployment": 3.8,
+    "youth_unemp_year": 2025
   },
   "PH": {
     "rd_spend_pct": 0.322,
@@ -36503,7 +37121,9 @@
         2023,
         14.1044353413959
       ]
-    ]
+    ],
+    "youth_unemployment": 7,
+    "youth_unemp_year": 2025
   },
   "PK": {
     "rd_spend_pct": 0.164,
@@ -36725,7 +37345,9 @@
         2024,
         10.8564126844434
       ]
-    ]
+    ],
+    "youth_unemployment": 9.6,
+    "youth_unemp_year": 2025
   },
   "PL": {
     "rd_spend_pct": 1.454,
@@ -37069,7 +37691,19 @@
         2023,
         17.9988487014512
       ]
-    ]
+    ],
+    "avg_wage_usd": 36216,
+    "avg_wage_year": 2023,
+    "labour_productivity": 41.1,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 7.8,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 22.2,
+    "social_spend_year": 2022,
+    "youth_unemployment": 10.7,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 8.4,
+    "poverty_rate_year": 2021
   },
   "PR": {
     "tertiary_pct": 30.83,
@@ -37143,7 +37777,9 @@
         2023,
         77.9263575380698
       ]
-    ]
+    ],
+    "youth_unemployment": 14,
+    "youth_unemp_year": 2025
   },
   "PS": {
     "tertiary_pct": 22.79,
@@ -37261,7 +37897,9 @@
         2023,
         44.4904623709098
       ]
-    ]
+    ],
+    "youth_unemployment": 36.1,
+    "youth_unemp_year": 2022
   },
   "PT": {
     "rd_spend_pct": 1.702,
@@ -37629,7 +38267,19 @@
         2023,
         22.6188283771548
       ]
-    ]
+    ],
+    "avg_wage_usd": 33565,
+    "avg_wage_year": 2023,
+    "labour_productivity": 41.5,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 10.6,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 23.3,
+    "social_spend_year": 2022,
+    "youth_unemployment": 20.2,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 10.7,
+    "poverty_rate_year": 2021
   },
   "PW": {
     "tax_revenue_pct": 17.895,
@@ -38005,7 +38655,9 @@
         2024,
         11.4048611893673
       ]
-    ]
+    ],
+    "youth_unemployment": 11.7,
+    "youth_unemp_year": 2025
   },
   "QA": {
     "rd_spend_pct": 0.681,
@@ -38125,7 +38777,9 @@
         2022,
         35.0854901088778
       ]
-    ]
+    ],
+    "youth_unemployment": 0.6,
+    "youth_unemp_year": 2025
   },
   "RO": {
     "rd_spend_pct": 0.459,
@@ -38517,7 +39171,13 @@
         2022,
         16.2141886979742
       ]
-    ]
+    ],
+    "social_spend_gdp": 0,
+    "social_spend_year": 2021,
+    "youth_unemployment": 24.5,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 11.7,
+    "poverty_rate_year": 2023
   },
   "RS": {
     "rd_spend_pct": 0.95,
@@ -38797,7 +39457,9 @@
         2022,
         23.8929959453301
       ]
-    ]
+    ],
+    "youth_unemployment": 20.9,
+    "youth_unemp_year": 2025
   },
   "RU": {
     "rd_spend_pct": 0.925,
@@ -39119,7 +39781,11 @@
         2023,
         12.0728013906636
       ]
-    ]
+    ],
+    "youth_unemployment": 7.6,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 10.3,
+    "poverty_rate_year": 2017
   },
   "RW": {
     "rd_spend_pct": 0.794,
@@ -39325,7 +39991,9 @@
         2023,
         13.5080695479594
       ]
-    ]
+    ],
+    "youth_unemployment": 16.4,
+    "youth_unemp_year": 2025
   },
   "S1": {
     "rd_spend_pct": 0.862,
@@ -39419,7 +40087,9 @@
         2019,
         20.5153171720698
       ]
-    ]
+    ],
+    "youth_unemployment": 22.1,
+    "youth_unemp_year": 2025
   },
   "S2": {
     "tax_revenue_pct": 20.428,
@@ -39477,7 +40147,9 @@
         2023,
         20.4283186970613
       ]
-    ]
+    ],
+    "youth_unemployment": 9.4,
+    "youth_unemp_year": 2025
   },
   "S3": {
     "tax_revenue_pct": 17.653,
@@ -39551,7 +40223,9 @@
         2017,
         17.6526301515574
       ]
-    ]
+    ],
+    "youth_unemployment": 19.1,
+    "youth_unemp_year": 2025
   },
   "S4": {
     "rd_spend_pct": 1.4,
@@ -39741,7 +40415,9 @@
         2023,
         21.9958221034027
       ]
-    ]
+    ],
+    "youth_unemployment": 25.9,
+    "youth_unemp_year": 2025
   },
   "SA": {
     "rd_spend_pct": 0.565,
@@ -40085,7 +40761,9 @@
         2024,
         8.18471656930006
       ]
-    ]
+    ],
+    "youth_unemployment": 10,
+    "youth_unemp_year": 2025
   },
   "SB": {
     "tax_revenue_pct": 22.075,
@@ -40139,7 +40817,9 @@
         2022,
         22.0746646402949
       ]
-    ]
+    ],
+    "youth_unemployment": 2.8,
+    "youth_unemp_year": 2025
   },
   "SC": {
     "rd_spend_pct": 0.202,
@@ -40303,7 +40983,9 @@
         2015,
         15.8645696640015
       ]
-    ]
+    ],
+    "youth_unemployment": 12,
+    "youth_unemp_year": 2022
   },
   "SE": {
     "rd_spend_pct": 3.408,
@@ -40717,7 +41399,19 @@
         2023,
         27.5821816916854
       ]
-    ]
+    ],
+    "avg_wage_usd": 52477,
+    "avg_wage_year": 2023,
+    "labour_productivity": 80.8,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 7.1,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 25.5,
+    "social_spend_year": 2022,
+    "youth_unemployment": 24.3,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 8.9,
+    "poverty_rate_year": 2021
   },
   "SG": {
     "rd_spend_pct": 2.156,
@@ -41089,7 +41783,9 @@
         2024,
         14.1917409326666
       ]
-    ]
+    ],
+    "youth_unemployment": 6.8,
+    "youth_unemp_year": 2025
   },
   "SI": {
     "rd_spend_pct": 2.095,
@@ -41441,7 +42137,19 @@
         2023,
         20.3151075328515
       ]
-    ]
+    ],
+    "avg_wage_usd": 39338,
+    "avg_wage_year": 2023,
+    "labour_productivity": 51.8,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 3.1,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 21.5,
+    "social_spend_year": 2022,
+    "youth_unemployment": 9.5,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 7.6,
+    "poverty_rate_year": 2021
   },
   "SK": {
     "rd_spend_pct": 0.979,
@@ -41781,7 +42489,19 @@
         2023,
         19.3078908764281
       ]
-    ]
+    ],
+    "avg_wage_usd": 28382,
+    "avg_wage_year": 2023,
+    "labour_productivity": 40.3,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 10.5,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 18.4,
+    "social_spend_year": 2022,
+    "youth_unemployment": 18.4,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 7.6,
+    "poverty_rate_year": 2021
   },
   "SL": {
     "tertiary_pct": 1.96,
@@ -41863,7 +42583,9 @@
         2002,
         1.98783004283905
       ]
-    ]
+    ],
+    "youth_unemployment": 3.7,
+    "youth_unemp_year": 2025
   },
   "SM": {
     "tax_revenue_pct": 17.269,
@@ -42191,7 +42913,9 @@
         2023,
         19.5370790010841
       ]
-    ]
+    ],
+    "youth_unemployment": 3.6,
+    "youth_unemp_year": 2025
   },
   "SO": {
     "tax_revenue_pct": 0,
@@ -42253,7 +42977,9 @@
         2024,
         0.0000796182509481436
       ]
-    ]
+    ],
+    "youth_unemployment": 34.2,
+    "youth_unemp_year": 2025
   },
   "SR": {
     "tertiary_pct": 8.93,
@@ -42323,7 +43049,13 @@
         2023,
         4.93785087797966
       ]
-    ]
+    ],
+    "youth_unemployment": 25.4,
+    "youth_unemp_year": 2025
+  },
+  "SS": {
+    "youth_unemployment": 18.5,
+    "youth_unemp_year": 2023
   },
   "ST": {
     "tertiary_pct": 4.85,
@@ -42349,7 +43081,9 @@
         2015,
         12.8210802078247
       ]
-    ]
+    ],
+    "youth_unemployment": 8.8,
+    "youth_unemp_year": 2025
   },
   "SV": {
     "rd_spend_pct": 0.143,
@@ -42727,7 +43461,9 @@
         2024,
         21.4969845858726
       ]
-    ]
+    ],
+    "youth_unemployment": 7.8,
+    "youth_unemp_year": 2025
   },
   "SY": {
     "rd_spend_pct": 0.073,
@@ -42741,7 +43477,9 @@
         2022,
         0.07306
       ]
-    ]
+    ],
+    "youth_unemployment": 33.1,
+    "youth_unemp_year": 2025
   },
   "SZ": {
     "tax_revenue_pct": 24.348,
@@ -42955,7 +43693,9 @@
         2021,
         24.3477036729934
       ]
-    ]
+    ],
+    "youth_unemployment": 54.3,
+    "youth_unemp_year": 2025
   },
   "T2": {
     "rd_spend_pct": 0.621,
@@ -43105,7 +43845,9 @@
         2023,
         14.1073530525643
       ]
-    ]
+    ],
+    "youth_unemployment": 12.3,
+    "youth_unemp_year": 2025
   },
   "T3": {
     "rd_spend_pct": 0.539,
@@ -43135,7 +43877,9 @@
         2021,
         0.538755837378145
       ]
-    ]
+    ],
+    "youth_unemployment": 19.4,
+    "youth_unemp_year": 2025
   },
   "T4": {
     "rd_spend_pct": 2.508,
@@ -43329,7 +44073,9 @@
         2023,
         8.2487656818632
       ]
-    ]
+    ],
+    "youth_unemployment": 13.1,
+    "youth_unemp_year": 2025
   },
   "T5": {
     "rd_spend_pct": 0.629,
@@ -43623,7 +44369,13 @@
         2022,
         6.75408406349519
       ]
-    ]
+    ],
+    "youth_unemployment": 15.4,
+    "youth_unemp_year": 2025
+  },
+  "T6": {
+    "youth_unemployment": 10.1,
+    "youth_unemp_year": 2025
   },
   "T7": {
     "rd_spend_pct": 0.938,
@@ -43833,7 +44585,9 @@
         2023,
         14.9828422913547
       ]
-    ]
+    ],
+    "youth_unemployment": 12.1,
+    "youth_unemp_year": 2025
   },
   "TC": {
     "tertiary_pct": 11.75,
@@ -43989,7 +44743,9 @@
         2020,
         4.39665967267065
       ]
-    ]
+    ],
+    "youth_unemployment": 1.5,
+    "youth_unemp_year": 2025
   },
   "TG": {
     "tax_revenue_pct": 13.79,
@@ -44231,7 +44987,9 @@
         2023,
         13.7896420898615
       ]
-    ]
+    ],
+    "youth_unemployment": 3.4,
+    "youth_unemp_year": 2025
   },
   "TH": {
     "rd_spend_pct": 1.159,
@@ -44655,7 +45413,9 @@
         2024,
         15.2576732483721
       ]
-    ]
+    ],
+    "youth_unemployment": 4.5,
+    "youth_unemp_year": 2025
   },
   "TJ": {
     "rd_spend_pct": 0.09,
@@ -44921,7 +45681,9 @@
         2023,
         10.752156064593
       ]
-    ]
+    ],
+    "youth_unemployment": 14.6,
+    "youth_unemp_year": 2025
   },
   "TL": {
     "tax_revenue_pct": 21.643,
@@ -44999,7 +45761,9 @@
         2022,
         21.6431379455773
       ]
-    ]
+    ],
+    "youth_unemployment": 3.7,
+    "youth_unemp_year": 2025
   },
   "TM": {
     "rd_spend_pct": 0.14,
@@ -45093,7 +45857,9 @@
         2024,
         20.4250351701637
       ]
-    ]
+    ],
+    "youth_unemployment": 10,
+    "youth_unemp_year": 2025
   },
   "TN": {
     "rd_spend_pct": 0.747,
@@ -45389,7 +46155,9 @@
         2023,
         38.1219482421875
       ]
-    ]
+    ],
+    "youth_unemployment": 38.1,
+    "youth_unemp_year": 2025
   },
   "TO": {
     "tax_revenue_pct": 20.454,
@@ -45471,7 +46239,9 @@
         2023,
         20.4538603855689
       ]
-    ]
+    ],
+    "youth_unemployment": 6,
+    "youth_unemp_year": 2025
   },
   "TR": {
     "rd_spend_pct": 1.323,
@@ -45859,7 +46629,19 @@
         2024,
         17.6239296511937
       ]
-    ]
+    ],
+    "avg_wage_usd": 24356,
+    "avg_wage_year": 2023,
+    "labour_productivity": 36.7,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 11.6,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 12.4,
+    "social_spend_year": 2022,
+    "youth_unemployment": 16,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 15.9,
+    "poverty_rate_year": 2021
   },
   "TT": {
     "rd_spend_pct": 0.048,
@@ -46195,7 +46977,9 @@
         2019,
         16.7568469467377
       ]
-    ]
+    ],
+    "youth_unemployment": 8.2,
+    "youth_unemp_year": 2025
   },
   "TV": {
     "tertiary_pct": 8.43,
@@ -46467,7 +47251,9 @@
         2024,
         12.8029080708118
       ]
-    ]
+    ],
+    "youth_unemployment": 2.4,
+    "youth_unemp_year": 2025
   },
   "UA": {
     "rd_spend_pct": 0.327,
@@ -46787,7 +47573,9 @@
         2024,
         21.027968473332
       ]
-    ]
+    ],
+    "youth_unemployment": 19.1,
+    "youth_unemp_year": 2021
   },
   "UG": {
     "rd_spend_pct": 0.311,
@@ -47029,7 +47817,9 @@
         2023,
         12.9683684791221
       ]
-    ]
+    ],
+    "youth_unemployment": 4.2,
+    "youth_unemp_year": 2025
   },
   "UK": {
     "tertiary_pct": 44.7,
@@ -47417,7 +48207,19 @@
         2024,
         10.8905153823848
       ]
-    ]
+    ],
+    "avg_wage_usd": 77463,
+    "avg_wage_year": 2023,
+    "labour_productivity": 85,
+    "labour_prod_year": 2023,
+    "gender_pay_gap": 17,
+    "gender_pay_gap_year": 2022,
+    "social_spend_gdp": 22.7,
+    "social_spend_year": 2022,
+    "youth_unemployment": 9.3,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 17.8,
+    "poverty_rate_year": 2021
   },
   "UY": {
     "rd_spend_pct": 0.626,
@@ -47837,7 +48639,9 @@
         2024,
         18.1623555727699
       ]
-    ]
+    ],
+    "youth_unemployment": 25.1,
+    "youth_unemp_year": 2025
   },
   "UZ": {
     "rd_spend_pct": 0.125,
@@ -48103,7 +48907,13 @@
         2023,
         11.5296953038943
       ]
-    ]
+    ],
+    "youth_unemployment": 11.4,
+    "youth_unemp_year": 2025
+  },
+  "V1": {
+    "youth_unemployment": 9.1,
+    "youth_unemp_year": 2025
   },
   "V2": {
     "rd_spend_pct": 0.823,
@@ -48325,7 +49135,9 @@
         2022,
         12.2085265069215
       ]
-    ]
+    ],
+    "youth_unemployment": 14.8,
+    "youth_unemp_year": 2025
   },
   "V3": {
     "rd_spend_pct": 2.163,
@@ -48503,7 +49315,9 @@
         2023,
         9.98392836946777
       ]
-    ]
+    ],
+    "youth_unemployment": 14.4,
+    "youth_unemp_year": 2025
   },
   "V4": {
     "rd_spend_pct": 3.121,
@@ -48829,7 +49643,9 @@
         2023,
         15.5160446695307
       ]
-    ]
+    ],
+    "youth_unemployment": 11.6,
+    "youth_unemp_year": 2025
   },
   "VC": {
     "tax_revenue_pct": 23.8,
@@ -48947,7 +49763,9 @@
         2017,
         23.7995357429648
       ]
-    ]
+    ],
+    "youth_unemployment": 41.9,
+    "youth_unemp_year": 2025
   },
   "VE": {
     "rd_spend_pct": 0.69,
@@ -49113,7 +49931,13 @@
         2009,
         78.2699203491211
       ]
-    ]
+    ],
+    "youth_unemployment": 10.4,
+    "youth_unemp_year": 2025
+  },
+  "VI": {
+    "youth_unemployment": 24.2,
+    "youth_unemp_year": 2025
   },
   "VN": {
     "rd_spend_pct": 0.425,
@@ -49313,7 +50137,9 @@
         2024,
         37.5923642016718
       ]
-    ]
+    ],
+    "youth_unemployment": 6.2,
+    "youth_unemp_year": 2025
   },
   "VU": {
     "tax_revenue_pct": 17.571,
@@ -49431,7 +50257,9 @@
         2023,
         17.5712891365028
       ]
-    ]
+    ],
+    "youth_unemployment": 11.3,
+    "youth_unemp_year": 2025
   },
   "WS": {
     "tax_revenue_pct": 23.956,
@@ -49561,7 +50389,9 @@
         2023,
         23.9562772523711
       ]
-    ]
+    ],
+    "youth_unemployment": 13,
+    "youth_unemp_year": 2025
   },
   "XC": {
     "rd_spend_pct": 2.28,
@@ -49887,7 +50717,9 @@
         2023,
         18.9072194719648
       ]
-    ]
+    ],
+    "youth_unemployment": 16.4,
+    "youth_unemp_year": 2025
   },
   "XD": {
     "rd_spend_pct": 2.922,
@@ -50213,7 +51045,9 @@
         2023,
         15.2142095336506
       ]
-    ]
+    ],
+    "youth_unemployment": 11.5,
+    "youth_unemp_year": 2025
   },
   "XE": {
     "tax_revenue_pct": 11.486,
@@ -50259,7 +51093,9 @@
         2020,
         11.4863544798662
       ]
-    ]
+    ],
+    "youth_unemployment": 7.6,
+    "youth_unemp_year": 2025
   },
   "XF": {
     "rd_spend_pct": 1.957,
@@ -50441,7 +51277,13 @@
         2023,
         11.1526327808633
       ]
-    ]
+    ],
+    "youth_unemployment": 15.9,
+    "youth_unemp_year": 2025
+  },
+  "XG": {
+    "youth_unemployment": 9.4,
+    "youth_unemp_year": 2025
   },
   "XH": {
     "rd_spend_pct": 0.24,
@@ -50455,7 +51297,9 @@
         2019,
         0.240202663818926
       ]
-    ]
+    ],
+    "youth_unemployment": 8.7,
+    "youth_unemp_year": 2025
   },
   "XI": {
     "tax_revenue_pct": 10.532,
@@ -50513,7 +51357,9 @@
         2021,
         10.5322692715478
       ]
-    ]
+    ],
+    "youth_unemployment": 9.8,
+    "youth_unemp_year": 2025
   },
   "XJ": {
     "rd_spend_pct": 0.651,
@@ -50663,7 +51509,9 @@
         2023,
         13.846627337645
       ]
-    ]
+    ],
+    "youth_unemployment": 11.8,
+    "youth_unemp_year": 2025
   },
   "XK": {
     "pisa_reading": 353,
@@ -50725,7 +51573,13 @@
         2021,
         10.5353242130843
       ]
-    ]
+    ],
+    "youth_unemployment": 9.7,
+    "youth_unemp_year": 2025
+  },
+  "XM": {
+    "youth_unemployment": 11.2,
+    "youth_unemp_year": 2025
   },
   "XN": {
     "rd_spend_pct": 0.544,
@@ -50827,7 +51681,9 @@
         2018,
         12.3016802345042
       ]
-    ]
+    ],
+    "youth_unemployment": 12.9,
+    "youth_unemp_year": 2025
   },
   "XO": {
     "rd_spend_pct": 1.939,
@@ -51001,7 +51857,9 @@
         2023,
         10.7771299144893
       ]
-    ]
+    ],
+    "youth_unemployment": 13.9,
+    "youth_unemp_year": 2025
   },
   "XP": {
     "rd_spend_pct": 1.941,
@@ -51175,7 +52033,9 @@
         2023,
         10.7587133957399
       ]
-    ]
+    ],
+    "youth_unemployment": 14.3,
+    "youth_unemp_year": 2025
   },
   "XQ": {
     "rd_spend_pct": 0.539,
@@ -51205,7 +52065,9 @@
         2021,
         0.538755837378145
       ]
-    ]
+    ],
+    "youth_unemployment": 19.4,
+    "youth_unemp_year": 2025
   },
   "XT": {
     "rd_spend_pct": 2.136,
@@ -51383,7 +52245,9 @@
         2023,
         10.5651505358538
       ]
-    ]
+    ],
+    "youth_unemployment": 16.3,
+    "youth_unemp_year": 2025
   },
   "XU": {
     "rd_spend_pct": 3.439,
@@ -51713,7 +52577,13 @@
         2024,
         11.1756521570362
       ]
-    ]
+    ],
+    "youth_unemployment": 9.8,
+    "youth_unemp_year": 2025
+  },
+  "YE": {
+    "youth_unemployment": 32.6,
+    "youth_unemp_year": 2025
   },
   "Z4": {
     "rd_spend_pct": 2.829,
@@ -51903,7 +52773,9 @@
         2022,
         10.7730216868572
       ]
-    ]
+    ],
+    "youth_unemployment": 12.5,
+    "youth_unemp_year": 2025
   },
   "Z7": {
     "rd_spend_pct": 1.972,
@@ -52229,7 +53101,9 @@
         2023,
         19.5536798107065
       ]
-    ]
+    ],
+    "youth_unemployment": 14,
+    "youth_unemp_year": 2025
   },
   "ZA": {
     "rd_spend_pct": 0.617,
@@ -52623,7 +53497,19 @@
         2023,
         25.4004573761785
       ]
-    ]
+    ],
+    "youth_unemployment": 59.9,
+    "youth_unemp_year": 2025,
+    "poverty_rate_oecd": 23.8,
+    "poverty_rate_year": 2017
+  },
+  "ZF": {
+    "youth_unemployment": 10.7,
+    "youth_unemp_year": 2025
+  },
+  "ZG": {
+    "youth_unemployment": 10.1,
+    "youth_unemp_year": 2025
   },
   "ZH": {
     "tax_revenue_pct": 17.893,
@@ -52725,7 +53611,9 @@
         2023,
         17.8927500792662
       ]
-    ]
+    ],
+    "youth_unemployment": 13.4,
+    "youth_unemp_year": 2025
   },
   "ZI": {
     "rd_spend_pct": 0.278,
@@ -52739,7 +53627,9 @@
         2019,
         0.278252142202904
       ]
-    ]
+    ],
+    "youth_unemployment": 5.6,
+    "youth_unemp_year": 2025
   },
   "ZJ": {
     "rd_spend_pct": 0.618,
@@ -52889,7 +53779,9 @@
         2023,
         14.1120021002354
       ]
-    ]
+    ],
+    "youth_unemployment": 12.2,
+    "youth_unemp_year": 2025
   },
   "ZM": {
     "tax_revenue_pct": 16.78,
@@ -53103,7 +53995,9 @@
         2021,
         16.7804106780344
       ]
-    ]
+    ],
+    "youth_unemployment": 10.5,
+    "youth_unemp_year": 2025
   },
   "ZQ": {
     "rd_spend_pct": 1.346,
@@ -53117,7 +54011,9 @@
         2021,
         1.34619726859862
       ]
-    ]
+    ],
+    "youth_unemployment": 18.7,
+    "youth_unemp_year": 2025
   },
   "ZT": {
     "rd_spend_pct": 1.933,
@@ -53295,7 +54191,9 @@
         2023,
         11.1866249438857
       ]
-    ]
+    ],
+    "youth_unemployment": 13.7,
+    "youth_unemp_year": 2025
   },
   "ZW": {
     "tax_revenue_pct": 7.215,
@@ -53441,6 +54339,8 @@
         2018,
         7.21476804985273
       ]
-    ]
+    ],
+    "youth_unemployment": 15.5,
+    "youth_unemp_year": 2025
   }
 }

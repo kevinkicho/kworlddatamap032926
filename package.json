@@ -24,6 +24,7 @@
     "fetch-imf": "node scripts/fetch-imf.js",
     "fetch-whr": "node scripts/fetch-whr.js",
     "fetch-ember": "node scripts/fetch-ember.js",
+    "fetch-oecd-social": "node scripts/fetch-oecd-social.js",
     "test": "node --test tests/*.test.js"
   },
   "keywords": [],
