@@ -1276,7 +1276,9 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 1px; background: #21262d; border-bottom: 1px solid #21262d; flex-shrink: 0;
 }
-.cp-stat-card { background: #161b22; padding: 10px 12px; text-align: center; }
+.cp-stat-card { background: #161b22; padding: 10px 12px; text-align: center; transition: background .15s; }
+.cp-stat-card-clickable { cursor: pointer; }
+.cp-stat-card-clickable:hover { background: #1c2128; }
 .cp-stat-val { font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums; color: #e6edf3; }
 .cp-stat-lbl { font-size: 0.68rem; color: #8b949e; margin-top: 2px; letter-spacing: .03em; }
 

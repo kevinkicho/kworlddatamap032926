@@ -4486,16 +4486,18 @@ function _renderCountryPanel(iso2) {
   var debtCls = !Number.isFinite(debt) ? "" : debt > 90 ? "cp-red"   : debt > 60 ? "cp-amber" : "";
   var fiscCls = !Number.isFinite(fisc) ? "" : fisc >= 0 ? "cp-green" : "cp-red";
 
-  function statCard(cls, val, fmt, suffix, label) {
+  function statCard(cls, val, fmt, suffix, label, wbKey) {
     var display = Number.isFinite(val) ? fmt(val) + suffix : "--";
-    return "<div class=\"cp-stat-card " + cls + "\"><div class=\"cp-stat-val\">" + display +
+    var onc = wbKey ? " onclick=\"" + escHtml("openStatsPanel(" + JSON.stringify(wbKey) + "," + JSON.stringify(iso2) + ")") + "\"" : "";
+    var clickCls = wbKey ? " cp-stat-card-clickable" : "";
+    return "<div class=\"cp-stat-card " + cls + clickCls + "\"" + onc + "><div class=\"cp-stat-val\">" + display +
            "</div><div class=\"cp-stat-lbl\">" + label + "</div></div>";
   }
   document.getElementById("cp-stats-row").innerHTML =
-    statCard("cp-blue",   gdp,  function(v){ return "$" + _cpFmt(v, 0); }, "", "GDP/cap") +
-    statCard(infCls,      inf,  function(v){ return v.toFixed(1); },       "%", "Inflation") +
-    statCard(debtCls,     debt, function(v){ return v.toFixed(0); },       "%", "Debt/GDP") +
-    statCard(fiscCls,     fisc, function(v){ return (v >= 0 ? "+" : "") + v.toFixed(1); }, "%", "Fiscal Bal");
+    statCard("cp-blue",   gdp,  function(v){ return "$" + _cpFmt(v, 0); }, "", "GDP/cap",    "wb_gdp_per_capita") +
+    statCard(infCls,      inf,  function(v){ return v.toFixed(1); },       "%", "Inflation",  "wb_cpi_inflation") +
+    statCard(debtCls,     debt, function(v){ return v.toFixed(0); },       "%", "Debt/GDP",   "wb_govt_debt_gdp") +
+    statCard(fiscCls,     fisc, function(v){ return (v >= 0 ? "+" : "") + v.toFixed(1); }, "%", "Fiscal Bal", "wb_fiscal_balance_gdp");
 
   // ── bar gauges (left column) ──────────────────────────────────────
   var maxGdp   = _cpWorldMax("gdp_per_capita"),  maxLife  = _cpWorldMax("life_expectancy");
