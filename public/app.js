@@ -94,6 +94,7 @@ async function _ensureUniversities() {
       if (res.ok) {
         universitiesData = await res.json();
         console.log(`[lazy] Universities loaded (${Object.keys(universitiesData).length} cities)`);
+        if (_filterAvail.universities || _filterValue.universities != null || _heatmapMetric === 'universities') rebuildMapLayer();
       }
     } catch (e) { console.warn('[lazy] universities.json failed', e); }
     finally { _univLoaded = true; _univLoading = null; }
@@ -130,6 +131,7 @@ async function _ensureAirport() {
       if (res.ok) {
         airportData = await res.json();
         console.log(`[lazy] Airport data loaded (${Object.keys(airportData).length} cities)`);
+        if (_filterAvail.airport) rebuildMapLayer();
       }
     } catch (e) { console.warn('[lazy] airport-connectivity.json failed', e); }
     finally { _airportLoaded = true; _airportLoading = null; }
@@ -148,6 +150,7 @@ async function _ensureAirQuality() {
       if (res.ok) {
         airQualityData = await res.json();
         console.log(`[lazy] WHO air quality loaded (${Object.keys(airQualityData).length} cities)`);
+        if (_filterAvail.airQuality || _filterValue.aq != null || _heatmapMetric === 'aq') rebuildMapLayer();
       }
     } catch (e) { console.warn('[lazy] who-airquality.json failed', e); }
     finally { _aqLoaded = true; _aqLoading = null; }
@@ -166,6 +169,7 @@ async function _ensureMetroTransit() {
       if (res.ok) {
         metroTransitData = await res.json();
         console.log(`[lazy] Metro transit loaded (${Object.keys(metroTransitData).length} cities)`);
+        if (_filterAvail.metro || _filterValue.metro != null || _heatmapMetric === 'metro') rebuildMapLayer();
       }
     } catch (e) { console.warn('[lazy] metro-transit.json failed', e); }
     finally { _metroLoaded = true; _metroLoading = null; }
@@ -184,6 +188,7 @@ async function _ensureNobelCities() {
       if (res.ok) {
         nobelCitiesData = await res.json();
         console.log(`[lazy] Nobel cities loaded (${Object.keys(nobelCitiesData).length} cities)`);
+        if (_filterAvail.nobel || _filterValue.nobel != null || _heatmapMetric === 'nobel') rebuildMapLayer();
       }
     } catch (e) { console.warn('[lazy] nobel-cities.json failed', e); }
     finally { _nobelLoaded = true; _nobelLoading = null; }
@@ -243,6 +248,8 @@ function openFilterPanel() {
   _ensureAirQuality();
   _ensureAirport();
   _ensureUniversities();
+  _ensureMetroTransit();
+  _ensureNobelCities();
   document.getElementById('filter-panel').classList.add('open');
   document.getElementById('filter-fab').classList.add('active');
 }
@@ -262,7 +269,7 @@ function _updateFilterBadge() {
 
 function setFilterDimMode(mode) {
   _filterDimMode = mode;
-  document.querySelectorAll('.filter-mode-btn').forEach(b => {
+  document.querySelectorAll('#filter-dim-row .filter-mode-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === mode);
   });
   rebuildMapLayer();
@@ -868,13 +875,13 @@ function rebuildMapLayer() {
     const filterResult = _anyFilterActive() ? applyMapFilters(city) : 'match';
     if (filterResult === 'hide') return;
     const filterDim = filterResult === 'dim';
-    if (!filterDim) _filterMatchCount++;
 
     // Heatmap dot mode: when heatmap is active, optionally hide/dim dots
     if (_heatmapMetric) {
       if (_heatDotMode === 'hide') return;   // hide all dots when heatmap active
     }
     const heatDim = _heatmapMetric && _heatDotMode === 'dim';
+    if (!filterDim) _filterMatchCount++;
 
     const aqCol     = (!filterDim && !heatDim && cityAqMode) ? airQualityDotColor(city) : null;
     const censusCol = aqCol ? null : (!filterDim && !heatDim ? censusDotColor(city) : null);
