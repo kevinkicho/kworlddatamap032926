@@ -2898,19 +2898,19 @@ const JAPAN_PREF_STAT_DEFS = {
   },
 };
 
+function statCell(label, val, cls = '', metric = '', qid = '', title = 'Click to see ranking') {
+  const extra = metric && qid
+    ? ` census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="${escHtml(title)}"`
+    : `"`;
+  return `<div class="census-stat${extra}><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
+}
+
 // Combined Census ACS + Business tab
 function buildEconomyHtml(acs, biz, qid) {
   const fmt$ = v => v != null && v > 0 ? '$' + fmtNum(Math.round(v)) : '—';
   const fmtPct = v => v != null && v >= 0 ? v.toFixed(1) + '%' : '—';
   const fmtN   = v => v != null ? fmtNum(v) : '—';
   const fmt$M  = v => v != null && v > 0 ? '$' + fmtRevenue(v * 1000) : '—';
-
-  function statCell(label, val, cls = '', metric = '') {
-    const extra = metric && qid
-      ? ` census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="Click to see ranking"`
-      : `"`;
-    return `<div class="census-stat${extra}><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
-  }
 
   let html = '<div class="census-wrap">';
 
@@ -2948,22 +2948,22 @@ function buildEconomyHtml(acs, biz, qid) {
         </div>
         <div class="econ-col-right">
           <div class="census-stats-grid econ-right-grid">
-            ${statCell('Median Income', medIncomeFmt, 'census-gold', 'medianIncome')}
-            ${statCell('Poverty', fmtPct(acs.povertyPct), povCls, 'povertyPct')}
-            ${statCell('Unemployed', fmtPct(acs.unemploymentPct), unempCls, 'unemploymentPct')}
-            ${statCell('Rent-Burdened', fmtPct(acs.rentBurdenedPct), burdCls, 'rentBurdenedPct')}
-            ${statCell('Median Rent', fmt$(acs.medianRent)+(acs.medianRent>0?'/mo':''), '', 'medianRent')}
-            ${statCell('Home Value', fmt$(acs.medianHomeValue), '', 'medianHomeValue')}
-            ${statCell('Gini', acs.gini!=null?acs.gini.toFixed(3):'—', giniCls, 'gini')}
-            ${statCell('SNAP', fmtPct(acs.snapPct), snapCls, 'snapPct')}
+            ${statCell('Median Income', medIncomeFmt, 'census-gold', 'medianIncome', qid)}
+            ${statCell('Poverty', fmtPct(acs.povertyPct), povCls, 'povertyPct', qid)}
+            ${statCell('Unemployed', fmtPct(acs.unemploymentPct), unempCls, 'unemploymentPct', qid)}
+            ${statCell('Rent-Burdened', fmtPct(acs.rentBurdenedPct), burdCls, 'rentBurdenedPct', qid)}
+            ${statCell('Median Rent', fmt$(acs.medianRent)+(acs.medianRent>0?'/mo':''), '', 'medianRent', qid)}
+            ${statCell('Home Value', fmt$(acs.medianHomeValue), '', 'medianHomeValue', qid)}
+            ${statCell('Gini', acs.gini!=null?acs.gini.toFixed(3):'—', giniCls, 'gini', qid)}
+            ${statCell('SNAP', fmtPct(acs.snapPct), snapCls, 'snapPct', qid)}
           </div>
         </div>
       </div>
       <div class="census-stats-grid" style="margin-top:6px;grid-template-columns:repeat(4,1fr)">
-        ${statCell('College+', fmtPct(acs.bachelorPlusPct), '', 'bachelorPlusPct')}
-        ${statCell('Transit', fmtPct(acs.transitPct), '', 'transitPct')}
-        ${statCell('Med. Age', acs.medianAge!=null?acs.medianAge+' yr':'—', '', 'medianAge')}
-        ${statCell('Homeown.', fmtPct(acs.ownerOccPct), '', 'ownerOccPct')}
+        ${statCell('College+', fmtPct(acs.bachelorPlusPct), '', 'bachelorPlusPct', qid)}
+        ${statCell('Transit', fmtPct(acs.transitPct), '', 'transitPct', qid)}
+        ${statCell('Med. Age', acs.medianAge!=null?acs.medianAge+' yr':'—', '', 'medianAge', qid)}
+        ${statCell('Homeown.', fmtPct(acs.ownerOccPct), '', 'ownerOccPct', qid)}
       </div>`;
   }
 
@@ -3041,10 +3041,10 @@ function buildEconomyHtml(acs, biz, qid) {
         </div>
       </div>
       <div class="census-stats-grid" style="margin-top:6px;grid-template-columns:repeat(4,1fr)">
-        ${statCell('Estab.', fmtN(cbp.total?.estab), '', 'totalEstab')}
-        ${statCell('Payroll', fmt$M(cbp.total?.payann), '', 'totalPayroll')}
-        ${statCell('Mfg Share', mfgShare, cbp.manufacturing?.estab/totalEstab>0.08?'census-gold':'', 'mfgShare')}
-        ${statCell('Self-Empl.', selfEmplDisplay, '', 'selfEmplPct')}
+        ${statCell('Estab.', fmtN(cbp.total?.estab), '', 'totalEstab', qid)}
+        ${statCell('Payroll', fmt$M(cbp.total?.payann), '', 'totalPayroll', qid)}
+        ${statCell('Mfg Share', mfgShare, cbp.manufacturing?.estab/totalEstab>0.08?'census-gold':'', 'mfgShare', qid)}
+        ${statCell('Self-Empl.', selfEmplDisplay, '', 'selfEmplPct', qid)}
       </div>`;
   }
 
@@ -3082,8 +3082,8 @@ function buildEconomyHtml(acs, biz, qid) {
     const pCol = crime.propertyPer100k > 3000 ? 'census-red' : crime.propertyPer100k > 1500 ? 'census-amber' : '';
     html += `<div class="census-section-title" style="margin-top:10px">Crime · FBI UCR ${crime.year}</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
-      ${statCell('Violent Crime', crime.violentPer100k.toFixed(0) + '/100k', vCol, 'fbi_violentPer100k')}
-      ${statCell('Property Crime', crime.propertyPer100k.toFixed(0) + '/100k', pCol, 'fbi_propertyPer100k')}
+      ${statCell('Violent Crime', crime.violentPer100k.toFixed(0) + '/100k', vCol, 'fbi_violentPer100k', qid)}
+      ${statCell('Property Crime', crime.propertyPer100k.toFixed(0) + '/100k', pCol, 'fbi_propertyPer100k', qid)}
     </div>`;
   }
 
@@ -3678,13 +3678,6 @@ function buildEurostatHtml(es, qid) {
   const fmtEur = v => v != null ? '€' + fmtNum(Math.round(v)) : '—';
   const fmtN   = v => v != null ? fmtNum(Math.round(v)) : '—';
 
-  function statCell(label, val, cls, metric) {
-    const extra = metric
-      ? ` census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="Click to see European ranking"`
-      : `"`;
-    return `<div class="census-stat${extra}><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
-  }
-
   const yr = es.year ? ` · ${es.year}` : '';
   const unempCls = es.unemploymentPct > 12 ? 'census-red' : es.unemploymentPct > 7 ? 'census-amber' : '';
   const povCls   = es.povertyPct > 25 ? 'census-red' : es.povertyPct > 15 ? 'census-amber' : '';
@@ -3694,18 +3687,18 @@ function buildEurostatHtml(es, qid) {
   let html = `<div class="census-wrap">
     <div class="census-head">Urban Audit · Eurostat${yr}</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:6px">
-      ${statCell('Unemployment', fmtPct(es.unemploymentPct), unempCls, 'eurostat_unemploymentPct')}
-      ${statCell('Activity Rate', fmtPct(es.activityRate), '', 'eurostat_activityRate')}
-      ${statCell('Companies', fmtN(es.totalCompanies), '', 'eurostat_totalCompanies')}
+      ${statCell('Unemployment', fmtPct(es.unemploymentPct), unempCls, 'eurostat_unemploymentPct', qid, 'Click to see European ranking')}
+      ${statCell('Activity Rate', fmtPct(es.activityRate), '', 'eurostat_activityRate', qid, 'Click to see European ranking')}
+      ${statCell('Companies', fmtN(es.totalCompanies), '', 'eurostat_totalCompanies', qid, 'Click to see European ranking')}
     </div>`;
 
   if (es.medianIncome != null || es.povertyPct != null || es.homeownershipPct != null || es.rentPerSqm != null) {
     html += `<div class="census-section-title" style="margin-top:6px">Living Conditions</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
-      ${statCell('Median Income', fmtEur(es.medianIncome), 'census-gold', 'eurostat_medianIncome')}
-      ${statCell('At-Risk Poverty', fmtPct(es.povertyPct), povCls, 'eurostat_povertyPct')}
-      ${statCell('Homeownership', fmtPct(es.homeownershipPct), '', 'eurostat_homeownershipPct')}
-      ${statCell('Rent / m²', es.rentPerSqm != null ? '€' + es.rentPerSqm.toFixed(1) : '—', '', 'eurostat_rentPerSqm')}
+      ${statCell('Median Income', fmtEur(es.medianIncome), 'census-gold', 'eurostat_medianIncome', qid, 'Click to see European ranking')}
+      ${statCell('At-Risk Poverty', fmtPct(es.povertyPct), povCls, 'eurostat_povertyPct', qid, 'Click to see European ranking')}
+      ${statCell('Homeownership', fmtPct(es.homeownershipPct), '', 'eurostat_homeownershipPct', qid, 'Click to see European ranking')}
+      ${statCell('Rent / m²', es.rentPerSqm != null ? '€' + es.rentPerSqm.toFixed(1) : '—', '', 'eurostat_rentPerSqm', qid, 'Click to see European ranking')}
     </div>`;
   }
 
@@ -3713,10 +3706,10 @@ function buildEurostatHtml(es, qid) {
   if (es.pm10 != null || es.no2 != null || es.greenSpacePct != null || es.roadNoisePct != null) {
     html += `<div class="census-section-title" style="margin-top:6px">Environment & Air Quality</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
-      ${es.pm10 != null           ? statCell('PM10', es.pm10.toFixed(1) + ' μg/m³', pm10Cls, 'eurostat_pm10') : ''}
-      ${es.no2  != null           ? statCell('NO₂',  es.no2.toFixed(1)  + ' μg/m³', no2Cls,  'eurostat_no2')  : ''}
-      ${es.greenSpacePct != null  ? statCell('Green Urban Area', es.greenSpacePct.toFixed(1) + '% land', '', 'eurostat_greenSpacePct') : ''}
-      ${es.roadNoisePct  != null  ? statCell('Road Noise >65dB', es.roadNoisePct.toFixed(1) + '% residents', '', 'eurostat_roadNoisePct') : ''}
+      ${es.pm10 != null           ? statCell('PM10', es.pm10.toFixed(1) + ' μg/m³', pm10Cls, 'eurostat_pm10', qid, 'Click to see European ranking') : ''}
+      ${es.no2  != null           ? statCell('NO₂',  es.no2.toFixed(1)  + ' μg/m³', no2Cls,  'eurostat_no2', qid, 'Click to see European ranking')  : ''}
+      ${es.greenSpacePct != null  ? statCell('Green Urban Area', es.greenSpacePct.toFixed(1) + '% land', '', 'eurostat_greenSpacePct', qid, 'Click to see European ranking') : ''}
+      ${es.roadNoisePct  != null  ? statCell('Road Noise >65dB', es.roadNoisePct.toFixed(1) + '% residents', '', 'eurostat_roadNoisePct', qid, 'Click to see European ranking') : ''}
     </div>`;
   }
 
@@ -3724,9 +3717,9 @@ function buildEurostatHtml(es, qid) {
   if (es.publicTransportPerInhab != null || es.carsPerHundred != null || es.hospitalBedsPer100k != null) {
     html += `<div class="census-section-title" style="margin-top:6px">Transport &amp; Health</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-top:4px">
-      ${es.publicTransportPerInhab != null ? statCell('Transit veh-km/p', fmtN(es.publicTransportPerInhab), '', 'eurostat_publicTransportPerInhab') : ''}
-      ${es.carsPerHundred != null          ? statCell('Cars / 100 people', es.carsPerHundred.toFixed(0), '', 'eurostat_carsPerHundred') : ''}
-      ${es.hospitalBedsPer100k != null     ? statCell('Hospital beds/100k', fmtN(es.hospitalBedsPer100k), '', 'eurostat_hospitalBedsPer100k') : ''}
+      ${es.publicTransportPerInhab != null ? statCell('Transit veh-km/p', fmtN(es.publicTransportPerInhab), '', 'eurostat_publicTransportPerInhab', qid, 'Click to see European ranking') : ''}
+      ${es.carsPerHundred != null          ? statCell('Cars / 100 people', es.carsPerHundred.toFixed(0), '', 'eurostat_carsPerHundred', qid, 'Click to see European ranking') : ''}
+      ${es.hospitalBedsPer100k != null     ? statCell('Hospital beds/100k', fmtN(es.hospitalBedsPer100k), '', 'eurostat_hospitalBedsPer100k', qid, 'Click to see European ranking') : ''}
     </div>`;
   }
 
@@ -3734,10 +3727,10 @@ function buildEurostatHtml(es, qid) {
   if (es.tempWarmest != null || es.tempColdest != null || es.rainfallMm != null || es.sunshineHours != null) {
     html += `<div class="census-section-title" style="margin-top:6px">Climate</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
-      ${es.tempWarmest   != null ? statCell('Warmest Month', es.tempWarmest.toFixed(1) + '°C', '', 'eurostat_tempWarmest') : ''}
-      ${es.tempColdest   != null ? statCell('Coldest Month', es.tempColdest.toFixed(1) + '°C', '', 'eurostat_tempColdest') : ''}
-      ${es.rainfallMm    != null ? statCell('Rainfall/yr', fmtNum(Math.round(es.rainfallMm)) + ' mm', '', 'eurostat_rainfallMm') : ''}
-      ${es.sunshineHours != null ? statCell('Sunshine', es.sunshineHours.toFixed(1) + ' hr/day', '', 'eurostat_sunshineHours') : ''}
+      ${es.tempWarmest   != null ? statCell('Warmest Month', es.tempWarmest.toFixed(1) + '°C', '', 'eurostat_tempWarmest', qid, 'Click to see European ranking') : ''}
+      ${es.tempColdest   != null ? statCell('Coldest Month', es.tempColdest.toFixed(1) + '°C', '', 'eurostat_tempColdest', qid, 'Click to see European ranking') : ''}
+      ${es.rainfallMm    != null ? statCell('Rainfall/yr', fmtNum(Math.round(es.rainfallMm)) + ' mm', '', 'eurostat_rainfallMm', qid, 'Click to see European ranking') : ''}
+      ${es.sunshineHours != null ? statCell('Sunshine', es.sunshineHours.toFixed(1) + ' hr/day', '', 'eurostat_sunshineHours', qid, 'Click to see European ranking') : ''}
     </div>`;
   }
 
@@ -3745,10 +3738,10 @@ function buildEurostatHtml(es, qid) {
   if (es.touristNights != null || es.museumVisitors != null || es.libraries != null || es.cinemaSeatsPer1k != null) {
     html += `<div class="census-section-title" style="margin-top:6px">Tourism & Culture</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
-      ${es.touristNights    != null ? statCell('Tourist Nights', fmtN(es.touristNights), '', 'eurostat_touristNights') : ''}
-      ${es.museumVisitors   != null ? statCell('Museum Visitors', fmtN(es.museumVisitors), '', 'eurostat_museumVisitors') : ''}
-      ${es.libraries        != null ? statCell('Public Libraries', fmtN(es.libraries), '', 'eurostat_libraries') : ''}
-      ${es.cinemaSeatsPer1k != null ? statCell('Cinema Seats/1k', es.cinemaSeatsPer1k.toFixed(1), '', '') : ''}
+      ${es.touristNights    != null ? statCell('Tourist Nights', fmtN(es.touristNights), '', 'eurostat_touristNights', qid, 'Click to see European ranking') : ''}
+      ${es.museumVisitors   != null ? statCell('Museum Visitors', fmtN(es.museumVisitors), '', 'eurostat_museumVisitors', qid, 'Click to see European ranking') : ''}
+      ${es.libraries        != null ? statCell('Public Libraries', fmtN(es.libraries), '', 'eurostat_libraries', qid, 'Click to see European ranking') : ''}
+      ${es.cinemaSeatsPer1k != null ? statCell('Cinema Seats/1k', es.cinemaSeatsPer1k.toFixed(1), '', '', qid) : ''}
     </div>`;
   }
 
@@ -3758,10 +3751,10 @@ function buildEurostatHtml(es, qid) {
     const popChangeCls = es.popChangePct != null ? (es.popChangePct > 0 ? 'census-green' : 'census-red') : '';
     html += `<div class="census-section-title" style="margin-top:6px">Demographics</div>
     <div class="census-stats-grid" style="grid-template-columns:repeat(2,1fr);margin-top:4px">
-      ${es.medianAge      != null ? statCell('Median Age', es.medianAge.toFixed(1) + ' yrs', '', 'eurostat_medianAge') : ''}
-      ${es.popChangePct   != null ? statCell('Pop Change/yr', popChangeFmt(es.popChangePct), popChangeCls, 'eurostat_popChangePct') : ''}
-      ${es.foreignBornPct != null ? statCell('Foreign-Born', es.foreignBornPct.toFixed(1) + '%', '', 'eurostat_foreignBornPct') : ''}
-      ${es.ageDependency  != null ? statCell('Age Dependency', es.ageDependency.toFixed(1) + '%', '', 'eurostat_ageDependency') : ''}
+      ${es.medianAge      != null ? statCell('Median Age', es.medianAge.toFixed(1) + ' yrs', '', 'eurostat_medianAge', qid, 'Click to see European ranking') : ''}
+      ${es.popChangePct   != null ? statCell('Pop Change/yr', popChangeFmt(es.popChangePct), popChangeCls, 'eurostat_popChangePct', qid, 'Click to see European ranking') : ''}
+      ${es.foreignBornPct != null ? statCell('Foreign-Born', es.foreignBornPct.toFixed(1) + '%', '', 'eurostat_foreignBornPct', qid, 'Click to see European ranking') : ''}
+      ${es.ageDependency  != null ? statCell('Age Dependency', es.ageDependency.toFixed(1) + '%', '', 'eurostat_ageDependency', qid, 'Click to see European ranking') : ''}
     </div>`;
   }
 
