@@ -2827,6 +2827,9 @@ async function init() {
     rebuildMapLayer();
     map.off("click", _cpMapClickHandler);
     map.on("click", _cpMapClickHandler);
+    // Choropleth controls are always visible; GeoJSON is lazy-loaded on first toggle
+    initChoroControls();
+    _choroControlsInited = true;
     updateStats();
     showLoading(false);
 
