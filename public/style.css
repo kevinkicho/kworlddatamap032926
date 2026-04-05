@@ -1617,3 +1617,20 @@ td.cmp-metric { color: #8b949e; }
 }
 .filter-heat-btn:hover { border-color: #f0a500; color: #f0a500; }
 .filter-heat-btn.active { background: #1e1a08; border-color: #f0a500; color: #f0a500; }
+
+/* ── Filter panel inline AQ legend ── */
+#filter-aq-legend {
+  margin-top: 7px; padding: 7px 8px;
+  background: #0d1117; border-radius: 5px;
+  border: 1px solid #21262d;
+}
+.filter-aq-legend-row {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 0.73rem; color: #8b949e; padding: 2px 0;
+}
+.filter-aq-swatch {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.filter-aq-coverage {
+  font-size: 0.68rem; color: #484f58; margin-top: 4px; text-align: right;
+}

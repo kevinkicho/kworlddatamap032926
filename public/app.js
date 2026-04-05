@@ -236,6 +236,42 @@ function _filterCount() {
 
 function _anyFilterActive() { return _filterCount() > 0; }
 
+// When a value filter is active, color matched city dots by that metric so the
+// data dimension is visible at a glance (not just opacity-boosted population dots).
+function _valueFilterColor(city) {
+  const qid = city.qid;
+  if (_filterValue.nobel != null) {
+    const n = nobelCitiesData[qid]?.total ?? 0;
+    if (n < _filterValue.nobel) return null; // not matched
+    // Purple scale: 1 → muted lilac, 50+ → vivid violet
+    const t = Math.min(n / 50, 1);
+    return `hsl(265,${Math.round(55 + t * 30)}%,${Math.round(62 - t * 18)}%)`;
+  }
+  if (_filterValue.universities != null) {
+    const n = universitiesData[qid]?.length ?? 0;
+    if (n < _filterValue.universities) return null;
+    // Blue scale: 1 → sky-blue, 100+ → vivid royal blue
+    const t = Math.min(n / 100, 1);
+    return `hsl(210,${Math.round(65 + t * 30)}%,${Math.round(65 - t * 22)}%)`;
+  }
+  if (_filterValue.metro != null) {
+    const n = metroTransitData[qid]?.stations ?? 0;
+    if (n < _filterValue.metro) return null;
+    // Amber scale: 1 → gold, 500+ → deep amber
+    const t = Math.min(n / 500, 1);
+    return `hsl(${Math.round(42 - t * 8)},${Math.round(85 + t * 10)}%,${Math.round(58 - t * 18)}%)`;
+  }
+  if (_filterValue.aq != null) {
+    // Use the same AQ dot colour for the matched category
+    return airQualityDotColor(city) || null;
+  }
+  if (_filterValue.pop != null) {
+    // Population filter: colour by population magnitude (existing scale is fine)
+    return null; // use default wikiCityColor which is already pop-based
+  }
+  return null;
+}
+
 // ── Filter panel controls ──────────────────────────────────────────────────────
 function toggleFilterPanel() {
   const panel = document.getElementById('filter-panel');
@@ -287,11 +323,21 @@ function clearAllFilters() {
 }
 
 function toggleAvailFilter(key) {
+  const wasAnyAvailOn = Object.values(_filterAvail).some(Boolean);
   _filterAvail[key] = !_filterAvail[key];
   const btn = document.querySelector(`.filter-avail-btn[data-key="${key}"]`);
   if (btn) {
     btn.classList.toggle('on', _filterAvail[key]);
     btn.textContent = _filterAvail[key] ? 'ON' : 'off';
+  }
+  // Auto-switch to Hide when any availability filter is first turned on:
+  // availability filters typically match only a small fraction of cities, so
+  // hiding non-matching cities is far cleaner than dimming thousands of grey dots.
+  if (_filterAvail[key] && !wasAnyAvailOn) {
+    _filterDimMode = 'hide';
+    document.querySelectorAll('#filter-dim-row .filter-mode-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === 'hide');
+    });
   }
   _updateFilterBadge();
   rebuildMapLayer();
@@ -340,7 +386,8 @@ async function setHeatmapMetric(metric) {
   if (_heatmapLayer) { _heatmapLayer.remove(); _heatmapLayer = null; }
   if (points.length > 0 && typeof L !== 'undefined' && L.heatLayer) {
     _heatmapLayer = L.heatLayer(points, {
-      radius: 35, blur: 25, maxZoom: 10, max: 1.0,
+      radius: 40, blur: 28, maxZoom: 10, max: 1.0,
+      minOpacity: 0.45,   // ensure gradient is visible on dark map backgrounds
       gradient: _heatGradient(metric),
     }).addTo(map);
   }
@@ -387,12 +434,14 @@ function _buildHeatPoints(metric) {
 }
 
 function _heatGradient(metric) {
+  // Gradients tuned for visibility on dark map backgrounds (dark mode).
+  // Each stop: fraction [0–1] → CSS colour. Start from a visible (non-black) hue.
   const gradients = {
-    nobel:        { 0.2: '#1a1a4e', 0.5: '#7b2ff7', 1: '#bc8cff' },
-    universities: { 0.2: '#0d2b4e', 0.5: '#1f6feb', 1: '#a5d6ff' },
-    pop:          { 0.2: '#0d3b2e', 0.5: '#20c997', 1: '#e6fffa' },
-    metro:        { 0.2: '#2d1a00', 0.5: '#f0a500', 1: '#fff3cd' },
-    aq:           { 0.0: '#3fb950', 0.4: '#f0a500', 0.7: '#f85149', 1: '#bc8cff' },
+    nobel:        { 0: '#3b1f6e', 0.35: '#7b2ff7', 0.65: '#a371f7', 1: '#e0ccff' },
+    universities: { 0: '#0d2b55', 0.35: '#1f6feb', 0.65: '#58a6ff', 1: '#cce5ff' },
+    pop:          { 0: '#0a3020', 0.35: '#20c997', 0.65: '#3fb950', 1: '#d1fadf' },
+    metro:        { 0: '#2e1c00', 0.35: '#b87800', 0.65: '#f0a500', 1: '#ffe08a' },
+    aq:           { 0: '#1a4a1a', 0.3: '#3fb950', 0.55: '#f0a500', 0.78: '#f85149', 1: '#bc8cff' },
   };
   return gradients[metric] || gradients.pop;
 }
@@ -883,9 +932,11 @@ function rebuildMapLayer() {
     const heatDim = _heatmapMetric && _heatDotMode === 'dim';
     if (!filterDim) _filterMatchCount++;
 
-    const aqCol     = (!filterDim && !heatDim && cityAqMode) ? airQualityDotColor(city) : null;
-    const censusCol = aqCol ? null : (!filterDim && !heatDim ? censusDotColor(city) : null);
-    const color  = (filterDim || heatDim) ? '#30363d' : (aqCol || censusCol || wikiCityColor(city.pop));
+    // Value-filter colour: when a value filter is active, colour matched cities by their metric
+    const valueCol  = (!filterDim && !heatDim && _anyFilterActive()) ? _valueFilterColor(city) : null;
+    const aqCol     = (!filterDim && !heatDim && !valueCol && cityAqMode) ? airQualityDotColor(city) : null;
+    const censusCol = aqCol ? null : (!filterDim && !heatDim && !valueCol ? censusDotColor(city) : null);
+    const color  = (filterDim || heatDim) ? '#30363d' : (valueCol || aqCol || censusCol || wikiCityColor(city.pop));
     const radius = wikiCityRadius(city.pop);
     const location = [city.admin, city.country].filter(Boolean).join(', ');
     let tip = `<strong>${escHtml(city.name)}</strong>`;
@@ -2207,25 +2258,34 @@ function airQualityDotColor(city) {
 
 async function toggleAqMode() {
   cityAqMode = !cityAqMode;
+  // Legacy header bar elements (now hidden, kept for compatibility)
   const btn  = document.getElementById('aq-toggle-btn');
   const leg  = document.getElementById('aq-legend-wrap');
   const cov  = document.getElementById('aq-coverage');
+  // Filter panel elements
+  const fpBtn = document.getElementById('filter-aq-color-btn');
+  const fpLeg = document.getElementById('filter-aq-legend');
   if (cityAqMode) {
-    btn.textContent = 'Loading…';
-    btn.disabled = true;
+    if (btn) { btn.textContent = 'Loading…'; btn.disabled = true; }
+    if (fpBtn) { fpBtn.textContent = '🎨 Loading…'; fpBtn.disabled = true; }
     await _ensureAirQuality();
-    btn.textContent = 'On';
-    btn.disabled = false;
-    btn.classList.add('on');
-    leg.style.display = '';
+    if (btn) { btn.textContent = 'On'; btn.disabled = false; btn.classList.add('on'); }
+    if (fpBtn) { fpBtn.textContent = '🎨 Color'; fpBtn.disabled = false; fpBtn.classList.add('active'); }
+    if (leg) leg.style.display = '';
+    if (fpLeg) {
+      fpLeg.style.display = '';
+      const covEl = fpLeg.querySelector('.filter-aq-coverage');
+      if (covEl) covEl.textContent = Object.keys(airQualityData).length.toLocaleString() + ' cities with data';
+    }
     const covered = Object.keys(airQualityData).length;
     if (cov) cov.textContent = covered + ' cities';
     // Turn off census coloring while in AQ mode
-    if (censusColorMetric) { setCensusColorMetric(''); document.getElementById('census-metric-select').value = ''; }
+    if (censusColorMetric) { setCensusColorMetric(''); const cs = document.getElementById('census-metric-select'); if (cs) cs.value = ''; }
   } else {
-    btn.textContent = 'Off';
-    btn.classList.remove('on');
-    leg.style.display = 'none';
+    if (btn) { btn.textContent = 'Off'; btn.classList.remove('on'); }
+    if (fpBtn) { fpBtn.textContent = '🎨 Color'; fpBtn.classList.remove('active'); }
+    if (leg) leg.style.display = 'none';
+    if (fpLeg) fpLeg.style.display = 'none';
     if (cov) cov.textContent = '';
   }
   rebuildMapLayer();
@@ -2236,6 +2296,9 @@ async function toggleAqMode() {
       : allCities.length.toLocaleString() + ' cities on map · circle size and color = population';
   }
 }
+
+// Called by the filter panel "🎨 Color" button in the AQ section
+async function toggleFilterAqColor() { await toggleAqMode(); }
 
 // GaWC tier → numeric score (Alpha++=12 … Sufficiency=1)
 const GAWC_TIER_SCORE = {
@@ -3671,7 +3734,7 @@ async function init() {
       const z = map.getZoom();
       const radius = Math.max(15, 35 - (z - 5) * 3);
       const blur   = Math.max(10, 25 - (z - 5) * 2);
-      _heatmapLayer.setOptions({ radius, blur });
+      _heatmapLayer.setOptions({ radius, blur, minOpacity: 0.45 });
     }
   });
 
@@ -3886,8 +3949,7 @@ async function init() {
     rebuildMapLayer();
     map.off("click", _cpMapClickHandler);
     map.on("click", _cpMapClickHandler);
-    // AQ bar always visible; data is lazy-loaded on first toggle
-    document.getElementById('aq-bar').style.display = '';
+    // AQ coloring is now in the filter panel; the legacy header bar stays hidden
     // Choropleth controls are always visible; GeoJSON is lazy-loaded on first toggle
     initChoroControls();
     _choroControlsInited = true;

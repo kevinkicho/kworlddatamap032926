@@ -32,8 +32,8 @@
     <span id="choro-coverage"></span>
   </div>
 
-  <!-- ── Air quality city color bar ── -->
-  <div id="aq-bar" style="display:none">
+  <!-- ── Air quality city color bar — functionality moved into filter panel ── -->
+  <div id="aq-bar" style="display:none!important">
     <label>Color cities by PM2.5:</label>
     <button id="aq-toggle-btn" onclick="toggleAqMode()">Off</button>
     <div id="aq-legend-wrap" style="display:none">
@@ -612,7 +612,10 @@
       <div class="filter-value-group">
         <div class="filter-value-label-row">
           <span class="filter-value-label">🌡 Air Quality (PM2.5)</span>
-          <button class="filter-heat-btn" data-metric="aq" onclick="setHeatmapMetric('aq')" title="Show heatmap">🌡 Heatmap</button>
+          <div style="display:flex;gap:5px">
+            <button id="filter-aq-color-btn" class="filter-heat-btn" onclick="toggleFilterAqColor()" title="Color city dots by PM2.5">🎨 Color</button>
+            <button class="filter-heat-btn" data-metric="aq" onclick="setHeatmapMetric('aq')" title="Show heatmap">🌡 Heatmap</button>
+          </div>
         </div>
         <div class="filter-bucket-row" data-metric="aq">
           <button class="filter-bucket active"                                       data-val="null"      onclick="setValueFilter('aq', null)">Any</button>
@@ -622,6 +625,16 @@
           <button class="filter-bucket" style="--aq:#ffa657;--aqbg:#2a1208"         data-val="Poor"      onclick="setValueFilter('aq', 'Poor')">Poor</button>
           <button class="filter-bucket" style="--aq:#f85149;--aqbg:#2a0a0a"         data-val="Very Poor" onclick="setValueFilter('aq', 'Very Poor')">V.Poor</button>
           <button class="filter-bucket" style="--aq:#bc8cff;--aqbg:#1e1028"         data-val="Severe"    onclick="setValueFilter('aq', 'Severe')">Severe</button>
+        </div>
+        <!-- AQ legend shown when Color mode is active -->
+        <div id="filter-aq-legend" style="display:none">
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#3fb950"></span>Good (&lt;5 µg/m³)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#58a6ff"></span>Acceptable (5–10)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#f0a500"></span>Moderate (10–15)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#ffa657"></span>Poor (15–25)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#f85149"></span>Very Poor (25–50)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#bc8cff"></span>Severe (&gt;50)</div>
+          <div class="filter-aq-coverage"></div>
         </div>
       </div>
 
