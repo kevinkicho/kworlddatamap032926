@@ -4536,12 +4536,6 @@ function _cpOecdMax(key) {
   return result;
 }
 
-function _cpFlagEmoji(iso2) {
-  if (!iso2 || iso2.length !== 2) return "";
-  var base = 0x1F1E6 - 65;
-  return String.fromCodePoint(base + iso2.toUpperCase().charCodeAt(0)) +
-         String.fromCodePoint(base + iso2.toUpperCase().charCodeAt(1));
-}
 
 // WGI rows: raw -2.5 to +2.5; bar fill normalised to 0-5 range so negatives show correctly.
 // wbKey + iso2: if provided, the row becomes clickable (opens stats panel).
@@ -4591,7 +4585,7 @@ function _renderCountryPanel(iso2) {
   if (cd.income_level) metaParts.push(escHtml(cd.income_level));
   metaParts.push(escHtml(iso2));
   document.getElementById("cp-header").innerHTML =
-    "<span class=\"cp-flag\">" + _cpFlagEmoji(iso2) + "</span>" +
+    "<span class=\"cp-flag\">" + isoToFlag(iso2) + "</span>" +
     "<div style=\"flex:1;min-width:0\">" +
       "<div class=\"cp-country-name\">" + escHtml(cd.name || iso2) + "</div>" +
       "<div class=\"cp-country-meta\">" + metaParts.join(" \u00b7 ") + "</div>" +
@@ -4747,24 +4741,18 @@ function _renderCountryPanel(iso2) {
     (function() {
       var ct = comtradeData[iso2];
       if (!ct) return '';
-      function flagEmoji(iso2code) {
-        if (!iso2code || iso2code.length !== 2) return '';
-        var base = 0x1F1E6 - 65;
-        return String.fromCodePoint(base + iso2code.toUpperCase().charCodeAt(0)) +
-               String.fromCodePoint(base + iso2code.toUpperCase().charCodeAt(1));
-      }
       var html = '<div class="cp-gauge-section-hdr">Top Trade Partners (' + (ct.year || '') + ')</div>';
       if (ct.top_exports && ct.top_exports.length) {
         html += '<div class="cp-gauge-row cp-trade-row"><span class="cp-gauge-lbl">Exports to</span><span class="cp-trade-partners">';
         html += ct.top_exports.slice(0, 5).map(function(p) {
-          return '<span class="cp-trade-partner" title="' + escHtml(p.name) + ' $' + p.value_bn + 'B">' + flagEmoji(p.iso2) + '</span>';
+          return '<span class="cp-trade-partner" title="' + escHtml(p.name) + ' $' + p.value_bn + 'B">' + isoToFlag(p.iso2) + '</span>';
         }).join('');
         html += '</span></div>';
       }
       if (ct.top_imports && ct.top_imports.length) {
         html += '<div class="cp-gauge-row cp-trade-row"><span class="cp-gauge-lbl">Imports from</span><span class="cp-trade-partners">';
         html += ct.top_imports.slice(0, 5).map(function(p) {
-          return '<span class="cp-trade-partner" title="' + escHtml(p.name) + ' $' + p.value_bn + 'B">' + flagEmoji(p.iso2) + '</span>';
+          return '<span class="cp-trade-partner" title="' + escHtml(p.name) + ' $' + p.value_bn + 'B">' + isoToFlag(p.iso2) + '</span>';
         }).join('');
         html += '</span></div>';
       }
