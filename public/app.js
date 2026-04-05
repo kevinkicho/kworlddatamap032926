@@ -905,10 +905,14 @@ function rebuildMapLayer() {
         tip += `<a href="#" onclick="event.preventDefault();openCorpPanel('${city.qid}','${escAttr(city.name)}')" style="color:#a371f7;font-size:0.8em">Corporations (${coCount}) ↗</a>`;
       tip += `</span>`;
     }
-    const opacity = filterDim ? 0.13 : heatDim ? 0.15 : ((aqCol || censusCol) ? 0.92 : wikiCityOpacity(city.pop));
+    // When a filter is active and this city matches, boost visibility so it pops against dimmed cities
+    const isFilterMatch = _anyFilterActive() && !filterDim;
+    const baseOpacity = isFilterMatch ? Math.max(0.82, wikiCityOpacity(city.pop)) : wikiCityOpacity(city.pop);
+    const opacity = filterDim ? 0.13 : heatDim ? 0.15 : ((aqCol || censusCol) ? 0.92 : baseOpacity);
+    const markerWeight = (isFilterMatch && !heatDim) ? 1.5 : 0.5;
     L.circleMarker([city.lat, city.lng], {
       radius, fillColor: color, fillOpacity: opacity,
-      color, opacity: opacity, weight: 0.5,
+      color, opacity: opacity, weight: markerWeight,
       pane: 'cityPane',
     }).bindPopup(tip, { maxWidth: 260, minWidth: 160 }).addTo(wikiLayer);
   });
