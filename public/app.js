@@ -3970,7 +3970,7 @@ async function init() {
     //   eurostat-cities.json   1 MB — on first EU city panel open
     //   world-countries.json   4 MB — on first choropleth toggle
     //   companies.json        75 MB — on first company lookup
-    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes, fbiRes, eciRes, metroRes, nobelRes] = await Promise.all([
+    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes, fbiRes, eciRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/census-cities.json').catch(() => null),
@@ -3991,8 +3991,6 @@ async function init() {
       fetch('/australia-states.json').catch(() => null),
       fetch('/fbi-crime.json').catch(() => null),
       fetch('/eci-data.json').catch(() => null),
-      fetch('/metro-transit.json').catch(() => null),
-      fetch('/nobel-cities.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -4136,18 +4134,6 @@ async function init() {
         eciData = await eciRes.json();
         console.log(`[init] ECI data loaded (${Object.keys(eciData).length} countries)`);
       } catch { console.warn('[init] eci-data.json is malformed'); }
-    }
-    if (metroRes && metroRes.ok) {
-      try {
-        metroTransitData = await metroRes.json();
-        console.log(`[init] Metro transit loaded (${Object.keys(metroTransitData).length} cities)`);
-      } catch { console.warn('[init] metro-transit.json is malformed'); }
-    }
-    if (nobelRes && nobelRes.ok) {
-      try {
-        nobelCitiesData = await nobelRes.json();
-        console.log(`[init] Nobel laureates loaded (${Object.keys(nobelCitiesData).length} cities)`);
-      } catch { console.warn('[init] nobel-cities.json is malformed'); }
     }
     // ── Phase 6: apply overrides + build UI ──
     applyOverrides();
