@@ -887,11 +887,22 @@ function _renderStatsPanel() {
   const points = [];
   if (isWbStat) {
     // Country-level — one point per real country (skip WB regional/income aggregates)
-    for (const [iso2, cdata] of Object.entries(countryData)) {
-      if (!cdata || !cdata.region || cdata.region === 'Aggregates') continue;
-      const val = cdata[wbDef.key];
-      if (val == null || isNaN(val)) continue;
-      points.push({ qid: iso2, val, name: cdata.name || iso2, region: cdata.region || '', iso: iso2 });
+    if (wbDef.src === 'oecd') {
+      // OECD data lives in oecdData, not countryData
+      for (const [iso2, odata] of Object.entries(oecdData)) {
+        if (!odata) continue;
+        const rawVal = odata[wbDef.key];
+        if (rawVal == null || isNaN(rawVal)) continue;
+        const cdata = countryData[iso2];
+        points.push({ qid: iso2, val: rawVal, name: (cdata && cdata.name) || iso2, region: (cdata && cdata.region) || '', iso: iso2 });
+      }
+    } else {
+      for (const [iso2, cdata] of Object.entries(countryData)) {
+        if (!cdata || !cdata.region || cdata.region === 'Aggregates') continue;
+        const rawVal = cdata[wbDef.key];
+        if (rawVal == null || isNaN(rawVal)) continue;
+        points.push({ qid: iso2, val: rawVal, name: cdata.name || iso2, region: cdata.region || '', iso: iso2 });
+      }
     }
   } else if (isCityStat) {
     const pool = (_statsScope === 'country' && selfIso)
@@ -1643,6 +1654,11 @@ let japanPrefData  = {};   // prefecture English name → {perCapitaIncomeJpy, g
 let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
 let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
+let ecbData      = {};  // ECB: deposit rate, MRO rate, Euribor 3M history, TARGET2 balances
+let bojData      = {};  // Japan MoF: JGB 10Y/2Y/5Y yield with monthly history
+let oecdData     = {};  // OECD: R&D spend %, tax revenue %, hours worked, tertiary education %
+let comtradeData = {};  // UN Comtrade: top 5 export+import partners per country
+let noaaClimate  = {};  // NOAA: 1991-2020 monthly climate normals for US cities
 let _cpCurrentIso2 = null;
 let _cpEscListener = null;
 function _cpMapClickHandler() { if (_cpCurrentIso2) closeCountryPanel(); }
@@ -1770,6 +1786,8 @@ function getCityClimate(city) {
   if (city.climate?.months?.length === 12) return city.climate;
   const ex = climateExtra[city.qid];
   if (ex?.months?.length === 12) return ex;
+  const noaa = noaaClimate[city.qid];
+  if (noaa?.months?.length === 12) return noaa;
   return null;
 }
 
@@ -1855,6 +1873,10 @@ const WB_STAT_DEFS = {
   // Transparency & Freedom (TI CPI / Freedom House)
   wb_ti_cpi:              { label:'Corruption Index (TI CPI)',key:'ti_cpi_score',        fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
   wb_fh_score:            { label:'Freedom Score (FH)',       key:'fh_score',            fmt: v=>v.toFixed(0)+'/100',    higherBetter:true  },
+  wb_rd_spend_pct:     { label:'R&D Spending',        key:'rd_spend_pct',     fmt: v=>v.toFixed(1)+'%',        higherBetter:true,  src:'oecd' },
+  wb_tax_revenue_pct:  { label:'Tax Revenue (central)',key:'tax_revenue_pct',  fmt: v=>v.toFixed(1)+'%',        higherBetter:null,  src:'oecd' },
+  wb_hours_worked:     { label:'Hours Worked/Year',    key:'hours_worked',     fmt: v=>Math.round(v)+' hrs',    higherBetter:null,  src:'oecd' },
+  wb_tertiary_pct:     { label:'Tertiary Education',   key:'tertiary_pct',     fmt: v=>v.toFixed(1)+'%',        higherBetter:true,  src:'oecd' },
 };
 
 // Company-level stats — company QID used as identifier; values converted to USD for fair ranking
@@ -2607,7 +2629,7 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, bojRes, oecdRes, comtradeRes, noaaRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
@@ -2621,6 +2643,11 @@ async function init() {
       fetch('/airport-connectivity.json').catch(() => null),
       fetch('/zillow-cities.json').catch(() => null),
       fetch('/climate-extra.json').catch(() => null),
+      fetch('/ecb-data.json').catch(() => null),
+      fetch('/boj-yields.json').catch(() => null),
+      fetch('/oecd-country.json').catch(() => null),
+      fetch('/comtrade-partners.json').catch(() => null),
+      fetch('/noaa-climate.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -2712,6 +2739,36 @@ async function init() {
         climateExtra = await climateExtraRes.json();
         console.log(`[init] Climate extra data loaded (${Object.keys(climateExtra).length} cities)`);
       } catch { console.warn('[init] climate-extra.json is malformed'); }
+    }
+    if (ecbRes && ecbRes.ok) {
+      try {
+        ecbData = await ecbRes.json();
+        console.log('[init] ECB data loaded');
+      } catch { console.warn('[init] ecb-data.json is malformed'); }
+    }
+    if (bojRes && bojRes.ok) {
+      try {
+        bojData = await bojRes.json();
+        console.log('[init] BoJ yield data loaded');
+      } catch { console.warn('[init] boj-yields.json is malformed'); }
+    }
+    if (oecdRes && oecdRes.ok) {
+      try {
+        oecdData = await oecdRes.json();
+        console.log(`[init] OECD data loaded (${Object.keys(oecdData).length} countries)`);
+      } catch { console.warn('[init] oecd-country.json is malformed'); }
+    }
+    if (comtradeRes && comtradeRes.ok) {
+      try {
+        comtradeData = await comtradeRes.json();
+        console.log(`[init] Comtrade data loaded (${Object.keys(comtradeData).length} countries)`);
+      } catch { console.warn('[init] comtrade-partners.json is malformed'); }
+    }
+    if (noaaRes && noaaRes.ok) {
+      try {
+        noaaClimate = await noaaRes.json();
+        console.log(`[init] NOAA climate data loaded (${Object.keys(noaaClimate).length} cities)`);
+      } catch { console.warn('[init] noaa-climate.json is malformed'); }
     }
     // ── Phase 5c: load world country borders GeoJSON (optional, for choropleth) ──
     if (geoRes && geoRes.ok) {
@@ -2977,6 +3034,19 @@ function _cpWorldMax(key) {
   return result;
 }
 
+var _cpOecdMaxCache = new Map();
+function _cpOecdMax(key) {
+  if (_cpOecdMaxCache.has(key)) return _cpOecdMaxCache.get(key);
+  var max = 0, v;
+  for (var k in oecdData) {
+    v = oecdData[k][key];
+    if (Number.isFinite(v) && v > max) max = v;
+  }
+  var result = max || 1;
+  _cpOecdMaxCache.set(key, result);
+  return result;
+}
+
 function _cpFlagEmoji(iso2) {
   if (!iso2 || iso2.length !== 2) return "";
   var base = 0x1F1E6 - 65;
@@ -3061,6 +3131,8 @@ function _renderCountryPanel(iso2) {
   var maxGdp   = _cpWorldMax("gdp_per_capita"),  maxLife  = _cpWorldMax("life_expectancy");
   var maxDebt  = _cpWorldMax("govt_debt_gdp"),   maxInf   = _cpWorldMax("cpi_inflation");
   var maxUnemp = _cpWorldMax("unemployment_rate"), maxYld = _cpWorldMax("bond_yield_10y");
+  var maxRd    = _cpOecdMax("rd_spend_pct"),  maxTax  = _cpOecdMax("tax_revenue_pct");
+  var maxHrs   = _cpOecdMax("hours_worked"),  maxTert = _cpOecdMax("tertiary_pct");
 
   var gaugeHtml =
     "<div class=\"cp-gauge-section-hdr\">World Bank</div>" +
@@ -3123,7 +3195,79 @@ function _renderCountryPanel(iso2) {
               (cd.fh_status === 'Free' ? 'cp-badge-green' : cd.fh_status === 'Partly Free' ? 'cp-badge-amber' : 'cp-badge-red') + "\">" +
               escHtml(cd.fh_status) + "</span></div>" : "")
           : "")
-      : "");
+      : "") +
+    // ── OECD Innovation & Labor ───────────────────────────────────────
+    (function() {
+      var od = oecdData[iso2];
+      if (!od) return '';
+      var rows = '';
+      if (Number.isFinite(od.rd_spend_pct))    rows += _cpGaugeRow('R&D spend',    od.rd_spend_pct,    maxRd,   '%',    'cp-blue', 'wb_rd_spend_pct',    iso2);
+      if (Number.isFinite(od.tax_revenue_pct)) rows += _cpGaugeRow('Tax rev (fed)', od.tax_revenue_pct, maxTax, '% GDP','',        'wb_tax_revenue_pct', iso2);
+      if (Number.isFinite(od.hours_worked))    rows += _cpGaugeRow('Hours worked',  od.hours_worked,    maxHrs,  '/yr',  '',        'wb_hours_worked',    iso2);
+      if (Number.isFinite(od.tertiary_pct))    rows += _cpGaugeRow('Tertiary edu',  od.tertiary_pct,    maxTert, '%',    'cp-blue', 'wb_tertiary_pct',    iso2);
+      return rows ? '<div class="cp-gauge-section-hdr">Innovation &amp; Labor (OECD)</div>' + rows : '';
+    })() +
+    // ── ECB (Eurozone only) ───────────────────────────────────────────
+    (function() {
+      if (!ecbData.eurozone_countries || !ecbData.eurozone_countries.includes(iso2)) return '';
+      var rows = '<div class="cp-gauge-section-hdr">ECB / Euribor</div>';
+      if (Number.isFinite(ecbData.ecb_deposit_rate)) {
+        rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">ECB Deposit Rate</span><span class="cp-gauge-info">' + ecbData.ecb_deposit_rate.toFixed(2) + '%</span></div>';
+      }
+      if (Number.isFinite(ecbData.ecb_mro_rate)) {
+        rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">ECB Refi Rate</span><span class="cp-gauge-info">' + ecbData.ecb_mro_rate.toFixed(2) + '%</span></div>';
+      }
+      if (Number.isFinite(ecbData.euribor_3m)) {
+        rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">Euribor 3M</span><span class="cp-gauge-info">' + ecbData.euribor_3m.toFixed(2) + '%</span></div>';
+      }
+      var t2 = ecbData.countries && ecbData.countries[iso2];
+      if (t2 && Number.isFinite(t2.target2_balance_bn_eur)) {
+        var val = t2.target2_balance_bn_eur;
+        var sign = val >= 0 ? '+' : '';
+        rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">TARGET2 balance</span><span class="cp-gauge-info">' + sign + val.toFixed(0) + ' Bn EUR</span></div>';
+      }
+      return rows;
+    })() +
+    // ── BoJ/MoF yields (JP additional tenors) ────────────────────────
+    (function() {
+      var bj = bojData[iso2];
+      if (!bj) return '';
+      var rows = '';
+      if (Number.isFinite(bj.bond_yield_2y)) {
+        rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">2Y JGB yield</span><span class="cp-gauge-info">' + bj.bond_yield_2y.toFixed(3) + '%</span></div>';
+      }
+      if (Number.isFinite(bj.bond_yield_5y)) {
+        rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">5Y JGB yield</span><span class="cp-gauge-info">' + bj.bond_yield_5y.toFixed(3) + '%</span></div>';
+      }
+      return rows ? '<div class="cp-gauge-section-hdr">JGB Yield Curve (MoF)</div>' + rows : '';
+    })() +
+    // ── Trade Partners (UN Comtrade) ──────────────────────────────────
+    (function() {
+      var ct = comtradeData[iso2];
+      if (!ct) return '';
+      function flagEmoji(iso2code) {
+        if (!iso2code || iso2code.length !== 2) return '';
+        var base = 0x1F1E6 - 65;
+        return String.fromCodePoint(base + iso2code.toUpperCase().charCodeAt(0)) +
+               String.fromCodePoint(base + iso2code.toUpperCase().charCodeAt(1));
+      }
+      var html = '<div class="cp-gauge-section-hdr">Top Trade Partners (' + (ct.year || '') + ')</div>';
+      if (ct.top_exports && ct.top_exports.length) {
+        html += '<div class="cp-gauge-row cp-trade-row"><span class="cp-gauge-lbl">Exports to</span><span class="cp-trade-partners">';
+        html += ct.top_exports.slice(0, 5).map(function(p) {
+          return '<span class="cp-trade-partner" title="' + escHtml(p.name) + ' $' + p.value_bn + 'B">' + flagEmoji(p.iso2) + '</span>';
+        }).join('');
+        html += '</span></div>';
+      }
+      if (ct.top_imports && ct.top_imports.length) {
+        html += '<div class="cp-gauge-row cp-trade-row"><span class="cp-gauge-lbl">Imports from</span><span class="cp-trade-partners">';
+        html += ct.top_imports.slice(0, 5).map(function(p) {
+          return '<span class="cp-trade-partner" title="' + escHtml(p.name) + ' $' + p.value_bn + 'B">' + flagEmoji(p.iso2) + '</span>';
+        }).join('');
+        html += '</span></div>';
+      }
+      return html;
+    })();
 
   // ── body: two-column ──────────────────────────────────────────────
   document.getElementById("cp-body").innerHTML =

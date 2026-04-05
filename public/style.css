@@ -1288,3 +1288,9 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 .cp-tab.active { color: #58a6ff; background: #21262d; border-bottom: 2px solid #58a6ff; }
 #cp-chart-area { height: 160px; padding: 8px 12px; }
 .cp-no-data { color: #484f58; font-size: 0.8rem; text-align: center; padding: 40px 0; }
+
+/* Trade partners row in country panel */
+.cp-trade-row { align-items: center; }
+.cp-trade-partners { display: flex; gap: 4px; flex-wrap: wrap; }
+.cp-trade-partner { font-size: 1.4em; cursor: default; line-height: 1; }
+.cp-trade-partner:hover { transform: scale(1.2); transition: transform 0.1s; }
