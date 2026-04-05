@@ -131,6 +131,34 @@ const FX_TO_USD = {
   BTC: 65000, ETH: 3200,
 };
 
+// US state full name → 2-letter abbreviation (for city→state lookup via census placeName)
+const STATE_NAME_TO_ABBR = {
+  'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA',
+  'Colorado':'CO','Connecticut':'CT','Delaware':'DE','District of Columbia':'DC',
+  'Florida':'FL','Georgia':'GA','Hawaii':'HI','Idaho':'ID','Illinois':'IL',
+  'Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY','Louisiana':'LA',
+  'Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN',
+  'Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV',
+  'New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM','New York':'NY',
+  'North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR',
+  'Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD',
+  'Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA',
+  'Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY',
+};
+// Canadian province name → abbreviation
+const CA_PROV_TO_ABBR = {
+  'Alberta':'AB','British Columbia':'BC','Manitoba':'MB','New Brunswick':'NB',
+  'Newfoundland and Labrador':'NL','Northwest Territories':'NT','Nova Scotia':'NS',
+  'Nunavut':'NU','Ontario':'ON','Prince Edward Island':'PE','Quebec':'QC',
+  'Saskatchewan':'SK','Yukon':'YT',
+};
+// Australian state name → abbreviation
+const AU_STATE_TO_ABBR = {
+  'New South Wales':'NSW','Victoria':'VIC','Queensland':'QLD','Western Australia':'WA',
+  'South Australia':'SA','Tasmania':'TAS','Australian Capital Territory':'ACT',
+  'Northern Territory':'NT',
+};
+
 // ISO-2 country → default/dominant currency (used when Wikidata currency unit is missing)
 const ISO2_TO_CURRENCY = {
   US:'USD', GB:'GBP', DE:'EUR', FR:'EUR', IT:'EUR', ES:'EUR', NL:'EUR',
@@ -1642,6 +1670,9 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   const economyEl  = document.getElementById('wiki-tab-economy');
   const overviewEl = document.getElementById('wiki-tab-overview');
 
+  const regionInfo  = _getRegionData(city);
+  const regionHtml  = regionInfo ? _buildRegionHtml(regionInfo) : '';
+
   if (infoEl) infoEl.innerHTML = `
     ${carouselHtml}
     <div class="wiki-city-header">
@@ -1650,6 +1681,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     </div>
     ${infoChips}
     ${(govSec || linksSec || wbSec) ? `<table class="wiki-info-table">${govSec}${linksSec}${wbSec}</table>` : ''}
+    ${regionHtml}
   `;
   if (economyEl)  economyEl.innerHTML  = hasCensus   ? buildEconomyHtml(censusData, businessData, city.qid)
                                        : hasEurostat ? buildEurostatHtml(eurostatData, city.qid)
@@ -1698,6 +1730,10 @@ let beaTradeData   = {};   // ISO2 → [{year,expGds,impGds,expSvc,impSvc}] (fro
 let eurostatCities = {};   // QID → Eurostat Urban Audit indicators (from eurostat-cities.json)
 let gawcCities     = {};   // QID → {tier, score} (GaWC 2024 world city network)
 let japanPrefData  = {};   // prefecture English name → {perCapitaIncomeJpy, gdpJpy, ...}
+let usStatesData   = {};   // 2-letter state abbr → {name, unemployment_rate, pcpi, histories...}
+let eurostatRegions = {};  // NUTS-2 code → {name, unemployment_rate, gdp_pps_eu100, histories...}
+let canadaProvinces = {};  // province abbr → {name, unemployment_rate, gdp_bn_cad, ...}
+let australiaStates = {};  // state abbr → {name, unemployment_rate, gsp_bn_aud, ...}
 let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
 let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
@@ -2194,6 +2230,68 @@ function _eurostatSparkline(history, color, W, H) {
 // ── Japan Prefecture data helpers ─────────────────────────────────────────────
 
 // Match a Japanese city's admin field to a prefecture in japanPrefData
+// ── Subnational region lookup + rendering ────────────────────────────────────
+
+/**
+ * Returns { abbr, label, data } for the subnational region containing a city,
+ * or null if no data is available.
+ * Checks US states, Canadian provinces, Australian states in order.
+ */
+function _getRegionData(city) {
+  if (city.iso === 'US') {
+    // Primary: extract state from census placeName (e.g. "Phoenix city, Arizona")
+    const cen = censusCities[city.qid];
+    let abbr = null;
+    if (cen?.placeName) {
+      const parts = cen.placeName.split(',');
+      const stateName = parts[parts.length - 1]?.trim();
+      abbr = STATE_NAME_TO_ABBR[stateName];
+    }
+    if (!abbr) abbr = STATE_NAME_TO_ABBR[city.admin];
+    if (abbr && usStatesData[abbr]) return { abbr, label: usStatesData[abbr].name, src: 'us', data: usStatesData[abbr] };
+  }
+  if (city.iso === 'CA') {
+    const abbr = CA_PROV_TO_ABBR[city.admin];
+    if (abbr && canadaProvinces[abbr]) return { abbr, label: canadaProvinces[abbr].name || city.admin, src: 'ca', data: canadaProvinces[abbr] };
+  }
+  if (city.iso === 'AU') {
+    const abbr = AU_STATE_TO_ABBR[city.admin];
+    if (abbr && australiaStates[abbr]) return { abbr, label: australiaStates[abbr].name || city.admin, src: 'au', data: australiaStates[abbr] };
+  }
+  return null;
+}
+
+/** Build a compact HTML block showing subnational economic indicators. */
+function _buildRegionHtml(region) {
+  const d = region.data;
+  let rows = '';
+
+  // Unemployment rate
+  if (Number.isFinite(d.unemployment_rate)) {
+    rows += `<tr><td class="wi-lbl">Unemployment</td><td class="wi-val">${d.unemployment_rate.toFixed(1)}%</td></tr>`;
+  }
+  // Per-capita income / PCPI (US) or equivalent
+  if (Number.isFinite(d.pcpi)) {
+    rows += `<tr><td class="wi-lbl">Income per capita</td><td class="wi-val">$${Math.round(d.pcpi).toLocaleString()}</td></tr>`;
+  }
+  if (Number.isFinite(d.gdp_per_capita_cad)) {
+    rows += `<tr><td class="wi-lbl">Income per capita</td><td class="wi-val">CA$${Math.round(d.gdp_per_capita_cad).toLocaleString()}</td></tr>`;
+  }
+  // GDP / GSP
+  if (Number.isFinite(d.gdp_bn_cad)) {
+    rows += `<tr><td class="wi-lbl">Provincial GDP</td><td class="wi-val">CA$${d.gdp_bn_cad.toFixed(0)}B</td></tr>`;
+  }
+  if (Number.isFinite(d.gsp_bn_aud)) {
+    rows += `<tr><td class="wi-lbl">State GSP</td><td class="wi-val">A$${d.gsp_bn_aud.toFixed(0)}B</td></tr>`;
+  }
+
+  if (!rows) return '';
+  return `<div class="region-stats-block">
+    <div class="region-stats-hdr">📍 ${escHtml(region.label)}</div>
+    <table class="wiki-info-table">${rows}</table>
+  </div>`;
+}
+
 function _lookupJapanPref(city) {
   if (!city || !Object.keys(japanPrefData).length) return null;
   const stripDiac = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -2686,7 +2784,7 @@ async function init() {
     // world-countries.json (3.9 MB) is lazy-loaded on first choropleth toggle
     // eurostat-cities.json (1.2 MB) is lazy-loaded on first EU city panel open
     // companies.json (75 MB) is lazy-loaded on first use
-    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, noaaRes] = await Promise.all([
+    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, noaaRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/census-cities.json').catch(() => null),
@@ -2703,6 +2801,10 @@ async function init() {
       fetch('/oecd-country.json').catch(() => null),
       fetch('/comtrade-partners.json').catch(() => null),
       fetch('/noaa-climate.json').catch(() => null),
+      fetch('/us-states.json').catch(() => null),
+      fetch('/eurostat-regions.json').catch(() => null),
+      fetch('/canada-provinces.json').catch(() => null),
+      fetch('/australia-states.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -2821,6 +2923,30 @@ async function init() {
         noaaClimate = await noaaRes.json();
         console.log(`[init] NOAA climate data loaded (${Object.keys(noaaClimate).length} cities)`);
       } catch { console.warn('[init] noaa-climate.json is malformed'); }
+    }
+    if (usStatesRes && usStatesRes.ok) {
+      try {
+        usStatesData = await usStatesRes.json();
+        console.log(`[init] US state data loaded (${Object.keys(usStatesData).length} states)`);
+      } catch { console.warn('[init] us-states.json is malformed'); }
+    }
+    if (eurostatRegionsRes && eurostatRegionsRes.ok) {
+      try {
+        eurostatRegions = await eurostatRegionsRes.json();
+        console.log(`[init] Eurostat regions loaded (${Object.keys(eurostatRegions).length} NUTS-2)`);
+      } catch { console.warn('[init] eurostat-regions.json is malformed'); }
+    }
+    if (canadaProvRes && canadaProvRes.ok) {
+      try {
+        canadaProvinces = await canadaProvRes.json();
+        console.log(`[init] Canada provinces loaded (${Object.keys(canadaProvinces).length})`);
+      } catch { console.warn('[init] canada-provinces.json is malformed'); }
+    }
+    if (australiaStateRes && australiaStateRes.ok) {
+      try {
+        australiaStates = await australiaStateRes.json();
+        console.log(`[init] Australia states loaded (${Object.keys(australiaStates).length})`);
+      } catch { console.warn('[init] australia-states.json is malformed'); }
     }
     // ── Phase 6: apply overrides + build UI ──
     applyOverrides();
