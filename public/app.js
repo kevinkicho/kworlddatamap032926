@@ -3,6 +3,7 @@ let map;
 let wikiLayer = null;
 let rawCities = [];      // validated data from server, never mutated
 let allCities = [];      // rawCities with overrides applied
+let cityByQid = new Map();  // QID → city object, rebuilt whenever allCities changes
 let countryData = {};      // World Bank data keyed by ISO-2 code
 let filtered = [];
 let visibleCount = 100;
@@ -1105,6 +1106,7 @@ function applyOverrides() {
       const ov = edits[c._key];
       return ov ? { ...c, ...ov } : c;
     });
+  cityByQid = new Map(allCities.map(c => [c.qid, c]));
   // show "Reset all" link only if there are any local changes
   const hasChanges = Object.keys(edits).length > 0 || deleted.size > 0;
   document.getElementById('reset-all-btn').style.display = hasChanges ? '' : 'none';
@@ -5769,14 +5771,12 @@ function buildEconLayer() {
 
   const MAX_PLAUSIBLE_USD = 2e12;
   const metric = (document.getElementById('econ-metric')?.value) || 'market_cap';
-  const cityByQid = {};
-  for (const c of allCities) cityByQid[c.qid] = c;
 
   // Collect one data point per city using the selected metric (market_cap or revenue).
   // For each company: prefer the selected metric; fall back to the other if missing.
   const cityPoints = [];
   for (const [qid, companies] of Object.entries(companiesData)) {
-    const city = cityByQid[qid];
+    const city = cityByQid.get(qid);
     if (!city || city.lat == null || city.lng == null) continue;
     let totalUSD = 0;
     const validCos = [];
@@ -6284,13 +6284,10 @@ let gcorpIndustry = '';
 let gcorpSort = 'revenue_usd';
 
 function buildGlobalCorpList() {
-  const cityByQid = {};
-  for (const c of allCities) cityByQid[c.qid] = c;
-
   globalCorpList = [];
   const _globalSeenQids = new Set();
   for (const [qid, companies] of Object.entries(companiesData)) {
-    const city = cityByQid[qid];
+    const city = cityByQid.get(qid);
     const cityName = city ? city.name : '—';
     const country = city ? (city.country || '') : '';
     for (const co of companies) {
