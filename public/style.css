@@ -1634,3 +1634,23 @@ td.cmp-metric { color: #8b949e; }
 .filter-aq-coverage {
   font-size: 0.68rem; color: #484f58; margin-top: 4px; text-align: right;
 }
+
+/* ── Heatmap parameter controls ── */
+#heat-controls-row {
+  padding: 8px 14px 10px; border-bottom: 1px solid #21262d;
+  background: #0a0f14; flex-shrink: 0;
+}
+.heat-ctrl {
+  display: flex; align-items: center; gap: 8px; padding: 3px 0;
+}
+.heat-ctrl-label {
+  font-size: 0.7rem; color: #6e7681; width: 52px; flex-shrink: 0;
+}
+.heat-ctrl-slider {
+  flex: 1; height: 3px; accent-color: #f0a500;
+  cursor: pointer;
+}
+.heat-ctrl-val {
+  font-size: 0.68rem; color: #8b949e;
+  width: 32px; text-align: right; font-variant-numeric: tabular-nums;
+}

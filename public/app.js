@@ -354,6 +354,8 @@ function setValueFilter(metric, value) {
     });
   }
   _updateFilterBadge();
+  // If the active heatmap is for this same metric, rebuild the gradient too
+  if (_heatmapMetric === metric) _refreshHeatLayer();
   rebuildMapLayer();
 }
 
@@ -377,20 +379,14 @@ async function setHeatmapMetric(metric) {
     b.classList.toggle('active', b.dataset.metric === metric);
   });
 
-  // Show dot-mode row
+  // Show dot-mode row + parameter controls
   const dotRow = document.getElementById('heat-dot-row');
   if (dotRow) dotRow.style.display = 'flex';
+  const ctrlRow = document.getElementById('heat-controls-row');
+  if (ctrlRow) ctrlRow.style.display = 'block';
 
-  // Build points and create/replace heat layer
-  const points = _buildHeatPoints(metric);
-  if (_heatmapLayer) { _heatmapLayer.remove(); _heatmapLayer = null; }
-  if (points.length > 0 && typeof L !== 'undefined' && L.heatLayer) {
-    _heatmapLayer = L.heatLayer(points, {
-      radius: 40, blur: 28, maxZoom: 10, max: 1.0,
-      minOpacity: 0.45,   // ensure gradient is visible on dark map backgrounds
-      gradient: _heatGradient(metric),
-    }).addTo(map);
-  }
+  // Build points and create/replace heat layer using current user params
+  _refreshHeatLayer();
 
   // Rebuild dots to apply dim/hide mode
   rebuildMapLayer();
@@ -401,6 +397,8 @@ function clearHeatmap() {
   if (_heatmapLayer) { _heatmapLayer.remove(); _heatmapLayer = null; }
   const dotRow = document.getElementById('heat-dot-row');
   if (dotRow) dotRow.style.display = 'none';
+  const ctrlRow = document.getElementById('heat-controls-row');
+  if (ctrlRow) ctrlRow.style.display = 'none';
   document.querySelectorAll('.filter-heat-btn').forEach(b => b.classList.remove('active'));
   rebuildMapLayer();
 }
@@ -413,24 +411,82 @@ function setHeatDotMode(mode) {
   rebuildMapLayer();
 }
 
+function setHeatRadius(v) {
+  _heatRadius = Number(v);
+  const el = document.getElementById('heat-radius-val');
+  if (el) el.textContent = v;
+  if (_heatmapLayer) _heatmapLayer.setOptions({ radius: _heatRadius });
+}
+
+function setHeatBlur(v) {
+  _heatBlur = Number(v);
+  const el = document.getElementById('heat-blur-val');
+  if (el) el.textContent = v;
+  if (_heatmapLayer) _heatmapLayer.setOptions({ blur: _heatBlur });
+}
+
+function setHeatIntensity(v) {
+  _heatMinOpacity = Number(v) / 100;
+  const el = document.getElementById('heat-intensity-val');
+  if (el) el.textContent = v + '%';
+  if (_heatmapLayer) _heatmapLayer.setOptions({ minOpacity: _heatMinOpacity });
+}
+
+// Returns true if the city passes the currently-active value filter for this metric.
+// Used to filter heatmap points so the gradient reflects the same subset shown on the map.
+function _passesMetricValueFilter(metric, city) {
+  const qid = city.qid;
+  const fv  = _filterValue[metric];
+  if (fv == null) return true; // "Any" — no restriction
+  switch (metric) {
+    case 'nobel':        return (nobelCitiesData[qid]?.total   ?? 0) >= fv;
+    case 'universities': return (universitiesData[qid]?.length ?? 0) >= fv;
+    case 'metro':        return (metroTransitData[qid]?.stations ?? 0) >= fv;
+    case 'aq':           return (airQualityData[qid]?.category ?? '') === fv;
+    case 'pop': {
+      const p = city.pop || 0;
+      if (fv === 'small')  return p < 100_000;
+      if (fv === 'medium') return p >= 100_000  && p < 1_000_000;
+      if (fv === 'large')  return p >= 1_000_000 && p < 10_000_000;
+      if (fv === 'mega')   return p >= 10_000_000;
+      return true;
+    }
+    default: return true;
+  }
+}
+
 function _buildHeatPoints(metric) {
-  // Gather raw values
   const raw = [];
   for (const city of allCities) {
     const qid = city.qid;
     let val = null;
-    if (metric === 'nobel')            val = nobelCitiesData[qid]?.total ?? 0;
+    if (metric === 'nobel')             val = nobelCitiesData[qid]?.total ?? 0;
     else if (metric === 'universities') val = universitiesData[qid]?.length ?? 0;
     else if (metric === 'pop')          val = city.pop || 0;
     else if (metric === 'metro')        val = metroTransitData[qid]?.stations ?? 0;
     else if (metric === 'aq')           val = airQualityData[qid]?.pm25 ?? null;
-    if (val !== null && val > 0) raw.push({ lat: city.lat, lng: city.lng, val });
+    if (val !== null && val > 0 && _passesMetricValueFilter(metric, city))
+      raw.push({ lat: city.lat, lng: city.lng, val });
   }
   if (raw.length === 0) return [];
-  // 95th-percentile cap to prevent outlier washout
+  // 95th-percentile cap re-computed within the filtered subset (preserves relative contrast)
   const sorted = raw.map(r => r.val).sort((a, b) => a - b);
   const p95 = sorted[Math.floor(sorted.length * 0.95)] || sorted[sorted.length - 1];
   return raw.map(r => [r.lat, r.lng, Math.min(r.val / p95, 1.0)]);
+}
+
+// Rebuild just the heat layer (not the whole map) — called when value filter or params change.
+function _refreshHeatLayer() {
+  if (!_heatmapMetric) return;
+  const points = _buildHeatPoints(_heatmapMetric);
+  if (_heatmapLayer) { _heatmapLayer.remove(); _heatmapLayer = null; }
+  if (points.length > 0 && typeof L !== 'undefined' && L.heatLayer) {
+    _heatmapLayer = L.heatLayer(points, {
+      radius: _heatRadius, blur: _heatBlur, maxZoom: 10, max: 1.0,
+      minOpacity: _heatMinOpacity,
+      gradient: _heatGradient(_heatmapMetric),
+    }).addTo(map);
+  }
 }
 
 function _heatGradient(metric) {
@@ -2214,6 +2270,10 @@ let _filterDimMode = 'dim';  // 'dim' | 'hide'
 let _heatmapMetric = null;   // null | 'nobel' | 'universities' | 'pop' | 'metro' | 'aq'
 let _heatmapLayer  = null;   // Leaflet.heat layer instance
 let _heatDotMode   = 'dim';  // 'show' | 'dim' | 'hide'
+// User-tunable heatmap parameters (exposed via sliders in the filter panel)
+let _heatRadius     = 40;
+let _heatBlur       = 28;
+let _heatMinOpacity = 0.45;
 
 let airportData    = {};   // QID → {iata, airportName, directDestinations, airportCount, airports[]}
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
@@ -3732,9 +3792,10 @@ async function init() {
     if (econOn) buildEconLayer();
     if (_heatmapLayer && _heatmapMetric) {
       const z = map.getZoom();
-      const radius = Math.max(15, 35 - (z - 5) * 3);
-      const blur   = Math.max(10, 25 - (z - 5) * 2);
-      _heatmapLayer.setOptions({ radius, blur, minOpacity: 0.45 });
+      // Scale from user-set baseline; zoom-in shrinks radius so individual hotspots stay crisp
+      const radius = Math.max(10, _heatRadius  - (z - 5) * 3);
+      const blur   = Math.max(5,  _heatBlur    - (z - 5) * 2);
+      _heatmapLayer.setOptions({ radius, blur, minOpacity: _heatMinOpacity });
     }
   });
 

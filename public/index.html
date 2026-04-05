@@ -512,6 +512,27 @@
       </div>
     </div>
 
+    <div id="heat-controls-row" style="display:none">
+      <div class="heat-ctrl">
+        <label class="heat-ctrl-label">Radius</label>
+        <input class="heat-ctrl-slider" type="range" id="heat-radius-slider" min="8" max="80" value="40"
+               oninput="setHeatRadius(this.value)">
+        <span class="heat-ctrl-val" id="heat-radius-val">40</span>
+      </div>
+      <div class="heat-ctrl">
+        <label class="heat-ctrl-label">Blur</label>
+        <input class="heat-ctrl-slider" type="range" id="heat-blur-slider" min="4" max="60" value="28"
+               oninput="setHeatBlur(this.value)">
+        <span class="heat-ctrl-val" id="heat-blur-val">28</span>
+      </div>
+      <div class="heat-ctrl">
+        <label class="heat-ctrl-label">Intensity</label>
+        <input class="heat-ctrl-slider" type="range" id="heat-intensity-slider" min="10" max="100" value="45"
+               oninput="setHeatIntensity(this.value)">
+        <span class="heat-ctrl-val" id="heat-intensity-val">45%</span>
+      </div>
+    </div>
+
     <div id="filter-dim-row">
       <span class="filter-row-label">Unmatched cities:</span>
       <div class="filter-btn-group">
