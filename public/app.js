@@ -4544,6 +4544,27 @@ function _renderCountryPanel(iso2) {
               escHtml(cd.fh_status) + "</span></div>" : "")
           : "")
       : "") +
+    // ── Happiness (WHR 2024) ──────────────────────────────────────────
+    (Number.isFinite(cd.whr_score)
+      ? '<div class="cp-gauge-section-hdr">Happiness (WHR 2024)</div>' +
+        '<div class="cp-gauge-row"><span class="cp-gauge-lbl">Happiness Rank</span><span class="cp-gauge-info">#' + cd.whr_rank + ' of 143</span></div>' +
+        _cpGaugeRow('Happiness score',  cd.whr_score,      8.0, '', 'cp-green', '', '') +
+        _cpGaugeRow('GDP contribution', cd.whr_gdp,        2.0, '', 'cp-blue',  '', '') +
+        _cpGaugeRow('Social support',   cd.whr_social,     1.5, '', 'cp-blue',  '', '') +
+        _cpGaugeRow('Life expectancy',  cd.whr_health,     1.0, '', '',          '', '') +
+        _cpGaugeRow('Freedom',          cd.whr_freedom,    0.8, '', '',          '', '') +
+        _cpGaugeRow('Generosity',       cd.whr_generosity, 0.5, '', 'cp-amber', '', '') +
+        _cpGaugeRow('Low corruption',   cd.whr_corruption, 0.6, '', 'cp-green', '', '')
+      : '') +
+    // ── Energy Mix (Ember) ────────────────────────────────────────────
+    (Number.isFinite(cd.energy_coal_pct)
+      ? '<div class="cp-gauge-section-hdr">Energy Mix</div>' +
+        _cpGaugeRow('Wind & Solar', cd.energy_wind_solar_pct, 100, '%', 'cp-green', '', '') +
+        _cpGaugeRow('Hydro',        cd.energy_hydro_pct,      100, '%', 'cp-blue',  '', '') +
+        _cpGaugeRow('Nuclear',      cd.energy_nuclear_pct,    100, '%', '',          '', '') +
+        _cpGaugeRow('Gas',          cd.energy_gas_pct,        100, '%', 'cp-amber', '', '') +
+        _cpGaugeRow('Coal',         cd.energy_coal_pct,       100, '%', 'cp-red',   '', '')
+      : '') +
     // ── OECD Innovation & Labor ───────────────────────────────────────
     (function() {
       var od = oecdData[iso2];
