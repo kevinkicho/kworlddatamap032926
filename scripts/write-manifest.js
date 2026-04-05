@@ -23,6 +23,14 @@ const climate      = readJson('climate-extra.json');
 const gawc         = readJson('gawc-cities.json');
 const airport      = readJson('airport-connectivity.json');
 const bea          = readJson('bea-trade.json');
+const ecb          = readJson('ecb-data.json');
+const ecbBonds     = readJson('ecb-bonds.json');
+const boj          = readJson('boj-yields.json');
+const oecd         = readJson('oecd-country.json');
+const comtrade     = readJson('comtrade-partners.json');
+const noaaClimate  = readJson('noaa-climate.json');
+const japan        = readJson('japan-prefectures.json');
+const censusB      = readJson('census-business.json');
 
 // Helper: first available field names from a sample entry
 const sampleFields = obj => obj ? Object.keys(Object.values(obj)[0] || {}) : [];
@@ -40,7 +48,15 @@ const manifest = {
   'climate-extra':        { key: 'qid',   coverage: climate  ? Object.keys(climate).length  : 0,         fields: ['months'],                   updated: today },
   'gawc-cities':          { key: 'qid',   coverage: gawc     ? Object.keys(gawc).length     : 0,         fields: sampleFields(gawc),           updated: today },
   'airport-connectivity': { key: 'qid',   coverage: airport  ? Object.keys(airport).length  : 0,         fields: sampleFields(airport),        updated: today },
-  'bea-trade':            { key: 'iso2',  coverage: bea      ? Object.keys(bea).length       : 0,  region: 'US-bilateral', fields: ['expGds', 'impGds'], updated: today },
+  'bea-trade':            { key: 'iso2',  coverage: bea          ? Object.keys(bea).length          : 0,  region: 'US-bilateral', fields: ['expGds', 'impGds'], updated: today },
+  'ecb-data':             { key: 'single',coverage: ecb          ? (ecb.eurozone_countries?.length ?? 0) : 0, fields: ['ecb_deposit_rate','ecb_mro_rate','euribor_3m','euribor_3m_history','countries'], updated: today },
+  'ecb-bonds':            { key: 'iso2',  coverage: ecbBonds     ? Object.keys(ecbBonds).length     : 0,  region: 'EU', fields: ['bond_yield_10y','bond_yield_10y_history','spread_vs_de_bps'], updated: today },
+  'boj-yields':           { key: 'iso2',  coverage: boj          ? Object.keys(boj).length          : 0,  region: 'JP', fields: ['bond_yield_10y','bond_yield_10y_history','bond_yield_2y','bond_yield_5y'], updated: today },
+  'oecd-country':         { key: 'iso2',  coverage: oecd         ? Object.keys(oecd).length         : 0,  fields: ['rd_spend_pct','tax_revenue_pct','hours_worked','tertiary_pct','pisa_reading','min_wage_usd_ppp'], updated: today },
+  'comtrade-partners':    { key: 'iso2',  coverage: comtrade     ? Object.keys(comtrade).length     : 0,  fields: ['top_exports','top_imports','year'], updated: today },
+  'noaa-climate':         { key: 'qid',   coverage: noaaClimate  ? Object.keys(noaaClimate).length  : 0,  region: 'US', fields: ['months','source','station'], updated: today },
+  'japan-prefectures':    { key: 'name',  coverage: japan        ? Object.keys(japan).length        : 0,  region: 'JP', fields: sampleFields(japan), updated: today },
+  'census-business':      { key: 'qid',   coverage: censusB      ? Object.keys(censusB).length      : 0,  region: 'US', fields: sampleFields(censusB), updated: today },
 };
 
 const OUT = path.join(PUB, 'data-manifest.json');

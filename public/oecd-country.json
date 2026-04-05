@@ -39,7 +39,9 @@
     "tax_revenue_pct": 0.648,
     "tax_revenue_year": 2024,
     "tertiary_pct": 52.66,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 432,
+    "pisa_reading_year": 2018
   },
   "AF": {
     "tax_revenue_pct": 9.898,
@@ -55,7 +57,9 @@
     "tax_revenue_pct": 17.802,
     "tax_revenue_year": 2023,
     "tertiary_pct": 17.51,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 405,
+    "pisa_reading_year": 2018
   },
   "AM": {
     "rd_spend_pct": 0.181,
@@ -77,7 +81,9 @@
     "rd_spend_pct": 0.549,
     "rd_spend_year": 2022,
     "tax_revenue_pct": 9.929,
-    "tax_revenue_year": 2023
+    "tax_revenue_year": 2023,
+    "pisa_reading": 402,
+    "pisa_reading_year": 2018
   },
   "AT": {
     "rd_spend_pct": 3.2,
@@ -87,7 +93,9 @@
     "hours_worked": 1432,
     "hours_worked_year": 2024,
     "tertiary_pct": 37.4,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 484,
+    "pisa_reading_year": 2018
   },
   "AU": {
     "rd_spend_pct": 1.855,
@@ -97,7 +105,11 @@
     "hours_worked": 1651,
     "hours_worked_year": 2019,
     "tertiary_pct": 36.78,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 503,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 16.15,
+    "min_wage_year": 2023
   },
   "AW": {
     "tertiary_pct": 19.6,
@@ -109,7 +121,9 @@
     "tax_revenue_pct": 17.786,
     "tax_revenue_year": 2023,
     "tertiary_pct": 17.67,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 362,
+    "pisa_reading_year": 2009
   },
   "B8": {
     "rd_spend_pct": 1.313,
@@ -123,7 +137,9 @@
     "tax_revenue_pct": 20.306,
     "tax_revenue_year": 2024,
     "tertiary_pct": 17.5,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 403,
+    "pisa_reading_year": 2018
   },
   "BD": {
     "tax_revenue_pct": 7.642,
@@ -139,7 +155,11 @@
     "hours_worked": 1593,
     "hours_worked_year": 2024,
     "tertiary_pct": 45,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 493,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 14.8,
+    "min_wage_year": 2023
   },
   "BF": {
     "rd_spend_pct": 0.251,
@@ -155,13 +175,17 @@
     "tax_revenue_pct": 20.515,
     "tax_revenue_year": 2023,
     "tertiary_pct": 33.8,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 420,
+    "pisa_reading_year": 2018
   },
   "BH": {
     "tax_revenue_pct": 2.823,
     "tax_revenue_year": 2020,
     "tertiary_pct": 29.22,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 387,
+    "pisa_reading_year": 2022
   },
   "BI": {
     "rd_spend_pct": 0.213,
@@ -183,7 +207,9 @@
     "rd_spend_pct": 0.278,
     "rd_spend_year": 2018,
     "tertiary_pct": 18.51,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 408,
+    "pisa_reading_year": 2018
   },
   "BO": {
     "tertiary_pct": 20.12,
@@ -195,7 +221,11 @@
     "tax_revenue_pct": 15.41,
     "tax_revenue_year": 2024,
     "tertiary_pct": 16.54,
-    "tertiary_pct_year": 2018
+    "tertiary_pct_year": 2018,
+    "pisa_reading": 413,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 5.02,
+    "min_wage_year": 2023
   },
   "BS": {
     "tax_revenue_pct": 16.198,
@@ -221,7 +251,9 @@
     "tax_revenue_pct": 12.701,
     "tax_revenue_year": 2023,
     "tertiary_pct": 28.3,
-    "tertiary_pct_year": 2019
+    "tertiary_pct_year": 2019,
+    "pisa_reading": 474,
+    "pisa_reading_year": 2018
   },
   "BZ": {
     "tax_revenue_pct": 21.347,
@@ -237,7 +269,11 @@
     "hours_worked": 1710,
     "hours_worked_year": 2015,
     "tertiary_pct": 34.66,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 520,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 13.22,
+    "min_wage_year": 2023
   },
   "CD": {
     "tax_revenue_pct": 10.662,
@@ -263,7 +299,9 @@
     "tax_revenue_pct": 9.004,
     "tax_revenue_year": 2023,
     "tertiary_pct": 46.5,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 484,
+    "pisa_reading_year": 2018
   },
   "CI": {
     "rd_spend_pct": 0.07,
@@ -281,7 +319,11 @@
     "hours_worked": 1966,
     "hours_worked_year": 2022,
     "tertiary_pct": 22.27,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 452,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 3.96,
+    "min_wage_year": 2023
   },
   "CM": {
     "tax_revenue_pct": 11.342,
@@ -295,7 +337,9 @@
     "tax_revenue_pct": 7.638,
     "tax_revenue_year": 2023,
     "tertiary_pct": 7.68,
-    "tertiary_pct_year": 2020
+    "tertiary_pct_year": 2020,
+    "pisa_reading": 555,
+    "pisa_reading_year": 2018
   },
   "CO": {
     "rd_spend_pct": 0.289,
@@ -305,7 +349,11 @@
     "hours_worked": 2405,
     "hours_worked_year": 2014,
     "tertiary_pct": 17.68,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 412,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 3.34,
+    "min_wage_year": 2023
   },
   "CR": {
     "rd_spend_pct": 0.338,
@@ -315,7 +363,11 @@
     "hours_worked": 2149,
     "hours_worked_year": 2022,
     "tertiary_pct": 21.61,
-    "tertiary_pct_year": 2020
+    "tertiary_pct_year": 2020,
+    "pisa_reading": 426,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 4.44,
+    "min_wage_year": 2022
   },
   "CU": {
     "rd_spend_pct": 0.36,
@@ -337,7 +389,9 @@
     "tax_revenue_pct": 23.266,
     "tax_revenue_year": 2023,
     "tertiary_pct": 51.4,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 424,
+    "pisa_reading_year": 2018
   },
   "CZ": {
     "rd_spend_pct": 1.964,
@@ -345,7 +399,11 @@
     "tax_revenue_pct": 12.642,
     "tax_revenue_year": 2022,
     "tertiary_pct": 27.5,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 490,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 8.41,
+    "min_wage_year": 2023
   },
   "DE": {
     "rd_spend_pct": 3.132,
@@ -353,7 +411,11 @@
     "tax_revenue_pct": 10.636,
     "tax_revenue_year": 2023,
     "tertiary_pct": 34.2,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 498,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 14.03,
+    "min_wage_year": 2023
   },
   "DJ": {
     "tertiary_pct": 7.06,
@@ -367,7 +429,9 @@
     "hours_worked": 1379,
     "hours_worked_year": 2024,
     "tertiary_pct": 45.1,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 501,
+    "pisa_reading_year": 2018
   },
   "DM": {
     "tertiary_pct": 6.84,
@@ -377,13 +441,17 @@
     "tax_revenue_pct": 14.703,
     "tax_revenue_year": 2024,
     "tertiary_pct": 14.36,
-    "tertiary_pct_year": 2019
+    "tertiary_pct_year": 2019,
+    "pisa_reading": 342,
+    "pisa_reading_year": 2018
   },
   "DZ": {
     "rd_spend_pct": 0.479,
     "rd_spend_year": 2017,
     "tertiary_pct": 11.44,
-    "tertiary_pct_year": 2019
+    "tertiary_pct_year": 2019,
+    "pisa_reading": 350,
+    "pisa_reading_year": 2015
   },
   "EC": {
     "tax_revenue_pct": 13.089,
@@ -399,13 +467,19 @@
     "hours_worked": 1611,
     "hours_worked_year": 2024,
     "tertiary_pct": 41.8,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 523,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 10.19,
+    "min_wage_year": 2023
   },
   "EG": {
     "rd_spend_pct": 1.034,
     "rd_spend_year": 2023,
     "tertiary_pct": 18.05,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 389,
+    "pisa_reading_year": 2022
   },
   "EL": {
     "tertiary_pct": 35.2,
@@ -419,7 +493,11 @@
     "hours_worked": 1634,
     "hours_worked_year": 2024,
     "tertiary_pct": 42,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 496,
+    "pisa_reading_year": 2015,
+    "min_wage_usd_ppp": 11.39,
+    "min_wage_year": 2023
   },
   "ET": {
     "rd_spend_pct": 0.274,
@@ -443,7 +521,9 @@
     "hours_worked": 1509,
     "hours_worked_year": 2024,
     "tertiary_pct": 42.6,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 520,
+    "pisa_reading_year": 2018
   },
   "FJ": {
     "tax_revenue_pct": 20.538,
@@ -461,7 +541,11 @@
     "tax_revenue_pct": 23.077,
     "tax_revenue_year": 2023,
     "tertiary_pct": 43.4,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 493,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 13.77,
+    "min_wage_year": 2023
   },
   "GA": {
     "tax_revenue_pct": 9.49,
@@ -475,7 +559,11 @@
     "hours_worked": 1512,
     "hours_worked_year": 2024,
     "tertiary_pct": 39.59,
-    "tertiary_pct_year": 2021
+    "tertiary_pct_year": 2021,
+    "pisa_reading": 504,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 14.41,
+    "min_wage_year": 2023
   },
   "GD": {
     "tertiary_pct": 7.92,
@@ -487,7 +575,9 @@
     "tax_revenue_pct": 24.258,
     "tax_revenue_year": 2024,
     "tertiary_pct": 33.69,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 380,
+    "pisa_reading_year": 2018
   },
   "GH": {
     "tax_revenue_pct": 12.298,
@@ -517,7 +607,11 @@
     "hours_worked": 1898,
     "hours_worked_year": 2024,
     "tertiary_pct": 28.94,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 457,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 7.72,
+    "min_wage_year": 2023
   },
   "GT": {
     "rd_spend_pct": 0.059,
@@ -539,7 +633,9 @@
   },
   "HK": {
     "rd_spend_pct": 1.103,
-    "rd_spend_year": 2023
+    "rd_spend_year": 2023,
+    "pisa_reading": 524,
+    "pisa_reading_year": 2018
   },
   "HN": {
     "rd_spend_pct": 0.06,
@@ -555,7 +651,9 @@
     "tax_revenue_pct": 21.183,
     "tax_revenue_year": 2023,
     "tertiary_pct": 30.4,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 479,
+    "pisa_reading_year": 2018
   },
   "HT": {
     "tertiary_pct": 4.53,
@@ -567,13 +665,19 @@
     "tax_revenue_pct": 23.429,
     "tax_revenue_year": 2022,
     "tertiary_pct": 31.1,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 476,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 7.81,
+    "min_wage_year": 2023
   },
   "ID": {
     "rd_spend_pct": 0.281,
     "rd_spend_year": 2020,
     "tertiary_pct": 9.33,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 371,
+    "pisa_reading_year": 2018
   },
   "IE": {
     "rd_spend_pct": 0.963,
@@ -583,7 +687,11 @@
     "hours_worked": 1742,
     "hours_worked_year": 2019,
     "tertiary_pct": 56.6,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 518,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 14.63,
+    "min_wage_year": 2023
   },
   "IL": {
     "rd_spend_pct": 6.019,
@@ -593,7 +701,11 @@
     "hours_worked": 1877,
     "hours_worked_year": 2024,
     "tertiary_pct": 38.3,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 470,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 10.23,
+    "min_wage_year": 2023
   },
   "IN": {
     "rd_spend_pct": 0.646,
@@ -625,7 +737,11 @@
     "hours_worked": 1434,
     "hours_worked_year": 2024,
     "tertiary_pct": 46.3,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 474,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 16.44,
+    "min_wage_year": 2022
   },
   "IT": {
     "rd_spend_pct": 1.39,
@@ -635,7 +751,9 @@
     "hours_worked": 1709,
     "hours_worked_year": 2024,
     "tertiary_pct": 22.3,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 476,
+    "pisa_reading_year": 2018
   },
   "JM": {
     "tax_revenue_pct": 23.674,
@@ -649,7 +767,9 @@
     "tax_revenue_pct": 17.049,
     "tax_revenue_year": 2023,
     "tertiary_pct": 23.23,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 419,
+    "pisa_reading_year": 2018
   },
   "JP": {
     "rd_spend_pct": 3.405,
@@ -657,7 +777,11 @@
     "hours_worked": 1644,
     "hours_worked_year": 2019,
     "tertiary_pct": 25.54,
-    "tertiary_pct_year": 2020
+    "tertiary_pct_year": 2020,
+    "pisa_reading": 504,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 9.29,
+    "min_wage_year": 2023
   },
   "KE": {
     "rd_spend_pct": 0.809,
@@ -673,7 +797,9 @@
     "tax_revenue_pct": 20.382,
     "tax_revenue_year": 2024,
     "tertiary_pct": 23.93,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 314,
+    "pisa_reading_year": 2009
   },
   "KH": {
     "tax_revenue_pct": 12.204,
@@ -703,13 +829,19 @@
     "hours_worked": 1910,
     "hours_worked_year": 2021,
     "tertiary_pct": 36.46,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 514,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 9.41,
+    "min_wage_year": 2023
   },
   "KW": {
     "rd_spend_pct": 0.098,
     "rd_spend_year": 2023,
     "tertiary_pct": 11.12,
-    "tertiary_pct_year": 2018
+    "tertiary_pct_year": 2018,
+    "pisa_reading": 348,
+    "pisa_reading_year": 2022
   },
   "KZ": {
     "rd_spend_pct": 0.145,
@@ -717,7 +849,9 @@
     "tax_revenue_pct": 11.892,
     "tax_revenue_year": 2023,
     "tertiary_pct": 37.68,
-    "tertiary_pct_year": 2019
+    "tertiary_pct_year": 2019,
+    "pisa_reading": 387,
+    "pisa_reading_year": 2018
   },
   "LA": {
     "tax_revenue_pct": 12.113,
@@ -729,7 +863,9 @@
     "tax_revenue_pct": 5.685,
     "tax_revenue_year": 2021,
     "tertiary_pct": 22.14,
-    "tertiary_pct_year": 2019
+    "tertiary_pct_year": 2019,
+    "pisa_reading": 353,
+    "pisa_reading_year": 2018
   },
   "LC": {
     "tax_revenue_pct": 18.225,
@@ -739,7 +875,9 @@
   },
   "LI": {
     "rd_spend_pct": 5.868,
-    "rd_spend_year": 2019
+    "rd_spend_year": 2019,
+    "pisa_reading": 516,
+    "pisa_reading_year": 2012
   },
   "LK": {
     "rd_spend_pct": 0.105,
@@ -767,7 +905,11 @@
     "hours_worked": 1660,
     "hours_worked_year": 2024,
     "tertiary_pct": 47.6,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 476,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 9.49,
+    "min_wage_year": 2023
   },
   "LU": {
     "rd_spend_pct": 0.977,
@@ -777,7 +919,11 @@
     "hours_worked": 1493,
     "hours_worked_year": 2019,
     "tertiary_pct": 54.7,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 470,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 19.1,
+    "min_wage_year": 2023
   },
   "LV": {
     "rd_spend_pct": 0.764,
@@ -787,11 +933,17 @@
     "hours_worked": 1637,
     "hours_worked_year": 2024,
     "tertiary_pct": 40.1,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 479,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 9.61,
+    "min_wage_year": 2023
   },
   "MA": {
     "tax_revenue_pct": 20.744,
-    "tax_revenue_year": 2023
+    "tax_revenue_year": 2023,
+    "pisa_reading": 359,
+    "pisa_reading_year": 2018
   },
   "MD": {
     "rd_spend_pct": 0.223,
@@ -799,13 +951,17 @@
     "tax_revenue_pct": 18.585,
     "tax_revenue_year": 2023,
     "tertiary_pct": 22.56,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 424,
+    "pisa_reading_year": 2018
   },
   "ME": {
     "rd_spend_pct": 0.363,
     "rd_spend_year": 2019,
     "tertiary_pct": 25.6,
-    "tertiary_pct_year": 2020
+    "tertiary_pct_year": 2020,
+    "pisa_reading": 421,
+    "pisa_reading_year": 2018
   },
   "MG": {
     "rd_spend_pct": 0.013,
@@ -827,7 +983,9 @@
     "tax_revenue_pct": 17.758,
     "tax_revenue_year": 2023,
     "tertiary_pct": 24.7,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 393,
+    "pisa_reading_year": 2018
   },
   "ML": {
     "rd_spend_pct": 0.174,
@@ -851,13 +1009,17 @@
     "tax_revenue_pct": 16.855,
     "tax_revenue_year": 2024,
     "tertiary_pct": 31.16,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 415,
+    "pisa_reading_year": 2022
   },
   "MO": {
     "rd_spend_pct": 0.264,
     "rd_spend_year": 2023,
     "tax_revenue_pct": 22.931,
-    "tax_revenue_year": 2023
+    "tax_revenue_year": 2023,
+    "pisa_reading": 525,
+    "pisa_reading_year": 2018
   },
   "MR": {
     "rd_spend_pct": 0.01,
@@ -869,7 +1031,9 @@
     "tax_revenue_pct": 21.483,
     "tax_revenue_year": 2023,
     "tertiary_pct": 36.3,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 448,
+    "pisa_reading_year": 2018
   },
   "MU": {
     "rd_spend_pct": 0.234,
@@ -877,7 +1041,9 @@
     "tax_revenue_pct": 20.532,
     "tax_revenue_year": 2024,
     "tertiary_pct": 11.67,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 407,
+    "pisa_reading_year": 2009
   },
   "MV": {
     "tax_revenue_pct": 19.453,
@@ -897,7 +1063,11 @@
     "tax_revenue_pct": 14.194,
     "tax_revenue_year": 2023,
     "tertiary_pct": 17.13,
-    "tertiary_pct_year": 2020
+    "tertiary_pct_year": 2020,
+    "pisa_reading": 420,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 4.52,
+    "min_wage_year": 2023
   },
   "MY": {
     "rd_spend_pct": 0.951,
@@ -905,7 +1075,9 @@
     "tax_revenue_pct": 12.565,
     "tax_revenue_year": 2023,
     "tertiary_pct": 14.56,
-    "tertiary_pct_year": 2022
+    "tertiary_pct_year": 2022,
+    "pisa_reading": 415,
+    "pisa_reading_year": 2018
   },
   "MZ": {
     "tax_revenue_pct": 21.853,
@@ -945,7 +1117,11 @@
     "tax_revenue_pct": 25.254,
     "tax_revenue_year": 2023,
     "tertiary_pct": 44.6,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 485,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 14.58,
+    "min_wage_year": 2023
   },
   "NO": {
     "rd_spend_pct": 1.558,
@@ -955,7 +1131,9 @@
     "hours_worked": 1426,
     "hours_worked_year": 2021,
     "tertiary_pct": 49.5,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 499,
+    "pisa_reading_year": 2018
   },
   "NP": {
     "tax_revenue_pct": 13.945,
@@ -977,13 +1155,19 @@
     "hours_worked": 1748,
     "hours_worked_year": 2022,
     "tertiary_pct": 32.28,
-    "tertiary_pct_year": 2020
+    "tertiary_pct_year": 2020,
+    "pisa_reading": 506,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 15.11,
+    "min_wage_year": 2023
   },
   "OE": {
     "rd_spend_pct": 3.022,
     "rd_spend_year": 2022,
     "tax_revenue_pct": 15.646,
-    "tax_revenue_year": 2023
+    "tax_revenue_year": 2023,
+    "pisa_reading": 487,
+    "pisa_reading_year": 2018
   },
   "OM": {
     "rd_spend_pct": 0.367,
@@ -997,7 +1181,9 @@
     "tax_revenue_pct": 7.461,
     "tax_revenue_year": 2021,
     "tertiary_pct": 14.6,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 377,
+    "pisa_reading_year": 2018
   },
   "PE": {
     "rd_spend_pct": 0.162,
@@ -1005,7 +1191,9 @@
     "tax_revenue_pct": 15.924,
     "tax_revenue_year": 2021,
     "hours_worked": 2263,
-    "hours_worked_year": 2024
+    "hours_worked_year": 2024,
+    "pisa_reading": 401,
+    "pisa_reading_year": 2018
   },
   "PG": {
     "rd_spend_pct": 0.032,
@@ -1021,7 +1209,9 @@
     "tax_revenue_pct": 14.104,
     "tax_revenue_year": 2023,
     "tertiary_pct": 18.08,
-    "tertiary_pct_year": 2022
+    "tertiary_pct_year": 2022,
+    "pisa_reading": 340,
+    "pisa_reading_year": 2018
   },
   "PK": {
     "rd_spend_pct": 0.164,
@@ -1037,7 +1227,11 @@
     "hours_worked": 1785,
     "hours_worked_year": 2024,
     "tertiary_pct": 39.5,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 512,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 10.46,
+    "min_wage_year": 2023
   },
   "PR": {
     "tertiary_pct": 30.83,
@@ -1055,7 +1249,11 @@
     "hours_worked": 1716,
     "hours_worked_year": 2024,
     "tertiary_pct": 31.4,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 492,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 10.38,
+    "min_wage_year": 2023
   },
   "PW": {
     "tax_revenue_pct": 17.895,
@@ -1075,7 +1273,9 @@
     "rd_spend_pct": 0.681,
     "rd_spend_year": 2021,
     "tertiary_pct": 30.39,
-    "tertiary_pct_year": 2022
+    "tertiary_pct_year": 2022,
+    "pisa_reading": 407,
+    "pisa_reading_year": 2018
   },
   "RO": {
     "rd_spend_pct": 0.459,
@@ -1085,7 +1285,11 @@
     "hours_worked": 1829,
     "hours_worked_year": 2024,
     "tertiary_pct": 19.2,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 428,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 6.94,
+    "min_wage_year": 2023
   },
   "RS": {
     "rd_spend_pct": 0.95,
@@ -1093,7 +1297,9 @@
     "tax_revenue_pct": 23.893,
     "tax_revenue_year": 2022,
     "tertiary_pct": 28.6,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 439,
+    "pisa_reading_year": 2018
   },
   "RU": {
     "rd_spend_pct": 0.925,
@@ -1103,7 +1309,9 @@
     "hours_worked": 1874,
     "hours_worked_year": 2020,
     "tertiary_pct": 41.22,
-    "tertiary_pct_year": 2021
+    "tertiary_pct_year": 2021,
+    "pisa_reading": 479,
+    "pisa_reading_year": 2018
   },
   "RW": {
     "rd_spend_pct": 0.794,
@@ -1139,7 +1347,9 @@
     "tax_revenue_pct": 8.185,
     "tax_revenue_year": 2024,
     "tertiary_pct": 36.04,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 399,
+    "pisa_reading_year": 2018
   },
   "SB": {
     "tax_revenue_pct": 22.075,
@@ -1163,7 +1373,9 @@
     "hours_worked": 1431,
     "hours_worked_year": 2024,
     "tertiary_pct": 50.5,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 506,
+    "pisa_reading_year": 2018
   },
   "SG": {
     "rd_spend_pct": 2.156,
@@ -1171,7 +1383,9 @@
     "tax_revenue_pct": 14.192,
     "tax_revenue_year": 2024,
     "tertiary_pct": 36.19,
-    "tertiary_pct_year": 2022
+    "tertiary_pct_year": 2022,
+    "pisa_reading": 549,
+    "pisa_reading_year": 2018
   },
   "SI": {
     "rd_spend_pct": 2.095,
@@ -1181,7 +1395,11 @@
     "hours_worked": 1610,
     "hours_worked_year": 2022,
     "tertiary_pct": 34.6,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 495,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 11.01,
+    "min_wage_year": 2023
   },
   "SK": {
     "rd_spend_pct": 0.979,
@@ -1191,7 +1409,11 @@
     "hours_worked": 1572,
     "hours_worked_year": 2020,
     "tertiary_pct": 29,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 458,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 9.35,
+    "min_wage_year": 2023
   },
   "SL": {
     "tertiary_pct": 1.96,
@@ -1291,7 +1513,9 @@
     "tax_revenue_pct": 15.258,
     "tax_revenue_year": 2024,
     "tertiary_pct": 17.35,
-    "tertiary_pct_year": 2022
+    "tertiary_pct_year": 2022,
+    "pisa_reading": 393,
+    "pisa_reading_year": 2018
   },
   "TJ": {
     "rd_spend_pct": 0.09,
@@ -1317,7 +1541,9 @@
     "rd_spend_pct": 0.747,
     "rd_spend_year": 2019,
     "tertiary_pct": 12.8,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 361,
+    "pisa_reading_year": 2015
   },
   "TO": {
     "tax_revenue_pct": 20.454,
@@ -1333,7 +1559,11 @@
     "hours_worked": 1832,
     "hours_worked_year": 2013,
     "tertiary_pct": 25.6,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 466,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 4.61,
+    "min_wage_year": 2023
   },
   "TT": {
     "rd_spend_pct": 0.048,
@@ -1341,11 +1571,17 @@
     "tax_revenue_pct": 16.757,
     "tax_revenue_year": 2019,
     "tertiary_pct": 10.14,
-    "tertiary_pct_year": 2022
+    "tertiary_pct_year": 2022,
+    "pisa_reading": 427,
+    "pisa_reading_year": 2015
   },
   "TV": {
     "tertiary_pct": 8.43,
     "tertiary_pct_year": 2017
+  },
+  "TW": {
+    "pisa_reading": 515,
+    "pisa_reading_year": 2022
   },
   "TZ": {
     "tax_revenue_pct": 12.803,
@@ -1359,7 +1595,9 @@
     "tax_revenue_pct": 21.028,
     "tax_revenue_year": 2024,
     "tertiary_pct": 34.75,
-    "tertiary_pct_year": 2019
+    "tertiary_pct_year": 2019,
+    "pisa_reading": 466,
+    "pisa_reading_year": 2018
   },
   "UG": {
     "rd_spend_pct": 0.311,
@@ -1381,7 +1619,11 @@
     "hours_worked": 1796,
     "hours_worked_year": 2024,
     "tertiary_pct": 39.03,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 505,
+    "pisa_reading_year": 2018,
+    "min_wage_usd_ppp": 10.42,
+    "min_wage_year": 2023
   },
   "UY": {
     "rd_spend_pct": 0.626,
@@ -1389,7 +1631,9 @@
     "tax_revenue_pct": 18.162,
     "tax_revenue_year": 2024,
     "tertiary_pct": 12.93,
-    "tertiary_pct_year": 2024
+    "tertiary_pct_year": 2024,
+    "pisa_reading": 427,
+    "pisa_reading_year": 2018
   },
   "UZ": {
     "rd_spend_pct": 0.125,
@@ -1431,7 +1675,9 @@
     "rd_spend_pct": 0.425,
     "rd_spend_year": 2021,
     "tertiary_pct": 11.32,
-    "tertiary_pct_year": 2023
+    "tertiary_pct_year": 2023,
+    "pisa_reading": 505,
+    "pisa_reading_year": 2018
   },
   "VU": {
     "tax_revenue_pct": 17.571,
@@ -1480,6 +1726,10 @@
     "rd_spend_year": 2020,
     "tax_revenue_pct": 13.847,
     "tax_revenue_year": 2023
+  },
+  "XK": {
+    "pisa_reading": 353,
+    "pisa_reading_year": 2018
   },
   "XL": {
     "tax_revenue_pct": 10.535,

@@ -29,7 +29,23 @@
       "cpi_inflation_history",
       "unemployment_rate",
       "unemployment_rate_year",
-      "unemployment_rate_history"
+      "unemployment_rate_history",
+      "wgi_rule_of_law",
+      "wgi_rule_of_law_year",
+      "wgi_corruption",
+      "wgi_corruption_year",
+      "wgi_govt_effectiveness",
+      "wgi_govt_effectiveness_year",
+      "wgi_voice_accountability",
+      "wgi_voice_accountability_year",
+      "wgi_political_stability",
+      "wgi_political_stability_year",
+      "wgi_regulatory_quality",
+      "wgi_regulatory_quality_year",
+      "renewable_energy_pct",
+      "renewable_energy_pct_year",
+      "education_spend_gdp",
+      "education_spend_gdp_year"
     ],
     "updated": "2026-04"
   },
@@ -240,6 +256,102 @@
     "fields": [
       "expGds",
       "impGds"
+    ],
+    "updated": "2026-04"
+  },
+  "ecb-data": {
+    "key": "single",
+    "coverage": 20,
+    "fields": [
+      "ecb_deposit_rate",
+      "ecb_mro_rate",
+      "euribor_3m",
+      "euribor_3m_history",
+      "countries"
+    ],
+    "updated": "2026-04"
+  },
+  "ecb-bonds": {
+    "key": "iso2",
+    "coverage": 20,
+    "region": "EU",
+    "fields": [
+      "bond_yield_10y",
+      "bond_yield_10y_history",
+      "spread_vs_de_bps"
+    ],
+    "updated": "2026-04"
+  },
+  "boj-yields": {
+    "key": "iso2",
+    "coverage": 1,
+    "region": "JP",
+    "fields": [
+      "bond_yield_10y",
+      "bond_yield_10y_history",
+      "bond_yield_2y",
+      "bond_yield_5y"
+    ],
+    "updated": "2026-04"
+  },
+  "oecd-country": {
+    "key": "iso2",
+    "coverage": 240,
+    "fields": [
+      "rd_spend_pct",
+      "tax_revenue_pct",
+      "hours_worked",
+      "tertiary_pct",
+      "pisa_reading",
+      "min_wage_usd_ppp"
+    ],
+    "updated": "2026-04"
+  },
+  "comtrade-partners": {
+    "key": "iso2",
+    "coverage": 49,
+    "fields": [
+      "top_exports",
+      "top_imports",
+      "year"
+    ],
+    "updated": "2026-04"
+  },
+  "noaa-climate": {
+    "key": "qid",
+    "coverage": 447,
+    "region": "US",
+    "fields": [
+      "months",
+      "source",
+      "station"
+    ],
+    "updated": "2026-04"
+  },
+  "japan-prefectures": {
+    "key": "name",
+    "coverage": 47,
+    "region": "JP",
+    "fields": [
+      "perCapitaIncomeJpy",
+      "perCapitaIncomeYear",
+      "perCapitaIncomeHistory",
+      "gdpJpy",
+      "gdpYear",
+      "gdpHistory"
+    ],
+    "updated": "2026-04"
+  },
+  "census-business": {
+    "key": "qid",
+    "coverage": 473,
+    "region": "US",
+    "fields": [
+      "popTrend",
+      "selfEmpl",
+      "cbp",
+      "abs",
+      "countyName"
     ],
     "updated": "2026-04"
   }

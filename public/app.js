@@ -1655,6 +1655,7 @@ let airportData    = {};   // QID → {iata, airportName, directDestinations, ai
 let zillowData     = {};   // QID → {zhvi, zhviHistory, zori, zoriHistory}
 let climateExtra   = {};   // QID → climate record for cities missing climate in cities-full.json
 let ecbData      = {};  // ECB: deposit rate, MRO rate, Euribor 3M history, TARGET2 balances
+let ecbBonds     = {};  // ECB: 10Y sovereign bond yield + spread vs DE per eurozone country
 let bojData      = {};  // Japan MoF: JGB 10Y/2Y/5Y yield with monthly history
 let oecdData     = {};  // OECD: R&D spend %, tax revenue %, hours worked, tertiary education %
 let comtradeData = {};  // UN Comtrade: top 5 export+import partners per country
@@ -1877,6 +1878,8 @@ const WB_STAT_DEFS = {
   wb_tax_revenue_pct:  { label:'Tax Revenue (central)',key:'tax_revenue_pct',  fmt: v=>v.toFixed(1)+'%',        higherBetter:null,  src:'oecd' },
   wb_hours_worked:     { label:'Hours Worked/Year',    key:'hours_worked',     fmt: v=>Math.round(v)+' hrs',    higherBetter:null,  src:'oecd' },
   wb_tertiary_pct:     { label:'Tertiary Education',   key:'tertiary_pct',     fmt: v=>v.toFixed(1)+'%',        higherBetter:true,  src:'oecd' },
+  wb_pisa_reading:     { label:'PISA Reading Score',   key:'pisa_reading',     fmt: v=>Math.round(v)+' pts',    higherBetter:true,  src:'oecd' },
+  wb_min_wage_usd_ppp: { label:'Min Wage ($/hr PPP)',  key:'min_wage_usd_ppp', fmt: v=>'$'+v.toFixed(2)+'/hr',  higherBetter:true,  src:'oecd' },
 };
 
 // Company-level stats — company QID used as identifier; values converted to USD for fair ranking
@@ -2629,7 +2632,7 @@ async function init() {
   // ── Phase 2: load city data (required) + country/geo data (optional) in parallel ──
   showLoading(true, 'Loading city dataset…');
   try {
-    const [citiesRes, countryRes, geoRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, bojRes, oecdRes, comtradeRes, noaaRes] = await Promise.all([
+    const [citiesRes, countryRes, geoRes, censusRes, censusBusinessRes, beaTradeRes, eurostatRes, gawcRes, japanRes, airportRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, noaaRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/world-countries.json').catch(() => null),
@@ -2644,6 +2647,7 @@ async function init() {
       fetch('/zillow-cities.json').catch(() => null),
       fetch('/climate-extra.json').catch(() => null),
       fetch('/ecb-data.json').catch(() => null),
+      fetch('/ecb-bonds.json').catch(() => null),
       fetch('/boj-yields.json').catch(() => null),
       fetch('/oecd-country.json').catch(() => null),
       fetch('/comtrade-partners.json').catch(() => null),
@@ -2745,6 +2749,12 @@ async function init() {
         ecbData = await ecbRes.json();
         console.log('[init] ECB data loaded');
       } catch { console.warn('[init] ecb-data.json is malformed'); }
+    }
+    if (ecbBondsRes && ecbBondsRes.ok) {
+      try {
+        ecbBonds = await ecbBondsRes.json();
+        console.log(`[init] ECB sovereign bonds loaded (${Object.keys(ecbBonds).length} countries)`);
+      } catch { console.warn('[init] ecb-bonds.json is malformed'); }
     }
     if (bojRes && bojRes.ok) {
       try {
@@ -3201,10 +3211,14 @@ function _renderCountryPanel(iso2) {
       var od = oecdData[iso2];
       if (!od) return '';
       var rows = '';
+      var maxPisa = _cpOecdMax('pisa_reading');
+      var maxWage = _cpOecdMax('min_wage_usd_ppp');
       if (Number.isFinite(od.rd_spend_pct))    rows += _cpGaugeRow('R&D spend',    od.rd_spend_pct,    maxRd,   '%',    'cp-blue', 'wb_rd_spend_pct',    iso2);
       if (Number.isFinite(od.tax_revenue_pct)) rows += _cpGaugeRow('Tax rev (fed)', od.tax_revenue_pct, maxTax, '% GDP','',        'wb_tax_revenue_pct', iso2);
       if (Number.isFinite(od.hours_worked))    rows += _cpGaugeRow('Hours worked',  od.hours_worked,    maxHrs,  '/yr',  '',        'wb_hours_worked',    iso2);
       if (Number.isFinite(od.tertiary_pct))    rows += _cpGaugeRow('Tertiary edu',  od.tertiary_pct,    maxTert, '%',    'cp-blue', 'wb_tertiary_pct',    iso2);
+      if (Number.isFinite(od.pisa_reading))    rows += _cpGaugeRow('PISA reading',  od.pisa_reading,    maxPisa, 'pts', 'cp-blue', 'wb_pisa_reading',    iso2);
+      if (Number.isFinite(od.min_wage_usd_ppp)) rows += _cpGaugeRow('Min wage',     od.min_wage_usd_ppp, maxWage, '$/hr PPP', 'cp-blue', 'wb_min_wage_usd_ppp', iso2);
       return rows ? '<div class="cp-gauge-section-hdr">Innovation &amp; Labor (OECD)</div>' + rows : '';
     })() +
     // ── ECB (Eurozone only) ───────────────────────────────────────────
@@ -3219,6 +3233,15 @@ function _renderCountryPanel(iso2) {
       }
       if (Number.isFinite(ecbData.euribor_3m)) {
         rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">Euribor 3M</span><span class="cp-gauge-info">' + ecbData.euribor_3m.toFixed(2) + '%</span></div>';
+      }
+      var eb = ecbBonds[iso2];
+      if (eb && Number.isFinite(eb.bond_yield_10y)) {
+        var yldDate = eb.bond_yield_10y_date ? ' (' + eb.bond_yield_10y_date + ')' : '';
+        rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">10Y Bond Yield</span><span class="cp-gauge-info">' + eb.bond_yield_10y.toFixed(2) + '%' + yldDate + '</span></div>';
+        if (iso2 !== 'DE' && Number.isFinite(eb.spread_vs_de_bps)) {
+          var spreadSign = eb.spread_vs_de_bps >= 0 ? '+' : '';
+          rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">Spread vs DE</span><span class="cp-gauge-info">' + spreadSign + Math.round(eb.spread_vs_de_bps) + ' bps</span></div>';
+        }
       }
       var t2 = ecbData.countries && ecbData.countries[iso2];
       if (t2 && Number.isFinite(t2.target2_balance_bn_eur)) {
