@@ -1883,6 +1883,8 @@ function statsGoToCountry(iso2) {
   if (pt) map.flyTo(pt, Math.max(map.getZoom(), 4), { duration: 1 });
   // Re-render stats panel highlighting the new country (skip if same — would toggle off)
   if (_statsCurrent && _statsCurrent.qid !== iso2) openStatsPanel(_statsCurrent.metric, iso2);
+  // Update the country profile panel to the selected country
+  if (typeof openCountryPanel === "function" && countryData[iso2]) openCountryPanel(iso2);
 }
 
 // ── Sidebar tab state ─────────────────────────────────────────────────────────
@@ -4897,20 +4899,30 @@ function _buildEnergyRadar(iso2) {
     }).join(" ");
   }
 
+  // world max per axis (so each axis scales to the leader, not a fixed 100%)
+  var maxVals = axes.map(function(a) {
+    var mx = 0;
+    for (var k in countryData) {
+      var v = countryData[k][a.key];
+      if (Number.isFinite(v) && v > mx) mx = v;
+    }
+    return mx || 1;
+  });
+
   // world-average per axis (live average across countryData)
-  var avgScores = axes.map(function(a) {
+  var avgScores = axes.map(function(a, i) {
     var sum = 0, count = 0;
     for (var k in countryData) {
       var v = countryData[k][a.key];
       if (Number.isFinite(v)) { sum += v; count++; }
     }
-    return count > 0 ? Math.min(1, (sum / count) / 100) : 0;
+    return count > 0 ? Math.min(1, (sum / count) / maxVals[i]) : 0;
   });
 
   // country scores
-  var countryScores = axes.map(function(a) {
+  var countryScores = axes.map(function(a, i) {
     var v = cd[a.key];
-    return Number.isFinite(v) ? Math.min(1, v / 100) : 0;
+    return Number.isFinite(v) ? Math.min(1, v / maxVals[i]) : 0;
   });
 
   // grid rings at 25 / 50 / 75 / 100 %
