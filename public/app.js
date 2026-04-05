@@ -1516,6 +1516,13 @@ function openStatsPanel(metric, qid) {
   _activeStatMetric = metric + ':' + qid;
   _statsCurrent = { metric, qid };
   _renderStatsPanel();
+
+  // Auto-switch radar tab when clicking energy metrics
+  var radarPane = metric.indexOf('wb_energy_') === 0 ? 'energy' : null;
+  if (radarPane) {
+    var btn = document.querySelector('.cp-radar-tab[onclick*="' + radarPane + '"]');
+    if (btn && !btn.classList.contains('cp-radar-tab-active')) _switchRadarTab(btn, radarPane);
+  }
 }
 
 function _renderStatsPanel() {
