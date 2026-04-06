@@ -615,6 +615,12 @@ let tradeArrowLayer  = null;   // current trade arrows LayerGroup
 const tradeCache     = {};     // iso2 → [{year, expGds, impGds}]
 const countryCentroids = {};   // iso2 → [lat, lng]
 
+// Admin-1 (subnational boundaries) layer state
+let admin1Layer      = null;   // L.geoJSON layer for current country
+let admin1Iso2       = null;   // which country is currently showing admin-1
+let admin1Index      = null;   // {iso2: {n, kb}} loaded from admin1/_index.json
+const admin1Cache    = {};     // iso2 → TopoJSON object
+
 // Approximate 2026 FX rates to USD (used only for relative dot sizing, not financial reporting)
 const FX_TO_USD = {
   USD: 1, EUR: 1.08, GBP: 1.27, JPY: 0.0067, CNY: 0.138, KRW: 0.00075,
@@ -4084,6 +4090,8 @@ async function init() {
   // ─────────────────────────────────────────────────────────────────────────────
   map.createPane('choroplethPane');
   map.getPane('choroplethPane').style.zIndex = 350;
+  map.createPane('admin1Pane');
+  map.getPane('admin1Pane').style.zIndex = 370;
   map.createPane('tradePane');
   map.getPane('tradePane').style.zIndex = 390;
   map.createPane('cityPane');
@@ -4142,7 +4150,7 @@ async function init() {
     //   eurostat-cities.json   1 MB — on first EU city panel open
     //   world-countries.json   4 MB — on first choropleth toggle
     //   companies.json        75 MB — on first company lookup
-    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes, fbiRes, eciRes] = await Promise.all([
+    const [citiesRes, countryRes, censusRes, censusBusinessRes, beaTradeRes, gawcRes, japanRes, zillowRes, climateExtraRes, ecbRes, ecbBondsRes, bojRes, oecdRes, comtradeRes, usStatesRes, eurostatRegionsRes, canadaProvRes, australiaStateRes, fbiRes, eciRes, admin1IndexRes] = await Promise.all([
       fetch('/cities-full.json'),
       fetch('/country-data.json').catch(() => null),
       fetch('/census-cities.json').catch(() => null),
@@ -4163,6 +4171,7 @@ async function init() {
       fetch('/australia-states.json').catch(() => null),
       fetch('/fbi-crime.json').catch(() => null),
       fetch('/eci-data.json').catch(() => null),
+      fetch('/admin1/_index.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error(`Could not load cities-full.json (HTTP ${citiesRes.status})`);
@@ -4306,6 +4315,12 @@ async function init() {
         eciData = await eciRes.json();
         console.log(`[init] ECI data loaded (${Object.keys(eciData).length} countries)`);
       } catch { console.warn('[init] eci-data.json is malformed'); }
+    }
+    if (admin1IndexRes && admin1IndexRes.ok) {
+      try {
+        admin1Index = await admin1IndexRes.json();
+        console.log(`[init] Admin-1 index loaded (${Object.keys(admin1Index).length} countries)`);
+      } catch { console.warn('[init] admin1/_index.json is malformed'); }
     }
     // ── Phase 6: apply overrides + build UI ──
     applyOverrides();
@@ -4623,12 +4638,16 @@ function _renderCountryPanel(iso2) {
   if (cd.region)       metaParts.push(escHtml(cd.region));
   if (cd.income_level) metaParts.push(escHtml(cd.income_level));
   metaParts.push(escHtml(iso2));
+  var admin1Btn = admin1Index && admin1Index[iso2]
+    ? "<button id=\"cp-admin1-btn\" class=\"cp-admin1-btn" + (admin1Iso2 === iso2 ? " on" : "") + "\" onclick=\"toggleAdmin1('" + escHtml(iso2) + "')\">" + (admin1Iso2 === iso2 ? "Regions ✓" : "Regions") + "</button>"
+    : "";
   document.getElementById("cp-header").innerHTML =
     "<span class=\"cp-flag\">" + isoToFlag(iso2) + "</span>" +
     "<div style=\"flex:1;min-width:0\">" +
       "<div class=\"cp-country-name\">" + escHtml(cd.name || iso2) + "</div>" +
       "<div class=\"cp-country-meta\">" + metaParts.join(" \u00b7 ") + "</div>" +
     "</div>" +
+    admin1Btn +
     "<button class=\"cp-close\" onclick=\"closeCountryPanel()\">\u00d7</button>";
 
   // ── 4 stat cards ──────────────────────────────────────────────────
@@ -5886,6 +5905,169 @@ function initChoroControls() {
     buildChoropleth();
   });
   document.getElementById('choropleth-bar').style.display = '';
+}
+
+// ── Admin-1 subnational boundaries layer ──────────────────────────────────────
+
+// Subnational data registries: keyed by admin-1 name → data object
+var subnatData = {
+  US: null, JP: null, CA: null, AU: null, KR: null, CN: null, IN: null,
+  DE: null, GB: null, FR: null,
+};
+var subnatFiles = {
+  US: 'us-states.json',     JP: 'japan-prefectures.json',
+  CA: 'canada-provinces.json', AU: 'australia-states.json',
+  KR: 'korea-provinces.json',  CN: 'china-provinces.json',
+  IN: 'india-states.json',     DE: 'germany-states.json',
+  GB: 'uk-regions.json',       FR: 'france-regions.json',
+};
+
+// Get subnational indicator value for a region
+function _admin1RegionVal(iso2, regionName) {
+  // EU countries: use eurostatRegions via NUTS-2 code
+  var euroCountries = ADMIN_TO_NUTS2[iso2];
+  if (euroCountries && Object.keys(eurostatRegions).length) {
+    // Try direct name match first
+    var nuts2 = euroCountries[regionName];
+    if (nuts2 && eurostatRegions[nuts2]) {
+      return { label: eurostatRegions[nuts2].name, gdp: eurostatRegions[nuts2].gdp_pps_eu100 };
+    }
+  }
+  // Country-specific subnational data
+  var sd = subnatData[iso2];
+  if (!sd) return null;
+  // Try direct key match, then match by name property
+  if (sd[regionName]) return sd[regionName];
+  for (var k in sd) {
+    if (sd[k] && sd[k].name === regionName) return sd[k];
+  }
+  return null;
+}
+
+async function toggleAdmin1(iso2) {
+  // If already showing this country's admin-1, remove it
+  if (admin1Layer && admin1Iso2 === iso2) {
+    map.removeLayer(admin1Layer);
+    admin1Layer = null;
+    admin1Iso2 = null;
+    var btn = document.getElementById('cp-admin1-btn');
+    if (btn) { btn.textContent = 'Regions'; btn.classList.remove('on'); }
+    return;
+  }
+
+  // Remove any existing admin-1 layer
+  if (admin1Layer) { map.removeLayer(admin1Layer); admin1Layer = null; }
+
+  var btn = document.getElementById('cp-admin1-btn');
+  if (btn) { btn.textContent = 'Loading…'; btn.disabled = true; }
+
+  try {
+    // Load index if needed
+    if (!admin1Index) {
+      var idxRes = await fetch('/admin1/_index.json');
+      if (idxRes.ok) admin1Index = await idxRes.json();
+      else admin1Index = {};
+    }
+
+    // Check if this country has admin-1 data
+    if (!admin1Index[iso2]) {
+      if (btn) { btn.textContent = 'N/A'; btn.disabled = false; }
+      return;
+    }
+
+    // Load TopoJSON
+    if (!admin1Cache[iso2]) {
+      var res = await fetch('/admin1/' + iso2 + '.json');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      admin1Cache[iso2] = await res.json();
+    }
+
+    // Load subnational economic data if available
+    if (subnatFiles[iso2] && !subnatData[iso2]) {
+      try {
+        var sdRes = await fetch('/' + subnatFiles[iso2]);
+        if (sdRes.ok) subnatData[iso2] = await sdRes.json();
+      } catch (e) { /* no data — boundaries only */ }
+    }
+
+    // Convert TopoJSON → GeoJSON
+    var topoClient = window.topojson;
+    if (!topoClient) {
+      // Load topojson-client dynamically
+      await new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = 'https://unpkg.com/topojson-client@3/dist/topojson-client.min.js';
+        s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      topoClient = window.topojson;
+    }
+
+    var topo = admin1Cache[iso2];
+    var objKey = Object.keys(topo.objects)[0];
+    var geoData = topoClient.feature(topo, topo.objects[objKey]);
+
+    // Build the layer
+    admin1Layer = L.geoJSON(geoData, {
+      pane: 'admin1Pane',
+      style: function(feature) {
+        var name = feature.properties && feature.properties.name;
+        var regionData = _admin1RegionVal(iso2, name);
+        var hasData = !!regionData;
+        return {
+          fillColor: hasData ? '#1f6feb' : '#30363d',
+          fillOpacity: hasData ? 0.25 : 0.08,
+          color: '#58a6ff',
+          weight: 1,
+          opacity: 0.6,
+        };
+      },
+      onEachFeature: function(feature, layer) {
+        var name = feature.properties && feature.properties.name || '';
+        var code = feature.properties && feature.properties.code || '';
+        var regionData = _admin1RegionVal(iso2, name);
+
+        // Tooltip
+        var tip = '<b>' + escHtml(name) + '</b>';
+        if (code) tip += ' <span style="opacity:.6">(' + escHtml(code) + ')</span>';
+        if (regionData) {
+          if (regionData.gdp_pps_eu100 != null) tip += '<br>GDP: ' + regionData.gdp_pps_eu100 + ' (EU=100)';
+          else if (regionData.gdp != null) tip += '<br>GDP: ' + regionData.gdp + ' (EU=100)';
+          if (regionData.unemployment_rate != null) tip += '<br>Unemployment: ' + regionData.unemployment_rate + '%';
+          if (regionData.pcpi != null) tip += '<br>Per-cap income: $' + Math.round(regionData.pcpi).toLocaleString();
+          if (regionData.gdp_bn_cny != null) tip += '<br>GDP: ¥' + regionData.gdp_bn_cny + 'B';
+          if (regionData.grdp_bn_krw != null) tip += '<br>GRDP: ₩' + Math.round(regionData.grdp_bn_krw).toLocaleString() + 'B';
+          if (regionData.gsdp_bn_inr != null) tip += '<br>GSDP: ₹' + Math.round(regionData.gsdp_bn_inr).toLocaleString() + 'B';
+          if (regionData.gsp_bn_aud != null) tip += '<br>GSP: A$' + regionData.gsp_bn_aud + 'B';
+          if (regionData.gdp_bn_cad != null) tip += '<br>GDP: C$' + regionData.gdp_bn_cad + 'B';
+          if (regionData.perCapitaIncomeJpy != null) tip += '<br>Income: ¥' + Math.round(regionData.perCapitaIncomeJpy / 1000) + 'k';
+          if (regionData.population_m != null) tip += '<br>Pop: ' + regionData.population_m + 'M';
+          if (regionData.population != null && !regionData.population_m) tip += '<br>Pop: ' + Math.round(regionData.population / 1e6 * 10) / 10 + 'M';
+        }
+        layer.bindTooltip(tip, { sticky: true, className: 'admin1-tooltip' });
+
+        layer.on({
+          mouseover: function(e) {
+            e.target.setStyle({ weight: 2, fillOpacity: 0.4, color: '#79c0ff' });
+            e.target.bringToFront();
+          },
+          mouseout: function(e) {
+            admin1Layer.resetStyle(e.target);
+          },
+        });
+      },
+    }).addTo(map);
+
+    admin1Iso2 = iso2;
+    if (btn) { btn.textContent = 'Regions ✓'; btn.disabled = false; btn.classList.add('on'); }
+
+    // Fit map to the country bounds
+    map.fitBounds(admin1Layer.getBounds(), { padding: [30, 30], maxZoom: 7 });
+
+  } catch (e) {
+    console.warn('[admin1] Failed to load', iso2, e.message);
+    if (btn) { btn.textContent = 'Error'; btn.disabled = false; }
+  }
 }
 
 // ── City dot visibility ───────────────────────────────────────────────────────

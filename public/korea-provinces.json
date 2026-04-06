@@ -1,0 +1,155 @@
+{
+  "Seoul": {
+    "name": "Seoul",
+    "grdp_bn_krw": 461000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 48894974,
+    "population": 9428372,
+    "unemployment_rate": 3,
+    "unemployment_year": 2023
+  },
+  "Busan": {
+    "name": "Busan",
+    "grdp_bn_krw": 96000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 29107871,
+    "population": 3298077,
+    "unemployment_rate": 3.3,
+    "unemployment_year": 2023
+  },
+  "Daegu": {
+    "name": "Daegu",
+    "grdp_bn_krw": 55000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 23215773,
+    "population": 2369079,
+    "unemployment_rate": 3.2,
+    "unemployment_year": 2023
+  },
+  "Incheon": {
+    "name": "Incheon",
+    "grdp_bn_krw": 95000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 32055576,
+    "population": 2963603,
+    "unemployment_rate": 3.2,
+    "unemployment_year": 2023
+  },
+  "Gwangju": {
+    "name": "Gwangju",
+    "grdp_bn_krw": 39000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 27240991,
+    "population": 1431666,
+    "unemployment_rate": 3.5,
+    "unemployment_year": 2023
+  },
+  "Daejeon": {
+    "name": "Daejeon",
+    "grdp_bn_krw": 42000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 29044197,
+    "population": 1446072,
+    "unemployment_rate": 3.5,
+    "unemployment_year": 2023
+  },
+  "Ulsan": {
+    "name": "Ulsan",
+    "grdp_bn_krw": 81000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 72917858,
+    "population": 1110839,
+    "unemployment_rate": 3,
+    "unemployment_year": 2023
+  },
+  "Sejong": {
+    "name": "Sejong",
+    "grdp_bn_krw": 13000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 33864044,
+    "population": 383888,
+    "unemployment_rate": 2.8,
+    "unemployment_year": 2023
+  },
+  "Gyeonggi": {
+    "name": "Gyeonggi",
+    "grdp_bn_krw": 576000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 42579684,
+    "population": 13527578,
+    "unemployment_rate": 3,
+    "unemployment_year": 2023
+  },
+  "Gangwon": {
+    "name": "Gangwon",
+    "grdp_bn_krw": 48000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 31471984,
+    "population": 1525166,
+    "unemployment_rate": 2.6,
+    "unemployment_year": 2023
+  },
+  "North Chungcheong": {
+    "name": "North Chungcheong",
+    "grdp_bn_krw": 60000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 37560402,
+    "population": 1597427,
+    "unemployment_rate": 2.6,
+    "unemployment_year": 2023
+  },
+  "South Chungcheong": {
+    "name": "South Chungcheong",
+    "grdp_bn_krw": 95000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 44821258,
+    "population": 2119530,
+    "unemployment_rate": 2.7,
+    "unemployment_year": 2023
+  },
+  "North Jeolla": {
+    "name": "North Jeolla",
+    "grdp_bn_krw": 51000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 28829733,
+    "population": 1769007,
+    "unemployment_rate": 2.8,
+    "unemployment_year": 2023
+  },
+  "South Jeolla": {
+    "name": "South Jeolla",
+    "grdp_bn_krw": 73000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 39829703,
+    "population": 1832803,
+    "unemployment_rate": 2.5,
+    "unemployment_year": 2023
+  },
+  "North Gyeongsang": {
+    "name": "North Gyeongsang",
+    "grdp_bn_krw": 112000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 42753232,
+    "population": 2619685,
+    "unemployment_rate": 2.8,
+    "unemployment_year": 2023
+  },
+  "South Gyeongsang": {
+    "name": "South Gyeongsang",
+    "grdp_bn_krw": 112000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 34052676,
+    "population": 3289022,
+    "unemployment_rate": 3,
+    "unemployment_year": 2023
+  },
+  "Jeju": {
+    "name": "Jeju",
+    "grdp_bn_krw": 21000,
+    "grdp_year": 2022,
+    "grdp_per_capita_krw": 31030249,
+    "population": 676759,
+    "unemployment_rate": 2.3,
+    "unemployment_year": 2023
+  }
+}

@@ -1426,6 +1426,23 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 .cp-trade-name { flex: 1; font-size: .78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .cp-trade-val  { font-size: .75rem; color: #7be0c4; font-variant-numeric: tabular-nums; flex-shrink: 0; }
 
+/* ── Admin-1 regions button + tooltip ─────────────── */
+.cp-admin1-btn {
+  font-size: .72rem; padding: 3px 8px; border-radius: 4px;
+  background: #21262d; color: #8b949e; border: 1px solid #30363d;
+  cursor: pointer; white-space: nowrap; margin-right: 4px;
+  transition: background .15s, color .15s;
+}
+.cp-admin1-btn:hover { background: #30363d; color: #c9d1d9; }
+.cp-admin1-btn.on { background: #1f6feb; color: #fff; border-color: #1f6feb; }
+.admin1-tooltip {
+  background: rgba(13,17,23,.92) !important; color: #c9d1d9 !important;
+  border: 1px solid #30363d !important; border-radius: 6px !important;
+  font-size: .78rem !important; padding: 6px 10px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.4) !important;
+}
+.admin1-tooltip b { color: #58a6ff; }
+
 /* ── Air Quality bar ──────────────────────────────── */
 #aq-bar {
   position: absolute; bottom: 44px; left: 10px; z-index: 900;
