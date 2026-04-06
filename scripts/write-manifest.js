@@ -39,6 +39,8 @@ const whoAirQual   = readJson('who-airquality.json');
 const universities = readJson('universities.json');
 const fbiCrime     = readJson('fbi-crime.json');
 const eciData      = readJson('eci-data.json');
+const metroTransit = readJson('metro-transit.json');
+const nobelCities  = readJson('nobel-cities.json');
 
 // Helper: first available field names from a sample entry
 const sampleFields = obj => obj ? Object.keys(Object.values(obj)[0] || {}) : [];
@@ -73,6 +75,8 @@ const manifest = {
   'universities':         { key: 'qid',   coverage: universities ? Object.keys(universities).length : 0,         fields: ['qid','name','founded','students'], updated: today },
   'fbi-crime':            { key: 'qid',   coverage: fbiCrime     ? Object.keys(fbiCrime).length     : 0,  region: 'US', fields: ['violentPer100k','propertyPer100k','year'], updated: today },
   'eci-data':             { key: 'iso2',  coverage: eciData      ? Object.keys(eciData).length      : 0,         fields: ['eci','year'], updated: today },
+  'metro-transit':        { key: 'qid',   coverage: metroTransit ? Object.keys(metroTransit).length  : 0,         fields: ['name','lines','stations','opened'], updated: today },
+  'nobel-cities':         { key: 'qid',   coverage: nobelCities  ? Object.keys(nobelCities).length   : 0,         fields: ['total','byPrize'], updated: today },
 };
 
 const OUT = path.join(PUB, 'data-manifest.json');

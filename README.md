@@ -50,13 +50,24 @@ Click any country border → full data panel with left/right columns:
 - Governance (WGI): Rule of Law, Control of Corruption, Govt Effectiveness, Voice & Accountability, Political Stability, Regulatory Quality
 - Human Development: UNDP HDI score and rank
 - Transparency & Freedom: TI Corruption Perceptions Index, Freedom House status
+- Energy Mix: Wind/solar, hydro, nuclear, gas, coal percentages (Ember/OWID, ~200 countries)
+- Happiness: WHR score with GDP, social, health, freedom, generosity, corruption components (~150 countries)
+- Innovation & Labor (OECD): R&D spending, tax revenue, hours worked, PISA scores, minimum wage (37 countries)
+- Social & Wages (OECD): Average wages, productivity, gender pay gap, social spending, youth unemployment, poverty rate
+- Trade & Investment (World Bank): Trade/GDP, exports, imports, current account, FDI inflows (257 countries)
+- Health (WHO): Physicians, nurses, hospital beds per 10k, DPT3 immunization, maternal mortality, NCD mortality (186-195 countries)
+- ECB / Euribor: Deposit rate, refi rate, Euribor 3M, bond yields and spreads (Eurozone only)
+- BoJ / MoF: JGB yield curve (Japan only)
+- Trade Partners: Top 5 export/import partners with names and dollar values, clickable to navigate (UN Comtrade, ~100 countries)
 
 **Right column:**
-- Radar chart (6 economic axes) with world-average polygon
+- Economy radar chart (6 axes) with world-average polygon
+- Energy radar chart (5 axes: wind/solar, hydro, nuclear, gas, coal) with percentile-based scaling
+- Tabbed Economy / Energy toggle
 - Rank chips: GDP/cap, HDI, TI CPI, Rule of Law, Anti-Corruption, Renewables, Internet, Life Expectancy, Urban %, Electricity
 - Regional sub-rank within Europe & Central Asia, East Asia & Pacific, etc.
 
-*Every gauge row is clickable — opens the Stats distribution panel for that indicator.*
+*Every gauge row and stat card is clickable — opens the Stats distribution panel showing all countries ranked for that indicator, with data source attribution.*
 
 ### Economic Centers layer
 - Zoom-adaptive clustering of corporate headquarters by market cap or revenue
@@ -102,7 +113,7 @@ npm start       # serves public/ on http://localhost:3000
 ## Test suite
 
 ```bash
-npm test        # 139 unit tests, ~1 second, zero extra dependencies (node:test built-in)
+npm test        # 161 unit tests, ~1 second, zero extra dependencies (node:test built-in)
 ```
 
 ---
@@ -144,6 +155,15 @@ All data is pre-fetched by Node.js scripts and committed as JSON — **the app m
 | Freedom in the World | [Freedom House 2024](https://freedomhouse.org/report/freedom-world) | None (static) | 121 countries | Aggregate score 0–100, Free/Partly Free/Not Free |
 | Central bank policy rates | Static data (early 2025 values) | None | 29 countries, 11 currency blocs | Rate %, bank name, rate label |
 | Sovereign credit ratings | Static data | None | 12 major economies | S&P, Moody's, Fitch |
+| Energy mix | [Our World in Data / Ember](https://github.com/owid/etl) | None | ~200 countries | Wind/solar, hydro, nuclear, gas, coal % |
+| World Happiness Report | [WHR 2024 data](https://worldhappiness.report/) | None | ~150 countries | Happiness score + 6 sub-factors |
+| OECD social/labour indicators | [OECD SDMX API](https://stats.oecd.org/) | None | 37 OECD members | Wages, productivity, gender pay gap, social spend, youth unemployment, poverty |
+| Trade & investment | [World Bank Open Data API](https://api.worldbank.org/v2/) | None | 257 countries | Trade/GDP, current account, FDI, exports, imports |
+| WHO health indicators | [WHO GHO OData API](https://ghoapi.azureedge.net/api/) | None | 186–195 countries | Physicians, nurses, hospital beds, DPT3 immunization, maternal/NCD mortality |
+| Economic Complexity Index | [OEC Atlas](https://oec.world/) | None | ~130 countries | ECI score |
+| Trade partners | [UN Comtrade](https://comtradeplus.un.org/) | None | ~100 countries | Top 5 export/import partners with values |
+| ECB rates & bonds | [ECB Data Portal](https://data.ecb.europa.eu/) | None | Eurozone countries | Deposit/refi rates, Euribor, 10Y yields, spreads |
+| BoJ yields | [MoF Japan](https://www.mof.go.jp/) | None | Japan | JGB 2Y, 5Y, 10Y yields |
 
 ### US regional data
 
@@ -188,22 +208,18 @@ All data is pre-fetched by Node.js scripts and committed as JSON — **the app m
 | Company Wikipedia page | Wikipedia REST API (media-list + summary) | None |
 | Local-language Wikipedia | Language-specific Wikipedia REST APIs | None |
 
-### APIs tapped but **not yet integrated** (potential future sources)
+### Potential future sources
 
 | Source | What's available | Notes |
 |---|---|---|
 | Pew Research Center | Survey data: social attitudes, religion, demographics by country | No public API; PDFs + topline datasets available for download |
-| WHO Global Health Observatory | ~2,000 health indicators (mortality, disease burden, nutrition) | Free REST API: `https://ghoapi.azureedge.net/api/` |
-| OECD.Stat | 400+ economic datasets (labour, education, tax, health, trade) | Free SDMX-JSON API; more granular than World Bank |
-| ECB Statistical Data Warehouse | Euro area monetary/banking data, exchange rates history | Free REST API; overlaps with Frankfurter but richer |
-| Bank of Japan | JGB yields, monetary base, exchange rates | Free; CSV/XML download |
+| WHO GHO (extended) | ~2,000 health indicators beyond the 6 currently integrated | Free REST API: `https://ghoapi.azureedge.net/api/` |
+| OECD.Stat (extended) | 400+ datasets beyond the 12 currently integrated | Free SDMX-JSON API |
 | Reserve Bank of India | Policy rates, CPI, IIP, FX reserves | Free REST API |
 | CBRT (Turkey) | Policy rates, inflation, FX | Free REST API |
 | PBoC (China) | LPR rates, M2, FX | HTML/CSV; structured access limited |
 | OpenStreetMap Nominatim | Geocoding, admin boundaries, POI lookup | Free; rate-limited |
 | GeoNames | City alternative names, admin hierarchy, timezone | Free API with registration |
-| UN Comtrade | Bilateral merchandise trade (HS codes) by country pair | Free tier: 100 req/hr |
-| OEC (Observatory of Economic Complexity) | Economic complexity index, product space, trade | Free API available |
 | Global Carbon Project | Country CO₂ emissions with fossil/land-use breakdown | Annual CSV download |
 
 ---
@@ -338,6 +354,13 @@ public/
   metro-transit.json          # Metro/transit systems, 248 cities
   nobel-cities.json           # Nobel laureate counts by city, 289 cities
   universities.json           # University counts by city, 1,923 cities
+  oecd-country.json           # OECD social/labour indicators, 37 countries
+  eci-data.json               # Economic Complexity Index, ~130 countries
+  comtrade-partners.json      # UN Comtrade top trade partners, ~100 countries
+  ecb-data.json               # ECB rates, Euribor, TARGET2 balances
+  ecb-bonds.json              # Eurozone 10Y bond yields + spreads
+  boj-yields.json             # BoJ JGB yield curve
+  gawc-cities.json            # GaWC 2024 tiers, 305 cities (QID-keyed)
   data-manifest.json          # auto-generated file registry
 
 scripts/
@@ -373,6 +396,16 @@ scripts/
   fetch-metro-transit.js      # Wikidata SPARQL → metro/transit systems
   fetch-nobel-cities.js       # Wikidata SPARQL → Nobel laureate counts
   fetch-wikidata-universities.js  # Wikidata SPARQL → university counts
+  fetch-ember.js              # OWID/Ember → energy mix percentages
+  fetch-whr.js                # World Happiness Report → happiness scores
+  fetch-oecd-social.js        # OECD SDMX → social/labour indicators
+  fetch-trade.js              # World Bank → trade & investment indicators
+  fetch-who.js                # WHO GHO → health indicators
+  fetch-eci.js                # OEC → Economic Complexity Index
+  fetch-comtrade.js           # UN Comtrade → top trade partners
+  fetch-ecb.js                # ECB → rates, Euribor, TARGET2
+  fetch-ecb-bonds.js          # ECB → Eurozone bond yields + spreads
+  fetch-boj.js                # BoJ/MoF → JGB yield curve
   fetch-world-geo.js          # world-atlas CDN → GeoJSON borders
   migrate-gawc.js             # GaWC data → QID-keyed JSON
   migrate-country-data.js     # One-time: merged imf-fiscal + fred-yields → country-data
@@ -389,7 +422,7 @@ tests/
   migrate-companies-history.test.js
   test-rank-chips.test.js
   test-trend-tab.test.js
-  # 139 tests total (node:test, zero extra dependencies)
+  # 161 tests total (node:test, zero extra dependencies)
 ```
 
 ---
@@ -398,8 +431,8 @@ tests/
 
 - **Frontend:** Leaflet.js, Leaflet.heat, vanilla JS/HTML/CSS, dark GitHub-inspired theme
 - **Map tiles:** CARTO Dark Matter (OpenStreetMap data)
-- **Data pipeline:** Node.js — 40+ scripts calling 20+ APIs
-- **Testing:** Node.js built-in `node:test` — 139 tests, zero extra dependencies
+- **Data pipeline:** Node.js — 49 fetch scripts calling 25+ APIs
+- **Testing:** Node.js built-in `node:test` — 161 tests, zero extra dependencies
 - **Hosting:** Fully static — no backend required after data build
 
 ---

@@ -1,0 +1,1490 @@
+{
+  "Q60": {
+    "name": "New York City Subway",
+    "lines": 29,
+    "stations": 787,
+    "opened": 1860
+  },
+  "Q8684": {
+    "name": "Seoul Metropolitan Subway",
+    "lines": 162,
+    "stations": 787,
+    "opened": 1974
+  },
+  "Q956": {
+    "name": "Beijing Subway",
+    "lines": 27,
+    "stations": 490,
+    "opened": 1971
+  },
+  "Q8686": {
+    "name": "Shanghai Metro",
+    "lines": 20,
+    "stations": 460,
+    "opened": 1993
+  },
+  "Q90": {
+    "name": "Paris Métro",
+    "lines": 27,
+    "stations": 422,
+    "opened": 1900
+  },
+  "Q16572": {
+    "name": "Guangzhou Metro",
+    "lines": 19,
+    "stations": 410,
+    "opened": 1997
+  },
+  "Q30002": {
+    "name": "Chengdu Metro",
+    "lines": 16,
+    "stations": 391,
+    "opened": 2010
+  },
+  "Q11725": {
+    "name": "Chongqing Rail Transit",
+    "lines": 12,
+    "stations": 375,
+    "opened": 2005
+  },
+  "Q15174": {
+    "name": "Shenzhen Metro",
+    "lines": 17,
+    "stations": 373,
+    "opened": 2004
+  },
+  "Q649": {
+    "name": "Moscow Metro",
+    "lines": 17,
+    "stations": 350,
+    "opened": 1935
+  },
+  "Q16666": {
+    "name": "Nanjing Metro",
+    "lines": 14,
+    "stations": 320,
+    "opened": 2005
+  },
+  "Q4970": {
+    "name": "Hangzhou Metro",
+    "lines": 12,
+    "stations": 296,
+    "opened": 2012
+  },
+  "Q11746": {
+    "name": "Wuhan Metro",
+    "lines": 12,
+    "stations": 287,
+    "opened": 2004
+  },
+  "Q5826": {
+    "name": "Xi'an Metro",
+    "lines": 12,
+    "stations": 279,
+    "opened": 2011
+  },
+  "Q1353": {
+    "name": "Delhi Metro",
+    "lines": 20,
+    "stations": 269,
+    "opened": 2002
+  },
+  "Q11736": {
+    "name": "Tianjin Metro",
+    "lines": 12,
+    "stations": 269,
+    "opened": 1984
+  },
+  "Q42622": {
+    "name": "Suzhou Metro",
+    "lines": 9,
+    "stations": 255,
+    "opened": 2012
+  },
+  "Q404529": {
+    "name": "Zhengzhou Metro",
+    "lines": 13,
+    "stations": 249,
+    "opened": 2013
+  },
+  "Q1297": {
+    "name": "Chicago \"L\"",
+    "lines": 9,
+    "stations": 238,
+    "opened": 1892
+  },
+  "Q334": {
+    "name": "Singapore MRT",
+    "lines": 7,
+    "stations": 204,
+    "opened": 1987
+  },
+  "Q1345": {
+    "name": "SEPTA Metro",
+    "lines": 2,
+    "stations": 200,
+    "opened": null
+  },
+  "Q64": {
+    "name": "Berlin U-Bahn",
+    "lines": 9,
+    "stations": 199,
+    "opened": 1902
+  },
+  "Q185684": {
+    "name": "Hefei Metro",
+    "lines": 7,
+    "stations": 199,
+    "opened": 2016
+  },
+  "Q42780": {
+    "name": "Ningbo Rail Transit",
+    "lines": 8,
+    "stations": 195,
+    "opened": 2014
+  },
+  "Q170322": {
+    "name": "Qingdao Metro",
+    "lines": 8,
+    "stations": 191,
+    "opened": 2015
+  },
+  "Q1492": {
+    "name": "Barcelona Metro",
+    "lines": 17,
+    "stations": 186,
+    "opened": 1924
+  },
+  "Q1489": {
+    "name": "Mexico City Metro",
+    "lines": 11,
+    "stations": 179,
+    "opened": 1969
+  },
+  "Q1490": {
+    "name": "Tokyo subway",
+    "lines": 13,
+    "stations": 452,
+    "opened": 1960
+  },
+  "Q1486": {
+    "name": "Buenos Aires Underground",
+    "lines": 9,
+    "stations": 168,
+    "opened": 1913
+  },
+  "Q174": {
+    "name": "São Paulo Metrô",
+    "lines": 11,
+    "stations": 161,
+    "opened": 1974
+  },
+  "Q1861": {
+    "name": "MRT",
+    "lines": 10,
+    "stations": 221,
+    "opened": 1999
+  },
+  "Q3616": {
+    "name": "Tehran Metro",
+    "lines": 13,
+    "stations": 154,
+    "opened": null
+  },
+  "Q8646": {
+    "name": "MTR",
+    "lines": 11,
+    "stations": 154,
+    "opened": 1979
+  },
+  "Q174091": {
+    "name": "Changsha Metro",
+    "lines": 7,
+    "stations": 152,
+    "opened": 2014
+  },
+  "Q16520": {
+    "name": "Busan Metro",
+    "lines": 5,
+    "stations": 148,
+    "opened": 1985
+  },
+  "Q2887": {
+    "name": "Santiago Metro",
+    "lines": 10,
+    "stations": 143,
+    "opened": 1975
+  },
+  "Q11720": {
+    "name": "Shenyang Metro",
+    "lines": 6,
+    "stations": 141,
+    "opened": 2010
+  },
+  "Q61": {
+    "name": "Washington Metro",
+    "lines": 6,
+    "stations": 138,
+    "opened": 1976
+  },
+  "Q1355": {
+    "name": "Namma Metro",
+    "lines": 13,
+    "stations": 136,
+    "opened": 2011
+  },
+  "Q490": {
+    "name": "Milan Metro",
+    "lines": 5,
+    "stations": 134,
+    "opened": 1964
+  },
+  "Q172": {
+    "name": "Toronto subway",
+    "lines": 3,
+    "stations": 131,
+    "opened": 1954
+  },
+  "Q104231": {
+    "name": "Stockholm Metro",
+    "lines": 10,
+    "stations": 126,
+    "opened": 1950
+  },
+  "Q170247": {
+    "name": "Jinan Metro",
+    "lines": 6,
+    "stations": 123,
+    "opened": 2019
+  },
+  "Q35765": {
+    "name": "Osaka Metro",
+    "lines": 9,
+    "stations": 122,
+    "opened": null
+  },
+  "Q1055": {
+    "name": "Hamburg U-Bahn",
+    "lines": 5,
+    "stations": 120,
+    "opened": 1912
+  },
+  "Q1726": {
+    "name": "Munich U-Bahn",
+    "lines": 8,
+    "stations": 120,
+    "opened": null
+  },
+  "Q1741": {
+    "name": "Vienna U-Bahn",
+    "lines": 6,
+    "stations": 120,
+    "opened": 1976
+  },
+  "Q171943": {
+    "name": "Nanchang Metro",
+    "lines": 4,
+    "stations": 118,
+    "opened": 2015
+  },
+  "Q68481": {
+    "name": "Fuzhou Metro",
+    "lines": 6,
+    "stations": 114,
+    "opened": 2016
+  },
+  "Q340": {
+    "name": "Montreal Metro",
+    "lines": 7,
+    "stations": 112,
+    "opened": 1966
+  },
+  "Q182852": {
+    "name": "Kunming Metro",
+    "lines": 6,
+    "stations": 110,
+    "opened": 2012
+  },
+  "Q2868": {
+    "name": "Lima and Callao Subway",
+    "lines": 5,
+    "stations": 109,
+    "opened": 1990
+  },
+  "Q11751": {
+    "name": "Nagoya Municipal Subway",
+    "lines": 6,
+    "stations": 109,
+    "opened": 1957
+  },
+  "Q74881": {
+    "name": "Dalian Metro",
+    "lines": 6,
+    "stations": 109,
+    "opened": 2003
+  },
+  "Q179608": {
+    "name": "Nanning Rail Transit",
+    "lines": 5,
+    "stations": 108,
+    "opened": 2016
+  },
+  "Q656": {
+    "name": "Saint Petersburg Metro",
+    "lines": 13,
+    "stations": 101,
+    "opened": 1955
+  },
+  "Q19660": {
+    "name": "Bucharest Metro",
+    "lines": 6,
+    "stations": 100,
+    "opened": 1979
+  },
+  "Q42651": {
+    "name": "Wuxi Metro",
+    "lines": 5,
+    "stations": 98,
+    "opened": 2014
+  },
+  "Q192271": {
+    "name": "Guiyang Metro",
+    "lines": 3,
+    "stations": 98,
+    "opened": null
+  },
+  "Q85": {
+    "name": "Cairo Metro",
+    "lines": 72,
+    "stations": 95,
+    "opened": 1987
+  },
+  "Q20927": {
+    "name": "Daegu Metropolitan Subway",
+    "lines": 6,
+    "stations": 95,
+    "opened": 1997
+  },
+  "Q1533": {
+    "name": "Caracas Metro",
+    "lines": 6,
+    "stations": 93,
+    "opened": 1983
+  },
+  "Q3692": {
+    "name": "Riyadh Metro",
+    "lines": 7,
+    "stations": 91,
+    "opened": null
+  },
+  "Q1899": {
+    "name": "Kyiv Metro",
+    "lines": 3,
+    "stations": 87,
+    "opened": 1960
+  },
+  "Q34412": {
+    "name": "Foshan Metro",
+    "lines": 3,
+    "stations": 86,
+    "opened": 2010
+  },
+  "Q68744": {
+    "name": "Xiamen Metro",
+    "lines": 3,
+    "stations": 84,
+    "opened": 2017
+  },
+  "Q220": {
+    "name": "Rome Metro",
+    "lines": 3,
+    "stations": 82,
+    "opened": null
+  },
+  "Q1156": {
+    "name": "Mumbai Metro",
+    "lines": 4,
+    "stations": 82,
+    "opened": 2014
+  },
+  "Q42956": {
+    "name": "Harbin Metro",
+    "lines": 3,
+    "stations": 78,
+    "opened": 2013
+  },
+  "Q57719": {
+    "name": "Xuzhou Metro",
+    "lines": 4,
+    "stations": 76,
+    "opened": 2019
+  },
+  "Q1085": {
+    "name": "Prague Metro",
+    "lines": 4,
+    "stations": 75,
+    "opened": 1974
+  },
+  "Q240": {
+    "name": "Brussels Metro",
+    "lines": 15,
+    "stations": 75,
+    "opened": null
+  },
+  "Q2280": {
+    "name": "Minsk Metro",
+    "lines": 5,
+    "stations": 70,
+    "opened": 1984
+  },
+  "Q1352": {
+    "name": "Chennai Metro",
+    "lines": 5,
+    "stations": 69,
+    "opened": 2015
+  },
+  "Q58401": {
+    "name": "Shijiazhuang Metro",
+    "lines": 3,
+    "stations": 63,
+    "opened": 2017
+  },
+  "Q1361": {
+    "name": "Hyderabad Metro",
+    "lines": 6,
+    "stations": 63,
+    "opened": 2017
+  },
+  "Q1070": {
+    "name": "Ahmedabad Metro",
+    "lines": null,
+    "stations": 58,
+    "opened": 2019
+  },
+  "Q2090": {
+    "name": "Nuremberg U-Bahn",
+    "lines": 3,
+    "stations": 56,
+    "opened": 1972
+  },
+  "Q269": {
+    "name": "Tashkent Metro",
+    "lines": 5,
+    "stations": 56,
+    "opened": 1977
+  },
+  "Q181557": {
+    "name": "Kaohsiung Metro",
+    "lines": 3,
+    "stations": 55,
+    "opened": 2008
+  },
+  "Q65": {
+    "name": "Los Angeles Metro Rail",
+    "lines": 3,
+    "stations": 53,
+    "opened": 1990
+  },
+  "Q43463": {
+    "name": "Fortaleza Metro",
+    "lines": 8,
+    "stations": 53,
+    "opened": null
+  },
+  "Q72778": {
+    "name": "Taiyuan Metro",
+    "lines": 2,
+    "stations": 50,
+    "opened": 2020
+  },
+  "Q37951": {
+    "name": "Sapporo Municipal Subway",
+    "lines": 3,
+    "stations": 49,
+    "opened": 1971
+  },
+  "Q270": {
+    "name": "Warsaw Metro",
+    "lines": 3,
+    "stations": 49,
+    "opened": 1995
+  },
+  "Q456": {
+    "name": "Lyon Metro",
+    "lines": 4,
+    "stations": 48,
+    "opened": 1978
+  },
+  "Q8678": {
+    "name": "Rio de Janeiro Metro",
+    "lines": 5,
+    "stations": 48,
+    "opened": 1979
+  },
+  "Q57947": {
+    "name": "Nantong Rail Transit",
+    "lines": null,
+    "stations": 45,
+    "opened": null
+  },
+  "Q535534": {
+    "name": "Hohhot Metro",
+    "lines": 2,
+    "stations": 45,
+    "opened": 2019
+  },
+  "Q57970": {
+    "name": "Changzhou Metro",
+    "lines": 2,
+    "stations": 45,
+    "opened": 2019
+  },
+  "Q2634": {
+    "name": "Naples Metro",
+    "lines": 4,
+    "stations": 45,
+    "opened": 1993
+  },
+  "Q42666": {
+    "name": "Shaoxing Metro",
+    "lines": 2,
+    "stations": 44,
+    "opened": null
+  },
+  "Q115256": {
+    "name": "Taoyuan Metro",
+    "lines": null,
+    "stations": 43,
+    "opened": 2017
+  },
+  "Q59218": {
+    "name": "Dongguan Rail Transit",
+    "lines": 2,
+    "stations": 43,
+    "opened": 2016
+  },
+  "Q23556": {
+    "name": "MARTA rail",
+    "lines": 5,
+    "stations": 42,
+    "opened": 1979
+  },
+  "Q38283": {
+    "name": "Yokohama Municipal Subway",
+    "lines": 2,
+    "stations": 42,
+    "opened": 1972
+  },
+  "Q1513": {
+    "name": "Nagpur Metro Rail",
+    "lines": 34,
+    "stations": 41,
+    "opened": 2019
+  },
+  "Q34820": {
+    "name": "Santo Domingo Metro",
+    "lines": 2,
+    "stations": 41,
+    "opened": 2009
+  },
+  "Q3306": {
+    "name": "Panama Metro",
+    "lines": 3,
+    "stations": 40,
+    "opened": 2014
+  },
+  "Q26600": {
+    "name": "Fukuoka City Subway",
+    "lines": 3,
+    "stations": 39,
+    "opened": 1981
+  },
+  "Q1757": {
+    "name": "Helsinki Metro",
+    "lines": 2,
+    "stations": 38,
+    "opened": 1982
+  },
+  "Q359990": {
+    "name": "Wuhu Rail Transit",
+    "lines": 2,
+    "stations": 37,
+    "opened": null
+  },
+  "Q1854": {
+    "name": "Ho Chi Minh City Metro",
+    "lines": 6,
+    "stations": 37,
+    "opened": null
+  },
+  "Q3561": {
+    "name": "Algiers Metro",
+    "lines": 2,
+    "stations": 36,
+    "opened": 2011
+  },
+  "Q47916": {
+    "name": "Lucknow Metro",
+    "lines": 3,
+    "stations": 35,
+    "opened": 2017
+  },
+  "Q187136": {
+    "name": "Luoyang Subway",
+    "lines": 2,
+    "stations": 35,
+    "opened": null
+  },
+  "Q48344": {
+    "name": "Recife Metro",
+    "lines": 4,
+    "stations": 34,
+    "opened": 1985
+  },
+  "Q23482": {
+    "name": "Marseille Metro",
+    "lines": 3,
+    "stations": 34,
+    "opened": 1977
+  },
+  "Q34600": {
+    "name": "Kyoto Municipal Subway",
+    "lines": 2,
+    "stations": 33,
+    "opened": 1981
+  },
+  "Q58210": {
+    "name": "Jinhua Rail Transit",
+    "lines": null,
+    "stations": 33,
+    "opened": null
+  },
+  "Q807": {
+    "name": "Lausanne Metro",
+    "lines": 16,
+    "stations": 32,
+    "opened": 2008
+  },
+  "Q42800": {
+    "name": "Belo Horizonte Metro",
+    "lines": 3,
+    "stations": 32,
+    "opened": 1986
+  },
+  "Q66616": {
+    "name": "Indore Metro",
+    "lines": null,
+    "stations": 30,
+    "opened": null
+  },
+  "Q183584": {
+    "name": "Lanzhou Metro",
+    "lines": 2,
+    "stations": 29,
+    "opened": 2019
+  },
+  "Q48320": {
+    "name": "Kobe City Subway",
+    "lines": 3,
+    "stations": 29,
+    "opened": 1977
+  },
+  "Q48278": {
+    "name": "Medellín Metro",
+    "lines": 3,
+    "stations": 29,
+    "opened": 1995
+  },
+  "Q1858": {
+    "name": "Hanoi Metro",
+    "lines": 2,
+    "stations": 28,
+    "opened": null
+  },
+  "Q34664": {
+    "name": "Astram Line",
+    "lines": 1,
+    "stations": 28,
+    "opened": 1994
+  },
+  "Q994": {
+    "name": "Tbilisi Metro",
+    "lines": 25,
+    "stations": 27,
+    "opened": 1966
+  },
+  "Q278204": {
+    "name": "Noida Metro",
+    "lines": 2,
+    "stations": 26,
+    "opened": 2019
+  },
+  "Q40269": {
+    "name": "Porto Alegre Metro",
+    "lines": 2,
+    "stations": 25,
+    "opened": 1985
+  },
+  "Q16959": {
+    "name": "Ürümqi Metro",
+    "lines": 2,
+    "stations": 25,
+    "opened": 2018
+  },
+  "Q36947": {
+    "name": "Salvador Metro",
+    "lines": 2,
+    "stations": 25,
+    "opened": 2014
+  },
+  "Q891": {
+    "name": "Nizhny Novgorod Metro",
+    "lines": 3,
+    "stations": 25,
+    "opened": 1985
+  },
+  "Q20921": {
+    "name": "Daejeon Metro",
+    "lines": 1,
+    "stations": 24,
+    "opened": 2006
+  },
+  "Q42053": {
+    "name": "Isfahan Metro",
+    "lines": 7,
+    "stations": 23,
+    "opened": 2015
+  },
+  "Q894": {
+    "name": "Samara Metro",
+    "lines": 2,
+    "stations": 23,
+    "opened": 1987
+  },
+  "Q1354": {
+    "name": "Dhaka Metro Rail",
+    "lines": 6,
+    "stations": 23,
+    "opened": null
+  },
+  "Q41283": {
+    "name": "Gwangju Metro",
+    "lines": 2,
+    "stations": 23,
+    "opened": 2004
+  },
+  "Q883": {
+    "name": "Novosibirsk Metro",
+    "lines": 3,
+    "stations": 22,
+    "opened": 1986
+  },
+  "Q3630": {
+    "name": "Jakarta MRT",
+    "lines": 1,
+    "stations": 21,
+    "opened": 2019
+  },
+  "Q18808": {
+    "name": "Pyŏngyang Metro",
+    "lines": 3,
+    "stations": 20,
+    "opened": 1973
+  },
+  "Q900": {
+    "name": "Kazan Metro",
+    "lines": 4,
+    "stations": 20,
+    "opened": 2005
+  },
+  "Q80989": {
+    "name": "Bhopal Metro",
+    "lines": null,
+    "stations": 18,
+    "opened": 2025
+  },
+  "Q25395": {
+    "name": "Port Authority Trans-Hudson",
+    "lines": 1,
+    "stations": 18,
+    "opened": 1908
+  },
+  "Q2841": {
+    "name": "Bogotá Metro",
+    "lines": 1,
+    "stations": 18,
+    "opened": null
+  },
+  "Q1903": {
+    "name": "Catania Metro",
+    "lines": 15,
+    "stations": 18,
+    "opened": 1999
+  },
+  "Q41211": {
+    "name": "Tren Urbano",
+    "lines": 1,
+    "stations": 17,
+    "opened": 2004
+  },
+  "Q66568": {
+    "name": "Kanpur Metro",
+    "lines": 9,
+    "stations": 16,
+    "opened": null
+  },
+  "Q42941": {
+    "name": "Agra Metro",
+    "lines": 2,
+    "stations": 16,
+    "opened": null
+  },
+  "Q887": {
+    "name": "Yekaterinburg Metro",
+    "lines": 1,
+    "stations": 16,
+    "opened": 1991
+  },
+  "Q2900": {
+    "name": "Quito Metro",
+    "lines": 1,
+    "stations": 16,
+    "opened": null
+  },
+  "Q468782": {
+    "name": "Huancayo Metro",
+    "lines": null,
+    "stations": 14,
+    "opened": null
+  },
+  "Q38545": {
+    "name": "Adana Metro",
+    "lines": 14,
+    "stations": 14,
+    "opened": 2009
+  },
+  "Q1953": {
+    "name": "Yerevan Metro",
+    "lines": 4,
+    "stations": 14,
+    "opened": 1981
+  },
+  "Q35493": {
+    "name": "Almaty Metro",
+    "lines": 7,
+    "stations": 14,
+    "opened": 2011
+  },
+  "Q66485": {
+    "name": "Jaipur Metro",
+    "lines": 2,
+    "stations": 13,
+    "opened": 2015
+  },
+  "Q200237": {
+    "name": "Meerut Metro",
+    "lines": null,
+    "stations": 13,
+    "opened": null
+  },
+  "Q8826": {
+    "name": "Palma Metro",
+    "lines": 8,
+    "stations": 13,
+    "opened": null
+  },
+  "Q61445": {
+    "name": "Navi Mumbai Metro",
+    "lines": 1,
+    "stations": 12,
+    "opened": null
+  },
+  "Q1449": {
+    "name": "Genoa Metro",
+    "lines": 1,
+    "stations": 12,
+    "opened": 1990
+  },
+  "Q48256": {
+    "name": "Dnipro Metro",
+    "lines": 1,
+    "stations": 11,
+    "opened": 1995
+  },
+  "Q80484": {
+    "name": "Patna Metro",
+    "lines": null,
+    "stations": 10,
+    "opened": 2025
+  },
+  "Q1515": {
+    "name": "Abidjan Metro",
+    "lines": 1,
+    "stations": 10,
+    "opened": null
+  },
+  "Q5806": {
+    "name": "Mecca Metro",
+    "lines": 1,
+    "stations": 10,
+    "opened": 2010
+  },
+  "Q898": {
+    "name": "Omsk Metro",
+    "lines": null,
+    "stations": 7,
+    "opened": null
+  },
+  "Q695631": {
+    "name": "Los Teques Metro",
+    "lines": 4,
+    "stations": 7,
+    "opened": null
+  },
+  "Q919": {
+    "name": "Krasnoyarsk Metro",
+    "lines": null,
+    "stations": 6,
+    "opened": null
+  },
+  "Q906": {
+    "name": "Chelyabinsk Metro",
+    "lines": 5,
+    "stations": 6,
+    "opened": null
+  },
+  "Q9885": {
+    "name": "Coimbatore Metro",
+    "lines": null,
+    "stations": 3,
+    "opened": null
+  },
+  "Q360069": {
+    "name": "Bengbu Metro",
+    "lines": null,
+    "stations": 1,
+    "opened": null
+  },
+  "Q100188": {
+    "name": "Cluj-Napoca Metro",
+    "lines": 1,
+    "stations": 1,
+    "opened": null
+  },
+  "Q228405": {
+    "name": "Madurai Metro",
+    "lines": null,
+    "stations": 1,
+    "opened": null
+  },
+  "Q71266": {
+    "name": "Yichang Metro",
+    "lines": null,
+    "stations": 1,
+    "opened": null
+  },
+  "Q199605": {
+    "name": "Guwahati Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q170366": {
+    "name": "Ahvaz Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q134291": {
+    "name": "Mersin Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q4629": {
+    "name": "Surat Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q200123": {
+    "name": "Ludhiana Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q216077": {
+    "name": "Jiujiang Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q23430": {
+    "name": "Ulaanbaatar Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q363166": {
+    "name": "Ganzhou Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q216": {
+    "name": "Vilnius Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q43196": {
+    "name": "MetroMoves",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q1780": {
+    "name": "Bratislava Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q131818": {
+    "name": "Oran Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q213026": {
+    "name": "Bareilly Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q189823": {
+    "name": "Haikou Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q170115": {
+    "name": "Srinagar Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q200017": {
+    "name": "Vijayawada Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q200016": {
+    "name": "Visakhapatnam Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q35484": {
+    "name": "Medina Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q210493": {
+    "name": "Yantai Rail Transit",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q200878": {
+    "name": "Jabalpur Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q569907": {
+    "name": "Baotou Metro",
+    "lines": null,
+    "stations": null,
+    "opened": 2017
+  },
+  "Q69060": {
+    "name": "Xining Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q211243": {
+    "name": "Yinchuan Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q79980": {
+    "name": "Varanasi Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q58178": {
+    "name": "Jiaxing Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q174461": {
+    "name": "Ranchi Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q427367": {
+    "name": "Guang'an Rail Transit",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q207749": {
+    "name": "Thane Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q1880": {
+    "name": "Metro de Concepción",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q87": {
+    "name": "Alexandria Metro",
+    "lines": null,
+    "stations": null,
+    "opened": 2022
+  },
+  "Q79857": {
+    "name": "Konya Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q37995": {
+    "name": "Yangon Urban Mass Rapid Transit",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q189633": {
+    "name": "Guilin Rail Transit",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q144663": {
+    "name": "Hengyang Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q59095": {
+    "name": "Zhuhai Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q31487": {
+    "name": "metro in Kraków",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q1479": {
+    "name": "Bordeaux Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q185458": {
+    "name": "Quetta Mass transit train",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q43433": {
+    "name": "Chandigarh Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q164234": {
+    "name": "Kawasaki Municipal Subway",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q3711": {
+    "name": "Belgrade Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q4361": {
+    "name": "Metrô de Curitiba",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q1761": {
+    "name": "Dublin Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q1773": {
+    "name": "Riga Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q915": {
+    "name": "Perm Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q2656": {
+    "name": "Palermo Ring Railway",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q1435": {
+    "name": "Zagreb Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q374365": {
+    "name": "Jeddah metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q1519": {
+    "name": "Abu Dhabi Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q911": {
+    "name": "Ufa Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q7903": {
+    "name": "Casablanca metro (project)",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q9365": {
+    "name": "Dushanbe Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q289693": {
+    "name": "Sharjah Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q908": {
+    "name": "Rostov Metro",
+    "lines": null,
+    "stations": null,
+    "opened": null
+  },
+  "Q84": {
+    "name": "London Underground",
+    "lines": 11,
+    "stations": 371,
+    "opened": 1890
+  },
+  "Q2807": {
+    "name": "Madrid Metro",
+    "lines": 15,
+    "stations": 260,
+    "opened": 1919
+  },
+  "Q406": {
+    "name": "Istanbul Metro",
+    "lines": 16,
+    "stations": 229,
+    "opened": 1989
+  },
+  "Q100": {
+    "name": "MBTA subway",
+    "lines": 4,
+    "stations": 149,
+    "opened": 1901
+  },
+  "Q585": {
+    "name": "Oslo Metro",
+    "lines": 6,
+    "stations": 146,
+    "opened": 1928
+  },
+  "Q24017120": {
+    "name": "Metrovalencia",
+    "lines": 18,
+    "stations": 108,
+    "opened": null
+  },
+  "Q1524": {
+    "name": "Athens Metro",
+    "lines": 4,
+    "stations": 88,
+    "opened": 1869
+  },
+  "Q34370": {
+    "name": "Rotterdam Metro",
+    "lines": 5,
+    "stations": 83,
+    "opened": 1968
+  },
+  "Q205697": {
+    "name": "Kolkata Metro",
+    "lines": 6,
+    "stations": 80,
+    "opened": 1984
+  },
+  "Q2279529": {
+    "name": "İzmir Metro",
+    "lines": 5,
+    "stations": 72,
+    "opened": 2000
+  },
+  "Q55893348": {
+    "name": "Seville Metro",
+    "lines": 4,
+    "stations": 72,
+    "opened": null
+  },
+  "Q727": {
+    "name": "Amsterdam Metro",
+    "lines": 5,
+    "stations": 67,
+    "opened": 1977
+  },
+  "Q488965": {
+    "name": "Incheon Subway",
+    "lines": 5,
+    "stations": 64,
+    "opened": null
+  },
+  "Q487801": {
+    "name": "Metro Bilbao",
+    "lines": 5,
+    "stations": 62,
+    "opened": 1995
+  },
+  "Q62": {
+    "name": "Bay Area Rapid Transit",
+    "lines": 7,
+    "stations": 61,
+    "opened": null
+  },
+  "Q3640": {
+    "name": "Ankara Metro",
+    "lines": null,
+    "stations": 59,
+    "opened": 1997
+  },
+  "Q472": {
+    "name": "Sofia Metro",
+    "lines": 11,
+    "stations": 51,
+    "opened": 1998
+  },
+  "Q2844": {
+    "name": "Federal District Metro",
+    "lines": 4,
+    "stations": 37,
+    "opened": 2001
+  },
+  "Q4539151": {
+    "name": "Baku Metro",
+    "lines": 9,
+    "stations": 35,
+    "opened": 1940
+  },
+  "Q642018": {
+    "name": "Sendai Subway",
+    "lines": 2,
+    "stations": 31,
+    "opened": 1987
+  },
+  "Q1538": {
+    "name": "Pune Metro",
+    "lines": 10,
+    "stations": 30,
+    "opened": null
+  },
+  "Q8652": {
+    "name": "Miami Metrorail",
+    "lines": 3,
+    "stations": 27,
+    "opened": 1984
+  },
+  "Q1800": {
+    "name": "Kochi Metro",
+    "lines": 1,
+    "stations": 26,
+    "opened": 2017
+  },
+  "Q1461": {
+    "name": "Manila Metro Rail Transit System",
+    "lines": 2,
+    "stations": 23,
+    "opened": 1999
+  },
+  "Q37320": {
+    "name": "RTA Rapid Transit",
+    "lines": 2,
+    "stations": 23,
+    "opened": null
+  },
+  "Q18094": {
+    "name": "Skyline",
+    "lines": 1,
+    "stations": 22,
+    "opened": null
+  },
+  "Q17151": {
+    "name": "Thessaloniki Metro",
+    "lines": 2,
+    "stations": 21,
+    "opened": 2024
+  },
+  "Q4093": {
+    "name": "Glasgow Subway",
+    "lines": 17,
+    "stations": 17,
+    "opened": 1896
+  },
+  "Q397905": {
+    "name": "Baltimore Metro SubwayLink",
+    "lines": 1,
+    "stations": 15,
+    "opened": 1983
+  },
+  "Q23768": {
+    "name": "Las Vegas Monorail",
+    "lines": null,
+    "stations": 8,
+    "opened": 2004
+  }
+}

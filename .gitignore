@@ -12,3 +12,6 @@ public/companies-pre-enrich-backup.json
 public/prices/
 .superpowers/
 .worktrees/
+tmp/
+tmp_gdp.zip
+scripts/.comtrade-checkpoint.json

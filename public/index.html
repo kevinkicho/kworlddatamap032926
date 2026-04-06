@@ -498,17 +498,61 @@
     <div id="filter-panel-header">
       <span id="filter-panel-title">⚗ Filters</span>
       <div id="filter-panel-header-right">
-        <button id="filter-clear-btn" onclick="clearAllFilters()">Clear all</button>
+        <button id="filter-clear-btn" onclick="clearAllFilters()">Reset</button>
         <button id="filter-panel-close" onclick="closeFilterPanel()" title="Close">×</button>
       </div>
     </div>
 
-    <div id="heat-dot-row" style="display:none">
-      <span class="filter-row-label">City dots:</span>
-      <div class="filter-btn-group">
-        <button class="filter-mode-btn" data-dotmode="show" onclick="setHeatDotMode('show')">Show</button>
-        <button class="filter-mode-btn active" data-dotmode="dim"  onclick="setHeatDotMode('dim')">Dim</button>
-        <button class="filter-mode-btn" data-dotmode="hide" onclick="setHeatDotMode('hide')">Hide</button>
+    <!-- Unified dot display controls: always visible -->
+    <div id="dot-controls-section">
+      <div class="dot-ctrl-group">
+        <span class="dot-ctrl-label">Matched cities</span>
+        <div class="dot-ctrl-row">
+          <div class="filter-btn-group">
+            <button class="filter-mode-btn active" data-matched-vis="show" onclick="setMatchedVis('show')">Show</button>
+            <button class="filter-mode-btn"        data-matched-vis="dim"  onclick="setMatchedVis('dim')">Dim</button>
+            <button class="filter-mode-btn"        data-matched-vis="hide" onclick="setMatchedVis('hide')">Hide</button>
+          </div>
+          <span class="dot-ctrl-sep">|</span>
+          <div class="filter-btn-group">
+            <button class="filter-mode-btn active" data-matched-col="pop"    onclick="setMatchedColorMode('pop')">Pop</button>
+            <button class="filter-mode-btn"        data-matched-col="metric" onclick="setMatchedColorMode('metric')">Intensity</button>
+          </div>
+        </div>
+      </div>
+      <div class="dot-ctrl-group">
+        <span class="dot-ctrl-label">Other cities</span>
+        <div class="dot-ctrl-row">
+          <div class="filter-btn-group">
+            <button class="filter-mode-btn"        data-other-vis="full" onclick="setOtherVis('full')">Show</button>
+            <button class="filter-mode-btn active" data-other-vis="dim"  onclick="setOtherVis('dim')">Dim</button>
+            <button class="filter-mode-btn"        data-other-vis="hide" onclick="setOtherVis('hide')">Hide</button>
+          </div>
+          <span class="dot-ctrl-sep">|</span>
+          <div class="filter-btn-group">
+            <button class="filter-mode-btn active" data-other-col="pop"   onclick="setOtherColorMode('pop')">Pop</button>
+            <button class="filter-mode-btn"        data-other-col="ghost" onclick="setOtherColorMode('ghost')">Ghost</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Heatmap palette — only shown when a heatmap is active -->
+    <div id="heat-palette-row" style="display:none">
+      <span class="filter-row-label">Palette:</span>
+      <div class="palette-chips">
+        <button class="palette-chip active" data-palette="warm"    onclick="setHeatPalette('warm')">
+          <span class="palette-strip warm-strip"></span>Warm
+        </button>
+        <button class="palette-chip" data-palette="viridis" onclick="setHeatPalette('viridis')">
+          <span class="palette-strip viridis-strip"></span>Viridis
+        </button>
+        <button class="palette-chip" data-palette="inferno" onclick="setHeatPalette('inferno')">
+          <span class="palette-strip inferno-strip"></span>Inferno
+        </button>
+        <button class="palette-chip" data-palette="ocean"   onclick="setHeatPalette('ocean')">
+          <span class="palette-strip ocean-strip"></span>Ocean
+        </button>
       </div>
     </div>
 
@@ -533,30 +577,26 @@
       </div>
     </div>
 
-    <div id="filter-dim-row">
-      <span class="filter-row-label">Unmatched cities:</span>
-      <div class="filter-btn-group">
-        <button class="filter-mode-btn active" data-mode="dim"  onclick="setFilterDimMode('dim')">Dim</button>
-        <button class="filter-mode-btn"        data-mode="hide" onclick="setFilterDimMode('hide')">Hide</button>
-      </div>
-    </div>
-
     <div class="filter-section-head">Availability</div>
     <div id="filter-avail-list">
-      <div class="filter-avail-row">
+      <div class="filter-avail-row" data-metric="aq">
         <span class="filter-avail-label">🌡 Air Quality</span>
+        <span class="avail-intensity-strip" style="display:none"></span>
         <button class="filter-avail-btn" data-key="airQuality" onclick="toggleAvailFilter('airQuality')">off</button>
       </div>
-      <div class="filter-avail-row">
+      <div class="filter-avail-row" data-metric="metro">
         <span class="filter-avail-label">🚇 Metro system</span>
+        <span class="avail-intensity-strip" style="display:none"></span>
         <button class="filter-avail-btn" data-key="metro" onclick="toggleAvailFilter('metro')">off</button>
       </div>
-      <div class="filter-avail-row">
+      <div class="filter-avail-row" data-metric="nobel">
         <span class="filter-avail-label">🏅 Nobel laureates</span>
+        <span class="avail-intensity-strip" style="display:none"></span>
         <button class="filter-avail-btn" data-key="nobel" onclick="toggleAvailFilter('nobel')">off</button>
       </div>
-      <div class="filter-avail-row">
+      <div class="filter-avail-row" data-metric="universities">
         <span class="filter-avail-label">🎓 Universities</span>
+        <span class="avail-intensity-strip" style="display:none"></span>
         <button class="filter-avail-btn" data-key="universities" onclick="toggleAvailFilter('universities')">off</button>
       </div>
       <div class="filter-avail-row">

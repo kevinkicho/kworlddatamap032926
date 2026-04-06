@@ -444,5 +444,25 @@
       "year"
     ],
     "updated": "2026-04"
+  },
+  "metro-transit": {
+    "key": "qid",
+    "coverage": 248,
+    "fields": [
+      "name",
+      "lines",
+      "stations",
+      "opened"
+    ],
+    "updated": "2026-04"
+  },
+  "nobel-cities": {
+    "key": "qid",
+    "coverage": 289,
+    "fields": [
+      "total",
+      "byPrize"
+    ],
+    "updated": "2026-04"
   }
 }
