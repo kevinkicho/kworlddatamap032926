@@ -1,0 +1,146 @@
+{
+  "Baden-Württemberg": {
+    "name": "Baden-Württemberg",
+    "gdp_bn_eur": 583,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 51683,
+    "population": 11280257,
+    "unemployment_rate": 3.8,
+    "unemployment_year": 2023
+  },
+  "Bayern": {
+    "name": "Bayern",
+    "gdp_bn_eur": 685,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 51236,
+    "population": 13369393,
+    "unemployment_rate": 3.2,
+    "unemployment_year": 2023
+  },
+  "Berlin": {
+    "name": "Berlin",
+    "gdp_bn_eur": 176,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 46868,
+    "population": 3755251,
+    "unemployment_rate": 8.7,
+    "unemployment_year": 2023
+  },
+  "Brandenburg": {
+    "name": "Brandenburg",
+    "gdp_bn_eur": 87,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 33811,
+    "population": 2573135,
+    "unemployment_rate": 5.5,
+    "unemployment_year": 2023
+  },
+  "Bremen": {
+    "name": "Bremen",
+    "gdp_bn_eur": 38,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 55485,
+    "population": 684864,
+    "unemployment_rate": 10.3,
+    "unemployment_year": 2023
+  },
+  "Hamburg": {
+    "name": "Hamburg",
+    "gdp_bn_eur": 139,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 73462,
+    "population": 1892122,
+    "unemployment_rate": 6.5,
+    "unemployment_year": 2023
+  },
+  "Hessen": {
+    "name": "Hessen",
+    "gdp_bn_eur": 316,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 49442,
+    "population": 6391360,
+    "unemployment_rate": 4.7,
+    "unemployment_year": 2023
+  },
+  "Mecklenburg-Vorpommern": {
+    "name": "Mecklenburg-Vorpommern",
+    "gdp_bn_eur": 51,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 31320,
+    "population": 1628378,
+    "unemployment_rate": 7.2,
+    "unemployment_year": 2023
+  },
+  "Niedersachsen": {
+    "name": "Niedersachsen",
+    "gdp_bn_eur": 335,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 41154,
+    "population": 8140242,
+    "unemployment_rate": 5.2,
+    "unemployment_year": 2023
+  },
+  "Nordrhein-Westfalen": {
+    "name": "Nordrhein-Westfalen",
+    "gdp_bn_eur": 771,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 42505,
+    "population": 18139116,
+    "unemployment_rate": 6.8,
+    "unemployment_year": 2023
+  },
+  "Rheinland-Pfalz": {
+    "name": "Rheinland-Pfalz",
+    "gdp_bn_eur": 162,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 38950,
+    "population": 4159150,
+    "unemployment_rate": 4.5,
+    "unemployment_year": 2023
+  },
+  "Saarland": {
+    "name": "Saarland",
+    "gdp_bn_eur": 40,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 40296,
+    "population": 992666,
+    "unemployment_rate": 6.5,
+    "unemployment_year": 2023
+  },
+  "Sachsen": {
+    "name": "Sachsen",
+    "gdp_bn_eur": 143,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 34996,
+    "population": 4086152,
+    "unemployment_rate": 5.7,
+    "unemployment_year": 2023
+  },
+  "Sachsen-Anhalt": {
+    "name": "Sachsen-Anhalt",
+    "gdp_bn_eur": 71,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 32559,
+    "population": 2180684,
+    "unemployment_rate": 7.3,
+    "unemployment_year": 2023
+  },
+  "Schleswig-Holstein": {
+    "name": "Schleswig-Holstein",
+    "gdp_bn_eur": 110,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 37247,
+    "population": 2953270,
+    "unemployment_rate": 5,
+    "unemployment_year": 2023
+  },
+  "Thüringen": {
+    "name": "Thüringen",
+    "gdp_bn_eur": 69,
+    "gdp_year": 2022,
+    "gdp_per_capita_eur": 32442,
+    "population": 2126846,
+    "unemployment_rate": 5.4,
+    "unemployment_year": 2023
+  }
+}

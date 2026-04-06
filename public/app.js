@@ -5924,22 +5924,32 @@ var subnatFiles = {
 
 // Get subnational indicator value for a region
 function _admin1RegionVal(iso2, regionName) {
+  // Country-specific subnational data (checked first — most precise)
+  var sd = subnatData[iso2];
+  if (sd) {
+    // Two-level structure: { regions: {...}, la_to_region/dept_to_region: {...} }
+    if (sd.regions) {
+      var mapKey = sd.la_to_region || sd.dept_to_region;
+      if (mapKey) {
+        var regionKey = mapKey[regionName];
+        if (regionKey && sd.regions[regionKey]) return sd.regions[regionKey];
+      }
+      // Direct match on region name
+      if (sd.regions[regionName]) return sd.regions[regionName];
+    }
+    // Flat structure (KR, CN, IN, DE, US, JP, CA, AU)
+    if (sd[regionName]) return sd[regionName];
+    for (var k in sd) {
+      if (sd[k] && sd[k].name === regionName) return sd[k];
+    }
+  }
   // EU countries: use eurostatRegions via NUTS-2 code
   var euroCountries = ADMIN_TO_NUTS2[iso2];
   if (euroCountries && Object.keys(eurostatRegions).length) {
-    // Try direct name match first
     var nuts2 = euroCountries[regionName];
     if (nuts2 && eurostatRegions[nuts2]) {
-      return { label: eurostatRegions[nuts2].name, gdp: eurostatRegions[nuts2].gdp_pps_eu100 };
+      return { label: eurostatRegions[nuts2].name, gdp_pps_eu100: eurostatRegions[nuts2].gdp_pps_eu100 };
     }
-  }
-  // Country-specific subnational data
-  var sd = subnatData[iso2];
-  if (!sd) return null;
-  // Try direct key match, then match by name property
-  if (sd[regionName]) return sd[regionName];
-  for (var k in sd) {
-    if (sd[k] && sd[k].name === regionName) return sd[k];
   }
   return null;
 }
@@ -6032,7 +6042,8 @@ async function toggleAdmin1(iso2) {
         if (code) tip += ' <span style="opacity:.6">(' + escHtml(code) + ')</span>';
         if (regionData) {
           if (regionData.gdp_pps_eu100 != null) tip += '<br>GDP: ' + regionData.gdp_pps_eu100 + ' (EU=100)';
-          else if (regionData.gdp != null) tip += '<br>GDP: ' + regionData.gdp + ' (EU=100)';
+          if (regionData.gdp_bn_eur != null) tip += '<br>GDP: €' + regionData.gdp_bn_eur + 'B';
+          if (regionData.gva_bn_gbp != null) tip += '<br>GVA: £' + regionData.gva_bn_gbp + 'B';
           if (regionData.unemployment_rate != null) tip += '<br>Unemployment: ' + regionData.unemployment_rate + '%';
           if (regionData.pcpi != null) tip += '<br>Per-cap income: $' + Math.round(regionData.pcpi).toLocaleString();
           if (regionData.gdp_bn_cny != null) tip += '<br>GDP: ¥' + regionData.gdp_bn_cny + 'B';
