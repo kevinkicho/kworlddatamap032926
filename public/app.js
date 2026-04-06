@@ -4846,20 +4846,24 @@ function _renderCountryPanel(iso2) {
     (function() {
       var ct = comtradeData[iso2];
       if (!ct) return '';
+      function partnerRows(list) {
+        return list.slice(0, 5).map(function(p) {
+          var flag = isoToFlag(p.iso2);
+          var val  = p.value_bn >= 100 ? '$' + Math.round(p.value_bn) + 'B'
+                   : p.value_bn >= 1   ? '$' + p.value_bn.toFixed(1) + 'B'
+                   :                     '$' + (p.value_bn * 1000).toFixed(0) + 'M';
+          return '<div class="cp-trade-partner-row" onclick="openCountryPanel(\'' + escHtml(p.iso2) + '\')">' +
+            '<span class="cp-trade-flag">' + flag + '</span>' +
+            '<span class="cp-trade-name">' + escHtml(p.name) + '</span>' +
+            '<span class="cp-trade-val">' + val + '</span></div>';
+        }).join('');
+      }
       var html = '<div class="cp-gauge-section-hdr">Top Trade Partners (' + (ct.year || '') + ')</div>';
       if (ct.top_exports && ct.top_exports.length) {
-        html += '<div class="cp-gauge-row cp-trade-row"><span class="cp-gauge-lbl">Exports to</span><span class="cp-trade-partners">';
-        html += ct.top_exports.slice(0, 5).map(function(p) {
-          return '<span class="cp-trade-partner" title="' + escHtml(p.name) + ' $' + p.value_bn + 'B">' + isoToFlag(p.iso2) + '</span>';
-        }).join('');
-        html += '</span></div>';
+        html += '<div class="cp-trade-sub-hdr">Exports to</div>' + partnerRows(ct.top_exports);
       }
       if (ct.top_imports && ct.top_imports.length) {
-        html += '<div class="cp-gauge-row cp-trade-row"><span class="cp-gauge-lbl">Imports from</span><span class="cp-trade-partners">';
-        html += ct.top_imports.slice(0, 5).map(function(p) {
-          return '<span class="cp-trade-partner" title="' + escHtml(p.name) + ' $' + p.value_bn + 'B">' + isoToFlag(p.iso2) + '</span>';
-        }).join('');
-        html += '</span></div>';
+        html += '<div class="cp-trade-sub-hdr">Imports from</div>' + partnerRows(ct.top_imports);
       }
       return html;
     })();

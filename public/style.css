@@ -1418,11 +1418,13 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 .univ-detail, .univ-meta { font-size: 0.72rem; color: #8b949e; }
 .univ-more { padding: 4px 0; font-size: 0.72rem; color: #484f58; font-style: italic; }
 
-/* Trade partners row in country panel */
-.cp-trade-row { align-items: center; }
-.cp-trade-partners { display: flex; gap: 4px; flex-wrap: wrap; }
-.cp-trade-partner { font-size: 1.4em; cursor: default; line-height: 1; }
-.cp-trade-partner:hover { transform: scale(1.2); transition: transform 0.1s; }
+/* Trade partners in country panel */
+.cp-trade-sub-hdr { font-size: .7rem; text-transform: uppercase; letter-spacing: .04em; color: #8aa; margin: 6px 0 2px; }
+.cp-trade-partner-row { display: flex; align-items: center; gap: 6px; padding: 3px 4px; border-radius: 4px; cursor: pointer; transition: background .15s; }
+.cp-trade-partner-row:hover { background: rgba(100,200,220,.12); }
+.cp-trade-flag { font-size: 1.15em; line-height: 1; flex-shrink: 0; }
+.cp-trade-name { flex: 1; font-size: .78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cp-trade-val  { font-size: .75rem; color: #7be0c4; font-variant-numeric: tabular-nums; flex-shrink: 0; }
 
 /* ── Air Quality bar ──────────────────────────────── */
 #aq-bar {
