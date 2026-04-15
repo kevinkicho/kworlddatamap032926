@@ -1,0 +1,76 @@
+/* Layer indicator dots for dropdown */
+.layer-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+/* Improved dropdown layout */
+#more-layers-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  z-index: 1000;
+  min-width: 200px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+#more-layers-menu button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 5px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.1s, color 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#more-layers-menu button:hover {
+  background: var(--hover-row);
+  color: var(--text-body);
+}
+
+#more-layers-menu button.on {
+  color: var(--accent);
+  background: rgba(88,166,255,0.09);
+}
+
+#more-layers-menu button.on .layer-dot {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.dropdown-section {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.dropdown-section:last-child {
+  border-bottom: none;
+}
+
+.dropdown-heading {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 3px 12px;
+  font-weight: 600;
+}

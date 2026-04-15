@@ -1,0 +1,396 @@
+{
+  "fetched_at": "2026-04-09T19:22:26.089Z",
+  "source": "Global Forest Watch (fallback estimates)",
+  "countries": {
+    "BR": {
+      "iso2": "BR",
+      "total_loss_sqkm": 50000,
+      "annual_loss": {
+        "2022": 48000,
+        "2023": 50000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 4500000
+    },
+    "ID": {
+      "iso2": "ID",
+      "total_loss_sqkm": 12000,
+      "annual_loss": {
+        "2022": 11000,
+        "2023": 12000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 940000
+    },
+    "CD": {
+      "iso2": "CD",
+      "total_loss_sqkm": 8000,
+      "annual_loss": {
+        "2022": 7500,
+        "2023": 8000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 1550000
+    },
+    "PE": {
+      "iso2": "PE",
+      "total_loss_sqkm": 3500,
+      "annual_loss": {
+        "2022": 3200,
+        "2023": 3500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 740000
+    },
+    "CO": {
+      "iso2": "CO",
+      "total_loss_sqkm": 3000,
+      "annual_loss": {
+        "2022": 2800,
+        "2023": 3000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 610000
+    },
+    "MX": {
+      "iso2": "MX",
+      "total_loss_sqkm": 2500,
+      "annual_loss": {
+        "2022": 2400,
+        "2023": 2500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 650000
+    },
+    "BO": {
+      "iso2": "BO",
+      "total_loss_sqkm": 4000,
+      "annual_loss": {
+        "2022": 3800,
+        "2023": 4000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 530000
+    },
+    "VE": {
+      "iso2": "VE",
+      "total_loss_sqkm": 3500,
+      "annual_loss": {
+        "2022": 3300,
+        "2023": 3500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 470000
+    },
+    "MY": {
+      "iso2": "MY",
+      "total_loss_sqkm": 2800,
+      "annual_loss": {
+        "2022": 2600,
+        "2023": 2800
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 210000
+    },
+    "PG": {
+      "iso2": "PG",
+      "total_loss_sqkm": 3500,
+      "annual_loss": {
+        "2022": 3400,
+        "2023": 3500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 330000
+    },
+    "TH": {
+      "iso2": "TH",
+      "total_loss_sqkm": 1200,
+      "annual_loss": {
+        "2022": 1100,
+        "2023": 1200
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 160000
+    },
+    "VN": {
+      "iso2": "VN",
+      "total_loss_sqkm": 1500,
+      "annual_loss": {
+        "2022": 1400,
+        "2023": 1500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 98000
+    },
+    "MM": {
+      "iso2": "MM",
+      "total_loss_sqkm": 2200,
+      "annual_loss": {
+        "2022": 2100,
+        "2023": 2200
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 310000
+    },
+    "KH": {
+      "iso2": "KH",
+      "total_loss_sqkm": 1400,
+      "annual_loss": {
+        "2022": 1300,
+        "2023": 1400
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 93000
+    },
+    "LA": {
+      "iso2": "LA",
+      "total_loss_sqkm": 800,
+      "annual_loss": {
+        "2022": 750,
+        "2023": 800
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 160000
+    },
+    "NP": {
+      "iso2": "NP",
+      "total_loss_sqkm": 400,
+      "annual_loss": {
+        "2022": 380,
+        "2023": 400
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 46000
+    },
+    "IN": {
+      "iso2": "IN",
+      "total_loss_sqkm": 2000,
+      "annual_loss": {
+        "2022": 1900,
+        "2023": 2000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 680000
+    },
+    "CN": {
+      "iso2": "CN",
+      "total_loss_sqkm": 3000,
+      "annual_loss": {
+        "2022": 2900,
+        "2023": 3000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 1800000
+    },
+    "AU": {
+      "iso2": "AU",
+      "total_loss_sqkm": 1500,
+      "annual_loss": {
+        "2022": 1400,
+        "2023": 1500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 1350000
+    },
+    "CA": {
+      "iso2": "CA",
+      "total_loss_sqkm": 2500,
+      "annual_loss": {
+        "2022": 2400,
+        "2023": 2500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 3500000
+    },
+    "US": {
+      "iso2": "US",
+      "total_loss_sqkm": 1800,
+      "annual_loss": {
+        "2022": 1700,
+        "2023": 1800
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 2600000
+    },
+    "RU": {
+      "iso2": "RU",
+      "total_loss_sqkm": 4500,
+      "annual_loss": {
+        "2022": 4300,
+        "2023": 4500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 8500000
+    },
+    "SE": {
+      "iso2": "SE",
+      "total_loss_sqkm": 800,
+      "annual_loss": {
+        "2022": 750,
+        "2023": 800
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 280000
+    },
+    "FI": {
+      "iso2": "FI",
+      "total_loss_sqkm": 600,
+      "annual_loss": {
+        "2022": 550,
+        "2023": 600
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 220000
+    },
+    "NO": {
+      "iso2": "NO",
+      "total_loss_sqkm": 400,
+      "annual_loss": {
+        "2022": 380,
+        "2023": 400
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 100000
+    },
+    "MZ": {
+      "iso2": "MZ",
+      "total_loss_sqkm": 1800,
+      "annual_loss": {
+        "2022": 1700,
+        "2023": 1800
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 200000
+    },
+    "ZM": {
+      "iso2": "ZM",
+      "total_loss_sqkm": 1200,
+      "annual_loss": {
+        "2022": 1100,
+        "2023": 1200
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 250000
+    },
+    "ZW": {
+      "iso2": "ZW",
+      "total_loss_sqkm": 1000,
+      "annual_loss": {
+        "2022": 950,
+        "2023": 1000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 170000
+    },
+    "AO": {
+      "iso2": "AO",
+      "total_loss_sqkm": 2000,
+      "annual_loss": {
+        "2022": 1900,
+        "2023": 2000
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 520000
+    },
+    "CM": {
+      "iso2": "CM",
+      "total_loss_sqkm": 1500,
+      "annual_loss": {
+        "2022": 1400,
+        "2023": 1500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 240000
+    },
+    "CF": {
+      "iso2": "CF",
+      "total_loss_sqkm": 600,
+      "annual_loss": {
+        "2022": 550,
+        "2023": 600
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 220000
+    },
+    "CG": {
+      "iso2": "CG",
+      "total_loss_sqkm": 1100,
+      "annual_loss": {
+        "2022": 1000,
+        "2023": 1100
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 220000
+    },
+    "GA": {
+      "iso2": "GA",
+      "total_loss_sqkm": 500,
+      "annual_loss": {
+        "2022": 480,
+        "2023": 500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 190000
+    },
+    "GN": {
+      "iso2": "GN",
+      "total_loss_sqkm": 800,
+      "annual_loss": {
+        "2022": 750,
+        "2023": 800
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 65000
+    },
+    "LR": {
+      "iso2": "LR",
+      "total_loss_sqkm": 400,
+      "annual_loss": {
+        "2022": 380,
+        "2023": 400
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 35000
+    },
+    "MG": {
+      "iso2": "MG",
+      "total_loss_sqkm": 1500,
+      "annual_loss": {
+        "2022": 1400,
+        "2023": 1500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 120000
+    },
+    "NG": {
+      "iso2": "NG",
+      "total_loss_sqkm": 900,
+      "annual_loss": {
+        "2022": 850,
+        "2023": 900
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 70000
+    },
+    "TZ": {
+      "iso2": "TZ",
+      "total_loss_sqkm": 1500,
+      "annual_loss": {
+        "2022": 1400,
+        "2023": 1500
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 350000
+    },
+    "UG": {
+      "iso2": "UG",
+      "total_loss_sqkm": 600,
+      "annual_loss": {
+        "2022": 550,
+        "2023": 600
+      },
+      "last_year": 2023,
+      "tree_cover_extent_2000_sqkm": 24000
+    }
+  }
+}

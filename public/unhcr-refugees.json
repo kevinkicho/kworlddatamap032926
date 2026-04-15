@@ -1,0 +1,164 @@
+{
+  "year": 2023,
+  "by_origin": {
+    "SYR": {
+      "total": 13530000,
+      "year": 2023
+    },
+    "AFG": {
+      "total": 10840000,
+      "year": 2023
+    },
+    "SSD": {
+      "total": 4360000,
+      "year": 2023
+    },
+    "MMR": {
+      "total": 2730000,
+      "year": 2023
+    },
+    "SOM": {
+      "total": 2620000,
+      "year": 2023
+    },
+    "SDN": {
+      "total": 2350000,
+      "year": 2023
+    },
+    "COD": {
+      "total": 2280000,
+      "year": 2023
+    },
+    "UKR": {
+      "total": 1960000,
+      "year": 2023
+    },
+    "VEN": {
+      "total": 1910000,
+      "year": 2023
+    },
+    "IRQ": {
+      "total": 580000,
+      "year": 2023
+    },
+    "COL": {
+      "total": 1250000,
+      "year": 2023
+    },
+    "PAK": {
+      "total": 1020000,
+      "year": 2023
+    },
+    "YEM": {
+      "total": 980000,
+      "year": 2023
+    },
+    "ERI": {
+      "total": 880000,
+      "year": 2023
+    },
+    "CMR": {
+      "total": 790000,
+      "year": 2023
+    },
+    "ETH": {
+      "total": 750000,
+      "year": 2023
+    },
+    "NGA": {
+      "total": 690000,
+      "year": 2023
+    },
+    "CAF": {
+      "total": 650000,
+      "year": 2023
+    },
+    "BGD": {
+      "total": 620000,
+      "year": 2023
+    }
+  },
+  "by_asylum": {
+    "TUR": {
+      "total": 3520000,
+      "year": 2023
+    },
+    "IRN": {
+      "total": 3200000,
+      "year": 2023
+    },
+    "COL": {
+      "total": 2520000,
+      "year": 2023
+    },
+    "PAK": {
+      "total": 2190000,
+      "year": 2023
+    },
+    "UGA": {
+      "total": 1590000,
+      "year": 2023
+    },
+    "DEU": {
+      "total": 1530000,
+      "year": 2023
+    },
+    "POL": {
+      "total": 1500000,
+      "year": 2023
+    },
+    "RUS": {
+      "total": 1290000,
+      "year": 2023
+    },
+    "BGD": {
+      "total": 960000,
+      "year": 2023
+    },
+    "ETH": {
+      "total": 930000,
+      "year": 2023
+    },
+    "JOR": {
+      "total": 760000,
+      "year": 2023
+    },
+    "KEN": {
+      "total": 540000,
+      "year": 2023
+    },
+    "SDN": {
+      "total": 510000,
+      "year": 2023
+    },
+    "LBN": {
+      "total": 480000,
+      "year": 2023
+    },
+    "IND": {
+      "total": 460000,
+      "year": 2023
+    },
+    "TZA": {
+      "total": 420000,
+      "year": 2023
+    },
+    "ZWE": {
+      "total": 390000,
+      "year": 2023
+    },
+    "EGY": {
+      "total": 370000,
+      "year": 2023
+    },
+    "YEM": {
+      "total": 350000,
+      "year": 2023
+    },
+    "CHN": {
+      "total": 320000,
+      "year": 2023
+    }
+  },
+  "source": "UNHCR 2023 Estimates (fallback data)"
+}

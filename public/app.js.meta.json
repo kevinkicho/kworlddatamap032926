@@ -1,0 +1,121 @@
+{
+  "inputs": {
+    "src/utils.js": {
+      "bytes": 3375,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/state.js": {
+      "bytes": 10036,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/constants.js": {
+      "bytes": 10477,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/choro-defs.js": {
+      "bytes": 3605,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/stat-defs.js": {
+      "bytes": 2724,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/viz-defs.js": {
+      "bytes": 3663,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/app-legacy.js": {
+      "bytes": 593471,
+      "imports": [
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        },
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/constants.js",
+          "kind": "import-statement",
+          "original": "./constants.js"
+        },
+        {
+          "path": "src/choro-defs.js",
+          "kind": "import-statement",
+          "original": "./choro-defs.js"
+        },
+        {
+          "path": "src/stat-defs.js",
+          "kind": "import-statement",
+          "original": "./stat-defs.js"
+        },
+        {
+          "path": "src/viz-defs.js",
+          "kind": "import-statement",
+          "original": "./viz-defs.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/main.js": {
+      "bytes": 4322,
+      "imports": [
+        {
+          "path": "src/app-legacy.js",
+          "kind": "import-statement",
+          "original": "./app-legacy.js"
+        }
+      ],
+      "format": "cjs"
+    }
+  },
+  "outputs": {
+    "public/app.js.map": {
+      "imports": [],
+      "exports": [],
+      "inputs": {},
+      "bytes": 1053419
+    },
+    "public/app.js": {
+      "imports": [],
+      "exports": [],
+      "entryPoint": "src/main.js",
+      "inputs": {
+        "src/utils.js": {
+          "bytesInOutput": 3374
+        },
+        "src/state.js": {
+          "bytesInOutput": 11472
+        },
+        "src/constants.js": {
+          "bytesInOutput": 14223
+        },
+        "src/choro-defs.js": {
+          "bytesInOutput": 3250
+        },
+        "src/stat-defs.js": {
+          "bytesInOutput": 2270
+        },
+        "src/viz-defs.js": {
+          "bytesInOutput": 3480
+        },
+        "src/app-legacy.js": {
+          "bytesInOutput": 532213
+        },
+        "src/main.js": {
+          "bytesInOutput": 3014
+        }
+      },
+      "bytes": 573876
+    }
+  }
+}

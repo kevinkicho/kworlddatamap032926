@@ -1,0 +1,1014 @@
+{
+  "fetched_at": "2026-04-10T04:47:41.402Z",
+  "source": "NOAA OceanWatch / OSCAR (representative data)",
+  "total_currents": 70,
+  "total_sst": 40,
+  "currents": [
+    {
+      "lat": 35,
+      "lng": -70,
+      "name": "Gulf Stream",
+      "region": "North Atlantic",
+      "speed_cm_s": 180,
+      "direction_deg": 45,
+      "u_component": 1.273,
+      "v_component": 1.273
+    },
+    {
+      "lat": 38,
+      "lng": -68,
+      "name": "Gulf Stream",
+      "region": "North Atlantic",
+      "speed_cm_s": 200,
+      "direction_deg": 50,
+      "u_component": 1.532,
+      "v_component": 1.286
+    },
+    {
+      "lat": 40,
+      "lng": -65,
+      "name": "Gulf Stream",
+      "region": "North Atlantic",
+      "speed_cm_s": 150,
+      "direction_deg": 55,
+      "u_component": 1.229,
+      "v_component": 0.86
+    },
+    {
+      "lat": 42,
+      "lng": -60,
+      "name": "Gulf Stream",
+      "region": "North Atlantic",
+      "speed_cm_s": 120,
+      "direction_deg": 60,
+      "u_component": 1.039,
+      "v_component": 0.6
+    },
+    {
+      "lat": 32,
+      "lng": 135,
+      "name": "Kuroshio",
+      "region": "North Pacific",
+      "speed_cm_s": 160,
+      "direction_deg": 30,
+      "u_component": 0.8,
+      "v_component": 1.386
+    },
+    {
+      "lat": 35,
+      "lng": 140,
+      "name": "Kuroshio",
+      "region": "North Pacific",
+      "speed_cm_s": 140,
+      "direction_deg": 35,
+      "u_component": 0.803,
+      "v_component": 1.147
+    },
+    {
+      "lat": 36,
+      "lng": 150,
+      "name": "Kuroshio Extension",
+      "region": "North Pacific",
+      "speed_cm_s": 100,
+      "direction_deg": 70,
+      "u_component": 0.94,
+      "v_component": 0.342
+    },
+    {
+      "lat": -55,
+      "lng": 0,
+      "name": "ACC",
+      "region": "Southern Ocean",
+      "speed_cm_s": 80,
+      "direction_deg": 90,
+      "u_component": 0.8,
+      "v_component": 0
+    },
+    {
+      "lat": -55,
+      "lng": 60,
+      "name": "ACC",
+      "region": "Southern Ocean",
+      "speed_cm_s": 75,
+      "direction_deg": 85,
+      "u_component": 0.747,
+      "v_component": 0.065
+    },
+    {
+      "lat": -55,
+      "lng": 120,
+      "name": "ACC",
+      "region": "Southern Ocean",
+      "speed_cm_s": 70,
+      "direction_deg": 88,
+      "u_component": 0.7,
+      "v_component": 0.024
+    },
+    {
+      "lat": -55,
+      "lng": 180,
+      "name": "ACC",
+      "region": "Southern Ocean",
+      "speed_cm_s": 72,
+      "direction_deg": 92,
+      "u_component": 0.72,
+      "v_component": -0.025
+    },
+    {
+      "lat": -55,
+      "lng": -120,
+      "name": "ACC",
+      "region": "Southern Ocean",
+      "speed_cm_s": 78,
+      "direction_deg": 87,
+      "u_component": 0.779,
+      "v_component": 0.041
+    },
+    {
+      "lat": -55,
+      "lng": -60,
+      "name": "ACC",
+      "region": "Southern Ocean",
+      "speed_cm_s": 82,
+      "direction_deg": 91,
+      "u_component": 0.82,
+      "v_component": -0.014
+    },
+    {
+      "lat": -35,
+      "lng": 40,
+      "name": "Agulhas",
+      "region": "South Indian",
+      "speed_cm_s": 140,
+      "direction_deg": 180,
+      "u_component": 0,
+      "v_component": -1.4
+    },
+    {
+      "lat": -40,
+      "lng": 38,
+      "name": "Agulhas",
+      "region": "South Indian",
+      "speed_cm_s": 120,
+      "direction_deg": 190,
+      "u_component": -0.208,
+      "v_component": -1.182
+    },
+    {
+      "lat": -42,
+      "lng": 25,
+      "name": "Agulhas Retroflection",
+      "region": "South Indian",
+      "speed_cm_s": 100,
+      "direction_deg": 270,
+      "u_component": -1,
+      "v_component": 0
+    },
+    {
+      "lat": -25,
+      "lng": -40,
+      "name": "Brazil Current",
+      "region": "South Atlantic",
+      "speed_cm_s": 90,
+      "direction_deg": 180,
+      "u_component": 0,
+      "v_component": -0.9
+    },
+    {
+      "lat": -30,
+      "lng": -42,
+      "name": "Brazil Current",
+      "region": "South Atlantic",
+      "speed_cm_s": 85,
+      "direction_deg": 185,
+      "u_component": -0.074,
+      "v_component": -0.847
+    },
+    {
+      "lat": -35,
+      "lng": -45,
+      "name": "Brazil Current",
+      "region": "South Atlantic",
+      "speed_cm_s": 70,
+      "direction_deg": 190,
+      "u_component": -0.122,
+      "v_component": -0.689
+    },
+    {
+      "lat": -28,
+      "lng": 155,
+      "name": "EAC",
+      "region": "South Pacific",
+      "speed_cm_s": 100,
+      "direction_deg": 170,
+      "u_component": 0.174,
+      "v_component": -0.985
+    },
+    {
+      "lat": -32,
+      "lng": 154,
+      "name": "EAC",
+      "region": "South Pacific",
+      "speed_cm_s": 95,
+      "direction_deg": 175,
+      "u_component": 0.083,
+      "v_component": -0.946
+    },
+    {
+      "lat": -36,
+      "lng": 152,
+      "name": "EAC",
+      "region": "South Pacific",
+      "speed_cm_s": 80,
+      "direction_deg": 160,
+      "u_component": 0.274,
+      "v_component": -0.752
+    },
+    {
+      "lat": 35,
+      "lng": -125,
+      "name": "California Current",
+      "region": "North Pacific",
+      "speed_cm_s": 50,
+      "direction_deg": 160,
+      "u_component": 0.171,
+      "v_component": -0.47
+    },
+    {
+      "lat": 30,
+      "lng": -120,
+      "name": "California Current",
+      "region": "North Pacific",
+      "speed_cm_s": 45,
+      "direction_deg": 155,
+      "u_component": 0.19,
+      "v_component": -0.408
+    },
+    {
+      "lat": 25,
+      "lng": -115,
+      "name": "California Current",
+      "region": "North Pacific",
+      "speed_cm_s": 40,
+      "direction_deg": 150,
+      "u_component": 0.2,
+      "v_component": -0.346
+    },
+    {
+      "lat": 30,
+      "lng": -15,
+      "name": "Canary Current",
+      "region": "North Atlantic",
+      "speed_cm_s": 55,
+      "direction_deg": 190,
+      "u_component": -0.096,
+      "v_component": -0.542
+    },
+    {
+      "lat": 25,
+      "lng": -18,
+      "name": "Canary Current",
+      "region": "North Atlantic",
+      "speed_cm_s": 50,
+      "direction_deg": 185,
+      "u_component": -0.044,
+      "v_component": -0.498
+    },
+    {
+      "lat": 20,
+      "lng": -20,
+      "name": "Canary Current",
+      "region": "North Atlantic",
+      "speed_cm_s": 45,
+      "direction_deg": 180,
+      "u_component": 0,
+      "v_component": -0.45
+    },
+    {
+      "lat": -10,
+      "lng": -80,
+      "name": "Humboldt",
+      "region": "South Pacific",
+      "speed_cm_s": 60,
+      "direction_deg": 350,
+      "u_component": -0.104,
+      "v_component": 0.591
+    },
+    {
+      "lat": -15,
+      "lng": -78,
+      "name": "Humboldt",
+      "region": "South Pacific",
+      "speed_cm_s": 55,
+      "direction_deg": 345,
+      "u_component": -0.142,
+      "v_component": 0.531
+    },
+    {
+      "lat": -20,
+      "lng": -75,
+      "name": "Humboldt",
+      "region": "South Pacific",
+      "speed_cm_s": 50,
+      "direction_deg": 340,
+      "u_component": -0.171,
+      "v_component": 0.47
+    },
+    {
+      "lat": -20,
+      "lng": 12,
+      "name": "Benguela",
+      "region": "South Atlantic",
+      "speed_cm_s": 65,
+      "direction_deg": 350,
+      "u_component": -0.113,
+      "v_component": 0.64
+    },
+    {
+      "lat": -25,
+      "lng": 13,
+      "name": "Benguela",
+      "region": "South Atlantic",
+      "speed_cm_s": 60,
+      "direction_deg": 345,
+      "u_component": -0.155,
+      "v_component": 0.58
+    },
+    {
+      "lat": -30,
+      "lng": 14,
+      "name": "Benguela",
+      "region": "South Atlantic",
+      "speed_cm_s": 55,
+      "direction_deg": 340,
+      "u_component": -0.188,
+      "v_component": 0.517
+    },
+    {
+      "lat": 55,
+      "lng": -50,
+      "name": "Labrador",
+      "region": "North Atlantic",
+      "speed_cm_s": 70,
+      "direction_deg": 170,
+      "u_component": 0.122,
+      "v_component": -0.689
+    },
+    {
+      "lat": 50,
+      "lng": -48,
+      "name": "Labrador",
+      "region": "North Atlantic",
+      "speed_cm_s": 65,
+      "direction_deg": 175,
+      "u_component": 0.057,
+      "v_component": -0.648
+    },
+    {
+      "lat": 45,
+      "lng": -45,
+      "name": "Labrador",
+      "region": "North Atlantic",
+      "speed_cm_s": 55,
+      "direction_deg": 160,
+      "u_component": 0.188,
+      "v_component": -0.517
+    },
+    {
+      "lat": 48,
+      "lng": -35,
+      "name": "NAC",
+      "region": "North Atlantic",
+      "speed_cm_s": 80,
+      "direction_deg": 50,
+      "u_component": 0.613,
+      "v_component": 0.514
+    },
+    {
+      "lat": 50,
+      "lng": -25,
+      "name": "NAC",
+      "region": "North Atlantic",
+      "speed_cm_s": 75,
+      "direction_deg": 55,
+      "u_component": 0.614,
+      "v_component": 0.43
+    },
+    {
+      "lat": 52,
+      "lng": -15,
+      "name": "NAC",
+      "region": "North Atlantic",
+      "speed_cm_s": 60,
+      "direction_deg": 60,
+      "u_component": 0.52,
+      "v_component": 0.3
+    },
+    {
+      "lat": 42,
+      "lng": 170,
+      "name": "NPC",
+      "region": "North Pacific",
+      "speed_cm_s": 65,
+      "direction_deg": 75,
+      "u_component": 0.628,
+      "v_component": 0.168
+    },
+    {
+      "lat": 43,
+      "lng": -170,
+      "name": "NPC",
+      "region": "North Pacific",
+      "speed_cm_s": 60,
+      "direction_deg": 70,
+      "u_component": 0.564,
+      "v_component": 0.205
+    },
+    {
+      "lat": 44,
+      "lng": -150,
+      "name": "NPC",
+      "region": "North Pacific",
+      "speed_cm_s": 55,
+      "direction_deg": 65,
+      "u_component": 0.498,
+      "v_component": 0.232
+    },
+    {
+      "lat": 10,
+      "lng": 60,
+      "name": "Monsoon Current",
+      "region": "North Indian",
+      "speed_cm_s": 80,
+      "direction_deg": 80,
+      "u_component": 0.788,
+      "v_component": 0.139
+    },
+    {
+      "lat": 12,
+      "lng": 70,
+      "name": "Monsoon Current",
+      "region": "North Indian",
+      "speed_cm_s": 75,
+      "direction_deg": 75,
+      "u_component": 0.724,
+      "v_component": 0.194
+    },
+    {
+      "lat": 5,
+      "lng": 50,
+      "name": "Somali Current",
+      "region": "North Indian",
+      "speed_cm_s": 120,
+      "direction_deg": 45,
+      "u_component": 0.849,
+      "v_component": 0.849
+    },
+    {
+      "lat": 8,
+      "lng": 52,
+      "name": "Somali Current",
+      "region": "North Indian",
+      "speed_cm_s": 100,
+      "direction_deg": 50,
+      "u_component": 0.766,
+      "v_component": 0.643
+    },
+    {
+      "lat": -20,
+      "lng": 42,
+      "name": "Mozambique",
+      "region": "South Indian",
+      "speed_cm_s": 90,
+      "direction_deg": 180,
+      "u_component": 0,
+      "v_component": -0.9
+    },
+    {
+      "lat": -25,
+      "lng": 40,
+      "name": "Mozambique",
+      "region": "South Indian",
+      "speed_cm_s": 85,
+      "direction_deg": 175,
+      "u_component": 0.074,
+      "v_component": -0.847
+    },
+    {
+      "lat": 55,
+      "lng": -145,
+      "name": "Alaska Current",
+      "region": "North Pacific",
+      "speed_cm_s": 70,
+      "direction_deg": 320,
+      "u_component": -0.45,
+      "v_component": 0.536
+    },
+    {
+      "lat": 57,
+      "lng": -150,
+      "name": "Alaska Current",
+      "region": "North Pacific",
+      "speed_cm_s": 65,
+      "direction_deg": 310,
+      "u_component": -0.498,
+      "v_component": 0.418
+    },
+    {
+      "lat": 42,
+      "lng": 145,
+      "name": "Oyashio",
+      "region": "North Pacific",
+      "speed_cm_s": 80,
+      "direction_deg": 200,
+      "u_component": -0.274,
+      "v_component": -0.752
+    },
+    {
+      "lat": 40,
+      "lng": 148,
+      "name": "Oyashio",
+      "region": "North Pacific",
+      "speed_cm_s": 70,
+      "direction_deg": 190,
+      "u_component": -0.122,
+      "v_component": -0.689
+    },
+    {
+      "lat": -45,
+      "lng": -60,
+      "name": "Falkland",
+      "region": "South Atlantic",
+      "speed_cm_s": 75,
+      "direction_deg": 10,
+      "u_component": 0.13,
+      "v_component": 0.739
+    },
+    {
+      "lat": -42,
+      "lng": -58,
+      "name": "Falkland",
+      "region": "South Atlantic",
+      "speed_cm_s": 70,
+      "direction_deg": 15,
+      "u_component": 0.181,
+      "v_component": 0.676
+    },
+    {
+      "lat": 65,
+      "lng": 5,
+      "name": "Norwegian",
+      "region": "North Atlantic",
+      "speed_cm_s": 50,
+      "direction_deg": 30,
+      "u_component": 0.25,
+      "v_component": 0.433
+    },
+    {
+      "lat": 68,
+      "lng": 10,
+      "name": "Norwegian",
+      "region": "North Atlantic",
+      "speed_cm_s": 45,
+      "direction_deg": 25,
+      "u_component": 0.19,
+      "v_component": 0.408
+    },
+    {
+      "lat": -30,
+      "lng": 113,
+      "name": "Leeuwin",
+      "region": "South Indian",
+      "speed_cm_s": 40,
+      "direction_deg": 180,
+      "u_component": 0,
+      "v_component": -0.4
+    },
+    {
+      "lat": -33,
+      "lng": 114,
+      "name": "Leeuwin",
+      "region": "South Indian",
+      "speed_cm_s": 35,
+      "direction_deg": 175,
+      "u_component": 0.031,
+      "v_component": -0.349
+    },
+    {
+      "lat": 45,
+      "lng": -125,
+      "name": "Davidson",
+      "region": "North Pacific",
+      "speed_cm_s": 30,
+      "direction_deg": 20,
+      "u_component": 0.103,
+      "v_component": 0.282
+    },
+    {
+      "lat": 10,
+      "lng": 150,
+      "name": "North Equatorial",
+      "region": "Pacific",
+      "speed_cm_s": 60,
+      "direction_deg": 270,
+      "u_component": -0.6,
+      "v_component": 0
+    },
+    {
+      "lat": 10,
+      "lng": 180,
+      "name": "North Equatorial",
+      "region": "Pacific",
+      "speed_cm_s": 55,
+      "direction_deg": 265,
+      "u_component": -0.548,
+      "v_component": -0.048
+    },
+    {
+      "lat": 10,
+      "lng": -150,
+      "name": "North Equatorial",
+      "region": "Pacific",
+      "speed_cm_s": 50,
+      "direction_deg": 270,
+      "u_component": -0.5,
+      "v_component": 0
+    },
+    {
+      "lat": -5,
+      "lng": 160,
+      "name": "South Equatorial",
+      "region": "Pacific",
+      "speed_cm_s": 70,
+      "direction_deg": 275,
+      "u_component": -0.697,
+      "v_component": 0.061
+    },
+    {
+      "lat": -5,
+      "lng": -170,
+      "name": "South Equatorial",
+      "region": "Pacific",
+      "speed_cm_s": 65,
+      "direction_deg": 270,
+      "u_component": -0.65,
+      "v_component": 0
+    },
+    {
+      "lat": 5,
+      "lng": -160,
+      "name": "Equatorial Counter",
+      "region": "Pacific",
+      "speed_cm_s": 50,
+      "direction_deg": 80,
+      "u_component": 0.492,
+      "v_component": 0.087
+    },
+    {
+      "lat": -3,
+      "lng": -20,
+      "name": "Atlantic SEC",
+      "region": "Atlantic",
+      "speed_cm_s": 65,
+      "direction_deg": 270,
+      "u_component": -0.65,
+      "v_component": 0
+    },
+    {
+      "lat": -3,
+      "lng": -30,
+      "name": "Atlantic SEC",
+      "region": "Atlantic",
+      "speed_cm_s": 60,
+      "direction_deg": 265,
+      "u_component": -0.598,
+      "v_component": -0.052
+    },
+    {
+      "lat": -5,
+      "lng": 120,
+      "name": "ITF",
+      "region": "Indonesian Seas",
+      "speed_cm_s": 80,
+      "direction_deg": 240,
+      "u_component": -0.693,
+      "v_component": -0.4
+    },
+    {
+      "lat": -8,
+      "lng": 115,
+      "name": "ITF",
+      "region": "Indonesian Seas",
+      "speed_cm_s": 70,
+      "direction_deg": 230,
+      "u_component": -0.536,
+      "v_component": -0.45
+    }
+  ],
+  "sea_surface_temp": [
+    {
+      "lat": 5,
+      "lng": 150,
+      "region": "Western Pacific Warm Pool",
+      "temp_c": 29.5,
+      "anomaly_c": 0.5
+    },
+    {
+      "lat": 5,
+      "lng": 160,
+      "region": "Western Pacific Warm Pool",
+      "temp_c": 29.2,
+      "anomaly_c": 0.3
+    },
+    {
+      "lat": 18,
+      "lng": -75,
+      "region": "Caribbean Sea",
+      "temp_c": 28.5,
+      "anomaly_c": 0.2
+    },
+    {
+      "lat": 25,
+      "lng": -90,
+      "region": "Gulf of Mexico",
+      "temp_c": 27.8,
+      "anomaly_c": 0.4
+    },
+    {
+      "lat": 22,
+      "lng": 38,
+      "region": "Red Sea",
+      "temp_c": 28,
+      "anomaly_c": 0.1
+    },
+    {
+      "lat": 26,
+      "lng": 52,
+      "region": "Persian Gulf",
+      "temp_c": 29,
+      "anomaly_c": 0.6
+    },
+    {
+      "lat": -10,
+      "lng": 80,
+      "region": "Indian Ocean",
+      "temp_c": 28.2,
+      "anomaly_c": 0.3
+    },
+    {
+      "lat": 30,
+      "lng": -40,
+      "region": "North Atlantic Gyre",
+      "temp_c": 22.5,
+      "anomaly_c": -0.2
+    },
+    {
+      "lat": 35,
+      "lng": -140,
+      "region": "North Pacific Gyre",
+      "temp_c": 20.8,
+      "anomaly_c": 0.1
+    },
+    {
+      "lat": -30,
+      "lng": -120,
+      "region": "South Pacific Gyre",
+      "temp_c": 19.5,
+      "anomaly_c": -0.3
+    },
+    {
+      "lat": -25,
+      "lng": -10,
+      "region": "South Atlantic Gyre",
+      "temp_c": 21.2,
+      "anomaly_c": 0
+    },
+    {
+      "lat": -25,
+      "lng": 90,
+      "region": "Indian Ocean Gyre",
+      "temp_c": 23.5,
+      "anomaly_c": 0.2
+    },
+    {
+      "lat": 40,
+      "lng": 15,
+      "region": "Mediterranean Sea",
+      "temp_c": 19.5,
+      "anomaly_c": 0.5
+    },
+    {
+      "lat": 50,
+      "lng": -30,
+      "region": "North Atlantic",
+      "temp_c": 12.5,
+      "anomaly_c": -0.5
+    },
+    {
+      "lat": 45,
+      "lng": -160,
+      "region": "North Pacific",
+      "temp_c": 10.2,
+      "anomaly_c": -0.3
+    },
+    {
+      "lat": -50,
+      "lng": 0,
+      "region": "Southern Ocean",
+      "temp_c": 5.5,
+      "anomaly_c": 0.2
+    },
+    {
+      "lat": -50,
+      "lng": 90,
+      "region": "Southern Ocean",
+      "temp_c": 4.8,
+      "anomaly_c": 0.1
+    },
+    {
+      "lat": -50,
+      "lng": -90,
+      "region": "Southern Ocean",
+      "temp_c": 5.2,
+      "anomaly_c": 0
+    },
+    {
+      "lat": 40,
+      "lng": 135,
+      "region": "Sea of Japan",
+      "temp_c": 15.5,
+      "anomaly_c": 0.3
+    },
+    {
+      "lat": 55,
+      "lng": 3,
+      "region": "North Sea",
+      "temp_c": 11,
+      "anomaly_c": -0.2
+    },
+    {
+      "lat": 58,
+      "lng": 18,
+      "region": "Baltic Sea",
+      "temp_c": 8.5,
+      "anomaly_c": -0.4
+    },
+    {
+      "lat": 80,
+      "lng": 0,
+      "region": "Arctic Ocean",
+      "temp_c": -1.5,
+      "anomaly_c": 0.8
+    },
+    {
+      "lat": 80,
+      "lng": -90,
+      "region": "Arctic Ocean",
+      "temp_c": -1.6,
+      "anomaly_c": 0.7
+    },
+    {
+      "lat": 80,
+      "lng": 90,
+      "region": "Arctic Ocean",
+      "temp_c": -1.4,
+      "anomaly_c": 0.9
+    },
+    {
+      "lat": 72,
+      "lng": 30,
+      "region": "Barents Sea",
+      "temp_c": 2.5,
+      "anomaly_c": 1.2
+    },
+    {
+      "lat": 72,
+      "lng": -140,
+      "region": "Beaufort Sea",
+      "temp_c": -1.2,
+      "anomaly_c": 0.5
+    },
+    {
+      "lat": -70,
+      "lng": 0,
+      "region": "Antarctic",
+      "temp_c": -1.8,
+      "anomaly_c": 0.3
+    },
+    {
+      "lat": -70,
+      "lng": 90,
+      "region": "Antarctic",
+      "temp_c": -1.9,
+      "anomaly_c": 0.2
+    },
+    {
+      "lat": -72,
+      "lng": -45,
+      "region": "Weddell Sea",
+      "temp_c": -2,
+      "anomaly_c": 0.1
+    },
+    {
+      "lat": -75,
+      "lng": 180,
+      "region": "Ross Sea",
+      "temp_c": -2.1,
+      "anomaly_c": 0.2
+    },
+    {
+      "lat": -12,
+      "lng": -78,
+      "region": "Peru Upwelling",
+      "temp_c": 16.5,
+      "anomaly_c": -1.5
+    },
+    {
+      "lat": 36,
+      "lng": -122,
+      "region": "California Upwelling",
+      "temp_c": 13.5,
+      "anomaly_c": -0.8
+    },
+    {
+      "lat": 25,
+      "lng": -14,
+      "region": "Canary Upwelling",
+      "temp_c": 18,
+      "anomaly_c": -0.5
+    },
+    {
+      "lat": -25,
+      "lng": 13,
+      "region": "Benguela Upwelling",
+      "temp_c": 15.5,
+      "anomaly_c": -0.7
+    },
+    {
+      "lat": 8,
+      "lng": 52,
+      "region": "Somali Upwelling",
+      "temp_c": 19,
+      "anomaly_c": -1
+    },
+    {
+      "lat": 38,
+      "lng": -68,
+      "region": "Gulf Stream",
+      "temp_c": 24.5,
+      "anomaly_c": 2.5
+    },
+    {
+      "lat": 34,
+      "lng": 138,
+      "region": "Kuroshio",
+      "temp_c": 23,
+      "anomaly_c": 2
+    },
+    {
+      "lat": -36,
+      "lng": 38,
+      "region": "Agulhas",
+      "temp_c": 24,
+      "anomaly_c": 1.8
+    },
+    {
+      "lat": -28,
+      "lng": -42,
+      "region": "Brazil Current",
+      "temp_c": 25.5,
+      "anomaly_c": 1.5
+    },
+    {
+      "lat": -32,
+      "lng": 154,
+      "region": "EAC",
+      "temp_c": 23.5,
+      "anomaly_c": 1.2
+    }
+  ],
+  "stats": {
+    "currents": {
+      "byRegion": {
+        "North Atlantic": 15,
+        "North Pacific": 14,
+        "Southern Ocean": 6,
+        "South Indian": 7,
+        "South Atlantic": 8,
+        "South Pacific": 6,
+        "North Indian": 4,
+        "Pacific": 6,
+        "Atlantic": 2,
+        "Indonesian Seas": 2
+      },
+      "avgSpeed": 77.2,
+      "maxSpeed": 200,
+      "minSpeed": 30
+    },
+    "sst": {
+      "avgTemp": 14.81,
+      "maxTemp": 29.5,
+      "minTemp": -2.1
+    }
+  }
+}

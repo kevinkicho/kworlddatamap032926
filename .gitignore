@@ -1,0 +1,99 @@
+# Environment variables - NEVER commit this file
+.env
+.env.local
+.env.*.local
+
+# Credentials and secrets
+*.pem
+*.key
+credentials.json
+secrets.json
+secrets.*.json
+tokens.json
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Data files (large)
+*.zip
+*.tar.gz
+*.csv
+*.xlsx
+*.pdf
+tmp/
+data-raw/
+
+# Consolidated data bundle (277MB — for Firebase RTDB migration, not for git)
+public/kdb.json
+public/kdb-chunks/
+
+# Large JSON data files (served by dev server, fetched from APIs, rebuilt via npm scripts)
+# These range from 1MB to 62MB — too large for git, regenerated via `npm run fetch-*`
+public/cities-full.json
+public/country-data.json
+public/companies.json
+public/companies-detail.json
+public/companies-index.json
+public/companies.json.*
+public/world-countries.json
+public/eez_boundaries.json
+public/eez_countries.json
+public/wildfires-live.json
+public/wildfires-live-lite.json
+public/power_plants.json
+public/aircraft-live.json
+public/aircraft-live-lite.json
+public/volcanoes_full.json
+public/volcanoes-full.json
+public/volcanoes_100.json
+
+# Backup files
+*.bak
+*.pre-*-bak
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Testing
+coverage/
+.nyc_output/
+test-results/
+
+# AI tools
+.claude/
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Misc
+*.local
+*.bak
+*.pre-*-bak
+
+# Worktrees
+.worktrees/

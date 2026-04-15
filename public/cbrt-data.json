@@ -1,0 +1,155 @@
+{
+  "fetched_at": "2026-04-09T19:50:18.168Z",
+  "source": "Central Bank of the Republic of Turkey",
+  "country": "TR",
+  "rates": {
+    "one_week_repo": 50,
+    "late_liquidity_window": 53,
+    "overnight_borrowing": 49,
+    "overnight_lending": 51,
+    "bisten_repo": 50,
+    "last_updated": "2024-10-17",
+    "mpc_meeting": "October 2024"
+  },
+  "statistics": {
+    "cpi_inflation": {
+      "value": 48.58,
+      "period": "Oct 2024",
+      "source": "TURKSTAT"
+    },
+    "core_inflation": {
+      "value": 44.21,
+      "period": "Oct 2024",
+      "source": "TURKSTAT"
+    },
+    "ppi_inflation": {
+      "value": 33.11,
+      "period": "Oct 2024",
+      "source": "TURKSTAT"
+    },
+    "gdp_growth": {
+      "value": 2.1,
+      "period": "Q2 2024",
+      "source": "TURKSTAT"
+    },
+    "unemployment": {
+      "value": 9.9,
+      "period": "Aug 2024",
+      "source": "TURKSTAT"
+    }
+  },
+  "exchange_rates": {
+    "usd_try": 34.25,
+    "eur_try": 37.15,
+    "gbp_try": 44.2,
+    "date": "2026-04-09"
+  },
+  "historical": {
+    "policy_rate": [
+      {
+        "date": "2024-10-17",
+        "rate": 50
+      },
+      {
+        "date": "2024-09-12",
+        "rate": 50
+      },
+      {
+        "date": "2024-08-08",
+        "rate": 50
+      },
+      {
+        "date": "2024-07-18",
+        "rate": 50
+      },
+      {
+        "date": "2024-06-20",
+        "rate": 50
+      },
+      {
+        "date": "2024-05-23",
+        "rate": 50
+      },
+      {
+        "date": "2024-04-25",
+        "rate": 50
+      },
+      {
+        "date": "2024-03-21",
+        "rate": 50
+      },
+      {
+        "date": "2024-02-22",
+        "rate": 45
+      },
+      {
+        "date": "2024-01-18",
+        "rate": 45
+      },
+      {
+        "date": "2023-12-21",
+        "rate": 42.5
+      },
+      {
+        "date": "2023-11-23",
+        "rate": 40
+      }
+    ],
+    "inflation": [
+      {
+        "date": "2024-10",
+        "cpi": 48.58
+      },
+      {
+        "date": "2024-09",
+        "cpi": 49.38
+      },
+      {
+        "date": "2024-08",
+        "cpi": 51.97
+      },
+      {
+        "date": "2024-07",
+        "cpi": 61.78
+      },
+      {
+        "date": "2024-06",
+        "cpi": 71.6
+      },
+      {
+        "date": "2024-05",
+        "cpi": 75.45
+      },
+      {
+        "date": "2024-04",
+        "cpi": 69.8
+      },
+      {
+        "date": "2024-03",
+        "cpi": 68.5
+      },
+      {
+        "date": "2024-02",
+        "cpi": 67.07
+      },
+      {
+        "date": "2024-01",
+        "cpi": 64.86
+      },
+      {
+        "date": "2023-12",
+        "cpi": 64.77
+      },
+      {
+        "date": "2023-11",
+        "cpi": 61.98
+      }
+    ]
+  },
+  "reserves": {
+    "gross_reserves_billion_usd": 158.2,
+    "net_reserves_billion_usd": 102.5,
+    "gold_reserves_billion_usd": 45.3,
+    "period": "Oct 2024"
+  }
+}

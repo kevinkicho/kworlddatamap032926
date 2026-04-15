@@ -1,0 +1,60 @@
+{
+  "fetched_at": "2026-04-10T04:47:13.774Z",
+  "source": "NOAA SWPC",
+  "solar_flare": {
+    "class": "None",
+    "region": null,
+    "time": null,
+    "description": "No significant flares in past 24h"
+  },
+  "kp_index": {
+    "current": 2.4000001,
+    "recent": [
+      2.5,
+      2.5,
+      2.5,
+      2.5,
+      2.5,
+      2.5,
+      2.5,
+      2.4000001
+    ],
+    "max_24h": 2.5,
+    "avg_24h": "2.49"
+  },
+  "aurora_forecast": {
+    "northern_hemisphere": {
+      "visible_below_latitude": 62,
+      "description": "Aurora visible at high latitudes",
+      "probability_high_lat": "Moderate",
+      "probability_mid_lat": "Very Low"
+    },
+    "southern_hemisphere": {
+      "visible_above_latitude": -62,
+      "description": "Aurora visible in southern at high latitudes",
+      "probability_high_lat": "Moderate"
+    },
+    "best_viewing_locations": [
+      "Anchorage AK",
+      "Whitehorse Canada",
+      "Oslo Norway",
+      "Helsinki Finland"
+    ]
+  },
+  "geomagnetic_activity": {
+    "level": "Quiet",
+    "kp": 2.4000001,
+    "kp_range": [
+      0,
+      4
+    ],
+    "description": "Normal geomagnetic activity"
+  },
+  "solar_wind": {
+    "speed_km_s": 414.9,
+    "density_cm3": 9.85,
+    "temperature_k": 144320,
+    "bz_gauss": 0
+  },
+  "warnings": []
+}

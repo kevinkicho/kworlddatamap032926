@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+  <meta name="color-scheme" content="dark" />
+  <title>World Cities Map</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script src="https://unpkg.com/@joergdietrich/leaflet.terminator@1.0.0/L.Terminator.js"></script>
+  <link rel="stylesheet" href="style.css?v=20260408q" />
+  <script>
+    // Restore theme before first paint to prevent flash
+    (function(){var t=localStorage.getItem('wdm_theme');if(t==='light'){document.documentElement.setAttribute('data-theme','light');document.querySelector('meta[name="color-scheme"]').content='light';}})();
+  </script>
+</head>
+<body>
+
+  <!-- ── Mobile topbar toggle ── -->
+  <button id="mobile-topbar-toggle" onclick="toggleMobileTopbar()" aria-label="Toggle toolbar"><span class="hamburger"><span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span></span></button>
+
+  <!-- ── Unified topbar ── -->
+  <div id="topbar">
+    <!-- Mobile drawer: title + settings row -->
+    <div id="topbar-left">
+      <h1 id="topbar-title">🌍 WDM</h1>
+    </div>
+    <div id="topbar-right">
+      <span class="topbar-sep"></span>
+      <select id="basemap-select" onchange="setBasemap(this.value)" title="Switch basemap">
+        <option value="street">Street</option>
+        <option value="satellite">Satellite</option>
+        <option value="terrain">Terrain</option>
+      </select>
+      <button id="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light theme">🌙</button>
+    </div>
+
+    <!-- Mobile drawer: main toggles -->
+    <div class="mobile-drawer-section mobile-toggles">
+      <button id="cities-toggle-btn" class="on" onclick="toggleCities()">🏙️ Cities</button>
+      <button id="choro-toggle-btn" onclick="toggleChoropleth()">🗺️ Countries</button>
+      <button id="admin1-toggle-btn" onclick="toggleAdmin1Global()">📍 Regions</button>
+      <button id="econ-toggle-btn" onclick="toggleEconLayer()">💰 Economy</button>
+      <!-- Choropleth controls (inline, visible when active) -->
+      <span id="choropleth-bar">
+        <span id="choro-options" style="display:none;contents:normal">
+          <span id="choro-coverage"></span>
+          <span id="choro-time-slider" style="display:none">
+            <label id="choro-year-label">Year: —</label>
+            <input id="choro-year-range" type="range" min="2000" max="2024" value="2024" step="1" />
+            <button id="choro-play-btn" onclick="toggleChoroPlay()" title="Play animation">▶</button>
+          </span>
+        </span>
+      </span>
+    </div>
+
+    <!-- Mobile drawer: more layers -->
+    <div class="mobile-drawer-section mobile-layers">
+      <div id="more-layers-dropdown">
+        <button id="more-layers-btn" onclick="toggleMoreLayers(event)">🧩 Layers</button><button id="reset-layers-btn" onclick="resetAllLayers()" title="Turn off all map layers">✕</button>
+        <div id="more-layers-menu">
+          <div class="dropdown-section">
+            <div class="dropdown-heading">Cultural</div>
+            <button id="unesco-toggle-btn" onclick="toggleUnescoLayer()"><span class="layer-dot" style="background:#e6a817"></span>UNESCO Sites</button>
+            <button id="unesco-ich-toggle-btn" onclick="toggleUnescoIchLayer()"><span class="layer-dot" style="background:#a0522d"></span>Cultural Heritage</button>
+          </div>
+          <div class="dropdown-section">
+            <div class="dropdown-heading">Natural Hazards</div>
+            <button id="volcano-toggle-btn" onclick="toggleVolcanoLayer()"><span class="layer-dot" style="background:#ef4444"></span>Volcanoes</button>
+            <button id="earthquake-toggle-btn" onclick="toggleEarthquakeLayer()"><span class="layer-dot" style="background:#d29922"></span>Earthquakes</button>
+            <button id="wildfire-toggle-btn" onclick="toggleWildfireLayer()"><span class="layer-dot" style="background:#ff6b35"></span>Wildfires</button>
+            <button id="tectonic-toggle-btn" onclick="toggleTectonicLayer()"><span class="layer-dot" style="background:#58a6ff"></span>Tectonic Plates</button>
+            <button id="eonet-toggle-btn" onclick="toggleEonetLayer()"><span class="layer-dot" style="background:#22c55e"></span>Natural Events</button>
+            <button id="waqi-toggle-btn" onclick="toggleWaqiLayer()"><span class="layer-dot" style="background:#a855f7"></span>Air Quality</button>
+            <button id="weather-toggle-btn" onclick="toggleWeatherLayer()"><span class="layer-dot" style="background:#38bdf8"></span>Weather Stations</button>
+            <button id="gtd-toggle-btn" onclick="toggleGtdLayer()"><span class="layer-dot" style="background:#dc2626"></span>Terrorism</button>
+          </div>
+          <div class="dropdown-section">
+            <div class="dropdown-heading">Infrastructure</div>
+            <button id="cable-toggle-btn" onclick="toggleCableLayer()"><span class="layer-dot" style="background:#3b82f6"></span>Submarine Cables</button>
+            <button id="airroute-toggle-btn" onclick="toggleAirRouteLayer()"><span class="layer-dot" style="background:#0ea5e9"></span>Air Routes</button>
+            <button id="launchsite-toggle-btn" onclick="toggleLaunchSiteLayer()"><span class="layer-dot" style="background:#f97316"></span>Launch Sites</button>
+            <button id="eez-toggle-btn" onclick="toggleEezLayer()"><span class="layer-dot" style="background:#06b6d4"></span>EEZ Boundaries</button>
+            <button id="peeringdb-toggle-btn" onclick="togglePeeringdbLayer()"><span class="layer-dot" style="background:#84cc16"></span>Internet Exchanges</button>
+            <button id="vessel-ports-toggle-btn" onclick="toggleVesselPortsLayer()"><span class="layer-dot" style="background:#6366f1"></span>Ports</button>
+            <button id="satellite-toggle-btn" onclick="toggleSatelliteLayer()"><span class="layer-dot" style="background:#8b5cf6"></span>Satellites</button>
+            <button id="marinetraffic-toggle-btn" onclick="toggleMarineTrafficLayer()"><span class="layer-dot" style="background:#14b8a6"></span>Ships</button>
+          </div>
+          <div class="dropdown-section">
+            <div class="dropdown-heading">Other</div>
+            <button id="iss-toggle-btn" onclick="toggleIssTracker()"><span class="layer-dot" style="background:#ec4899"></span>ISS Tracker</button>
+            <button id="aircraft-toggle-btn" onclick="toggleAircraftLayer()"><span class="layer-dot" style="background:#38bdf8"></span>Live Aircraft</button>
+            <button id="flightaware-toggle-btn" onclick="toggleFlightAwareLayer()"><span class="layer-dot" style="background:#60a5fa"></span>Flight Routes</button>
+            <button id="protected-areas-toggle-btn" onclick="toggleProtectedAreasLayer()"><span class="layer-dot" style="background:#22c55e"></span>Protected Areas</button>
+            <button id="crypto-toggle-btn" onclick="toggleCryptoLayer()"><span class="layer-dot" style="background:#f59e0b"></span>Crypto Adoption</button>
+            <button id="spaceweather-toggle-btn" onclick="toggleSpaceWeatherLayer()"><span class="layer-dot" style="background:#a855f7"></span>Space Weather</button>
+            <button id="ocean-toggle-btn" onclick="toggleOceanLayer()"><span class="layer-dot" style="background:#3b82f6"></span>Ocean Currents</button>
+          </div>
+        </div>
+      </div>
+      <span id="layers-info"></span>
+    </div>
+  </div>
+
+  <div id="map-wrapper">
+    <!-- ── City search overlay ── -->
+    <div id="city-search-box">
+      <div id="city-search-inner">
+        <svg id="city-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="city-search-input" type="text" placeholder="Search cities & countries…" autocomplete="off" spellcheck="false" />
+        <button id="city-search-clear" aria-label="Clear search">✕</button>
+      </div>
+      <ul id="city-search-results"></ul>
+    </div>
+    <div id="map-container"></div>
+    <div id="loading-overlay">
+      <div class="spinner"></div>
+      <div id="loading-text">Loading city dataset…</div>
+      <div id="loading-error"></div>
+    </div>
+    <!-- ── Map legends overlay (bottom-left) ── -->
+    <div id="map-legends">
+      <div id="wiki-legend">
+        <div class="wiki-legend-title" id="wiki-legend-title">Population</div>
+        <div class="legend-gradient-row">
+          <span class="legend-end-label">10k</span>
+          <div class="legend-ramp"></div>
+          <span class="legend-end-label">40M+</span>
+        </div>
+        <div class="legend-tick-row">
+          <span>100k</span><span>500k</span><span>1M</span><span>5M</span><span>20M</span>
+        </div>
+      </div>
+      <div id="choro-legend">
+        <span class="choro-leg-label" id="choro-lo-label"></span>
+        <canvas id="choro-ramp" width="120" height="8"></canvas>
+        <span class="choro-leg-label" id="choro-hi-label"></span>
+        <span id="choro-coverage"></span>
+      </div>
+      <div id="econ-legend-inline">
+        <span class="econ-leg-lo">$500M</span>
+        <canvas id="econ-color-ramp" width="80" height="8"></canvas>
+        <span class="econ-leg-hi">$5T+</span>
+        <span id="econ-info"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item">Cities: <span class="stat-value" id="stat-count">—</span></div>
+    <div class="stat-item">Largest: <span class="stat-value" id="stat-largest">—</span></div>
+    <div class="stat-item">Total pop: <span class="stat-value" id="stat-total">—</span></div>
+  </div>
+
+  <div class="data-source">
+    City data: Wikidata · Map: Leaflet.js + CartoDB Dark Matter tiles
+  </div>
+
+  <div id="list-tabs">
+    <button class="list-tab active" data-tab="cities" onclick="switchListTab('cities')">Cities</button>
+    <button class="list-tab" data-tab="corps" onclick="switchListTab('corps')">Companies</button>
+  </div>
+
+  <!-- ── Cities list panel ── -->
+  <div id="list-panel" class="panel" style="display:none">
+    <div id="list-header">
+      <h2>Explore Cities</h2>
+      <div class="filters">
+        <input  type="text"   id="f-search"  placeholder="Search city name…" />
+        <select id="f-country"><option value="">All countries</option></select>
+        <select id="f-minpop">
+          <option value="0">Any population</option>
+          <option value="10000000">≥ 10M</option>
+          <option value="5000000">≥ 5M</option>
+          <option value="2000000">≥ 2M</option>
+          <option value="1000000">≥ 1M</option>
+          <option value="500000">≥ 500k</option>
+          <option value="200000">≥ 200k</option>
+          <option value="100000">≥ 100k</option>
+          <option value="50000">≥ 50k</option>
+        </select>
+        <select id="f-sort">
+          <option value="pop-desc">Population ↓</option>
+          <option value="pop-asc">Population ↑</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="country-asc">Country A–Z</option>
+          <option value="founded-asc">Founded (oldest)</option>
+          <option value="founded-desc">Founded (newest)</option>
+        </select>
+      </div>
+    </div>
+    <div id="list-meta">
+      <span id="list-meta-text">Loading…</span>
+      <button id="reset-all-btn" onclick="resetAll()">Reset all edits</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="city-dot no-sort"></th>
+            <th class="no-sort"></th>
+            <th data-col="name">City</th>
+            <th data-col="country">Country</th>
+            <th data-col="admin">Region</th>
+            <th data-col="pop">Population</th>
+            <th data-col="area_km2">Area km²</th>
+            <th data-col="founded">Founded</th>
+            <th data-col="timezone">Timezone</th>
+            <th class="no-sort">Wikipedia</th>
+          </tr>
+        </thead>
+        <tbody id="list-body"></tbody>
+        <tfoot>
+          <tr id="load-more-row" style="display:none">
+            <td colspan="10">
+              <button id="load-more-btn">Show more</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Global corporations list ── -->
+  <div id="global-corp-panel" class="panel" style="display:none">
+    <div id="global-corp-header">
+      <h2>All Corporations</h2>
+      <span id="gcorp-count"></span>
+      <button id="global-corp-panel-close" onclick="closeGlobalCorpPanel()" title="Close">×</button>
+    </div>
+    <div id="gcorp-filters">
+      <input id="gcorp-search" type="text" placeholder="Search company or city…" oninput="gcorpQueryChanged(this.value)" />
+      <div id="gcorp-country" class="count-dropdown" data-value="">
+        <div class="count-dropdown-trigger"><span class="count-dropdown-label">All countries</span><span class="count-dropdown-count"></span><span class="count-dropdown-arrow">▾</span></div>
+        <div class="count-dropdown-menu"></div>
+      </div>
+      <div id="gcorp-industry" class="count-dropdown" data-value="">
+        <div class="count-dropdown-trigger"><span class="count-dropdown-label">All industries</span><span class="count-dropdown-count"></span><span class="count-dropdown-arrow">▾</span></div>
+        <div class="count-dropdown-menu"></div>
+      </div>
+      <select id="gcorp-sort" onchange="gcorpSortChanged(this.value)">
+        <option value="revenue_usd">Revenue (USD) ↓</option>
+        <option value="employees">Employees ↓</option>
+        <option value="name">Name A–Z</option>
+        <option value="country">Country A–Z</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table id="gcorp-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>Industry</th>
+            <th title="USD-normalized using approximate 2026 FX rates">Revenue (USD≈) ⓘ</th>
+            <th>Employees</th>
+          </tr>
+        </thead>
+        <tbody id="gcorp-tbody"></tbody>
+        <tfoot>
+          <tr id="gcorp-more-row" style="display:none">
+            <td colspan="6">
+              <button id="gcorp-more-btn" onclick="gcorpShowMore()">Show more</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Lightbox ── -->
+  <div id="wiki-lightbox">
+    <button id="lightbox-close" onclick="closeLightbox()">×</button>
+    <button class="lightbox-nav" id="lightbox-prev" onclick="lightboxNav(-1)">‹</button>
+    <img id="lightbox-img" src="" alt="" />
+    <button class="lightbox-nav" id="lightbox-next" onclick="lightboxNav(1)">›</button>
+    <span id="lightbox-counter"></span>
+  </div>
+
+  <!-- ── Wikipedia sidebar ── -->
+  <div id="wiki-sidebar">
+    <div id="wiki-sidebar-header">
+      <span id="wiki-sidebar-title">Wikipedia</span>
+      <button id="wiki-sidebar-close" onclick="closeWikiSidebar()" title="Close">×</button>
+    </div>
+    <div id="wiki-sidebar-tabs">
+      <button class="wiki-tab active" data-tab="info"     onclick="switchWikiTab('info')">Info</button>
+      <button class="wiki-tab"        data-tab="economy"  onclick="switchWikiTab('economy')"  id="wiki-tab-economy-btn"  style="display:none">Census</button>
+      <button class="wiki-tab"        data-tab="finance"  onclick="switchWikiTab('finance')"  id="wiki-tab-finance-btn"  style="display:none">Finance</button>
+      <button class="wiki-tab"        data-tab="overview" onclick="switchWikiTab('overview')">Overview</button>
+    </div>
+    <div id="wiki-sidebar-body">
+      <div id="wiki-tab-info"></div>
+      <div id="wiki-tab-economy" style="display:none"></div>
+      <div id="wiki-tab-finance" style="display:none"></div>
+      <div id="wiki-tab-overview" style="display:none"></div>
+    </div>
+    <div id="wiki-sidebar-footer"></div>
+  </div>
+
+  <!-- ── Stats distribution panel (slides left of wiki sidebar) ── -->
+  <div id="stats-panel">
+    <div id="stats-panel-header">
+      <div id="stats-panel-titles">
+        <div id="stats-panel-title">Stat</div>
+        <div id="stats-panel-city"></div>
+      </div>
+      <button id="stats-panel-close" onclick="closeStatsPanel()" title="Close">×</button>
+    </div>
+    <div id="stats-panel-body"></div>
+  </div>
+
+  <!-- ── Corporations panel (city-specific) ── -->
+  <div id="corp-panel">
+    <div id="corp-panel-header">
+      <span id="corp-panel-title">Corporations</span>
+      <button id="corp-panel-close" onclick="closeCorpPanel()" title="Close">×</button>
+    </div>
+    <div id="corp-panel-controls">
+      <input id="corp-search" type="text" placeholder="Search corporations…" oninput="renderCorpList()" />
+      <div id="corp-sort-row">
+        <label for="corp-sort">Sort</label>
+        <select id="corp-sort" onchange="renderCorpList()">
+          <option value="revenue">Revenue</option>
+          <option value="net_income">Net Income</option>
+          <option value="founded">Founded</option>
+          <option value="name">Name A–Z</option>
+        </select>
+        <label for="corp-display-currency">in</label>
+        <select id="corp-display-currency" onchange="renderCorpList()" title="Display and sort financial values in this currency">
+          <option value="">As reported</option>
+        </select>
+        <span id="corp-count"></span>
+      </div>
+    </div>
+    <div id="corp-list">
+      <table id="corp-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Industry</th>
+            <th title="Revenue in reported currency, not USD-normalized">Revenue ⓘ</th>
+            <th title="Net income in reported currency, not USD-normalized">Net Inc. ⓘ</th>
+            <th>Founded</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="corp-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Country sidebar panel -->
+  <div id="country-panel">
+    <div id="cp-header"></div>
+    <div id="cp-stats-row"></div>
+    <div id="cp-body"></div>
+    <div id="cp-trend"></div>
+  </div>
+
+  <!-- Region (admin-1) sidebar panel -->
+  <div id="region-panel">
+    <div id="rp-header"></div>
+    <div id="rp-body"></div>
+  </div>
+
+  <!-- ── Trade flow panel (left side, BEA data) ── -->
+  <div id="trade-panel">
+    <div id="trade-panel-header">
+      <span id="trade-panel-flag"></span>
+      <div id="trade-panel-titles">
+        <span id="trade-panel-title">Trade Flows</span>
+        <span id="trade-panel-sub">US Bilateral Trade</span>
+      </div>
+      <button id="trade-panel-close" onclick="closeTradePanelFn()" title="Close">×</button>
+    </div>
+    <div id="trade-panel-body">
+      <div id="trade-year-row">
+        <input type="range" id="trade-year-slider" min="1999" max="2025" value="2024" />
+        <span id="trade-year-label">2024</span>
+      </div>
+      <div id="trade-flows">
+        <div class="tf-flow-row">
+          <span class="tf-arrow tf-arrow-exp">↗</span>
+          <div class="tf-flow-info">
+            <span class="tf-flow-label">US Exports</span>
+            <span class="tf-flow-detail" id="tf-exp-detail"></span>
+          </div>
+          <span class="tf-flow-total" id="tf-exp-total">—</span>
+        </div>
+        <div class="tf-bar-wrap"><div id="tf-exp-bar" class="tf-bar tf-bar-exp"></div></div>
+        <div class="tf-flow-row">
+          <span class="tf-arrow tf-arrow-imp">↙</span>
+          <div class="tf-flow-info">
+            <span class="tf-flow-label">US Imports</span>
+            <span class="tf-flow-detail" id="tf-imp-detail"></span>
+          </div>
+          <span class="tf-flow-total" id="tf-imp-total">—</span>
+        </div>
+        <div class="tf-bar-wrap"><div id="tf-imp-bar" class="tf-bar tf-bar-imp"></div></div>
+      </div>
+      <div id="trade-balance-row">
+        <span id="trade-balance-label">Balance</span>
+        <span id="trade-balance-val">—</span>
+      </div>
+      <div id="trade-chart-wrap">
+        <div class="trade-section-head">Balance history</div>
+        <div id="trade-chart"></div>
+      </div>
+      <div id="trade-companies-wrap">
+        <div class="trade-section-head">Top companies</div>
+        <div id="trade-companies-list"></div>
+      </div>
+      <div id="trade-source">Source: BEA International Transactions · Goods + Services</div>
+    </div>
+  </div>
+
+  <!-- ── FX Rate sidebar ── -->
+  <div id="fx-sidebar">
+    <div id="fx-header">
+      <span id="fx-title">💱 FX Rates <span class="fx-base">· 1 unit → USD</span></span>
+      <button id="fx-close" onclick="toggleFxSidebar()" title="Close">×</button>
+    </div>
+    <div id="fx-controls">
+       <input type="date" id="fx-date" value="" title="Pick a date for historical ECB rates" />
+      <button id="fx-fetch-btn" onclick="fxFetchRates()">Fetch</button>
+      <button id="fx-reset-btn" onclick="fxResetDefaults()" title="Reset to built-in rates">Reset</button>
+    </div>
+    <div id="fx-status">Rates auto-fetched from ECB on first load</div>
+    <div id="fx-list"></div>
+    <div id="fx-source">Source: <a href="https://www.frankfurter.app" target="_blank" rel="noopener">Frankfurter / ECB</a> · edit any row to override</div>
+  </div>
+
+  <!-- ── City Comparison Panel ── -->
+  <div id="compare-panel" class="float-panel">
+    <div id="compare-header">
+      <span id="compare-title">Compare Cities</span>
+      <button id="compare-close" onclick="closeComparePanel()" title="Close">×</button>
+    </div>
+    <div id="compare-search-row">
+      <span id="compare-vs-label">vs.</span>
+      <div id="compare-search-wrap">
+        <input id="compare-search-input" type="text" placeholder="Search second city…" autocomplete="off" />
+        <ul id="compare-search-results"></ul>
+      </div>
+    </div>
+    <div id="compare-body">
+      <table id="compare-table">
+        <thead>
+          <tr>
+            <th class="cmp-metric-col">Metric</th>
+            <th id="compare-col-a" class="cmp-city-col">—</th>
+            <th id="compare-col-b" class="cmp-city-col">—</th>
+          </tr>
+        </thead>
+        <tbody id="compare-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Country Comparison Panel ── -->
+  <div id="country-compare-panel" class="float-panel float-panel-center">
+    <div id="cc-header">
+      <span id="cc-title">Compare Countries</span>
+      <button id="cc-close" onclick="closeCountryCompare()" title="Close">×</button>
+    </div>
+    <div id="cc-search-row">
+      <span id="cc-vs-label">vs.</span>
+      <div id="cc-search-wrap">
+        <input id="cc-search-input" type="text" placeholder="Search second country…" autocomplete="off" />
+        <ul id="cc-search-results"></ul>
+      </div>
+    </div>
+    <div id="cc-body">
+      <table id="cc-table">
+        <thead>
+          <tr>
+            <th class="cmp-metric-col">Metric</th>
+            <th id="cc-col-a" class="cmp-city-col">—</th>
+            <th id="cc-col-b" class="cmp-city-col">—</th>
+          </tr>
+        </thead>
+        <tbody id="cc-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Bottom nav bar (mobile) / Side FABs (desktop) ── -->
+  <div id="fab-stack">
+    <button id="fx-fab" onclick="toggleFxSidebar()" title="FX Rate Settings" data-label="FX">💱</button>
+    <button id="nations-fab" onclick="toggleNationsPanel()" title="Nations Filter" data-label="Nations">🌍</button>
+    <button id="draw-fab" onclick="toggleDrawMode()" title="Draw a region to explore">⬡</button>
+    <button id="bookmarks-fab" onclick="toggleBookmarksPanel()" title="Saved cities" data-label="Saved">☆</button>
+    <button id="filter-fab" onclick="toggleFilterPanel()" title="City Filters" data-label="Filter">🏙<span id="filter-fab-badge"></span></button>
+    <button id="corp-fab" onclick="switchListTab('corps')" title="Corporations" data-label="Corp">🏢</button>
+  </div>
+
+  <!-- ── Nations panel ── -->
+  <div id="nations-panel" class="float-panel">
+    <div id="nations-panel-header">
+      <span>🌍 Nations</span>
+      <button id="nations-panel-close" onclick="toggleNationsPanel()">×</button>
+    </div>
+    <div id="nations-panel-body">
+      <select id="choro-select" style="display:none"></select>
+    </div>
+  </div>
+
+  <!-- ── Bookmarks panel ── -->
+  <div id="bookmarks-panel" class="float-panel">
+    <div id="bookmarks-header">
+      <span>Saved Cities</span>
+      <button id="bookmarks-close" onclick="toggleBookmarksPanel()">×</button>
+    </div>
+    <div id="bookmarks-body"></div>
+  </div>
+
+  <!-- ── Edit modal ── -->
+  <div id="edit-modal">
+    <div id="edit-box">
+      <h3 id="modal-title">Edit City</h3>
+      <div class="field-row">
+        <div class="field-group">
+          <label>City name</label>
+          <input id="e-name" type="text" />
+        </div>
+        <div class="field-group">
+          <label>Population</label>
+          <input id="e-pop" type="number" min="0" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Country</label>
+          <input id="e-country" type="text" />
+        </div>
+        <div class="field-group">
+          <label>Region / Admin</label>
+          <input id="e-admin" type="text" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Description</label>
+        <input id="e-desc" type="text" />
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Area (km²)</label>
+          <input id="e-area" type="number" min="0" />
+        </div>
+        <div class="field-group">
+          <label>Founded (year)</label>
+          <input id="e-founded" type="number" />
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Latitude</label>
+          <input id="e-lat" type="number" step="0.0001" />
+        </div>
+        <div class="field-group">
+          <label>Longitude</label>
+          <input id="e-lng" type="number" step="0.0001" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Timezone</label>
+        <input id="e-timezone" type="text" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-delete" onclick="deleteCity()">🗑 Delete city</button>
+        <div class="spacer"></div>
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-save"   onclick="saveEdit()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Filter Panel ── -->
+  <div id="filter-panel">
+    <div id="filter-panel-header">
+      <span id="filter-panel-title">🏙 City Filters</span>
+      <div id="filter-panel-header-right">
+        <button id="filter-clear-btn" onclick="clearAllFilters()">Reset</button>
+        <button id="filter-panel-close" onclick="closeFilterPanel()" title="Close">×</button>
+      </div>
+    </div>
+
+    <!-- Heatmap palette — only shown when a heatmap is active -->
+    <div id="heat-palette-row" style="display:none">
+      <span class="filter-row-label">Palette:</span>
+      <div class="palette-chips">
+        <button class="palette-chip active" data-palette="warm"    onclick="setHeatPalette('warm')">
+          <span class="palette-strip warm-strip"></span>Warm
+        </button>
+        <button class="palette-chip" data-palette="viridis" onclick="setHeatPalette('viridis')">
+          <span class="palette-strip viridis-strip"></span>Viridis
+        </button>
+        <button class="palette-chip" data-palette="inferno" onclick="setHeatPalette('inferno')">
+          <span class="palette-strip inferno-strip"></span>Inferno
+        </button>
+        <button class="palette-chip" data-palette="ocean"   onclick="setHeatPalette('ocean')">
+          <span class="palette-strip ocean-strip"></span>Ocean
+        </button>
+      </div>
+    </div>
+
+    <div id="heat-controls-row" style="display:none">
+      <div class="heat-ctrl">
+        <label class="heat-ctrl-label">Radius</label>
+        <input class="heat-ctrl-slider" type="range" id="heat-radius-slider" min="8" max="80" value="40"
+               oninput="setHeatRadius(this.value)">
+        <span class="heat-ctrl-val" id="heat-radius-val">40</span>
+      </div>
+      <div class="heat-ctrl">
+        <label class="heat-ctrl-label">Blur</label>
+        <input class="heat-ctrl-slider" type="range" id="heat-blur-slider" min="4" max="60" value="28"
+               oninput="setHeatBlur(this.value)">
+        <span class="heat-ctrl-val" id="heat-blur-val">28</span>
+      </div>
+      <div class="heat-ctrl">
+        <label class="heat-ctrl-label">Intensity</label>
+        <input class="heat-ctrl-slider" type="range" id="heat-intensity-slider" min="10" max="100" value="45"
+               oninput="setHeatIntensity(this.value)">
+        <span class="heat-ctrl-val" id="heat-intensity-val">45%</span>
+      </div>
+    </div>
+
+    <div class="filter-section-head">Availability</div>
+    <div id="filter-avail-list">
+      <div class="filter-avail-row" data-metric="aq">
+        <span class="filter-avail-label">🌡 Air Quality</span>
+        <span class="avail-intensity-strip" style="display:none"></span>
+        <button class="filter-avail-btn" data-key="airQuality" onclick="toggleAvailFilter('airQuality')">off</button>
+      </div>
+      <div class="filter-avail-row" data-metric="metro">
+        <span class="filter-avail-label">🚇 Metro system</span>
+        <span class="avail-intensity-strip" style="display:none"></span>
+        <button class="filter-avail-btn" data-key="metro" onclick="toggleAvailFilter('metro')">off</button>
+      </div>
+      <div class="filter-avail-row" data-metric="nobel">
+        <span class="filter-avail-label">🏅 Nobel laureates</span>
+        <span class="avail-intensity-strip" style="display:none"></span>
+        <button class="filter-avail-btn" data-key="nobel" onclick="toggleAvailFilter('nobel')">off</button>
+      </div>
+      <div class="filter-avail-row" data-metric="universities">
+        <span class="filter-avail-label">🎓 Universities</span>
+        <span class="avail-intensity-strip" style="display:none"></span>
+        <button class="filter-avail-btn" data-key="universities" onclick="toggleAvailFilter('universities')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">✈ Airport data</span>
+        <button class="filter-avail-btn" data-key="airport" onclick="toggleAvailFilter('airport')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">📊 Eurostat</span>
+        <button class="filter-avail-btn" data-key="eurostat" onclick="toggleAvailFilter('eurostat')">off</button>
+      </div>
+      <div class="filter-avail-row">
+        <span class="filter-avail-label">🇺🇸 Census (US)</span>
+        <button class="filter-avail-btn" data-key="census" onclick="toggleAvailFilter('census')">off</button>
+      </div>
+      <div id="census-color-bar" style="display:none">
+        <select id="census-metric-select" onchange="setCensusColorMetric(this.value)">
+          <option value="">Color by…</option>
+          <option value="medianIncome">Income</option>
+          <option value="povertyPct">Poverty</option>
+          <option value="unemploymentPct">Unemployment</option>
+          <option value="rentBurdenedPct">Rent-Burdened</option>
+          <option value="gini">Gini</option>
+          <option value="bachelorPlusPct">College-Educated</option>
+          <option value="snapPct">SNAP</option>
+          <option value="transitPct">Transit</option>
+          <option value="medianAge">Age</option>
+          <option value="ownerOccPct">Homeownership</option>
+        </select>
+        <span id="census-color-legend-inner" style="display:none">
+          <span class="census-leg-lo" id="census-leg-lo"></span>
+          <canvas id="census-color-ramp" width="80" height="8"></canvas>
+          <span class="census-leg-hi" id="census-leg-hi"></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="filter-section-head">Value Filters</div>
+    <div id="filter-value-list">
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">🏅 Nobel Laureates</span>
+          <button class="filter-heat-btn" data-metric="nobel" onclick="setHeatmapMetric('nobel')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="filter-bucket-row" data-metric="nobel">
+          <button class="filter-bucket active" data-val="null"  onclick="setValueFilter('nobel', null)">Any</button>
+          <button class="filter-bucket"        data-val="1"     onclick="setValueFilter('nobel', 1)">1+</button>
+          <button class="filter-bucket"        data-val="5"     onclick="setValueFilter('nobel', 5)">5+</button>
+          <button class="filter-bucket"        data-val="10"    onclick="setValueFilter('nobel', 10)">10+</button>
+          <button class="filter-bucket"        data-val="20"    onclick="setValueFilter('nobel', 20)">20+</button>
+        </div>
+      </div>
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">🎓 Universities</span>
+          <button class="filter-heat-btn" data-metric="universities" onclick="setHeatmapMetric('universities')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="filter-bucket-row" data-metric="universities">
+          <button class="filter-bucket active" data-val="null" onclick="setValueFilter('universities', null)">Any</button>
+          <button class="filter-bucket"        data-val="1"    onclick="setValueFilter('universities', 1)">1+</button>
+          <button class="filter-bucket"        data-val="5"    onclick="setValueFilter('universities', 5)">5+</button>
+          <button class="filter-bucket"        data-val="10"   onclick="setValueFilter('universities', 10)">10+</button>
+        </div>
+      </div>
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">👥 Population</span>
+          <button class="filter-heat-btn" data-metric="pop" onclick="setHeatmapMetric('pop')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="pop-slider-container">
+          <div class="pop-slider-track"></div>
+          <input type="range" class="pop-slider pop-slider-min" id="pop-slider-min" min="3" max="8" step="0.1" value="3">
+          <input type="range" class="pop-slider pop-slider-max" id="pop-slider-max" min="3" max="8" step="0.1" value="8">
+          <div class="pop-slider-labels">
+            <span>1k</span>
+            <span>10k</span>
+            <span>100k</span>
+            <span>1M</span>
+            <span>10M</span>
+            <span>100M</span>
+          </div>
+          <div class="pop-slider-values">
+            <span id="pop-slider-min-val">Any</span>
+            <span>—</span>
+            <span id="pop-slider-max-val">Any</span>
+            <button class="pop-slider-reset" onclick="resetPopRange()" title="Reset">↺</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">🚇 Metro Stations</span>
+          <button class="filter-heat-btn" data-metric="metro" onclick="setHeatmapMetric('metro')" title="Show heatmap">🌡 Heatmap</button>
+        </div>
+        <div class="filter-bucket-row" data-metric="metro">
+          <button class="filter-bucket active" data-val="null"   onclick="setValueFilter('metro', null)">Any</button>
+          <button class="filter-bucket"        data-val="1"      onclick="setValueFilter('metro', 1)">Has metro</button>
+          <button class="filter-bucket"        data-val="100"    onclick="setValueFilter('metro', 100)">100+</button>
+          <button class="filter-bucket"        data-val="500"    onclick="setValueFilter('metro', 500)">500+</button>
+        </div>
+      </div>
+
+      <div class="filter-value-group">
+        <div class="filter-value-label-row">
+          <span class="filter-value-label">🌡 Air Quality (PM2.5)</span>
+          <div style="display:flex;gap:5px">
+            <button id="filter-aq-color-btn" class="filter-heat-btn" onclick="toggleFilterAqColor()" title="Color city dots by PM2.5">🎨 Color</button>
+            <button class="filter-heat-btn" data-metric="aq" onclick="setHeatmapMetric('aq')" title="Show heatmap">🌡 Heatmap</button>
+          </div>
+        </div>
+        <div class="filter-bucket-row" data-metric="aq">
+          <button class="filter-bucket active"                                       data-val="null"      onclick="setValueFilter('aq', null)">Any</button>
+          <button class="filter-bucket" style="--aq:#3fb950;--aqbg:#0f2c12"         data-val="Good"      onclick="setValueFilter('aq', 'Good')">Good</button>
+          <button class="filter-bucket" style="--aq:#58a6ff;--aqbg:#162040"         data-val="Acceptable" onclick="setValueFilter('aq', 'Acceptable')">OK</button>
+          <button class="filter-bucket" style="--aq:#f0a500;--aqbg:#2a1f08"         data-val="Moderate"  onclick="setValueFilter('aq', 'Moderate')">Mod</button>
+          <button class="filter-bucket" style="--aq:#ffa657;--aqbg:#2a1208"         data-val="Poor"      onclick="setValueFilter('aq', 'Poor')">Poor</button>
+          <button class="filter-bucket" style="--aq:#f85149;--aqbg:#2a0a0a"         data-val="Very Poor" onclick="setValueFilter('aq', 'Very Poor')">V.Poor</button>
+          <button class="filter-bucket" style="--aq:#bc8cff;--aqbg:#1e1028"         data-val="Severe"    onclick="setValueFilter('aq', 'Severe')">Severe</button>
+        </div>
+        <!-- AQ legend shown when Color mode is active -->
+        <div id="filter-aq-legend" style="display:none">
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#3fb950"></span>Good (&lt;5 µg/m³)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#58a6ff"></span>Acceptable (5–10)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#f0a500"></span>Moderate (10–15)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#ffa657"></span>Poor (15–25)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#f85149"></span>Very Poor (25–50)</div>
+          <div class="filter-aq-legend-row"><span class="filter-aq-swatch" style="background:#bc8cff"></span>Severe (&gt;50)</div>
+          <div class="filter-aq-coverage"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="filter-panel-footer">
+      Showing <span id="filter-match-count">—</span> <span id="filter-total-count"></span>
+    </div>
+  </div>
+
+  <!-- ── Mobile sheet backdrop ── -->
+  <div id="mobile-backdrop" onclick="closeAllMobileSheets()"></div>
+
+  <script src="app.js?v=20260410d"></script>
+</body>
+</html>
+
+
+
+
+
+

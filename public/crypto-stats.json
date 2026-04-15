@@ -1,0 +1,895 @@
+{
+  "fetched_at": "2026-04-10T16:00:21.859Z",
+  "source": "CoinGecko (curated adoption data)",
+  "total": 55,
+  "globalStats": {
+    "total_market_cap_usd": 2538859237991.658,
+    "total_volume_24h_usd": 100195693618.50258,
+    "active_cryptocurrencies": 17704,
+    "market_cap_change_24h": 0.4778418030614598
+  },
+  "byCountry": {
+    "IN": {
+      "adoption_rank": 1,
+      "crypto_users_pct": 5.8,
+      "estimated_users": 82824000,
+      "defi_value_usd": 5400000000,
+      "exchanges": 45
+    },
+    "NG": {
+      "adoption_rank": 2,
+      "crypto_users_pct": 4.2,
+      "estimated_users": 9492000,
+      "defi_value_usd": 890000000,
+      "exchanges": 28
+    },
+    "VN": {
+      "adoption_rank": 3,
+      "crypto_users_pct": 4,
+      "estimated_users": 3920000,
+      "defi_value_usd": 1200000000,
+      "exchanges": 18
+    },
+    "US": {
+      "adoption_rank": 4,
+      "crypto_users_pct": 3.8,
+      "estimated_users": 12882000,
+      "defi_value_usd": 45000000000,
+      "exchanges": 312
+    },
+    "PK": {
+      "adoption_rank": 5,
+      "crypto_users_pct": 3.5,
+      "estimated_users": 8400000,
+      "defi_value_usd": 320000000,
+      "exchanges": 12
+    },
+    "ID": {
+      "adoption_rank": 6,
+      "crypto_users_pct": 3.2,
+      "estimated_users": 8864000,
+      "defi_value_usd": 2100000000,
+      "exchanges": 34
+    },
+    "UA": {
+      "adoption_rank": 7,
+      "crypto_users_pct": 3,
+      "estimated_users": 1110000,
+      "defi_value_usd": 780000000,
+      "exchanges": 22
+    },
+    "PH": {
+      "adoption_rank": 8,
+      "crypto_users_pct": 2.9,
+      "estimated_users": 3335000,
+      "defi_value_usd": 650000000,
+      "exchanges": 26
+    },
+    "TR": {
+      "adoption_rank": 9,
+      "crypto_users_pct": 2.8,
+      "estimated_users": 2380000,
+      "defi_value_usd": 3200000000,
+      "exchanges": 48
+    },
+    "BR": {
+      "adoption_rank": 10,
+      "crypto_users_pct": 2.7,
+      "estimated_users": 5832000,
+      "defi_value_usd": 8900000000,
+      "exchanges": 67
+    },
+    "TH": {
+      "adoption_rank": 11,
+      "crypto_users_pct": 2.5,
+      "estimated_users": 1775000,
+      "defi_value_usd": 1800000000,
+      "exchanges": 31
+    },
+    "RU": {
+      "adoption_rank": 12,
+      "crypto_users_pct": 2.4,
+      "estimated_users": 3456000,
+      "defi_value_usd": 4500000000,
+      "exchanges": 52
+    },
+    "CO": {
+      "adoption_rank": 13,
+      "crypto_users_pct": 2.3,
+      "estimated_users": 1196000,
+      "defi_value_usd": 1100000000,
+      "exchanges": 24
+    },
+    "AR": {
+      "adoption_rank": 14,
+      "crypto_users_pct": 2.2,
+      "estimated_users": 1012000,
+      "defi_value_usd": 2300000000,
+      "exchanges": 38
+    },
+    "ZA": {
+      "adoption_rank": 15,
+      "crypto_users_pct": 2.1,
+      "estimated_users": 1260000,
+      "defi_value_usd": 980000000,
+      "exchanges": 29
+    },
+    "MY": {
+      "adoption_rank": 16,
+      "crypto_users_pct": 2,
+      "estimated_users": 680000,
+      "defi_value_usd": 890000000,
+      "exchanges": 21
+    },
+    "VE": {
+      "adoption_rank": 17,
+      "crypto_users_pct": 1.9,
+      "estimated_users": 532000,
+      "defi_value_usd": 450000000,
+      "exchanges": 15
+    },
+    "GB": {
+      "adoption_rank": 18,
+      "crypto_users_pct": 1.8,
+      "estimated_users": 1206000,
+      "defi_value_usd": 12000000000,
+      "exchanges": 89
+    },
+    "SG": {
+      "adoption_rank": 19,
+      "crypto_users_pct": 1.7,
+      "estimated_users": 100300,
+      "defi_value_usd": 8700000000,
+      "exchanges": 156
+    },
+    "KR": {
+      "adoption_rank": 20,
+      "crypto_users_pct": 1.6,
+      "estimated_users": 832000,
+      "defi_value_usd": 15000000000,
+      "exchanges": 78
+    },
+    "JP": {
+      "adoption_rank": 21,
+      "crypto_users_pct": 1.5,
+      "estimated_users": 1845000,
+      "defi_value_usd": 11000000000,
+      "exchanges": 92
+    },
+    "DE": {
+      "adoption_rank": 22,
+      "crypto_users_pct": 1.4,
+      "estimated_users": 1176000,
+      "defi_value_usd": 9800000000,
+      "exchanges": 67
+    },
+    "FR": {
+      "adoption_rank": 23,
+      "crypto_users_pct": 1.3,
+      "estimated_users": 884000,
+      "defi_value_usd": 7600000000,
+      "exchanges": 54
+    },
+    "AU": {
+      "adoption_rank": 24,
+      "crypto_users_pct": 1.2,
+      "estimated_users": 312000,
+      "defi_value_usd": 4200000000,
+      "exchanges": 43
+    },
+    "CA": {
+      "adoption_rank": 25,
+      "crypto_users_pct": 1.1,
+      "estimated_users": 429000,
+      "defi_value_usd": 5600000000,
+      "exchanges": 51
+    },
+    "NL": {
+      "adoption_rank": 26,
+      "crypto_users_pct": 1,
+      "estimated_users": 180000,
+      "defi_value_usd": 3400000000,
+      "exchanges": 32
+    },
+    "CH": {
+      "adoption_rank": 27,
+      "crypto_users_pct": 0.9,
+      "estimated_users": 78300,
+      "defi_value_usd": 6700000000,
+      "exchanges": 78
+    },
+    "AE": {
+      "adoption_rank": 28,
+      "crypto_users_pct": 0.85,
+      "estimated_users": 79900,
+      "defi_value_usd": 4100000000,
+      "exchanges": 67
+    },
+    "HK": {
+      "adoption_rank": 29,
+      "crypto_users_pct": 0.8,
+      "estimated_users": 60000,
+      "defi_value_usd": 5200000000,
+      "exchanges": 89
+    },
+    "TW": {
+      "adoption_rank": 30,
+      "crypto_users_pct": 0.75,
+      "estimated_users": 176250,
+      "defi_value_usd": 2800000000,
+      "exchanges": 34
+    },
+    "EG": {
+      "adoption_rank": 31,
+      "crypto_users_pct": 0.7,
+      "estimated_users": 784000,
+      "defi_value_usd": 340000000,
+      "exchanges": 8
+    },
+    "KE": {
+      "adoption_rank": 32,
+      "crypto_users_pct": 0.65,
+      "estimated_users": 357500,
+      "defi_value_usd": 280000000,
+      "exchanges": 12
+    },
+    "GH": {
+      "adoption_rank": 33,
+      "crypto_users_pct": 0.6,
+      "estimated_users": 204000,
+      "defi_value_usd": 190000000,
+      "exchanges": 9
+    },
+    "BD": {
+      "adoption_rank": 34,
+      "crypto_users_pct": 0.55,
+      "estimated_users": 946000,
+      "defi_value_usd": 150000000,
+      "exchanges": 6
+    },
+    "CL": {
+      "adoption_rank": 35,
+      "crypto_users_pct": 0.5,
+      "estimated_users": 98000,
+      "defi_value_usd": 890000000,
+      "exchanges": 18
+    },
+    "PE": {
+      "adoption_rank": 36,
+      "crypto_users_pct": 0.48,
+      "estimated_users": 163200,
+      "defi_value_usd": 420000000,
+      "exchanges": 14
+    },
+    "MX": {
+      "adoption_rank": 37,
+      "crypto_users_pct": 0.45,
+      "estimated_users": 576000,
+      "defi_value_usd": 2100000000,
+      "exchanges": 32
+    },
+    "PL": {
+      "adoption_rank": 38,
+      "crypto_users_pct": 0.42,
+      "estimated_users": 155400,
+      "defi_value_usd": 1200000000,
+      "exchanges": 23
+    },
+    "IT": {
+      "adoption_rank": 39,
+      "crypto_users_pct": 0.4,
+      "estimated_users": 236000,
+      "defi_value_usd": 4500000000,
+      "exchanges": 41
+    },
+    "ES": {
+      "adoption_rank": 40,
+      "crypto_users_pct": 0.38,
+      "estimated_users": 182400,
+      "defi_value_usd": 3800000000,
+      "exchanges": 38
+    },
+    "SE": {
+      "adoption_rank": 41,
+      "crypto_users_pct": 0.35,
+      "estimated_users": 36750,
+      "defi_value_usd": 2100000000,
+      "exchanges": 19
+    },
+    "NO": {
+      "adoption_rank": 42,
+      "crypto_users_pct": 0.32,
+      "estimated_users": 17600,
+      "defi_value_usd": 1800000000,
+      "exchanges": 16
+    },
+    "DK": {
+      "adoption_rank": 43,
+      "crypto_users_pct": 0.3,
+      "estimated_users": 17700,
+      "defi_value_usd": 1400000000,
+      "exchanges": 14
+    },
+    "FI": {
+      "adoption_rank": 44,
+      "crypto_users_pct": 0.28,
+      "estimated_users": 15400,
+      "defi_value_usd": 980000000,
+      "exchanges": 11
+    },
+    "AT": {
+      "adoption_rank": 45,
+      "crypto_users_pct": 0.26,
+      "estimated_users": 23660,
+      "defi_value_usd": 1100000000,
+      "exchanges": 15
+    },
+    "BE": {
+      "adoption_rank": 46,
+      "crypto_users_pct": 0.24,
+      "estimated_users": 28080,
+      "defi_value_usd": 1300000000,
+      "exchanges": 17
+    },
+    "PT": {
+      "adoption_rank": 47,
+      "crypto_users_pct": 0.22,
+      "estimated_users": 22880,
+      "defi_value_usd": 890000000,
+      "exchanges": 12
+    },
+    "GR": {
+      "adoption_rank": 48,
+      "crypto_users_pct": 0.2,
+      "estimated_users": 20800,
+      "defi_value_usd": 560000000,
+      "exchanges": 9
+    },
+    "CZ": {
+      "adoption_rank": 49,
+      "crypto_users_pct": 0.18,
+      "estimated_users": 18900,
+      "defi_value_usd": 780000000,
+      "exchanges": 13
+    },
+    "IL": {
+      "adoption_rank": 50,
+      "crypto_users_pct": 0.16,
+      "estimated_users": 15200,
+      "defi_value_usd": 2300000000,
+      "exchanges": 28
+    },
+    "CN": {
+      "adoption_rank": 51,
+      "crypto_users_pct": 0.15,
+      "estimated_users": 2137500,
+      "defi_value_usd": 8900000000,
+      "exchanges": 45
+    },
+    "SA": {
+      "adoption_rank": 52,
+      "crypto_users_pct": 0.14,
+      "estimated_users": 50400,
+      "defi_value_usd": 1200000000,
+      "exchanges": 18
+    },
+    "KZ": {
+      "adoption_rank": 53,
+      "crypto_users_pct": 0.12,
+      "estimated_users": 24000,
+      "defi_value_usd": 340000000,
+      "exchanges": 8
+    },
+    "UZ": {
+      "adoption_rank": 54,
+      "crypto_users_pct": 0.1,
+      "estimated_users": 35000,
+      "defi_value_usd": 120000000,
+      "exchanges": 4
+    },
+    "NZ": {
+      "adoption_rank": 55,
+      "crypto_users_pct": 0.08,
+      "estimated_users": 4080,
+      "defi_value_usd": 450000000,
+      "exchanges": 12
+    }
+  },
+  "stats": [
+    {
+      "country": "India",
+      "country_code": "IN",
+      "adoption_rank": 1,
+      "crypto_users_pct": 5.8,
+      "defi_value_usd": 5400000000,
+      "exchanges": 45,
+      "estimated_users": 82824000
+    },
+    {
+      "country": "Nigeria",
+      "country_code": "NG",
+      "adoption_rank": 2,
+      "crypto_users_pct": 4.2,
+      "defi_value_usd": 890000000,
+      "exchanges": 28,
+      "estimated_users": 9492000
+    },
+    {
+      "country": "Vietnam",
+      "country_code": "VN",
+      "adoption_rank": 3,
+      "crypto_users_pct": 4,
+      "defi_value_usd": 1200000000,
+      "exchanges": 18,
+      "estimated_users": 3920000
+    },
+    {
+      "country": "United States",
+      "country_code": "US",
+      "adoption_rank": 4,
+      "crypto_users_pct": 3.8,
+      "defi_value_usd": 45000000000,
+      "exchanges": 312,
+      "estimated_users": 12882000
+    },
+    {
+      "country": "Pakistan",
+      "country_code": "PK",
+      "adoption_rank": 5,
+      "crypto_users_pct": 3.5,
+      "defi_value_usd": 320000000,
+      "exchanges": 12,
+      "estimated_users": 8400000
+    },
+    {
+      "country": "Indonesia",
+      "country_code": "ID",
+      "adoption_rank": 6,
+      "crypto_users_pct": 3.2,
+      "defi_value_usd": 2100000000,
+      "exchanges": 34,
+      "estimated_users": 8864000
+    },
+    {
+      "country": "Ukraine",
+      "country_code": "UA",
+      "adoption_rank": 7,
+      "crypto_users_pct": 3,
+      "defi_value_usd": 780000000,
+      "exchanges": 22,
+      "estimated_users": 1110000
+    },
+    {
+      "country": "Philippines",
+      "country_code": "PH",
+      "adoption_rank": 8,
+      "crypto_users_pct": 2.9,
+      "defi_value_usd": 650000000,
+      "exchanges": 26,
+      "estimated_users": 3335000
+    },
+    {
+      "country": "Turkey",
+      "country_code": "TR",
+      "adoption_rank": 9,
+      "crypto_users_pct": 2.8,
+      "defi_value_usd": 3200000000,
+      "exchanges": 48,
+      "estimated_users": 2380000
+    },
+    {
+      "country": "Brazil",
+      "country_code": "BR",
+      "adoption_rank": 10,
+      "crypto_users_pct": 2.7,
+      "defi_value_usd": 8900000000,
+      "exchanges": 67,
+      "estimated_users": 5832000
+    },
+    {
+      "country": "Thailand",
+      "country_code": "TH",
+      "adoption_rank": 11,
+      "crypto_users_pct": 2.5,
+      "defi_value_usd": 1800000000,
+      "exchanges": 31,
+      "estimated_users": 1775000
+    },
+    {
+      "country": "Russia",
+      "country_code": "RU",
+      "adoption_rank": 12,
+      "crypto_users_pct": 2.4,
+      "defi_value_usd": 4500000000,
+      "exchanges": 52,
+      "estimated_users": 3456000
+    },
+    {
+      "country": "Colombia",
+      "country_code": "CO",
+      "adoption_rank": 13,
+      "crypto_users_pct": 2.3,
+      "defi_value_usd": 1100000000,
+      "exchanges": 24,
+      "estimated_users": 1196000
+    },
+    {
+      "country": "Argentina",
+      "country_code": "AR",
+      "adoption_rank": 14,
+      "crypto_users_pct": 2.2,
+      "defi_value_usd": 2300000000,
+      "exchanges": 38,
+      "estimated_users": 1012000
+    },
+    {
+      "country": "South Africa",
+      "country_code": "ZA",
+      "adoption_rank": 15,
+      "crypto_users_pct": 2.1,
+      "defi_value_usd": 980000000,
+      "exchanges": 29,
+      "estimated_users": 1260000
+    },
+    {
+      "country": "Malaysia",
+      "country_code": "MY",
+      "adoption_rank": 16,
+      "crypto_users_pct": 2,
+      "defi_value_usd": 890000000,
+      "exchanges": 21,
+      "estimated_users": 680000
+    },
+    {
+      "country": "Venezuela",
+      "country_code": "VE",
+      "adoption_rank": 17,
+      "crypto_users_pct": 1.9,
+      "defi_value_usd": 450000000,
+      "exchanges": 15,
+      "estimated_users": 532000
+    },
+    {
+      "country": "United Kingdom",
+      "country_code": "GB",
+      "adoption_rank": 18,
+      "crypto_users_pct": 1.8,
+      "defi_value_usd": 12000000000,
+      "exchanges": 89,
+      "estimated_users": 1206000
+    },
+    {
+      "country": "Singapore",
+      "country_code": "SG",
+      "adoption_rank": 19,
+      "crypto_users_pct": 1.7,
+      "defi_value_usd": 8700000000,
+      "exchanges": 156,
+      "estimated_users": 100300
+    },
+    {
+      "country": "South Korea",
+      "country_code": "KR",
+      "adoption_rank": 20,
+      "crypto_users_pct": 1.6,
+      "defi_value_usd": 15000000000,
+      "exchanges": 78,
+      "estimated_users": 832000
+    },
+    {
+      "country": "Japan",
+      "country_code": "JP",
+      "adoption_rank": 21,
+      "crypto_users_pct": 1.5,
+      "defi_value_usd": 11000000000,
+      "exchanges": 92,
+      "estimated_users": 1845000
+    },
+    {
+      "country": "Germany",
+      "country_code": "DE",
+      "adoption_rank": 22,
+      "crypto_users_pct": 1.4,
+      "defi_value_usd": 9800000000,
+      "exchanges": 67,
+      "estimated_users": 1176000
+    },
+    {
+      "country": "France",
+      "country_code": "FR",
+      "adoption_rank": 23,
+      "crypto_users_pct": 1.3,
+      "defi_value_usd": 7600000000,
+      "exchanges": 54,
+      "estimated_users": 884000
+    },
+    {
+      "country": "Australia",
+      "country_code": "AU",
+      "adoption_rank": 24,
+      "crypto_users_pct": 1.2,
+      "defi_value_usd": 4200000000,
+      "exchanges": 43,
+      "estimated_users": 312000
+    },
+    {
+      "country": "Canada",
+      "country_code": "CA",
+      "adoption_rank": 25,
+      "crypto_users_pct": 1.1,
+      "defi_value_usd": 5600000000,
+      "exchanges": 51,
+      "estimated_users": 429000
+    },
+    {
+      "country": "Netherlands",
+      "country_code": "NL",
+      "adoption_rank": 26,
+      "crypto_users_pct": 1,
+      "defi_value_usd": 3400000000,
+      "exchanges": 32,
+      "estimated_users": 180000
+    },
+    {
+      "country": "Switzerland",
+      "country_code": "CH",
+      "adoption_rank": 27,
+      "crypto_users_pct": 0.9,
+      "defi_value_usd": 6700000000,
+      "exchanges": 78,
+      "estimated_users": 78300
+    },
+    {
+      "country": "United Arab Emirates",
+      "country_code": "AE",
+      "adoption_rank": 28,
+      "crypto_users_pct": 0.85,
+      "defi_value_usd": 4100000000,
+      "exchanges": 67,
+      "estimated_users": 79900
+    },
+    {
+      "country": "Hong Kong",
+      "country_code": "HK",
+      "adoption_rank": 29,
+      "crypto_users_pct": 0.8,
+      "defi_value_usd": 5200000000,
+      "exchanges": 89,
+      "estimated_users": 60000
+    },
+    {
+      "country": "Taiwan",
+      "country_code": "TW",
+      "adoption_rank": 30,
+      "crypto_users_pct": 0.75,
+      "defi_value_usd": 2800000000,
+      "exchanges": 34,
+      "estimated_users": 176250
+    },
+    {
+      "country": "Egypt",
+      "country_code": "EG",
+      "adoption_rank": 31,
+      "crypto_users_pct": 0.7,
+      "defi_value_usd": 340000000,
+      "exchanges": 8,
+      "estimated_users": 784000
+    },
+    {
+      "country": "Kenya",
+      "country_code": "KE",
+      "adoption_rank": 32,
+      "crypto_users_pct": 0.65,
+      "defi_value_usd": 280000000,
+      "exchanges": 12,
+      "estimated_users": 357500
+    },
+    {
+      "country": "Ghana",
+      "country_code": "GH",
+      "adoption_rank": 33,
+      "crypto_users_pct": 0.6,
+      "defi_value_usd": 190000000,
+      "exchanges": 9,
+      "estimated_users": 204000
+    },
+    {
+      "country": "Bangladesh",
+      "country_code": "BD",
+      "adoption_rank": 34,
+      "crypto_users_pct": 0.55,
+      "defi_value_usd": 150000000,
+      "exchanges": 6,
+      "estimated_users": 946000
+    },
+    {
+      "country": "Chile",
+      "country_code": "CL",
+      "adoption_rank": 35,
+      "crypto_users_pct": 0.5,
+      "defi_value_usd": 890000000,
+      "exchanges": 18,
+      "estimated_users": 98000
+    },
+    {
+      "country": "Peru",
+      "country_code": "PE",
+      "adoption_rank": 36,
+      "crypto_users_pct": 0.48,
+      "defi_value_usd": 420000000,
+      "exchanges": 14,
+      "estimated_users": 163200
+    },
+    {
+      "country": "Mexico",
+      "country_code": "MX",
+      "adoption_rank": 37,
+      "crypto_users_pct": 0.45,
+      "defi_value_usd": 2100000000,
+      "exchanges": 32,
+      "estimated_users": 576000
+    },
+    {
+      "country": "Poland",
+      "country_code": "PL",
+      "adoption_rank": 38,
+      "crypto_users_pct": 0.42,
+      "defi_value_usd": 1200000000,
+      "exchanges": 23,
+      "estimated_users": 155400
+    },
+    {
+      "country": "Italy",
+      "country_code": "IT",
+      "adoption_rank": 39,
+      "crypto_users_pct": 0.4,
+      "defi_value_usd": 4500000000,
+      "exchanges": 41,
+      "estimated_users": 236000
+    },
+    {
+      "country": "Spain",
+      "country_code": "ES",
+      "adoption_rank": 40,
+      "crypto_users_pct": 0.38,
+      "defi_value_usd": 3800000000,
+      "exchanges": 38,
+      "estimated_users": 182400
+    },
+    {
+      "country": "Sweden",
+      "country_code": "SE",
+      "adoption_rank": 41,
+      "crypto_users_pct": 0.35,
+      "defi_value_usd": 2100000000,
+      "exchanges": 19,
+      "estimated_users": 36750
+    },
+    {
+      "country": "Norway",
+      "country_code": "NO",
+      "adoption_rank": 42,
+      "crypto_users_pct": 0.32,
+      "defi_value_usd": 1800000000,
+      "exchanges": 16,
+      "estimated_users": 17600
+    },
+    {
+      "country": "Denmark",
+      "country_code": "DK",
+      "adoption_rank": 43,
+      "crypto_users_pct": 0.3,
+      "defi_value_usd": 1400000000,
+      "exchanges": 14,
+      "estimated_users": 17700
+    },
+    {
+      "country": "Finland",
+      "country_code": "FI",
+      "adoption_rank": 44,
+      "crypto_users_pct": 0.28,
+      "defi_value_usd": 980000000,
+      "exchanges": 11,
+      "estimated_users": 15400
+    },
+    {
+      "country": "Austria",
+      "country_code": "AT",
+      "adoption_rank": 45,
+      "crypto_users_pct": 0.26,
+      "defi_value_usd": 1100000000,
+      "exchanges": 15,
+      "estimated_users": 23660
+    },
+    {
+      "country": "Belgium",
+      "country_code": "BE",
+      "adoption_rank": 46,
+      "crypto_users_pct": 0.24,
+      "defi_value_usd": 1300000000,
+      "exchanges": 17,
+      "estimated_users": 28080
+    },
+    {
+      "country": "Portugal",
+      "country_code": "PT",
+      "adoption_rank": 47,
+      "crypto_users_pct": 0.22,
+      "defi_value_usd": 890000000,
+      "exchanges": 12,
+      "estimated_users": 22880
+    },
+    {
+      "country": "Greece",
+      "country_code": "GR",
+      "adoption_rank": 48,
+      "crypto_users_pct": 0.2,
+      "defi_value_usd": 560000000,
+      "exchanges": 9,
+      "estimated_users": 20800
+    },
+    {
+      "country": "Czech Republic",
+      "country_code": "CZ",
+      "adoption_rank": 49,
+      "crypto_users_pct": 0.18,
+      "defi_value_usd": 780000000,
+      "exchanges": 13,
+      "estimated_users": 18900
+    },
+    {
+      "country": "Israel",
+      "country_code": "IL",
+      "adoption_rank": 50,
+      "crypto_users_pct": 0.16,
+      "defi_value_usd": 2300000000,
+      "exchanges": 28,
+      "estimated_users": 15200
+    },
+    {
+      "country": "China",
+      "country_code": "CN",
+      "adoption_rank": 51,
+      "crypto_users_pct": 0.15,
+      "defi_value_usd": 8900000000,
+      "exchanges": 45,
+      "estimated_users": 2137500
+    },
+    {
+      "country": "Saudi Arabia",
+      "country_code": "SA",
+      "adoption_rank": 52,
+      "crypto_users_pct": 0.14,
+      "defi_value_usd": 1200000000,
+      "exchanges": 18,
+      "estimated_users": 50400
+    },
+    {
+      "country": "Kazakhstan",
+      "country_code": "KZ",
+      "adoption_rank": 53,
+      "crypto_users_pct": 0.12,
+      "defi_value_usd": 340000000,
+      "exchanges": 8,
+      "estimated_users": 24000
+    },
+    {
+      "country": "Uzbekistan",
+      "country_code": "UZ",
+      "adoption_rank": 54,
+      "crypto_users_pct": 0.1,
+      "defi_value_usd": 120000000,
+      "exchanges": 4,
+      "estimated_users": 35000
+    },
+    {
+      "country": "New Zealand",
+      "country_code": "NZ",
+      "adoption_rank": 55,
+      "crypto_users_pct": 0.08,
+      "defi_value_usd": 450000000,
+      "exchanges": 12,
+      "estimated_users": 4080
+    }
+  ]
+}

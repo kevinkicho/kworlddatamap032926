@@ -1,0 +1,205 @@
+{
+  "fetched_at": "2026-04-09T19:50:18.583Z",
+  "source": "People's Bank of China",
+  "country": "CN",
+  "rates": {
+    "lpr_1yr": 3.1,
+    "lpr_5yr": 3.6,
+    "mlf_rate": 2,
+    "rrr_large": 9.5,
+    "rrr_small": 6,
+    "last_updated": "2024-10-21",
+    "source": "PBoC"
+  },
+  "statistics": {
+    "m2_growth": {
+      "value": 6.8,
+      "period": "Oct 2024",
+      "source": "PBoC"
+    },
+    "m1_growth": {
+      "value": -3.3,
+      "period": "Oct 2024",
+      "source": "PBoC"
+    },
+    "social_financing": {
+      "value": 18.9,
+      "period": "Oct 2024",
+      "source": "PBoC"
+    },
+    "new_loans_billion_cny": {
+      "value": 5000,
+      "period": "Oct 2024",
+      "source": "PBoC"
+    },
+    "total_deposits_trillion_cny": {
+      "value": 298.5,
+      "period": "Oct 2024",
+      "source": "PBoC"
+    }
+  },
+  "exchange_rates": {
+    "usd_cny": 7.1225,
+    "eur_cny": 7.725,
+    "gbp_cny": 9.215,
+    "jpy_cny": 0.0468,
+    "date": "2026-04-09"
+  },
+  "historical": {
+    "lpr_1yr": [
+      {
+        "date": "2024-10-21",
+        "rate": 3.1
+      },
+      {
+        "date": "2024-08-20",
+        "rate": 3.35
+      },
+      {
+        "date": "2024-07-22",
+        "rate": 3.35
+      },
+      {
+        "date": "2024-02-20",
+        "rate": 3.45
+      },
+      {
+        "date": "2024-01-22",
+        "rate": 3.45
+      },
+      {
+        "date": "2023-12-20",
+        "rate": 3.45
+      },
+      {
+        "date": "2023-08-21",
+        "rate": 3.45
+      },
+      {
+        "date": "2023-06-20",
+        "rate": 3.55
+      },
+      {
+        "date": "2023-01-20",
+        "rate": 3.65
+      },
+      {
+        "date": "2022-08-22",
+        "rate": 3.65
+      },
+      {
+        "date": "2022-01-20",
+        "rate": 3.7
+      },
+      {
+        "date": "2021-12-20",
+        "rate": 3.8
+      }
+    ],
+    "lpr_5yr": [
+      {
+        "date": "2024-10-21",
+        "rate": 3.6
+      },
+      {
+        "date": "2024-07-22",
+        "rate": 3.85
+      },
+      {
+        "date": "2024-05-18",
+        "rate": 3.95
+      },
+      {
+        "date": "2024-02-20",
+        "rate": 3.95
+      },
+      {
+        "date": "2024-01-22",
+        "rate": 4.2
+      },
+      {
+        "date": "2023-12-20",
+        "rate": 4.2
+      },
+      {
+        "date": "2023-06-20",
+        "rate": 4.2
+      },
+      {
+        "date": "2023-01-20",
+        "rate": 4.3
+      },
+      {
+        "date": "2022-08-22",
+        "rate": 4.3
+      },
+      {
+        "date": "2022-05-20",
+        "rate": 4.45
+      },
+      {
+        "date": "2022-01-20",
+        "rate": 4.6
+      },
+      {
+        "date": "2021-12-20",
+        "rate": 4.65
+      }
+    ],
+    "m2_growth": [
+      {
+        "date": "2024-10",
+        "growth": 6.8
+      },
+      {
+        "date": "2024-09",
+        "growth": 6.8
+      },
+      {
+        "date": "2024-08",
+        "growth": 6.3
+      },
+      {
+        "date": "2024-07",
+        "growth": 6.3
+      },
+      {
+        "date": "2024-06",
+        "growth": 6.2
+      },
+      {
+        "date": "2024-05",
+        "growth": 7
+      },
+      {
+        "date": "2024-04",
+        "growth": 7.2
+      },
+      {
+        "date": "2024-03",
+        "growth": 8.3
+      },
+      {
+        "date": "2024-02",
+        "growth": 8.7
+      },
+      {
+        "date": "2024-01",
+        "growth": 8.7
+      },
+      {
+        "date": "2023-12",
+        "growth": 9.7
+      },
+      {
+        "date": "2023-11",
+        "growth": 10
+      }
+    ]
+  },
+  "fx_reserves": {
+    "total_billion_usd": 3261.5,
+    "gold_tonnes": 2264,
+    "period": "Oct 2024"
+  }
+}

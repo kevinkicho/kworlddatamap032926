@@ -1,0 +1,1731 @@
+[
+  {
+    "iso2": "JP",
+    "name": "Japan",
+    "works_count": 42719475,
+    "cited_by_count": 115352980,
+    "citations_per_paper": 2.7
+  },
+  {
+    "iso2": "US",
+    "name": "United States of America",
+    "works_count": 35543887,
+    "cited_by_count": 1017056637,
+    "citations_per_paper": 28.6
+  },
+  {
+    "iso2": "CN",
+    "name": "China",
+    "works_count": 16906545,
+    "cited_by_count": 239432606,
+    "citations_per_paper": 14.2
+  },
+  {
+    "iso2": "GB",
+    "name": "United Kingdom of Great Britain and Northern Ireland",
+    "works_count": 9659422,
+    "cited_by_count": 264745108,
+    "citations_per_paper": 27.4
+  },
+  {
+    "iso2": "DE",
+    "name": "Germany",
+    "works_count": 9188583,
+    "cited_by_count": 181413120,
+    "citations_per_paper": 19.7
+  },
+  {
+    "iso2": "FR",
+    "name": "France",
+    "works_count": 6853271,
+    "cited_by_count": 124404207,
+    "citations_per_paper": 18.2
+  },
+  {
+    "iso2": "IN",
+    "name": "India",
+    "works_count": 5308776,
+    "cited_by_count": 66215978,
+    "citations_per_paper": 12.5
+  },
+  {
+    "iso2": "CA",
+    "name": "Canada",
+    "works_count": 4524800,
+    "cited_by_count": 131580289,
+    "citations_per_paper": 29.1
+  },
+  {
+    "iso2": "IT",
+    "name": "Italy",
+    "works_count": 4181425,
+    "cited_by_count": 95281060,
+    "citations_per_paper": 22.8
+  },
+  {
+    "iso2": "BR",
+    "name": "Brazil",
+    "works_count": 4045919,
+    "cited_by_count": 39408590,
+    "citations_per_paper": 9.7
+  },
+  {
+    "iso2": "ES",
+    "name": "Spain",
+    "works_count": 3646623,
+    "cited_by_count": 71345929,
+    "citations_per_paper": 19.6
+  },
+  {
+    "iso2": "AU",
+    "name": "Australia",
+    "works_count": 3587928,
+    "cited_by_count": 100824970,
+    "citations_per_paper": 28.1
+  },
+  {
+    "iso2": "ID",
+    "name": "Indonesia",
+    "works_count": 3395651,
+    "cited_by_count": 9843213,
+    "citations_per_paper": 2.9
+  },
+  {
+    "iso2": "RU",
+    "name": "Russian Federation",
+    "works_count": 2993922,
+    "cited_by_count": 28282745,
+    "citations_per_paper": 9.4
+  },
+  {
+    "iso2": "NL",
+    "name": "Netherlands",
+    "works_count": 2529912,
+    "cited_by_count": 80569309,
+    "citations_per_paper": 31.8
+  },
+  {
+    "iso2": "KR",
+    "name": "Korea, Republic of",
+    "works_count": 2353154,
+    "cited_by_count": 45907331,
+    "citations_per_paper": 19.5
+  },
+  {
+    "iso2": "PL",
+    "name": "Poland",
+    "works_count": 2035207,
+    "cited_by_count": 23218705,
+    "citations_per_paper": 11.4
+  },
+  {
+    "iso2": "CH",
+    "name": "Switzerland",
+    "works_count": 2033849,
+    "cited_by_count": 59931516,
+    "citations_per_paper": 29.5
+  },
+  {
+    "iso2": "TR",
+    "name": "Turkey",
+    "works_count": 1733664,
+    "cited_by_count": 20567708,
+    "citations_per_paper": 11.9
+  },
+  {
+    "iso2": "SE",
+    "name": "Sweden",
+    "works_count": 1601098,
+    "cited_by_count": 51821082,
+    "citations_per_paper": 32.4
+  },
+  {
+    "iso2": "BE",
+    "name": "Belgium",
+    "works_count": 1564500,
+    "cited_by_count": 37675215,
+    "citations_per_paper": 24.1
+  },
+  {
+    "iso2": "IR",
+    "name": "Iran, Islamic Republic of",
+    "works_count": 1446366,
+    "cited_by_count": 20981804,
+    "citations_per_paper": 14.5
+  },
+  {
+    "iso2": "TW",
+    "name": "Taiwan, Province of China",
+    "works_count": 1235254,
+    "cited_by_count": 24620452,
+    "citations_per_paper": 19.9
+  },
+  {
+    "iso2": "DK",
+    "name": "Denmark",
+    "works_count": 1215973,
+    "cited_by_count": 32326476,
+    "citations_per_paper": 26.6
+  },
+  {
+    "iso2": "MX",
+    "name": "Mexico",
+    "works_count": 1208339,
+    "cited_by_count": 13011418,
+    "citations_per_paper": 10.8
+  },
+  {
+    "iso2": "CZ",
+    "name": "Czechia",
+    "works_count": 1100251,
+    "cited_by_count": 14642162,
+    "citations_per_paper": 13.3
+  },
+  {
+    "iso2": "AT",
+    "name": "Austria",
+    "works_count": 1092143,
+    "cited_by_count": 24494858,
+    "citations_per_paper": 22.4
+  },
+  {
+    "iso2": "ZA",
+    "name": "South Africa",
+    "works_count": 1070517,
+    "cited_by_count": 16098048,
+    "citations_per_paper": 15
+  },
+  {
+    "iso2": "NO",
+    "name": "Norway",
+    "works_count": 1050843,
+    "cited_by_count": 22351032,
+    "citations_per_paper": 21.3
+  },
+  {
+    "iso2": "PT",
+    "name": "Portugal",
+    "works_count": 908317,
+    "cited_by_count": 16053269,
+    "citations_per_paper": 17.7
+  },
+  {
+    "iso2": "IL",
+    "name": "Israel",
+    "works_count": 907142,
+    "cited_by_count": 28153891,
+    "citations_per_paper": 31
+  },
+  {
+    "iso2": "MY",
+    "name": "Malaysia",
+    "works_count": 886398,
+    "cited_by_count": 12483030,
+    "citations_per_paper": 14.1
+  },
+  {
+    "iso2": "EG",
+    "name": "Egypt",
+    "works_count": 833146,
+    "cited_by_count": 10551413,
+    "citations_per_paper": 12.7
+  },
+  {
+    "iso2": "FI",
+    "name": "Finland",
+    "works_count": 817756,
+    "cited_by_count": 22506246,
+    "citations_per_paper": 27.5
+  },
+  {
+    "iso2": "GR",
+    "name": "Greece",
+    "works_count": 778193,
+    "cited_by_count": 15353359,
+    "citations_per_paper": 19.7
+  },
+  {
+    "iso2": "SA",
+    "name": "Saudi Arabia",
+    "works_count": 749282,
+    "cited_by_count": 13812345,
+    "citations_per_paper": 18.4
+  },
+  {
+    "iso2": "PK",
+    "name": "Pakistan",
+    "works_count": 733480,
+    "cited_by_count": 9883231,
+    "citations_per_paper": 13.5
+  },
+  {
+    "iso2": "UA",
+    "name": "Ukraine",
+    "works_count": 701866,
+    "cited_by_count": 3897902,
+    "citations_per_paper": 5.6
+  },
+  {
+    "iso2": "AR",
+    "name": "Argentina",
+    "works_count": 701398,
+    "cited_by_count": 8763634,
+    "citations_per_paper": 12.5
+  },
+  {
+    "iso2": "SG",
+    "name": "Singapore",
+    "works_count": 658572,
+    "cited_by_count": 20153168,
+    "citations_per_paper": 30.6
+  },
+  {
+    "iso2": "HK",
+    "name": "Hong Kong",
+    "works_count": 647120,
+    "cited_by_count": 19000422,
+    "citations_per_paper": 29.4
+  },
+  {
+    "iso2": "CO",
+    "name": "Colombia",
+    "works_count": 633786,
+    "cited_by_count": 4540130,
+    "citations_per_paper": 7.2
+  },
+  {
+    "iso2": "NG",
+    "name": "Nigeria",
+    "works_count": 624214,
+    "cited_by_count": 4794722,
+    "citations_per_paper": 7.7
+  },
+  {
+    "iso2": "IE",
+    "name": "Ireland",
+    "works_count": 593072,
+    "cited_by_count": 14553291,
+    "citations_per_paper": 24.5
+  },
+  {
+    "iso2": "NZ",
+    "name": "New Zealand",
+    "works_count": 578343,
+    "cited_by_count": 15999961,
+    "citations_per_paper": 27.7
+  },
+  {
+    "iso2": "HU",
+    "name": "Hungary",
+    "works_count": 549110,
+    "cited_by_count": 9625786,
+    "citations_per_paper": 17.5
+  },
+  {
+    "iso2": "CL",
+    "name": "Chile",
+    "works_count": 530089,
+    "cited_by_count": 8042667,
+    "citations_per_paper": 15.2
+  },
+  {
+    "iso2": "TH",
+    "name": "Thailand",
+    "works_count": 525333,
+    "cited_by_count": 7582590,
+    "citations_per_paper": 14.4
+  },
+  {
+    "iso2": "RO",
+    "name": "Romania",
+    "works_count": 475092,
+    "cited_by_count": 5063432,
+    "citations_per_paper": 10.7
+  },
+  {
+    "iso2": "SK",
+    "name": "Slovakia",
+    "works_count": 403661,
+    "cited_by_count": 4802619,
+    "citations_per_paper": 11.9
+  },
+  {
+    "iso2": "BD",
+    "name": "Bangladesh",
+    "works_count": 351350,
+    "cited_by_count": 4043747,
+    "citations_per_paper": 11.5
+  },
+  {
+    "iso2": "VN",
+    "name": "Viet Nam",
+    "works_count": 331737,
+    "cited_by_count": 4281896,
+    "citations_per_paper": 12.9
+  },
+  {
+    "iso2": "TN",
+    "name": "Tunisia",
+    "works_count": 315541,
+    "cited_by_count": 2861576,
+    "citations_per_paper": 9.1
+  },
+  {
+    "iso2": "MA",
+    "name": "Morocco",
+    "works_count": 300338,
+    "cited_by_count": 3625802,
+    "citations_per_paper": 12.1
+  },
+  {
+    "iso2": "HR",
+    "name": "Croatia",
+    "works_count": 298200,
+    "cited_by_count": 3369246,
+    "citations_per_paper": 11.3
+  },
+  {
+    "iso2": "IQ",
+    "name": "Iraq",
+    "works_count": 296360,
+    "cited_by_count": 1929764,
+    "citations_per_paper": 6.5
+  },
+  {
+    "iso2": "PE",
+    "name": "Peru",
+    "works_count": 288368,
+    "cited_by_count": 1727235,
+    "citations_per_paper": 6
+  },
+  {
+    "iso2": "RS",
+    "name": "Serbia",
+    "works_count": 275766,
+    "cited_by_count": 3385164,
+    "citations_per_paper": 12.3
+  },
+  {
+    "iso2": "SI",
+    "name": "Slovenia",
+    "works_count": 267169,
+    "cited_by_count": 4320277,
+    "citations_per_paper": 16.2
+  },
+  {
+    "iso2": "BG",
+    "name": "Bulgaria",
+    "works_count": 255373,
+    "cited_by_count": 3331310,
+    "citations_per_paper": 13
+  },
+  {
+    "iso2": "DZ",
+    "name": "Algeria",
+    "works_count": 239374,
+    "cited_by_count": 1971880,
+    "citations_per_paper": 8.2
+  },
+  {
+    "iso2": "PH",
+    "name": "Philippines",
+    "works_count": 238373,
+    "cited_by_count": 2463498,
+    "citations_per_paper": 10.3
+  },
+  {
+    "iso2": "EC",
+    "name": "Ecuador",
+    "works_count": 235039,
+    "cited_by_count": 1159658,
+    "citations_per_paper": 4.9
+  },
+  {
+    "iso2": "AE",
+    "name": "United Arab Emirates",
+    "works_count": 225856,
+    "cited_by_count": 3431805,
+    "citations_per_paper": 15.2
+  },
+  {
+    "iso2": "ET",
+    "name": "Ethiopia",
+    "works_count": 211012,
+    "cited_by_count": 2668395,
+    "citations_per_paper": 12.6
+  },
+  {
+    "iso2": "KE",
+    "name": "Kenya",
+    "works_count": 202613,
+    "cited_by_count": 3011567,
+    "citations_per_paper": 14.9
+  },
+  {
+    "iso2": "UZ",
+    "name": "Uzbekistan",
+    "works_count": 188943,
+    "cited_by_count": 446872,
+    "citations_per_paper": 2.4
+  },
+  {
+    "iso2": "CU",
+    "name": "Cuba",
+    "works_count": 169418,
+    "cited_by_count": 899899,
+    "citations_per_paper": 5.3
+  },
+  {
+    "iso2": "PA",
+    "name": "Panama",
+    "works_count": 158265,
+    "cited_by_count": 890977,
+    "citations_per_paper": 5.6
+  },
+  {
+    "iso2": "GH",
+    "name": "Ghana",
+    "works_count": 154975,
+    "cited_by_count": 1907509,
+    "citations_per_paper": 12.3
+  },
+  {
+    "iso2": "JO",
+    "name": "Jordan",
+    "works_count": 154328,
+    "cited_by_count": 2084729,
+    "citations_per_paper": 13.5
+  },
+  {
+    "iso2": "KZ",
+    "name": "Kazakhstan",
+    "works_count": 135991,
+    "cited_by_count": 894457,
+    "citations_per_paper": 6.6
+  },
+  {
+    "iso2": "LT",
+    "name": "Lithuania",
+    "works_count": 135954,
+    "cited_by_count": 1665190,
+    "citations_per_paper": 12.2
+  },
+  {
+    "iso2": "VE",
+    "name": "Venezuela, Bolivarian Republic of",
+    "works_count": 135619,
+    "cited_by_count": 1321185,
+    "citations_per_paper": 9.7
+  },
+  {
+    "iso2": "NP",
+    "name": "Nepal",
+    "works_count": 132077,
+    "cited_by_count": 1261271,
+    "citations_per_paper": 9.5
+  },
+  {
+    "iso2": "QA",
+    "name": "Qatar",
+    "works_count": 120531,
+    "cited_by_count": 2440771,
+    "citations_per_paper": 20.3
+  },
+  {
+    "iso2": "LK",
+    "name": "Sri Lanka",
+    "works_count": 116491,
+    "cited_by_count": 1370724,
+    "citations_per_paper": 11.8
+  },
+  {
+    "iso2": "EE",
+    "name": "Estonia",
+    "works_count": 115054,
+    "cited_by_count": 2503904,
+    "citations_per_paper": 21.8
+  },
+  {
+    "iso2": "BY",
+    "name": "Belarus",
+    "works_count": 113845,
+    "cited_by_count": 1182276,
+    "citations_per_paper": 10.4
+  },
+  {
+    "iso2": "CY",
+    "name": "Cyprus",
+    "works_count": 110476,
+    "cited_by_count": 2121950,
+    "citations_per_paper": 19.2
+  },
+  {
+    "iso2": "CR",
+    "name": "Costa Rica",
+    "works_count": 107802,
+    "cited_by_count": 827089,
+    "citations_per_paper": 7.7
+  },
+  {
+    "iso2": "LB",
+    "name": "Lebanon",
+    "works_count": 103703,
+    "cited_by_count": 2036712,
+    "citations_per_paper": 19.6
+  },
+  {
+    "iso2": "LV",
+    "name": "Latvia",
+    "works_count": 103572,
+    "cited_by_count": 1281328,
+    "citations_per_paper": 12.4
+  },
+  {
+    "iso2": "LU",
+    "name": "Luxembourg",
+    "works_count": 99186,
+    "cited_by_count": 1340761,
+    "citations_per_paper": 13.5
+  },
+  {
+    "iso2": "UY",
+    "name": "Uruguay",
+    "works_count": 98388,
+    "cited_by_count": 996864,
+    "citations_per_paper": 10.1
+  },
+  {
+    "iso2": "UG",
+    "name": "Uganda",
+    "works_count": 94694,
+    "cited_by_count": 1563943,
+    "citations_per_paper": 16.5
+  },
+  {
+    "iso2": "TZ",
+    "name": "Tanzania, United Republic of",
+    "works_count": 94542,
+    "cited_by_count": 1608417,
+    "citations_per_paper": 17
+  },
+  {
+    "iso2": "PR",
+    "name": "Puerto Rico",
+    "works_count": 92562,
+    "cited_by_count": 1708443,
+    "citations_per_paper": 18.5
+  },
+  {
+    "iso2": "CM",
+    "name": "Cameroon",
+    "works_count": 80446,
+    "cited_by_count": 1240377,
+    "citations_per_paper": 15.4
+  },
+  {
+    "iso2": "MO",
+    "name": "Macao",
+    "works_count": 76871,
+    "cited_by_count": 1530274,
+    "citations_per_paper": 19.9
+  },
+  {
+    "iso2": "AZ",
+    "name": "Azerbaijan",
+    "works_count": 74492,
+    "cited_by_count": 516631,
+    "citations_per_paper": 6.9
+  },
+  {
+    "iso2": "KW",
+    "name": "Kuwait",
+    "works_count": 69422,
+    "cited_by_count": 1081551,
+    "citations_per_paper": 15.6
+  },
+  {
+    "iso2": "OM",
+    "name": "Oman",
+    "works_count": 64639,
+    "cited_by_count": 979113,
+    "citations_per_paper": 15.1
+  },
+  {
+    "iso2": "MK",
+    "name": "North Macedonia",
+    "works_count": 63384,
+    "cited_by_count": 517655,
+    "citations_per_paper": 8.2
+  },
+  {
+    "iso2": "CI",
+    "name": "Côte d'Ivoire",
+    "works_count": 62421,
+    "cited_by_count": 348287,
+    "citations_per_paper": 5.6
+  },
+  {
+    "iso2": "TJ",
+    "name": "Tajikistan",
+    "works_count": 60533,
+    "cited_by_count": 435700,
+    "citations_per_paper": 7.2
+  },
+  {
+    "iso2": "AM",
+    "name": "Armenia",
+    "works_count": 57719,
+    "cited_by_count": 845993,
+    "citations_per_paper": 14.7
+  },
+  {
+    "iso2": "IS",
+    "name": "Iceland",
+    "works_count": 55135,
+    "cited_by_count": 1800079,
+    "citations_per_paper": 32.6
+  },
+  {
+    "iso2": "GE",
+    "name": "Georgia",
+    "works_count": 54574,
+    "cited_by_count": 624983,
+    "citations_per_paper": 11.5
+  },
+  {
+    "iso2": "BO",
+    "name": "Bolivia, Plurinational State of",
+    "works_count": 54102,
+    "cited_by_count": 401250,
+    "citations_per_paper": 7.4
+  },
+  {
+    "iso2": "BA",
+    "name": "Bosnia and Herzegovina",
+    "works_count": 53949,
+    "cited_by_count": 379358,
+    "citations_per_paper": 7
+  },
+  {
+    "iso2": "SD",
+    "name": "Sudan",
+    "works_count": 53281,
+    "cited_by_count": 568300,
+    "citations_per_paper": 10.7
+  },
+  {
+    "iso2": "ZW",
+    "name": "Zimbabwe",
+    "works_count": 47097,
+    "cited_by_count": 568003,
+    "citations_per_paper": 12.1
+  },
+  {
+    "iso2": "ZM",
+    "name": "Zambia",
+    "works_count": 46600,
+    "cited_by_count": 482012,
+    "citations_per_paper": 10.3
+  },
+  {
+    "iso2": "MN",
+    "name": "Mongolia",
+    "works_count": 46206,
+    "cited_by_count": 322394,
+    "citations_per_paper": 7
+  },
+  {
+    "iso2": "DO",
+    "name": "Dominican Republic",
+    "works_count": 45278,
+    "cited_by_count": 176677,
+    "citations_per_paper": 3.9
+  },
+  {
+    "iso2": "YE",
+    "name": "Yemen",
+    "works_count": 43321,
+    "cited_by_count": 393232,
+    "citations_per_paper": 9.1
+  },
+  {
+    "iso2": "SS",
+    "name": "South Sudan",
+    "works_count": 42454,
+    "cited_by_count": 869198,
+    "citations_per_paper": 20.5
+  },
+  {
+    "iso2": "SN",
+    "name": "Senegal",
+    "works_count": 40961,
+    "cited_by_count": 401851,
+    "citations_per_paper": 9.8
+  },
+  {
+    "iso2": "MT",
+    "name": "Malta",
+    "works_count": 40245,
+    "cited_by_count": 497250,
+    "citations_per_paper": 12.4
+  },
+  {
+    "iso2": "KH",
+    "name": "Cambodia",
+    "works_count": 40043,
+    "cited_by_count": 451752,
+    "citations_per_paper": 11.3
+  },
+  {
+    "iso2": "MM",
+    "name": "Myanmar",
+    "works_count": 39278,
+    "cited_by_count": 386542,
+    "citations_per_paper": 9.8
+  },
+  {
+    "iso2": "MD",
+    "name": "Moldova, Republic of",
+    "works_count": 38861,
+    "cited_by_count": 230269,
+    "citations_per_paper": 5.9
+  },
+  {
+    "iso2": "PS",
+    "name": "Palestine, State of",
+    "works_count": 37633,
+    "cited_by_count": 694484,
+    "citations_per_paper": 18.5
+  },
+  {
+    "iso2": "MZ",
+    "name": "Mozambique",
+    "works_count": 37374,
+    "cited_by_count": 364056,
+    "citations_per_paper": 9.7
+  },
+  {
+    "iso2": "BJ",
+    "name": "Benin",
+    "works_count": 37028,
+    "cited_by_count": 382396,
+    "citations_per_paper": 10.3
+  },
+  {
+    "iso2": "MW",
+    "name": "Malawi",
+    "works_count": 33487,
+    "cited_by_count": 533470,
+    "citations_per_paper": 15.9
+  },
+  {
+    "iso2": "PY",
+    "name": "Paraguay",
+    "works_count": 32348,
+    "cited_by_count": 227949,
+    "citations_per_paper": 7
+  },
+  {
+    "iso2": "NE",
+    "name": "Niger",
+    "works_count": 31394,
+    "cited_by_count": 209791,
+    "citations_per_paper": 6.7
+  },
+  {
+    "iso2": "BF",
+    "name": "Burkina Faso",
+    "works_count": 31093,
+    "cited_by_count": 363105,
+    "citations_per_paper": 11.7
+  },
+  {
+    "iso2": "AL",
+    "name": "Albania",
+    "works_count": 29161,
+    "cited_by_count": 207824,
+    "citations_per_paper": 7.1
+  },
+  {
+    "iso2": "GT",
+    "name": "Guatemala",
+    "works_count": 29050,
+    "cited_by_count": 295910,
+    "citations_per_paper": 10.2
+  },
+  {
+    "iso2": "CD",
+    "name": "Congo, Democratic Republic of the",
+    "works_count": 28400,
+    "cited_by_count": 253104,
+    "citations_per_paper": 8.9
+  },
+  {
+    "iso2": "BH",
+    "name": "Bahrain",
+    "works_count": 27835,
+    "cited_by_count": 379922,
+    "citations_per_paper": 13.6
+  },
+  {
+    "iso2": "BW",
+    "name": "Botswana",
+    "works_count": 26372,
+    "cited_by_count": 373491,
+    "citations_per_paper": 14.2
+  },
+  {
+    "iso2": "LY",
+    "name": "Libya",
+    "works_count": 26062,
+    "cited_by_count": 222306,
+    "citations_per_paper": 8.5
+  },
+  {
+    "iso2": "RW",
+    "name": "Rwanda",
+    "works_count": 25707,
+    "cited_by_count": 261122,
+    "citations_per_paper": 10.2
+  },
+  {
+    "iso2": "SY",
+    "name": "Syrian Arab Republic",
+    "works_count": 24963,
+    "cited_by_count": 301799,
+    "citations_per_paper": 12.1
+  },
+  {
+    "iso2": "BI",
+    "name": "Burundi",
+    "works_count": 23244,
+    "cited_by_count": 356641,
+    "citations_per_paper": 15.3
+  },
+  {
+    "iso2": "ML",
+    "name": "Mali",
+    "works_count": 22402,
+    "cited_by_count": 418984,
+    "citations_per_paper": 18.7
+  },
+  {
+    "iso2": "ME",
+    "name": "Montenegro",
+    "works_count": 22242,
+    "cited_by_count": 228758,
+    "citations_per_paper": 10.3
+  },
+  {
+    "iso2": "JM",
+    "name": "Jamaica",
+    "works_count": 21263,
+    "cited_by_count": 410336,
+    "citations_per_paper": 19.3
+  },
+  {
+    "iso2": "NI",
+    "name": "Nicaragua",
+    "works_count": 20751,
+    "cited_by_count": 108120,
+    "citations_per_paper": 5.2
+  },
+  {
+    "iso2": "KG",
+    "name": "Kyrgyzstan",
+    "works_count": 19867,
+    "cited_by_count": 101332,
+    "citations_per_paper": 5.1
+  },
+  {
+    "iso2": "BN",
+    "name": "Brunei Darussalam",
+    "works_count": 19697,
+    "cited_by_count": 304899,
+    "citations_per_paper": 15.5
+  },
+  {
+    "iso2": "RE",
+    "name": "Réunion",
+    "works_count": 18674,
+    "cited_by_count": 209181,
+    "citations_per_paper": 11.2
+  },
+  {
+    "iso2": "MG",
+    "name": "Madagascar",
+    "works_count": 18427,
+    "cited_by_count": 209676,
+    "citations_per_paper": 11.4
+  },
+  {
+    "iso2": "SV",
+    "name": "El Salvador",
+    "works_count": 17493,
+    "cited_by_count": 74024,
+    "citations_per_paper": 4.2
+  },
+  {
+    "iso2": "XK",
+    "name": "Kosovo",
+    "works_count": 16644,
+    "cited_by_count": 120074,
+    "citations_per_paper": 7.2
+  },
+  {
+    "iso2": "VG",
+    "name": "Virgin Islands, British",
+    "works_count": 15781,
+    "cited_by_count": 165587,
+    "citations_per_paper": 10.5
+  },
+  {
+    "iso2": "TT",
+    "name": "Trinidad and Tobago",
+    "works_count": 15711,
+    "cited_by_count": 219307,
+    "citations_per_paper": 14
+  },
+  {
+    "iso2": "AF",
+    "name": "Afghanistan",
+    "works_count": 15250,
+    "cited_by_count": 99792,
+    "citations_per_paper": 6.5
+  },
+  {
+    "iso2": "TG",
+    "name": "Togo",
+    "works_count": 14620,
+    "cited_by_count": 85207,
+    "citations_per_paper": 5.8
+  },
+  {
+    "iso2": "HN",
+    "name": "Honduras",
+    "works_count": 14603,
+    "cited_by_count": 92106,
+    "citations_per_paper": 6.3
+  },
+  {
+    "iso2": "GL",
+    "name": "Greenland",
+    "works_count": 14539,
+    "cited_by_count": 107678,
+    "citations_per_paper": 7.4
+  },
+  {
+    "iso2": "AG",
+    "name": "Antigua and Barbuda",
+    "works_count": 13500,
+    "cited_by_count": 61980,
+    "citations_per_paper": 4.6
+  },
+  {
+    "iso2": "CG",
+    "name": "Congo",
+    "works_count": 13099,
+    "cited_by_count": 167836,
+    "citations_per_paper": 12.8
+  },
+  {
+    "iso2": "NA",
+    "name": "Namibia",
+    "works_count": 12931,
+    "cited_by_count": 175407,
+    "citations_per_paper": 13.6
+  },
+  {
+    "iso2": "FJ",
+    "name": "Fiji",
+    "works_count": 12132,
+    "cited_by_count": 231749,
+    "citations_per_paper": 19.1
+  },
+  {
+    "iso2": "GP",
+    "name": "Guadeloupe",
+    "works_count": 11811,
+    "cited_by_count": 135137,
+    "citations_per_paper": 11.4
+  },
+  {
+    "iso2": "LA",
+    "name": "Lao People's Democratic Republic",
+    "works_count": 11288,
+    "cited_by_count": 151526,
+    "citations_per_paper": 13.4
+  },
+  {
+    "iso2": "MU",
+    "name": "Mauritius",
+    "works_count": 10831,
+    "cited_by_count": 174366,
+    "citations_per_paper": 16.1
+  },
+  {
+    "iso2": "AO",
+    "name": "Angola",
+    "works_count": 10358,
+    "cited_by_count": 43100,
+    "citations_per_paper": 4.2
+  },
+  {
+    "iso2": "GF",
+    "name": "French Guiana",
+    "works_count": 10301,
+    "cited_by_count": 142368,
+    "citations_per_paper": 13.8
+  },
+  {
+    "iso2": "PG",
+    "name": "Papua New Guinea",
+    "works_count": 10240,
+    "cited_by_count": 209073,
+    "citations_per_paper": 20.4
+  },
+  {
+    "iso2": "SO",
+    "name": "Somalia",
+    "works_count": 10200,
+    "cited_by_count": 45639,
+    "citations_per_paper": 4.5
+  },
+  {
+    "iso2": "GM",
+    "name": "Gambia",
+    "works_count": 9791,
+    "cited_by_count": 311086,
+    "citations_per_paper": 31.8
+  },
+  {
+    "iso2": "GA",
+    "name": "Gabon",
+    "works_count": 9228,
+    "cited_by_count": 164982,
+    "citations_per_paper": 17.9
+  },
+  {
+    "iso2": "NC",
+    "name": "New Caledonia",
+    "works_count": 9161,
+    "cited_by_count": 178216,
+    "citations_per_paper": 19.5
+  },
+  {
+    "iso2": "GD",
+    "name": "Grenada",
+    "works_count": 6903,
+    "cited_by_count": 92851,
+    "citations_per_paper": 13.5
+  },
+  {
+    "iso2": "SL",
+    "name": "Sierra Leone",
+    "works_count": 6570,
+    "cited_by_count": 83960,
+    "citations_per_paper": 12.8
+  },
+  {
+    "iso2": "BB",
+    "name": "Barbados",
+    "works_count": 6498,
+    "cited_by_count": 142309,
+    "citations_per_paper": 21.9
+  },
+  {
+    "iso2": "MV",
+    "name": "Maldives",
+    "works_count": 6185,
+    "cited_by_count": 113942,
+    "citations_per_paper": 18.4
+  },
+  {
+    "iso2": "KN",
+    "name": "Saint Kitts and Nevis",
+    "works_count": 5916,
+    "cited_by_count": 81924,
+    "citations_per_paper": 13.8
+  },
+  {
+    "iso2": "PF",
+    "name": "French Polynesia",
+    "works_count": 5914,
+    "cited_by_count": 120613,
+    "citations_per_paper": 20.4
+  },
+  {
+    "iso2": "MC",
+    "name": "Monaco",
+    "works_count": 5885,
+    "cited_by_count": 223392,
+    "citations_per_paper": 38
+  },
+  {
+    "iso2": "ST",
+    "name": "Sao Tome and Principe",
+    "works_count": 5700,
+    "cited_by_count": 72184,
+    "citations_per_paper": 12.7
+  },
+  {
+    "iso2": "GN",
+    "name": "Guinea",
+    "works_count": 5693,
+    "cited_by_count": 56365,
+    "citations_per_paper": 9.9
+  },
+  {
+    "iso2": "TM",
+    "name": "Turkmenistan",
+    "works_count": 5640,
+    "cited_by_count": 10332,
+    "citations_per_paper": 1.8
+  },
+  {
+    "iso2": "LI",
+    "name": "Liechtenstein",
+    "works_count": 5581,
+    "cited_by_count": 112783,
+    "citations_per_paper": 20.2
+  },
+  {
+    "iso2": "MQ",
+    "name": "Martinique",
+    "works_count": 5373,
+    "cited_by_count": 74418,
+    "citations_per_paper": 13.9
+  },
+  {
+    "iso2": "GU",
+    "name": "Guam",
+    "works_count": 5018,
+    "cited_by_count": 81230,
+    "citations_per_paper": 16.2
+  },
+  {
+    "iso2": "BT",
+    "name": "Bhutan",
+    "works_count": 4937,
+    "cited_by_count": 40498,
+    "citations_per_paper": 8.2
+  },
+  {
+    "iso2": "SZ",
+    "name": "Eswatini",
+    "works_count": 4640,
+    "cited_by_count": 45947,
+    "citations_per_paper": 9.9
+  },
+  {
+    "iso2": "CW",
+    "name": "Curaçao",
+    "works_count": 4270,
+    "cited_by_count": 85586,
+    "citations_per_paper": 20
+  },
+  {
+    "iso2": "KP",
+    "name": "Korea, Democratic People's Republic of",
+    "works_count": 4037,
+    "cited_by_count": 47169,
+    "citations_per_paper": 11.7
+  },
+  {
+    "iso2": "TD",
+    "name": "Chad",
+    "works_count": 4027,
+    "cited_by_count": 29708,
+    "citations_per_paper": 7.4
+  },
+  {
+    "iso2": "GW",
+    "name": "Guinea-Bissau",
+    "works_count": 3818,
+    "cited_by_count": 93574,
+    "citations_per_paper": 24.5
+  },
+  {
+    "iso2": "GY",
+    "name": "Guyana",
+    "works_count": 3724,
+    "cited_by_count": 32339,
+    "citations_per_paper": 8.7
+  },
+  {
+    "iso2": "BS",
+    "name": "Bahamas",
+    "works_count": 3186,
+    "cited_by_count": 47007,
+    "citations_per_paper": 14.8
+  },
+  {
+    "iso2": "LR",
+    "name": "Liberia",
+    "works_count": 3132,
+    "cited_by_count": 44480,
+    "citations_per_paper": 14.2
+  },
+  {
+    "iso2": "BZ",
+    "name": "Belize",
+    "works_count": 3038,
+    "cited_by_count": 82428,
+    "citations_per_paper": 27.1
+  },
+  {
+    "iso2": "HT",
+    "name": "Haiti",
+    "works_count": 2978,
+    "cited_by_count": 33855,
+    "citations_per_paper": 11.4
+  },
+  {
+    "iso2": "LS",
+    "name": "Lesotho",
+    "works_count": 2954,
+    "cited_by_count": 31505,
+    "citations_per_paper": 10.7
+  },
+  {
+    "iso2": "FO",
+    "name": "Faroe Islands",
+    "works_count": 2620,
+    "cited_by_count": 66970,
+    "citations_per_paper": 25.6
+  },
+  {
+    "iso2": "CF",
+    "name": "Central African Republic",
+    "works_count": 2513,
+    "cited_by_count": 35503,
+    "citations_per_paper": 14.1
+  },
+  {
+    "iso2": "MR",
+    "name": "Mauritania",
+    "works_count": 2475,
+    "cited_by_count": 23282,
+    "citations_per_paper": 9.4
+  },
+  {
+    "iso2": "BM",
+    "name": "Bermuda",
+    "works_count": 2322,
+    "cited_by_count": 88953,
+    "citations_per_paper": 38.3
+  },
+  {
+    "iso2": "KY",
+    "name": "Cayman Islands",
+    "works_count": 2293,
+    "cited_by_count": 44689,
+    "citations_per_paper": 19.5
+  },
+  {
+    "iso2": "GI",
+    "name": "Gibraltar",
+    "works_count": 2262,
+    "cited_by_count": 33295,
+    "citations_per_paper": 14.7
+  },
+  {
+    "iso2": "VI",
+    "name": "Virgin Islands, U.S.",
+    "works_count": 2211,
+    "cited_by_count": 51295,
+    "citations_per_paper": 23.2
+  },
+  {
+    "iso2": "CV",
+    "name": "Cabo Verde",
+    "works_count": 2059,
+    "cited_by_count": 16568,
+    "citations_per_paper": 8
+  },
+  {
+    "iso2": "TL",
+    "name": "Timor-Leste",
+    "works_count": 2057,
+    "cited_by_count": 10663,
+    "citations_per_paper": 5.2
+  },
+  {
+    "iso2": "SC",
+    "name": "Seychelles",
+    "works_count": 1996,
+    "cited_by_count": 57010,
+    "citations_per_paper": 28.6
+  },
+  {
+    "iso2": "ER",
+    "name": "Eritrea",
+    "works_count": 1923,
+    "cited_by_count": 30325,
+    "citations_per_paper": 15.8
+  },
+  {
+    "iso2": "SR",
+    "name": "Suriname",
+    "works_count": 1844,
+    "cited_by_count": 19115,
+    "citations_per_paper": 10.4
+  },
+  {
+    "iso2": "SJ",
+    "name": "Svalbard and Jan Mayen",
+    "works_count": 1825,
+    "cited_by_count": 23784,
+    "citations_per_paper": 13
+  },
+  {
+    "iso2": "AS",
+    "name": "American Samoa",
+    "works_count": 1697,
+    "cited_by_count": 23568,
+    "citations_per_paper": 13.9
+  },
+  {
+    "iso2": "WS",
+    "name": "Samoa",
+    "works_count": 1436,
+    "cited_by_count": 27058,
+    "citations_per_paper": 18.8
+  },
+  {
+    "iso2": "SM",
+    "name": "San Marino",
+    "works_count": 1376,
+    "cited_by_count": 28399,
+    "citations_per_paper": 20.6
+  },
+  {
+    "iso2": "VA",
+    "name": "Vatican City",
+    "works_count": 1349,
+    "cited_by_count": 16288,
+    "citations_per_paper": 12.1
+  },
+  {
+    "iso2": "IM",
+    "name": "Isle of Man",
+    "works_count": 1256,
+    "cited_by_count": 25281,
+    "citations_per_paper": 20.1
+  },
+  {
+    "iso2": "AW",
+    "name": "Aruba",
+    "works_count": 1214,
+    "cited_by_count": 9072,
+    "citations_per_paper": 7.5
+  },
+  {
+    "iso2": "VU",
+    "name": "Vanuatu",
+    "works_count": 1189,
+    "cited_by_count": 22026,
+    "citations_per_paper": 18.5
+  },
+  {
+    "iso2": "TO",
+    "name": "Tonga",
+    "works_count": 1081,
+    "cited_by_count": 14857,
+    "citations_per_paper": 13.7
+  },
+  {
+    "iso2": "PW",
+    "name": "Palau",
+    "works_count": 1054,
+    "cited_by_count": 15130,
+    "citations_per_paper": 14.4
+  },
+  {
+    "iso2": "NU",
+    "name": "Niue",
+    "works_count": 1033,
+    "cited_by_count": 1780,
+    "citations_per_paper": 1.7
+  },
+  {
+    "iso2": "DJ",
+    "name": "Djibouti",
+    "works_count": 1029,
+    "cited_by_count": 10187,
+    "citations_per_paper": 9.9
+  },
+  {
+    "iso2": "SX",
+    "name": "Sint Maarten",
+    "works_count": 975,
+    "cited_by_count": 9665,
+    "citations_per_paper": 9.9
+  },
+  {
+    "iso2": "DM",
+    "name": "Dominica",
+    "works_count": 963,
+    "cited_by_count": 12150,
+    "citations_per_paper": 12.6
+  },
+  {
+    "iso2": "FK",
+    "name": "Falkland Islands (Malvinas)",
+    "works_count": 921,
+    "cited_by_count": 18493,
+    "citations_per_paper": 20.1
+  },
+  {
+    "iso2": "MS",
+    "name": "Montserrat",
+    "works_count": 839,
+    "cited_by_count": 15002,
+    "citations_per_paper": 17.9
+  },
+  {
+    "iso2": "JE",
+    "name": "Jersey",
+    "works_count": 832,
+    "cited_by_count": 20943,
+    "citations_per_paper": 25.2
+  },
+  {
+    "iso2": "AD",
+    "name": "Andorra",
+    "works_count": 765,
+    "cited_by_count": 13443,
+    "citations_per_paper": 17.6
+  },
+  {
+    "iso2": "LC",
+    "name": "Saint Lucia",
+    "works_count": 745,
+    "cited_by_count": 9040,
+    "citations_per_paper": 12.1
+  },
+  {
+    "iso2": "FM",
+    "name": "Micronesia, Federated States of",
+    "works_count": 619,
+    "cited_by_count": 24414,
+    "citations_per_paper": 39.4
+  },
+  {
+    "iso2": "GQ",
+    "name": "Equatorial Guinea",
+    "works_count": 500,
+    "cited_by_count": 7071,
+    "citations_per_paper": 14.1
+  },
+  {
+    "iso2": "TC",
+    "name": "Turks and Caicos Islands",
+    "works_count": 455,
+    "cited_by_count": 5214,
+    "citations_per_paper": 11.5
+  },
+  {
+    "iso2": "VC",
+    "name": "Saint Vincent and the Grenadines",
+    "works_count": 432,
+    "cited_by_count": 3726,
+    "citations_per_paper": 8.6
+  },
+  {
+    "iso2": "MP",
+    "name": "Northern Mariana Islands",
+    "works_count": 389,
+    "cited_by_count": 4771,
+    "citations_per_paper": 12.3
+  },
+  {
+    "iso2": "SB",
+    "name": "Solomon Islands",
+    "works_count": 355,
+    "cited_by_count": 4398,
+    "citations_per_paper": 12.4
+  },
+  {
+    "iso2": "KI",
+    "name": "Kiribati",
+    "works_count": 235,
+    "cited_by_count": 3073,
+    "citations_per_paper": 13.1
+  },
+  {
+    "iso2": "AX",
+    "name": "Åland Islands",
+    "works_count": 165,
+    "cited_by_count": 1632,
+    "citations_per_paper": 9.9
+  },
+  {
+    "iso2": "TV",
+    "name": "Tuvalu",
+    "works_count": 104,
+    "cited_by_count": 869,
+    "citations_per_paper": 8.4
+  },
+  {
+    "iso2": "BQ",
+    "name": "Bonaire, Sint Eustatius and Saba",
+    "works_count": 52,
+    "cited_by_count": 385,
+    "citations_per_paper": 7.4
+  },
+  {
+    "iso2": "CK",
+    "name": "Cook Islands",
+    "works_count": 42,
+    "cited_by_count": 575,
+    "citations_per_paper": 13.7
+  },
+  {
+    "iso2": "AI",
+    "name": "Anguilla",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "AQ",
+    "name": "Antarctica",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "BL",
+    "name": "Saint Barthélemy",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "BV",
+    "name": "Bouvet Island",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "CC",
+    "name": "Cocos (Keeling) Islands",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "CX",
+    "name": "Christmas Island",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "GG",
+    "name": "Guernsey",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "GS",
+    "name": "South Georgia and the South Sandwich Islands",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "HM",
+    "name": "Heard Island and McDonald Islands",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "IO",
+    "name": "British Indian Ocean Territory",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "KM",
+    "name": "Comoros",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "MF",
+    "name": "Saint Martin (French part)",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "MH",
+    "name": "Marshall Islands",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "NF",
+    "name": "Norfolk Island",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "NR",
+    "name": "Nauru",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "PM",
+    "name": "Saint Pierre and Miquelon",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "PN",
+    "name": "Pitcairn",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "SH",
+    "name": "Saint Helena, Ascension and Tristan da Cunha",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "TK",
+    "name": "Tokelau",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "WF",
+    "name": "Wallis and Futuna",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  },
+  {
+    "iso2": "YT",
+    "name": "Mayotte",
+    "works_count": null,
+    "cited_by_count": null,
+    "citations_per_paper": 0
+  }
+]

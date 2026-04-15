@@ -1,0 +1,347 @@
+{
+  "fetched_at": "2026-04-09T19:50:19.166Z",
+  "source": "Global Carbon Project 2024",
+  "year": 2023,
+  "countries": {
+    "CN": {
+      "total": 11580,
+      "per_capita": 8.2,
+      "cumulative": 270000,
+      "share": 32.4
+    },
+    "US": {
+      "total": 5070,
+      "per_capita": 15,
+      "cumulative": 420000,
+      "share": 14.2
+    },
+    "IN": {
+      "total": 2910,
+      "per_capita": 2.1,
+      "cumulative": 50000,
+      "share": 8.2
+    },
+    "RU": {
+      "total": 1850,
+      "per_capita": 12.7,
+      "cumulative": 105000,
+      "share": 5.2
+    },
+    "JP": {
+      "total": 1060,
+      "per_capita": 8.5,
+      "cumulative": 67000,
+      "share": 3
+    },
+    "ID": {
+      "total": 720,
+      "per_capita": 2.6,
+      "cumulative": 12000,
+      "share": 2
+    },
+    "DE": {
+      "total": 670,
+      "per_capita": 8,
+      "cumulative": 93000,
+      "share": 1.9
+    },
+    "KR": {
+      "total": 620,
+      "per_capita": 12,
+      "cumulative": 22000,
+      "share": 1.7
+    },
+    "SA": {
+      "total": 580,
+      "per_capita": 16,
+      "cumulative": 18000,
+      "share": 1.6
+    },
+    "CA": {
+      "total": 550,
+      "per_capita": 14.2,
+      "cumulative": 32000,
+      "share": 1.5
+    },
+    "BR": {
+      "total": 520,
+      "per_capita": 2.4,
+      "cumulative": 28000,
+      "share": 1.5
+    },
+    "MX": {
+      "total": 480,
+      "per_capita": 3.7,
+      "cumulative": 15000,
+      "share": 1.3
+    },
+    "AU": {
+      "total": 420,
+      "per_capita": 16,
+      "cumulative": 18000,
+      "share": 1.2
+    },
+    "TR": {
+      "total": 410,
+      "per_capita": 4.8,
+      "cumulative": 12000,
+      "share": 1.2
+    },
+    "ZA": {
+      "total": 400,
+      "per_capita": 6.6,
+      "cumulative": 18000,
+      "share": 1.1
+    },
+    "IR": {
+      "total": 390,
+      "per_capita": 4.5,
+      "cumulative": 12000,
+      "share": 1.1
+    },
+    "IT": {
+      "total": 340,
+      "per_capita": 5.8,
+      "cumulative": 47000,
+      "share": 1
+    },
+    "FR": {
+      "total": 320,
+      "per_capita": 4.9,
+      "cumulative": 53000,
+      "share": 0.9
+    },
+    "GB": {
+      "total": 320,
+      "per_capita": 4.7,
+      "cumulative": 77000,
+      "share": 0.9
+    },
+    "PL": {
+      "total": 310,
+      "per_capita": 8.2,
+      "cumulative": 14000,
+      "share": 0.9
+    },
+    "TH": {
+      "total": 290,
+      "per_capita": 4.1,
+      "cumulative": 5000,
+      "share": 0.8
+    },
+    "ES": {
+      "total": 270,
+      "per_capita": 5.7,
+      "cumulative": 22000,
+      "share": 0.8
+    },
+    "EG": {
+      "total": 250,
+      "per_capita": 2.3,
+      "cumulative": 7000,
+      "share": 0.7
+    },
+    "VN": {
+      "total": 240,
+      "per_capita": 2.5,
+      "cumulative": 4000,
+      "share": 0.7
+    },
+    "TW": {
+      "total": 240,
+      "per_capita": 10.2,
+      "cumulative": 6000,
+      "share": 0.7
+    },
+    "AR": {
+      "total": 210,
+      "per_capita": 4.6,
+      "cumulative": 15000,
+      "share": 0.6
+    },
+    "MY": {
+      "total": 200,
+      "per_capita": 6.2,
+      "cumulative": 5000,
+      "share": 0.6
+    },
+    "NG": {
+      "total": 190,
+      "per_capita": 0.9,
+      "cumulative": 3000,
+      "share": 0.5
+    },
+    "KZ": {
+      "total": 180,
+      "per_capita": 9.3,
+      "cumulative": 6000,
+      "share": 0.5
+    },
+    "UA": {
+      "total": 170,
+      "per_capita": 4,
+      "cumulative": 18000,
+      "share": 0.5
+    },
+    "NL": {
+      "total": 150,
+      "per_capita": 8.5,
+      "cumulative": 17000,
+      "share": 0.4
+    },
+    "AE": {
+      "total": 150,
+      "per_capita": 15.5,
+      "cumulative": 4000,
+      "share": 0.4
+    },
+    "CZ": {
+      "total": 100,
+      "per_capita": 9.4,
+      "cumulative": 7000,
+      "share": 0.3
+    },
+    "PH": {
+      "total": 150,
+      "per_capita": 1.3,
+      "cumulative": 3000,
+      "share": 0.4
+    },
+    "PK": {
+      "total": 180,
+      "per_capita": 0.8,
+      "cumulative": 5000,
+      "share": 0.5
+    },
+    "BD": {
+      "total": 80,
+      "per_capita": 0.5,
+      "cumulative": 2000,
+      "share": 0.2
+    },
+    "CO": {
+      "total": 100,
+      "per_capita": 2,
+      "cumulative": 5000,
+      "share": 0.3
+    },
+    "CL": {
+      "total": 90,
+      "per_capita": 4.6,
+      "cumulative": 7000,
+      "share": 0.3
+    },
+    "SE": {
+      "total": 40,
+      "per_capita": 3.9,
+      "cumulative": 9000,
+      "share": 0.1
+    },
+    "NO": {
+      "total": 45,
+      "per_capita": 8.3,
+      "cumulative": 4000,
+      "share": 0.1
+    },
+    "FI": {
+      "total": 45,
+      "per_capita": 8.1,
+      "cumulative": 6000,
+      "share": 0.1
+    },
+    "BE": {
+      "total": 100,
+      "per_capita": 8.7,
+      "cumulative": 11000,
+      "share": 0.3
+    },
+    "AT": {
+      "total": 70,
+      "per_capita": 7.7,
+      "cumulative": 8000,
+      "share": 0.2
+    },
+    "CH": {
+      "total": 40,
+      "per_capita": 4.5,
+      "cumulative": 12000,
+      "share": 0.1
+    },
+    "DK": {
+      "total": 30,
+      "per_capita": 5.1,
+      "cumulative": 6000,
+      "share": 0.1
+    },
+    "PT": {
+      "total": 50,
+      "per_capita": 4.8,
+      "cumulative": 4000,
+      "share": 0.1
+    },
+    "GR": {
+      "total": 60,
+      "per_capita": 5.6,
+      "cumulative": 5000,
+      "share": 0.2
+    },
+    "HU": {
+      "total": 55,
+      "per_capita": 5.7,
+      "cumulative": 5000,
+      "share": 0.2
+    },
+    "RO": {
+      "total": 70,
+      "per_capita": 3.6,
+      "cumulative": 5000,
+      "share": 0.2
+    },
+    "IL": {
+      "total": 55,
+      "per_capita": 5.9,
+      "cumulative": 3000,
+      "share": 0.2
+    },
+    "NZ": {
+      "total": 35,
+      "per_capita": 7.1,
+      "cumulative": 2000,
+      "share": 0.1
+    },
+    "SG": {
+      "total": 45,
+      "per_capita": 8,
+      "cumulative": 2000,
+      "share": 0.1
+    },
+    "HK": {
+      "total": 35,
+      "per_capita": 4.7,
+      "cumulative": 2000,
+      "share": 0.1
+    },
+    "IE": {
+      "total": 35,
+      "per_capita": 7,
+      "cumulative": 3000,
+      "share": 0.1
+    },
+    "LU": {
+      "total": 10,
+      "per_capita": 15.5,
+      "cumulative": 500,
+      "share": 0.03
+    }
+  },
+  "global_total": 35700,
+  "global_per_capita": 4.5,
+  "land_use_emissions": 4200,
+  "fossil_emissions": 31500,
+  "carbon_budget": {
+    "for_1_5C": 275,
+    "for_2_0C": 1000,
+    "years_at_current_1_5C": 7.7,
+    "years_at_current_2_0C": 28
+  }
+}

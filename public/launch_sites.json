@@ -1,0 +1,440 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.588343,
+          28.391139
+        ]
+      },
+      "properties": {
+        "id": "AFETR",
+        "name": "Kennedy Space Center/Cape Canaveral, USA",
+        "abbr": "CC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.35,
+          34.4
+        ]
+      },
+      "properties": {
+        "id": "AFWTR",
+        "name": "Vandenberg Air Force Base, USA",
+        "abbr": "V"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -15.386667,
+          27.931944
+        ]
+      },
+      "properties": {
+        "id": "CAS",
+        "name": "Spaceport Gran Canaria, Spain",
+        "abbr": "L-1011,GANC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          59.516667,
+          50.8
+        ]
+      },
+      "properties": {
+        "id": "DLS",
+        "name": "Dombarovsky Air Base, Russia",
+        "abbr": "YAS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -75.5,
+          37.8
+        ]
+      },
+      "properties": {
+        "id": "ERAS",
+        "name": "Wallops Flight Facility, USA",
+        "abbr": "WI"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -52.776,
+          5.232
+        ]
+      },
+      "properties": {
+        "id": "FRGUI",
+        "name": "Guiana Space Centre, French Guiana",
+        "abbr": "CSG"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -3.065188,
+          30.875014
+        ]
+      },
+      "properties": {
+        "id": "HGSTR",
+        "name": "Hammaguir Launch Site, Algeria",
+        "abbr": "HMG"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          99.9,
+          40.6
+        ]
+      },
+      "properties": {
+        "id": "JSC",
+        "name": "Jiuquan Satellite Launch Center, China",
+        "abbr": "JQ"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -152.344617,
+          57.438136
+        ]
+      },
+      "properties": {
+        "id": "KODAK",
+        "name": "Kodiak Launch Complex, Alaska, USA",
+        "abbr": "KLC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          131.1,
+          31.2
+        ]
+      },
+      "properties": {
+        "id": "KSCUT",
+        "name": "Uchinoura Space Center, Japan",
+        "abbr": "KASC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          167.743151,
+          9.049117
+        ]
+      },
+      "properties": {
+        "id": "KWAJ",
+        "name": "Omelek Island, Kwajalein Atoll",
+        "abbr": "KMR"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          45.8,
+          48.4
+        ]
+      },
+      "properties": {
+        "id": "KYMSC",
+        "name": "Kapustin Yar Missile and Space Complex, Russia",
+        "abbr": "GTsP-4"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          127.535069,
+          34.431867
+        ]
+      },
+      "properties": {
+        "id": "NSC",
+        "name": "Naro Space Center, South Korea",
+        "abbr": "NARO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.1,
+          62.8
+        ]
+      },
+      "properties": {
+        "id": "PLMSC",
+        "name": "Plesetsk Missile and Space Complex, Russia",
+        "abbr": "GIK-1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -154.0,
+          0.1
+        ]
+      },
+      "properties": {
+        "id": "SEAL",
+        "name": "Sea Launch Platform (mobile), USA",
+        "abbr": "ODYSSEY,KLA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          53.920833,
+          35.234722
+        ]
+      },
+      "properties": {
+        "id": "SEMLS",
+        "name": "Imam Khomeini Space Center, Iran",
+        "abbr": "SEM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2125,
+          -2.938333
+        ]
+      },
+      "properties": {
+        "id": "SNMLP",
+        "name": "Broglio Space Centre, Kenya",
+        "abbr": "SMLC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.4,
+          13.9
+        ]
+      },
+      "properties": {
+        "id": "SRILR",
+        "name": "Satish Dhawan Space Centre, India",
+        "abbr": "SHAR"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          36.610515,
+          74.803859
+        ]
+      },
+      "properties": {
+        "id": "SUBL",
+        "name": "Submarine Launch Platform (mobile), Russia",
+        "abbr": "K-496,BLA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          128.3,
+          51.4
+        ]
+      },
+      "properties": {
+        "id": "SVOBO",
+        "name": "Svobodnyy Launch Complex, Russia",
+        "abbr": "GIK-2"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.6,
+          37.5
+        ]
+      },
+      "properties": {
+        "id": "TAISC",
+        "name": "Taiyuan Space Center, China",
+        "abbr": "TYSC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          131.0,
+          30.4
+        ]
+      },
+      "properties": {
+        "id": "TANSC",
+        "name": "Tanegashima Space Center, Japan",
+        "abbr": "TNSC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          63.4,
+          45.6
+        ]
+      },
+      "properties": {
+        "id": "TYMSC",
+        "name": "Baikonur Cosmodrome, Kazakhstan",
+        "abbr": "NIIP-5"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          136.8,
+          -31.1
+        ]
+      },
+      "properties": {
+        "id": "WOMRA",
+        "name": "Woomera Test Range, Australia",
+        "abbr": "WOO"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          102.0,
+          28.25
+        ]
+      },
+      "properties": {
+        "id": "XICLF",
+        "name": "Xichang Launch Facility, China",
+        "abbr": "XSC"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.5,
+          31.5
+        ]
+      },
+      "properties": {
+        "id": "YAVNE",
+        "name": "Yavne Launch Facility, Israel",
+        "abbr": "PALB"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          124.705306,
+          39.660083
+        ]
+      },
+      "properties": {
+        "id": "YUN",
+        "name": "Sohae Satellite Launching Station, North Korea",
+        "abbr": "SOHAE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -44.396389,
+          -2.373056
+        ]
+      },
+      "properties": {
+        "id": "",
+        "name": "Alcantara Space Center, Brasil          ",
+        "abbr": "ALCA"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          129.666667,
+          40.85
+        ]
+      },
+      "properties": {
+        "id": "",
+        "name": "Tonghae Satellite Launching Ground, North Korea",
+        "abbr": "TONGH"
+      }
+    }
+  ]
+}

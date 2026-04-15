@@ -1,0 +1,30 @@
+# Memory Index
+
+- [User Profile](user_profile.md) — Kevin, building a world cities/data map app; uses Windows 11, terminal can crash due to cooling issues
+- [Project Overview](project_overview.md) — World Cities Map app with Leaflet, Wikipedia enrichment, World Bank country data
+- [Project State](project_state.md) — Full feature list as of 2026-04-06: commit c11be65; 145+ country indicators, 20+ gauge sections, 203 tests, 94 scripts, PWA, CI/CD
+- [Data Roadmap](data_roadmap.md) — All 6 sub-projects + 5 phases complete; 30+ data sources shipped
+- [Architecture Decisions](feedback_architecture.md) — Don't refactor until pain is real; city-enrichments.json consolidation is safe short-term; name matching is critical shared infrastructure
+- [Fetch Resilience Patterns](feedback_fetch_resilience.md) — Wikidata 504 vs 429 handling: lite query fallback, 2-retry limit for individual cities
+- [Infobox Parsing Lessons](feedback_infobox_parsing.md) — 7 bugs fixed: depth-aware field split, Unbulleted list vs plainlist, {{€|amt}} template, Wikipedia redirect lookup, currency symbol ordering, dollar-family override, scale-error sanity check
+- [Economic Layer Decisions](feedback_econ_layer.md) — Clustering must start per-city not per-country; zoom-persistent expansion via _pinnedExpansion; ISO2_TO_CURRENCY fallback critical; don't overwrite companies.json without verifying data quality
+- [Trade Flow and FX Lessons](feedback_trade_fx.md) — _tradeArc() for global routes; stopPropagation on country click; Frankfurter rates need inversion; autoPan:false + smart offset for popups
+- [User Preferences](feedback_user_preferences.md) — 10k pop floor intentional; values thorough analysis; checkpoint/resume preferred over restart
+- [Finance Charts & IYChart](feedback_finance_charts.md) — escHtml for JSON in attributes (not escAttr); display:none rAF redraw pattern; finData field list; fetch sequencing
+- [Data Quality Patterns](feedback_data_quality.md) — year-as-value corruption, tiny revenue, bad tickers, duplicate QIDs/cities, employees_yahoo preference
+- [Government Data Pipeline](feedback_govt_data.md) — IMF DataMapper only exposes 4 fiscal codes; FRED OECD series covers 27 countries (not BR/IN/ID/TR/CN); cap IMF years at current year
+- [Country Panel Feature](project_country_panel.md) — 20+ gauge sections (incl. Peace, Digital, Demographics), tabbed radar, clickable stats; 203 tests
+- [Discord Bot Setup](project_discord_setup.md) — Token saved, Windows chmodSync bug fixed in server.ts; needs restart then DM bot to pair
+- [API & Data Source Registry](reference_apis.md) — 25+ APIs integrated (WB, IMF, FRED, WHO, OECD, ECB, BoJ, Comtrade, etc.); 3 need keys (FRED, BEA, NOAA)
+- [NOAA API Token](reference_noaa_token.md) — Kevin's free NOAA CDO token for US climate normals (in .env, gitignored)
+- [Chinese Universities Interest](user_china_universities.md) — Kevin interested in Chinese university research rise; ~50M graduates/yr, Nature/Science/IEEE citations; highlight when displaying university data
+- [Skill Execution Preference](feedback_skill_preference.md) — Always pick Subagent-Driven (option 1) automatically; skip the choice question
+- [Autonomous Approval](feedback_autonomy.md) — Never ask Kevin to review spec/plan .md files; proceed autonomously, his approval is always implicit
+- [Optimization Pass](project_optimization_audit.md) — 9-task pass complete 2026-04-05; createLazyLoader factory, cityByQid Map, _editsCache, _buildCountryDataCaches, statCell hoist, flag emoji consolidation; open items: loadEdits mutation safety, A1 marker reuse
+- [Layers Bar Reorganization](project_layers_bar.md) — 2026-04-08: Primary controls + "More ▼" dropdown (Natural Hazards, Infrastructure, Other); emoji prefixes in button text; plate name tooltips
+- [OpenAlex Research Data](project_openalex.md) — 2026-04-09: Research Output gauge section; 247 countries; papers, citations, cites/paper; fits into existing country panel (no new map layer)
+- [Data Sources Implemented](project_datasources.md) — 2026-04-09: Complete list of 94 fetch scripts; FIRMS (NASA_MAP_KEY), UNHCR, GFW, WHO extended, OECD extended, Eurostat extended, RBI, CBRT, PBoC, Carbon; ENTSO-E pending
+- [Phase 1 API Integrations](new_apis_phase1.md) — 2026-04-09: 6 new data sources (WAQI Air Quality, Open-Meteo Weather, Celestrak Satellites, UNESCO ICH, Passport Index, Global Firepower); 922 satellites tracked, 80 heritage elements, 173 passport rankings
+- [Runtime Audit 2026-04-10](runtime_audit_2026_04_10.md) — Complete runtime error audit: all toggle functions verified safe, 203 tests passing, build 542.7KB
+- [Corporate Data Cleanup & Mobile UI](project_corp_data_mobile_ui.md) — 2026-04-13: Yahoo Finance enrichment, QAR/KRW/currency fixes, data scripts; mobile UI redesign, breakpoint merge (768→1024px), hamburger fix for landscape
+- [Mobile Palo Alto Theme](mobile_paloalto_theme.md) — 2026-04-13: Palo Alto design tokens, filter panel/toolbar/FAB glassmorphism, pill buttons, indigo/amber/emerald accent system; BioIntell Explorer reference

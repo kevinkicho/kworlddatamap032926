@@ -1,0 +1,151 @@
+{
+  "fetched_at": "2026-04-09T19:50:17.661Z",
+  "source": "Reserve Bank of India",
+  "country": "IN",
+  "rates": {
+    "repo_rate": 6.5,
+    "reverse_repo_rate": 3.35,
+    "msf_rate": 6.75,
+    "bank_rate": 6.5,
+    "crr": 4.5,
+    "slr": 18,
+    "last_updated": "2024-10-09",
+    "mpc_meeting": "October 2024"
+  },
+  "statistics": {
+    "cpi_inflation": {
+      "value": 5.49,
+      "period": "Sep 2024",
+      "source": "CPI-IW"
+    },
+    "iip_growth": {
+      "value": 4.9,
+      "period": "Aug 2024",
+      "source": "IIP"
+    },
+    "m3_growth": {
+      "value": 10.3,
+      "period": "Oct 2024",
+      "source": "M3"
+    },
+    "forex_reserves": {
+      "value": 688.8,
+      "period": "Oct 2024",
+      "source": "RBI"
+    },
+    "gdp_growth": {
+      "value": 7.8,
+      "period": "Q1 FY25",
+      "source": "NSO"
+    }
+  },
+  "historical": {
+    "repo_rate": [
+      {
+        "date": "2024-10-09",
+        "rate": 6.5
+      },
+      {
+        "date": "2024-08-08",
+        "rate": 6.5
+      },
+      {
+        "date": "2024-06-07",
+        "rate": 6.5
+      },
+      {
+        "date": "2024-04-05",
+        "rate": 6.5
+      },
+      {
+        "date": "2024-02-08",
+        "rate": 6.5
+      },
+      {
+        "date": "2023-12-08",
+        "rate": 6.5
+      },
+      {
+        "date": "2023-10-06",
+        "rate": 6.5
+      },
+      {
+        "date": "2023-08-10",
+        "rate": 6.5
+      },
+      {
+        "date": "2023-06-08",
+        "rate": 6.5
+      },
+      {
+        "date": "2023-04-06",
+        "rate": 6.5
+      },
+      {
+        "date": "2023-02-08",
+        "rate": 6.5
+      },
+      {
+        "date": "2022-12-07",
+        "rate": 6.25
+      }
+    ],
+    "inflation": [
+      {
+        "date": "2024-09",
+        "cpi": 5.49
+      },
+      {
+        "date": "2024-08",
+        "cpi": 6.21
+      },
+      {
+        "date": "2024-07",
+        "cpi": 7.44
+      },
+      {
+        "date": "2024-06",
+        "cpi": 5.08
+      },
+      {
+        "date": "2024-05",
+        "cpi": 4.75
+      },
+      {
+        "date": "2024-04",
+        "cpi": 4.83
+      },
+      {
+        "date": "2024-03",
+        "cpi": 4.85
+      },
+      {
+        "date": "2024-02",
+        "cpi": 5.09
+      },
+      {
+        "date": "2024-01",
+        "cpi": 5.1
+      },
+      {
+        "date": "2023-12",
+        "cpi": 5.69
+      },
+      {
+        "date": "2023-11",
+        "cpi": 5.55
+      },
+      {
+        "date": "2023-10",
+        "cpi": 4.87
+      }
+    ]
+  },
+  "fx_reference": {
+    "usd_inr": 83.85,
+    "eur_inr": 91.25,
+    "gbp_inr": 108.5,
+    "jpy_inr": 0.56,
+    "date": "2026-04-09"
+  }
+}
