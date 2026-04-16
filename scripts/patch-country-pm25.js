@@ -16,6 +16,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_FILE = path.join(__dirname, '..', 'public', 'country-data.json');
@@ -76,7 +77,7 @@ async function main() {
     await new Promise(r => setTimeout(r, 1000));
   }
 
-  fs.writeFileSync(OUT_FILE, JSON.stringify(data));
+  atomicWrite(OUT_FILE, JSON.stringify(data));
   console.log(`\nDone — wrote ${Object.keys(data).length} countries to country-data.json`);
 
   // Quick sanity check

@@ -12,6 +12,7 @@
  */
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const CITIES_PATH  = path.join(__dirname, '../public/cities-full.json');
@@ -78,14 +79,14 @@ async function main() {
     done++;
     if (done % 50 === 0 || done === todo.length) {
       process.stdout.write(`\r  ${done}/${todo.length} | found: ${found} | not found: ${notFound}   `);
-      fs.writeFileSync(OUTPUT_PATH, JSON.stringify(existing, null, 2));
+      atomicWrite(OUTPUT_PATH, JSON.stringify(existing, null, 2));
     }
 
     await sleep(DELAY_MS);
   }
 
   console.log(`\nDone. Writing ${OUTPUT_PATH}`);
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(existing, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(existing, null, 2));
 
   const total  = Object.values(existing).filter(Boolean).length;
   const nulls  = Object.values(existing).filter(v => v === null).length;

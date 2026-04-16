@@ -23,6 +23,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'crypto-stats.json');
@@ -228,7 +229,7 @@ async function fetchCoinGeckoData() {
     stats: stats.sort((a, b) => a.adoption_rank - b.adoption_rank),
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\n✓ Written ${stats.length} country stats to ${OUTPUT_PATH}`);
 
   // Write lightweight version for country panel integration
@@ -241,7 +242,7 @@ async function fetchCoinGeckoData() {
       exchanges: data.exchanges,
     };
   }
-  fs.writeFileSync(lightOutput, JSON.stringify({
+  atomicWrite(lightOutput, JSON.stringify({
     fetched_at: output.fetched_at,
     source: output.source,
     total: output.total,

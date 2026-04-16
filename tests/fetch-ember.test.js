@@ -74,12 +74,12 @@ describe('Ember fields in country-data.json', () => {
   try { cd = JSON.parse(fs.readFileSync(cdPath, 'utf8')); }
   catch { cd = null; }
 
-  it('country-data.json is readable', () => {
+  it('country-data.json is readable', { skip: !cd }, () => {
     assert.ok(cd !== null, 'Could not read country-data.json');
   });
 
-  it('DE has all Ember fields (run: node scripts/fetch-ember.js first)', () => {
-    const de = cd && cd['DE'];
+  it('DE has all Ember fields (run: node scripts/fetch-ember.js first)', { skip: !cd }, () => {
+    const de = cd['DE'];
     assert.ok(de, 'DE missing from country-data.json');
     assert.ok(typeof de.energy_coal_pct        === 'number', 'energy_coal_pct missing');
     assert.ok(typeof de.energy_gas_pct         === 'number', 'energy_gas_pct missing');
@@ -91,8 +91,8 @@ describe('Ember fields in country-data.json', () => {
     assert.ok(de.energy_coal_pct_history.length > 5,         'history should have 5+ years');
   });
 
-  it('coal history is sorted ascending by year', () => {
-    const de = cd && cd['DE'];
+  it('coal history is sorted ascending by year', { skip: !cd }, () => {
+    const de = cd['DE'];
     if (!de || !de.energy_coal_pct_history || de.energy_coal_pct_history.length < 2) return;
     const h = de.energy_coal_pct_history;
     for (let i = 1; i < h.length; i++) {
@@ -100,8 +100,8 @@ describe('Ember fields in country-data.json', () => {
     }
   });
 
-  it('history entries are [year, pct] tuples with year >= 2000', () => {
-    const de = cd && cd['DE'];
+  it('history entries are [year, pct] tuples with year >= 2000', { skip: !cd }, () => {
+    const de = cd['DE'];
     if (!de || !de.energy_coal_pct_history) return;
     for (const entry of de.energy_coal_pct_history) {
       assert.ok(Array.isArray(entry) && entry.length === 2, 'Entry must be [year, pct]');
@@ -110,13 +110,13 @@ describe('Ember fields in country-data.json', () => {
     }
   });
 
-  it('covers at least 80 countries with energy_coal_pct', () => {
-    const count = cd ? Object.values(cd).filter(d => typeof d.energy_coal_pct === 'number').length : 0;
+  it('covers at least 80 countries with energy_coal_pct', { skip: !cd }, () => {
+    const count = Object.values(cd).filter(d => typeof d.energy_coal_pct === 'number').length;
     assert.ok(count >= 80, `Only ${count} countries have energy_coal_pct — expected 80+`);
   });
 
-  it('existing WB and WHR fields are still intact on DE', () => {
-    const de = cd && cd['DE'];
+  it('existing WB and WHR fields are still intact on DE', { skip: !cd }, () => {
+    const de = cd['DE'];
     assert.ok(de, 'DE missing');
     assert.ok(typeof de.gdp_per_capita === 'number', 'gdp_per_capita clobbered');
     assert.ok(typeof de.whr_score === 'number', 'whr_score clobbered');

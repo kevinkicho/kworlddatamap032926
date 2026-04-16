@@ -3,7 +3,7 @@ const { describe, it, test } = require('node:test');
 const assert = require('node:assert/strict');
 const {
   popToT, lerpRGB, wikiCityColor, wikiCityOpacity, wikiCityRadius,
-  fmtPop, fmtNum, escHtml, escAttr, isoToFlag,
+  fmtPop, fmtNum, escHtml, escAttr, isoToFlag, safeOnclick,
   _tradeArc, _tradeArrowWeight, _convexHull, _arcLine,
   econDotColor, _econCellDeg, fmtEmployees, fmtRevenue,
   _pointInPolygon, validateCities, cityKey,
@@ -496,4 +496,35 @@ describe('_radarScore', () => {
     assert.equal(_radarScore('fiscal_balance_gdp', 15, 100), 1));
   test('NaN value returns 0', () =>
     assert.equal(_radarScore('gdp_per_capita', NaN, 100), 0));
+});
+
+describe('safeOnclick', () => {
+  test('simple function call', () =>
+    assert.equal(safeOnclick('foo', 'bar'), ' onclick="foo(&quot;bar&quot;)"'));
+  test('multiple args', () =>
+    assert.equal(safeOnclick('fn', 'a', 'b'), ' onclick="fn(&quot;a&quot;,&quot;b&quot;)"'));
+  test('single quotes in values remain but are inside double-quoted JS strings (safe)', () => {
+    const result = safeOnclick('fn', "Q1');alert(1);//");
+    const match = result.match(/onclick="([^"]*)"/);
+    assert.ok(match, 'onclick attribute has proper double-quote delimiters');
+    const jsCode = match[1].replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    assert.ok(jsCode.startsWith('fn("Q1') && jsCode.includes('")'), 'JS string delimiters are double quotes from JSON.stringify');
+    assert.doesNotThrow(() => new Function(jsCode), 'produces valid JS');
+  });
+  test('escapes double quotes in values', () => {
+    const result = safeOnclick('fn', 'he said "hello"');
+    assert.ok(!result.includes('"hello"'), 'no raw double quotes in attribute');
+    assert.ok(result.includes('&quot;'), 'HTML-escaped');
+  });
+  test('escapes angle brackets', () => {
+    const result = safeOnclick('fn', '<script>alert(1)</script>');
+    assert.ok(!result.includes('<script>'), 'no raw script tags');
+    assert.ok(result.includes('&lt;'), 'angle brackets escaped');
+  });
+  test('numeric arg', () =>
+    assert.equal(safeOnclick('flyTo', 40.7, -74.0), ' onclick="flyTo(40.7,-74)"'));
+  test('null arg', () =>
+    assert.equal(safeOnclick('fn', null), ' onclick="fn(null)"'));
+  test('no args', () =>
+    assert.equal(safeOnclick('closePanel'), ' onclick="closePanel()"'));
 });

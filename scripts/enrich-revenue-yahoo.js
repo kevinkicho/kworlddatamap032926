@@ -10,6 +10,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 const YahooFinance = require('yahoo-finance2').default;
 
@@ -131,7 +132,7 @@ async function main() {
   console.log(`Errors:      ${errors}`);
 
   if (!DRY_RUN) {
-    fs.writeFileSync(IN_FILE, JSON.stringify(data));
+    atomicWrite(IN_FILE, JSON.stringify(data));
     console.log('\nSaved to', IN_FILE);
   } else {
     console.log('\nDRY RUN — no changes saved');

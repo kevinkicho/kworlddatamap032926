@@ -76,6 +76,29 @@ function httpsGet(url, maxRedirects = 5) {
 }
 
 // ── FX proxy ──
+
+const _beaKey = process.env.BEA_API_KEY || '';
+
+app.get('/api/bea', (req, res) => {
+  if (!_beaKey) return res.status(503).json({ error: 'BEA_API_KEY not configured' });
+  const params = new URLSearchParams(req.query);
+  params.set('UserID', _beaKey);
+  params.set('ResultFormat', 'JSON');
+  const url = `https://apps.bea.gov/api/data/?${params}`;
+  const mod = require('https');
+  mod.get(url, (upstream) => {
+    if (upstream.statusCode !== 200) {
+      res.status(upstream.statusCode).type('json').send('{"error":"BEA upstream error"}');
+      return;
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    upstream.pipe(res);
+  }).on('error', (e) => {
+    res.status(502).json({ error: 'BEA proxy failed', detail: e.message });
+  });
+});
+
 app.get('/api/fx', async (req, res) => {
   const date = req.query.date || 'latest';
   const url = `https://api.frankfurter.app/${date}?from=USD`;
@@ -288,18 +311,19 @@ td{padding:6px 8px;border-bottom:1px solid var(--border)}
 <table><thead><tr><th>Time</th><th>Type</th><th>Detail</th></tr></thead><tbody id="err-body"></tbody></table>
 <script>
 fetch('/analytics').then(r=>r.json()).then(d=>{
+  const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const fmt=t=>t?t.replace('T',' ').slice(0,19):'—';
   const ok=v=>v>0?'ok':'err';
   document.getElementById('subtitle').textContent='Uptime: '+d.uptime.human+' · Started: '+fmt(d.started);
   document.getElementById('sys-grid').innerHTML=[
-    card('Node',d.server.node,'Runtime'),
-    card(_fmtB(d.memory.rssBytes),d.memory.heapUsed+' heap','Memory'),
-    card(d.server.cpus+' cores',d.server.platform+'/'+d.server.arch,'Server'),
+    card('Node',esc(d.server.node),'Runtime'),
+    card(_fmtB(d.memory.rssBytes),esc(d.memory.heapUsed)+' heap','Memory'),
+    card(d.server.cpus+' cores',esc(d.server.platform)+'/'+esc(d.server.arch),'Server'),
   ].join('');
   document.getElementById('data-grid').innerHTML=[
     card(d.data.files+' files',d.data.totalSize+' total','Data Files'),
     card(d.bundle.size,_fmtB(d.bundle.gzipSize)+' gzip','Bundle'),
-    ...d.data.largest.slice(0,5).map(f=>card(f.size,f.file,f.modified?fmt(f.modified):'')),
+    ...d.data.largest.slice(0,5).map(f=>card(f.size,esc(f.file),f.modified?fmt(f.modified):'')),
   ].join('');
   const fxPct=d.fxProxy.success+d.fxProxy.fail>0?Math.round(100*d.fxProxy.success/(d.fxProxy.success+d.fxProxy.fail)):null;
   const enPct=d.enrich.success+d.enrich.fail>0?Math.round(100*d.enrich.success/(d.enrich.success+d.enrich.fail)):null;
@@ -311,13 +335,13 @@ fetch('/analytics').then(r=>r.json()).then(d=>{
   ].join('');
   const rb=document.getElementById('req-body');
   d.requests.recent.reverse().forEach(r=>{
-    rb.innerHTML+='<tr><td class="mono">'+fmt(r.ts)+'</td><td>'+r.method+'</td><td class="mono">'+r.path+'</td><td><span class="badge badge-'+(r.status<400?'ok':'err')+'">'+r.status+'</span></td><td class="mono">'+r.ms+'ms</td></tr>';
+    rb.innerHTML+='<tr><td class="mono">'+fmt(r.ts)+'</td><td>'+esc(r.method)+'</td><td class="mono">'+esc(r.path)+'</td><td><span class="badge badge-'+(r.status<400?'ok':'err')+'">'+r.status+'</span></td><td class="mono">'+r.ms+'ms</td></tr>';
   });
   const eb=document.getElementById('err-body');
   d.errors.reverse().forEach(e=>{
-    eb.innerHTML+='<tr><td class="mono">'+fmt(e.ts)+'</td><td>'+e.type+'</td><td class="mono">'+(e.error||e.body||e.status||'—')+'</td></tr>';
+    eb.innerHTML+='<tr><td class="mono">'+fmt(e.ts)+'</td><td>'+esc(e.type)+'</td><td class="mono">'+esc(e.error||e.body||e.status||'—')+'</td></tr>';
   });
-}).catch(e=>{document.body.innerHTML='<h1>Error</h1><p>'+e.message+'</p>'});
+}).catch(e=>{document.body.innerHTML='<h1>Error</h1><p>'+esc(e.message)+'</p>'});
 function card(v,sub,label){return '<div class="card"><div class="label">'+label+'</div><div class="value">'+v+'</div><div class="sub">'+sub+'</div></div>';}
 function _fmtB(b){if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB';}
 </script>

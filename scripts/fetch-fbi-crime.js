@@ -23,6 +23,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const CITIES_PATH = path.join(__dirname, '../public/cities-full.json');
@@ -31,7 +32,7 @@ const OUTPUT_PATH = path.join(__dirname, '../public/fbi-crime.json');
 const CACHE_DIR   = path.join(__dirname, '../tmp/fbi-cache');
 
 const API_BASE  = 'https://api.usa.gov/crime/fbi/cde';
-const API_KEY   = 'DEMO_KEY';
+const API_KEY   = process.env.FBI_API_KEY || 'DEMO_KEY';
 const DELAY_MS  = 2500;
 
 // ── State FIPS → abbreviation ─────────────────────────────────────────────────
@@ -508,7 +509,7 @@ async function main() {
     console.log(`  ${city?.name || qid}: violent=${d.violentPer100k}, property=${d.propertyPer100k} (${d.year})`);
   });
   console.log(`\nWriting to ${OUTPUT_PATH}…`);
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(result, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(result, null, 2));
   console.log('Done. Re-run script daily to add more cities via API (rate limit resets ~21h).');
 }
 

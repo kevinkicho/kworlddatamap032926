@@ -54,6 +54,10 @@
   function escAttr(str) {
     return String(str ?? "").replace(/'/g, "&#39;");
   }
+  function safeOnclick(fnName, ...args) {
+    const jsArgs = args.map((a) => JSON.stringify(a)).join(",");
+    return ` onclick="${escHtml(fnName + "(" + jsArgs + ")")}"`;
+  }
   function isoToFlag(iso2) {
     if (!iso2 || iso2.length !== 2) return "\u{1F310}";
     return [...iso2.toUpperCase()].map(
@@ -83,7 +87,7 @@
         bad.push(c);
       }
     }
-    if (bad.length) console.warn(`[init] Skipped ${bad.length} malformed city records (missing name/lat/lng)`);
+    if (bad.length) ;
     if (valid.length === 0) throw new Error("cities-full.json contains no valid city records");
     return valid;
   }
@@ -130,6 +134,8 @@
         _hashRestoreCity: null,
         _hashRestoreCountry: null,
         _hashRestoreChoro: false,
+        // ── Timer IDs (for cleanup) ──────────────────────────────────────────────────
+        _terminatorInterval: null,
         // ── Core ───────────────────────────────────────────────────────────────────
         map: null,
         wikiLayer: null,
@@ -960,6 +966,139 @@
     }
   });
 
+  // src/fx-sidebar.js
+  function initFxCallbacks(callbacks) {
+    _onRatesChanged = callbacks.onRatesChanged || null;
+    _mobileBackdropOn = callbacks.mobileBackdropOn || _mobileBackdropOn;
+    _mobileBackdropOff = callbacks.mobileBackdropOff || _mobileBackdropOff;
+  }
+  function toUSD(value, currency) {
+    if (!value || !currency) return 0;
+    const rate = S.fxRates[(currency + "").toUpperCase()];
+    return rate ? value * rate : 0;
+  }
+  function toggleFxSidebar() {
+    const el = document.getElementById("fx-sidebar");
+    const opening = !el.classList.contains("open");
+    el.classList.toggle("open", opening);
+    if (opening) {
+      _fxRenderList();
+      _mobileBackdropOn();
+    } else {
+      _mobileBackdropOff();
+    }
+  }
+  function _fxSaveToLS() {
+    try {
+      const date = document.getElementById("fx-date")?.value || "latest";
+      localStorage.setItem(LS_FX_KEY, JSON.stringify({ date, rates: S.fxRates }));
+    } catch (_) {
+    }
+  }
+  function _fxLoadFromLS() {
+    try {
+      const raw = localStorage.getItem(LS_FX_KEY);
+      if (!raw) return false;
+      const { date, rates } = JSON.parse(raw);
+      if (rates && typeof rates === "object") {
+        Object.assign(S.fxRates, rates);
+        const dateEl = document.getElementById("fx-date");
+        if (dateEl && date && date !== "latest") dateEl.value = date;
+        return true;
+      }
+    } catch (_) {
+    }
+    return false;
+  }
+  async function fxFetchRates() {
+    const date = document.getElementById("fx-date")?.value || "latest";
+    const statusEl = document.getElementById("fx-status");
+    const btn = document.getElementById("fx-fetch-btn");
+    statusEl.textContent = "\u23F3 Fetching\u2026";
+    if (btn) btn.disabled = true;
+    try {
+      const apiDate = date || "latest";
+      const res = await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      if (!json.rates) throw new Error("No rates in response");
+      for (const [cur, val] of Object.entries(json.rates)) {
+        if (val > 0) S.fxRates[cur.toUpperCase()] = 1 / val;
+      }
+      const returnedDate = json.date || apiDate;
+      const dateEl = document.getElementById("fx-date");
+      if (dateEl) dateEl.value = returnedDate;
+      statusEl.textContent = `\u2713 ECB rates \xB7 ${returnedDate}`;
+      statusEl.style.color = "#3fb950";
+      _fxSaveToLS();
+      _fxRenderList();
+      _fxApplyRates();
+    } catch (e) {
+      statusEl.textContent = `\u2717 ${e.message}`;
+      statusEl.style.color = "#f85149";
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+  function fxResetDefaults() {
+    S.fxRates = { ...FX_TO_USD };
+    localStorage.removeItem(LS_FX_KEY);
+    const statusEl = document.getElementById("fx-status");
+    if (statusEl) {
+      statusEl.textContent = "Reset to built-in rates";
+      statusEl.style.color = "#8b949e";
+    }
+    const dateEl = document.getElementById("fx-date");
+    if (dateEl) dateEl.value = "2025-01-02";
+    _fxRenderList();
+    _fxApplyRates();
+  }
+  function fxInputChanged(cur, val) {
+    const n = parseFloat(val);
+    if (!n || n <= 0) return;
+    S.fxRates[cur] = n;
+    _fxSaveToLS();
+    _fxApplyRates();
+  }
+  function _fxRenderList() {
+    const list = document.getElementById("fx-list");
+    if (!list) return;
+    const curs = Object.keys(FX_TO_USD).filter((c) => c !== "USD").sort();
+    list.innerHTML = curs.map((cur) => {
+      const rate = S.fxRates[cur] ?? FX_TO_USD[cur];
+      const def = FX_TO_USD[cur];
+      const diff = Math.abs(rate - def) / def;
+      const modified = diff > 1e-3;
+      const perUSD = rate > 0 ? 1 / rate : 0;
+      const dispPerUSD = perUSD >= 1e3 ? perUSD.toFixed(0) : perUSD >= 10 ? perUSD.toFixed(2) : perUSD >= 1 ? perUSD.toFixed(3) : perUSD.toPrecision(3);
+      return `<div class="fx-row${modified ? " fx-modified" : ""}">
+      <span class="fx-cur">${cur}</span>
+      <span class="fx-label">${FX_LABELS[cur] || ""}</span>
+      <input class="fx-input" type="number" step="any" min="0"
+        value="${rate.toPrecision(4)}"
+        title="1 ${cur} = X USD"
+        onchange="fxInputChanged('${cur}', this.value)" />
+      <span class="fx-per-usd">${dispPerUSD}<span class="fx-per-usd-unit">/USD</span></span>
+    </div>`;
+    }).join("");
+  }
+  function _fxApplyRates() {
+    if (_onRatesChanged) _onRatesChanged();
+  }
+  var _onRatesChanged, _mobileBackdropOn, _mobileBackdropOff, LS_FX_KEY;
+  var init_fx_sidebar = __esm({
+    "src/fx-sidebar.js"() {
+      init_state();
+      init_constants();
+      _onRatesChanged = null;
+      _mobileBackdropOn = () => {
+      };
+      _mobileBackdropOff = () => {
+      };
+      LS_FX_KEY = "fx_rates_v2";
+    }
+  });
+
   // src/choro-defs.js
   var CHORO_INDICATORS;
   var init_choro_defs = __esm({
@@ -1185,7 +1324,92 @@
     }
   });
 
+  // src/lightbox.js
+  function openLightbox(images, idx) {
+    S.lightboxImages = images;
+    S.lightboxIdx = idx;
+    document.getElementById("wiki-lightbox").classList.add("open");
+    renderLightboxFrame();
+  }
+  function openCarouselLightbox() {
+    openLightbox(window._lbImgs, S.carIdx);
+  }
+  function closeLightbox() {
+    document.getElementById("wiki-lightbox").classList.remove("open");
+  }
+  function lightboxNav(dir) {
+    S.lightboxIdx = (S.lightboxIdx + dir + S.lightboxImages.length) % S.lightboxImages.length;
+    renderLightboxFrame();
+  }
+  function renderLightboxFrame() {
+    document.getElementById("lightbox-img").src = S.lightboxImages[S.lightboxIdx];
+    document.getElementById("lightbox-counter").textContent = S.lightboxImages.length > 1 ? `${S.lightboxIdx + 1} / ${S.lightboxImages.length}` : "";
+    document.getElementById("lightbox-prev").style.display = S.lightboxImages.length > 1 ? "" : "none";
+    document.getElementById("lightbox-next").style.display = S.lightboxImages.length > 1 ? "" : "none";
+  }
+  function carStart(images) {
+    carStop();
+    S.carImages = images;
+    S.carIdx = 0;
+    if (images.length > 1) S.carTimer = setInterval(() => carGo(1), 4500);
+  }
+  function carStop() {
+    clearInterval(S.carTimer);
+    S.carTimer = null;
+  }
+  function carResume() {
+    if (S.carImages?.length > 1) {
+      carStop();
+      S.carTimer = setInterval(() => carGo(1), 4500);
+    }
+  }
+  function carGo(dir) {
+    S.carIdx = (S.carIdx + dir + S.carImages.length) % S.carImages.length;
+    carRender();
+  }
+  function carJump(i) {
+    S.carIdx = i;
+    carRender();
+    carStop();
+    if (S.carImages.length > 1) S.carTimer = setInterval(() => carGo(1), 4500);
+  }
+  function carRender() {
+    const img = document.getElementById("wiki-car-img");
+    const counter = document.getElementById("wiki-car-counter");
+    if (!img) return;
+    img.classList.add("fade");
+    setTimeout(() => {
+      img.src = S.carImages[S.carIdx];
+      img.classList.remove("fade");
+    }, 180);
+    if (counter) counter.textContent = `${S.carIdx + 1} / ${S.carImages.length}`;
+    document.querySelectorAll(".wiki-car-dot").forEach((d, i) => d.classList.toggle("active", i === S.carIdx));
+  }
+  function initLightboxListeners() {
+    document.getElementById("wiki-lightbox").addEventListener("click", function(e) {
+      if (e.target === this) closeLightbox();
+    });
+    document.addEventListener("keydown", function(e) {
+      const lb = document.getElementById("wiki-lightbox");
+      if (!lb.classList.contains("open")) return;
+      if (e.key === "ArrowLeft") lightboxNav(-1);
+      if (e.key === "ArrowRight") lightboxNav(1);
+      if (e.key === "Escape") closeLightbox();
+    });
+  }
+  var init_lightbox = __esm({
+    "src/lightbox.js"() {
+      init_state();
+    }
+  });
+
   // src/app-legacy.js
+  function _log(tag, ...args) {
+    if (__DEBUG__) ;
+  }
+  function _warn(tag, ...args) {
+    if (__DEBUG__) ;
+  }
   function createLazyLoader(url, assign, shouldRebuild) {
     let loaded = false, loading = null;
     async function ensure() {
@@ -1195,7 +1419,7 @@
       var kdbData = _kdbGet(stem);
       if (kdbData !== null) {
         assign(kdbData);
-        console.log(`[kdb] lazy hit: ${stem}`);
+        _log("kdb", "lazy hit:", stem);
         if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
         loaded = true;
         return;
@@ -1205,11 +1429,11 @@
           const res = await fetch(url);
           if (res.ok) {
             assign(await res.json());
-            console.log(`[lazy] ${url} loaded`);
+            _log("lazy", url, "loaded");
             if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
           }
         } catch (e) {
-          console.warn(`[lazy] ${url} failed`, e);
+          _warn("lazy", url, "failed", e);
         } finally {
           loaded = true;
           loading = null;
@@ -1239,7 +1463,7 @@
     var stem = url.replace(/^\//, "").replace(/\.json(\?.*)?$/, "");
     var kdbData = _kdbGet(stem);
     if (kdbData !== null) {
-      console.log("[kdb] hit: " + stem);
+      _log("kdb", "hit:", stem);
       return { ok: true, status: 200, json: async () => kdbData };
     }
     var res = await fetch(url);
@@ -1329,12 +1553,12 @@
     _eurostatLoader.ensure();
     document.getElementById("filter-panel").classList.add("open");
     document.getElementById("filter-fab").classList.add("active");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
   }
   function closeFilterPanel() {
     document.getElementById("filter-panel").classList.remove("open");
     document.getElementById("filter-fab").classList.remove("active");
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
   }
   function _updateDotControls() {
     const active = _anyFilterActive() || !!S._heatmapMetric;
@@ -1774,122 +1998,6 @@
     for (const [t, c] of stops) g[t] = c;
     return g;
   }
-  function toUSD(value, currency) {
-    if (!value || !currency) return 0;
-    const rate = S.fxRates[(currency + "").toUpperCase()];
-    return rate ? value * rate : 0;
-  }
-  function toggleFxSidebar() {
-    const el = document.getElementById("fx-sidebar");
-    const opening = !el.classList.contains("open");
-    el.classList.toggle("open", opening);
-    if (opening) {
-      _fxRenderList();
-      _mobileBackdropOn();
-    } else {
-      _mobileBackdropOff();
-    }
-  }
-  function _fxSaveToLS() {
-    try {
-      const date = document.getElementById("fx-date")?.value || "latest";
-      localStorage.setItem(LS_FX_KEY, JSON.stringify({ date, rates: S.fxRates }));
-    } catch (_) {
-    }
-  }
-  function _fxLoadFromLS() {
-    try {
-      const raw = localStorage.getItem(LS_FX_KEY);
-      if (!raw) return false;
-      const { date, rates } = JSON.parse(raw);
-      if (rates && typeof rates === "object") {
-        Object.assign(S.fxRates, rates);
-        const dateEl = document.getElementById("fx-date");
-        if (dateEl && date && date !== "latest") dateEl.value = date;
-        return true;
-      }
-    } catch (_) {
-    }
-    return false;
-  }
-  async function fxFetchRates() {
-    const date = document.getElementById("fx-date")?.value || "latest";
-    const statusEl = document.getElementById("fx-status");
-    const btn = document.getElementById("fx-fetch-btn");
-    statusEl.textContent = "\u23F3 Fetching\u2026";
-    if (btn) btn.disabled = true;
-    try {
-      const apiDate = date || "latest";
-      const res = await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = await res.json();
-      if (!json.rates) throw new Error("No rates in response");
-      for (const [cur, val] of Object.entries(json.rates)) {
-        if (val > 0) S.fxRates[cur.toUpperCase()] = 1 / val;
-      }
-      const returnedDate = json.date || apiDate;
-      const dateEl = document.getElementById("fx-date");
-      if (dateEl) dateEl.value = returnedDate;
-      statusEl.textContent = `\u2713 ECB rates \xB7 ${returnedDate}`;
-      statusEl.style.color = "#3fb950";
-      _fxSaveToLS();
-      _fxRenderList();
-      _fxApplyRates();
-    } catch (e) {
-      statusEl.textContent = `\u2717 ${e.message}`;
-      statusEl.style.color = "#f85149";
-    } finally {
-      if (btn) btn.disabled = false;
-    }
-  }
-  function fxResetDefaults() {
-    S.fxRates = { ...FX_TO_USD };
-    localStorage.removeItem(LS_FX_KEY);
-    const statusEl = document.getElementById("fx-status");
-    if (statusEl) {
-      statusEl.textContent = "Reset to built-in rates";
-      statusEl.style.color = "#8b949e";
-    }
-    const dateEl = document.getElementById("fx-date");
-    if (dateEl) dateEl.value = "2025-01-02";
-    _fxRenderList();
-    _fxApplyRates();
-  }
-  function fxInputChanged(cur, val) {
-    const n = parseFloat(val);
-    if (!n || n <= 0) return;
-    S.fxRates[cur] = n;
-    _fxSaveToLS();
-    _fxApplyRates();
-  }
-  function _fxRenderList() {
-    const list = document.getElementById("fx-list");
-    if (!list) return;
-    const curs = Object.keys(FX_TO_USD).filter((c) => c !== "USD").sort();
-    list.innerHTML = curs.map((cur) => {
-      const rate = S.fxRates[cur] ?? FX_TO_USD[cur];
-      const def = FX_TO_USD[cur];
-      const diff = Math.abs(rate - def) / def;
-      const modified = diff > 1e-3;
-      const perUSD = rate > 0 ? 1 / rate : 0;
-      const dispPerUSD = perUSD >= 1e3 ? perUSD.toFixed(0) : perUSD >= 10 ? perUSD.toFixed(2) : perUSD >= 1 ? perUSD.toFixed(3) : perUSD.toPrecision(3);
-      return `<div class="fx-row${modified ? " fx-modified" : ""}">
-      <span class="fx-cur">${cur}</span>
-      <span class="fx-label">${FX_LABELS[cur] || ""}</span>
-      <input class="fx-input" type="number" step="any" min="0"
-        value="${rate.toPrecision(4)}"
-        title="1 ${cur} = X USD"
-        onchange="fxInputChanged('${cur}', this.value)" />
-      <span class="fx-per-usd">${dispPerUSD}<span class="fx-per-usd-unit">/USD</span></span>
-    </div>`;
-    }).join("");
-  }
-  function _fxApplyRates() {
-    if (S.econOn) buildEconLayer();
-    if (S.corpCityQid) renderCorpList();
-    const gPanel = document.getElementById("global-corp-panel");
-    if (gPanel && gPanel.classList.contains("panel-open")) renderGlobalCorpList();
-  }
   function loadEdits() {
     if (S._editsCache !== null) return S._editsCache;
     try {
@@ -1932,7 +2040,7 @@
         }
       }
       saveEditsStore(migrated);
-      console.log(`[init] Migrated ${count} city edits to QID keys`);
+      _log("init", `Migrated ${count} city edits to QID keys`);
     }
     const deleted = loadDeleted();
     const oldDelKeys = [...deleted].filter((k) => /^-?\d/.test(k) && k.includes(","));
@@ -1943,7 +2051,7 @@
         if (newKey) migrated.add(newKey);
       }
       saveDeletedStore(migrated);
-      console.log(`[init] Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
+      _log("init", `Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
     }
   }
   function applyOverrides() {
@@ -2039,8 +2147,8 @@
         const coCount = S.companiesData[city.qid]?.length || 0;
         const coLabel = coCount > 0 ? `Corporations (${coCount})` : "Corporations";
         tip += `<br/><span style="display:flex;gap:10px;margin-top:3px">`;
-        tip += `<a href="#" onclick="event.preventDefault();openWikiSidebar('${city.qid}','${escAttr(city.name)}')" style="color:var(--accent);font-size:0.8em">Wikipedia \u2197</a>`;
-        tip += `<a href="#" onclick="event.preventDefault();openCorpPanel('${city.qid}','${escAttr(city.name)}')" style="color:var(--purple);font-size:0.8em">${coLabel} \u2197</a>`;
+        tip += `<a href="javascript:void(0)"${safeOnclick("openWikiSidebar", city.qid, city.name)} style="color:var(--accent);font-size:0.8em">Wikipedia \u2197</a>`;
+        tip += `<a href="javascript:void(0)"${safeOnclick("openCorpPanel", city.qid, city.name)} style="color:var(--purple);font-size:0.8em">${coLabel} \u2197</a>`;
         tip += `</span>`;
       }
       L.circleMarker([city.lat, city.lng], {
@@ -2121,7 +2229,7 @@
         if (corpsPanel.classList.contains("panel-open")) {
           corpsPanel.classList.remove("panel-open");
           corpsPanel.style.display = "none";
-          _mobileBackdropOff();
+          _mobileBackdropOff2();
           document.querySelectorAll(".list-tab").forEach((b) => b.classList.remove("active"));
           return;
         }
@@ -2133,13 +2241,13 @@
         }
         corpsPanel.style.display = "";
         corpsPanel.classList.add("panel-open");
-        _mobileBackdropOn();
+        _mobileBackdropOn2();
         document.querySelectorAll(".list-tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === "corps"));
       } else {
         if (citiesPanel.classList.contains("panel-open")) {
           citiesPanel.style.display = "none";
           citiesPanel.classList.remove("panel-open");
-          _mobileBackdropOff();
+          _mobileBackdropOff2();
           document.querySelectorAll(".list-tab").forEach((b) => b.classList.remove("active"));
           return;
         }
@@ -2147,7 +2255,7 @@
         corpsPanel.style.display = "none";
         citiesPanel.style.display = "";
         citiesPanel.classList.add("panel-open");
-        _mobileBackdropOn();
+        _mobileBackdropOn2();
         document.querySelectorAll(".list-tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === "cities"));
       }
       return;
@@ -2187,11 +2295,10 @@
       const color = wikiCityColor(city.pop);
       const isEdited = !!edits[city._key];
       const rowClass = isEdited ? "edited-row" : "";
-      const key = escAttr(city._key);
       return `<tr class="${rowClass}" onclick="flyTo(${city.lat},${city.lng})">
       <td class="city-dot"><span class="dot" style="background:${color}"></span></td>
       <td class="city-edit" onclick="event.stopPropagation()">
-        <button class="edit-btn" onclick="openModal('${key}')">\u270E</button>
+        <button class="edit-btn"${safeOnclick("openModal", city._key)}>\u270E</button>
       </td>
       <td class="city-name">${escHtml(city.name)}${isEdited ? ' <span style="color:#f97316;font-size:0.75em" title="Locally edited">\u270E</span>' : ""}</td>
       <td>${escHtml(city.country || "\u2014")}</td>
@@ -2322,68 +2429,11 @@
       sel.appendChild(opt);
     });
   }
-  function openLightbox(images, idx) {
-    S.lightboxImages = images;
-    S.lightboxIdx = idx;
-    document.getElementById("wiki-lightbox").classList.add("open");
-    renderLightboxFrame();
-  }
-  function openCarouselLightbox() {
-    openLightbox(window._lbImgs, S.carIdx);
-  }
-  function closeLightbox() {
-    document.getElementById("wiki-lightbox").classList.remove("open");
-  }
-  function lightboxNav(dir) {
-    S.lightboxIdx = (S.lightboxIdx + dir + S.lightboxImages.length) % S.lightboxImages.length;
-    renderLightboxFrame();
-  }
-  function renderLightboxFrame() {
-    document.getElementById("lightbox-img").src = S.lightboxImages[S.lightboxIdx];
-    document.getElementById("lightbox-counter").textContent = S.lightboxImages.length > 1 ? `${S.lightboxIdx + 1} / ${S.lightboxImages.length}` : "";
-    document.getElementById("lightbox-prev").style.display = S.lightboxImages.length > 1 ? "" : "none";
-    document.getElementById("lightbox-next").style.display = S.lightboxImages.length > 1 ? "" : "none";
-  }
-  function carStart(images) {
-    S.carImages = images;
-    S.carIdx = 0;
-    clearInterval(S.carTimer);
-    if (images.length > 1) S.carTimer = setInterval(() => carGo(1), 4500);
-  }
-  function carStop() {
-    clearInterval(S.carTimer);
-    S.carTimer = null;
-  }
-  function carResume() {
-    if (S.carImages.length > 1) S.carTimer = setInterval(() => carGo(1), 4500);
-  }
-  function carGo(dir) {
-    S.carIdx = (S.carIdx + dir + S.carImages.length) % S.carImages.length;
-    carRender();
-  }
-  function carJump(i) {
-    S.carIdx = i;
-    carRender();
-    carStop();
-    if (S.carImages.length > 1) S.carTimer = setInterval(() => carGo(1), 4500);
-  }
-  function carRender() {
-    const img = document.getElementById("wiki-car-img");
-    const counter = document.getElementById("wiki-car-counter");
-    if (!img) return;
-    img.classList.add("fade");
-    setTimeout(() => {
-      img.src = S.carImages[S.carIdx];
-      img.classList.remove("fade");
-    }, 180);
-    if (counter) counter.textContent = `${S.carIdx + 1} / ${S.carImages.length}`;
-    document.querySelectorAll(".wiki-car-dot").forEach((d, i) => d.classList.toggle("active", i === S.carIdx));
-  }
   function closeWikiSidebar() {
     carStop();
     document.getElementById("wiki-sidebar").classList.remove("open");
     closeStatsPanel();
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
     _updateHash();
   }
   function closeStatsPanel() {
@@ -2392,7 +2442,7 @@
       _sp.classList.remove("open");
       _sp.style.right = "";
     }
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
     document.querySelectorAll(".census-stat-clickable.stats-active, .info-chip-clickable.stats-active").forEach((el) => el.classList.remove("stats-active"));
     S._activeStatMetric = null;
     S._statsCurrent = null;
@@ -2666,7 +2716,7 @@
     const _baseRight = _cpOpen ? 600 : _wikiOpen && _corpOpen ? 880 : _corpOpen ? 460 : 420;
     _sp.style.right = _baseRight + "px";
     _sp.classList.add("open");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
     _updateStatsListHtml();
   }
   function _updateStatsListHtml() {
@@ -2684,7 +2734,7 @@
     const jpSelfPref = isJapanPrefStat ? _lookupJapanPref(jpSelfCity)?.name : null;
     const rows = S._statsPoints.slice(S._statsWinStart, S._statsWinEnd + 1).map((p) => {
       const isCur = isJapanPrefStat ? p.prefName === jpSelfPref : p.qid === curId;
-      const navFn = isWbStat ? `statsGoToCountry('${p.qid}')` : `statsGoToCity('${p.qid}')`;
+      const navFn = isWbStat ? escHtml("statsGoToCountry(" + JSON.stringify(p.qid) + ")") : escHtml("statsGoToCity(" + JSON.stringify(p.qid) + ")");
       const sub = isWbStat ? "" : p.state ? ` \xB7 ${escHtml(p.state)}` : "";
       return `<div class="stats-rank-row${isCur ? " stats-rank-current" : ""}" onclick="${navFn}">
       <span class="stats-rank-num">#${p.rank}</span>
@@ -2798,7 +2848,7 @@
       if (!val && val !== 0) return "";
       const v = isHtml ? val : escHtml(String(val));
       const extraCls = cityMetric ? " info-chip-clickable" : "";
-      const extraAttr = cityMetric ? ` onclick="openStatsPanel('${cityMetric}','${escHtml(city.qid)}')" title="Click to see world ranking"` : "";
+      const extraAttr = cityMetric ? safeOnclick("openStatsPanel", cityMetric, city.qid) + ` title="Click to see world ranking"` : "";
       return `<div class="info-chip${span2 ? " info-chip-wide" : ""}${extraCls}"${extraAttr}><div class="info-chip-lbl">${label}</div><div class="info-chip-val">${v}</div></div>`;
     }
     const infoChips = `<div class="info-chips">
@@ -2911,7 +2961,7 @@
     function wbChip(label, key, fmt, wbMetric) {
       if (!wb || wb[key] == null) return "";
       const yr = wb[key + "_year"] ? ` <span class="wb-chip-yr">${wb[key + "_year"]}</span>` : "";
-      const extra = wbMetric && city.iso ? ` wb-chip-clickable" onclick="openStatsPanel('${wbMetric}','${escHtml(city.iso)}')" title="Click to see country rankings"` : `"`;
+      const extra = wbMetric && city.iso ? ` wb-chip-clickable"${safeOnclick("openStatsPanel", wbMetric, city.iso)} title="Click to see country rankings"` : `"`;
       return `<div class="wb-chip${extra}><div class="wb-chip-lbl">${label}</div><div class="wb-chip-val">${escHtml(fmt(wb[key]))}${yr}</div></div>`;
     }
     const wbSec = wb ? `<tr><td colspan="2" class="wiki-info-section-head">Country \xB7 ${escHtml(wb.name || city.country || city.iso)} <span style="color:var(--text-muted);font-size:0.75em">(World Bank)</span></td></tr>
@@ -2934,7 +2984,7 @@
       const e = city.iso ? S.eciData[city.iso] : null;
       if (!e) return "";
       const col = e.eci > 1.5 ? "#3fb950" : e.eci > 0.5 ? "#58a6ff" : e.eci > -0.5 ? "#f0a500" : "#f85149";
-      return `<div class="wb-chip wb-chip-clickable" onclick="openStatsPanel('eci','${escHtml(city.iso)}')" title="Economic Complexity Index \u2014 click for country ranking"><div class="wb-chip-lbl">Complexity (ECI)</div><div class="wb-chip-val" style="color:${col}">${e.eci > 0 ? "+" : ""}${e.eci.toFixed(2)} <span class="wb-chip-yr">${e.year}</span></div></div>`;
+      return `<div class="wb-chip wb-chip-clickable"${safeOnclick("openStatsPanel", "eci", city.iso)} title="Economic Complexity Index \u2014 click for country ranking"><div class="wb-chip-lbl">Complexity (ECI)</div><div class="wb-chip-val" style="color:${col}">${e.eci > 0 ? "+" : ""}${e.eci.toFixed(2)} <span class="wb-chip-yr">${e.year}</span></div></div>`;
     })()}
       </div>
     </td></tr>` : "";
@@ -3105,7 +3155,7 @@
       infoEl.innerHTML = `
       ${carouselHtml}
       <div class="wiki-city-header">
-        <div class="wiki-city-name">${escHtml(city.name)}<button class="bm-toggle" onclick="toggleBookmark('${escAttr(city.qid)}')" title="Save city">${S._bookmarks.has(city.qid) ? "\u2605" : "\u2606"}</button></div>
+        <div class="wiki-city-name">${escHtml(city.name)}<button class="bm-toggle"${safeOnclick("toggleBookmark", city.qid)} title="Save city">${S._bookmarks.has(city.qid) ? "\u2605" : "\u2606"}</button></div>
         ${city.desc ? `<div class="wiki-city-desc">${escHtml(city.desc)}</div>` : ""}
       </div>
       ${infoChips}
@@ -3146,7 +3196,7 @@
          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1-4-10z"/></svg>
          Official website
        </a>` : "";
-    const cmpBtn = `<button class="wiki-cmp-btn" onclick="openComparePanel('${escHtml(city.qid)}')">Compare</button>`;
+    const cmpBtn = `<button class="wiki-cmp-btn"${safeOnclick("openComparePanel", city.qid)}>Compare</button>`;
     footer.innerHTML = wikiLink || siteLink ? wikiLink + siteLink + cmpBtn + `<span class="wiki-cache-note">${fromCache ? "Cached \xB7 " : ""}Data from Wikipedia &amp; Wikidata</span>` : cmpBtn;
   }
   function toggleExtract() {
@@ -3513,7 +3563,7 @@
     return src ? "Source: " + escHtml(src) : "";
   }
   function statCell(label, val, cls = "", metric = "", qid = "", title = "Click to see ranking") {
-    const extra = metric && qid ? ` census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="${escHtml(title)}"` : `"`;
+    const extra = metric && qid ? ` census-stat-clickable"${safeOnclick("openStatsPanel", metric, qid)} title="${escHtml(title)}"` : `"`;
     return `<div class="census-stat${extra}><div class="census-stat-label">${label}</div><div class="census-stat-value${cls ? " " + cls : ""}">${val}</div></div>`;
   }
   function buildEconomyHtml(acs, biz, qid) {
@@ -3593,7 +3643,7 @@
       </svg>`;
       }
       const growthCls = (pt.growthPct || 0) >= 0 ? "census-gold" : "census-red";
-      const growthStr = popVals.length >= 2 ? `<span class="census-stat-value ${growthCls} census-stat-clickable" style="font-size:0.78rem" onclick="openStatsPanel('popGrowthPct','${qid}')" title="Click to see ranking">${(pt.growthPct || 0) >= 0 ? "+" : ""}${(pt.growthPct || 0).toFixed(1)}%</span> <span class="census-stat-label">pop 19\u219222</span>` : "";
+      const growthStr = popVals.length >= 2 ? `<span class="census-stat-value ${growthCls} census-stat-clickable" style="font-size:0.78rem"${safeOnclick("openStatsPanel", "popGrowthPct", qid)} title="Click to see ranking">${(pt.growthPct || 0) >= 0 ? "+" : ""}${(pt.growthPct || 0).toFixed(1)}%</span> <span class="census-stat-label">pop 19\u219222</span>` : "";
       const cbp = biz.cbp || {};
       const SECTORS = [
         { key: "manufacturing", label: "Mfg", color: "#f0a500" },
@@ -3646,7 +3696,7 @@
     <div class="es-trends">`;
       if (zw.zhviHistory?.length >= 2) {
         const { svg, range } = _eurostatSparkline(zw.zhviHistory, "#58a6ff", 110, 28);
-        html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('zhvi','${escHtml(qid)}')" title="Click to see ranking">
+        html += `<div class="es-trend-row census-stat-clickable"${safeOnclick("openStatsPanel", "zhvi", qid)} title="Click to see ranking">
         <span class="es-trend-label">Home Value</span>
         <span class="es-trend-spark">${svg}</span>
         <span class="es-trend-val" style="color:var(--accent)">${zw.zhvi ? fmtDollar(zw.zhvi) : "\u2014"}</span>
@@ -3655,7 +3705,7 @@
       }
       if (zw.zoriHistory?.length >= 2) {
         const { svg, range } = _eurostatSparkline(zw.zoriHistory, "#f0a500", 110, 28);
-        html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('zori','${escHtml(qid)}')" title="Click to see ranking">
+        html += `<div class="es-trend-row census-stat-clickable"${safeOnclick("openStatsPanel", "zori", qid)} title="Click to see ranking">
         <span class="es-trend-label">Rent Index</span>
         <span class="es-trend-spark">${svg}</span>
         <span class="es-trend-val" style="color:var(--gold)">${zw.zori ? fmtDollar(zw.zori) + "/mo" : "\u2014"}</span>
@@ -3902,7 +3952,7 @@
     const gdpYear = pref.gdpYear || "";
     const incomeRange = incomeHistory && incomeHistory.length >= 2 ? `${incomeHistory[0][0]}\u2013${incomeHistory[incomeHistory.length - 1][0]}` : "";
     const gdpRange = gdpHistory && gdpHistory.length >= 2 ? `${gdpHistory[0][0]}\u2013${gdpHistory[gdpHistory.length - 1][0]}` : "";
-    const click = (metric) => `census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="Click to see Japan prefecture ranking"`;
+    const click = (metric) => `census-stat-clickable"${safeOnclick("openStatsPanel", metric, qid)} title="Click to see Japan prefecture ranking"`;
     return `<div class="census-wrap">
     <div class="census-head">Prefecture \xB7 Cabinet Office${incYear ? " \xB7 " + incYear : ""}</div>
     <div style="margin-bottom:6px;font-size:0.7rem;color:var(--text-secondary)">${escHtml(prefName)} Prefecture</div>
@@ -3920,7 +3970,7 @@
 
     ${incomeHistory && incomeHistory.length >= 2 ? `
     <div class="es-trends">
-      <div class="es-trend-row" onclick="openStatsPanel('japan_perCapitaIncome','${escHtml(qid)}')" title="Click to see prefecture ranking">
+      <div class="es-trend-row"${safeOnclick("openStatsPanel", "japan_perCapitaIncome", qid)} title="Click to see prefecture ranking">
         <span class="es-trend-label">Per-Capita Income</span>
         <span>${jpSparkline(incomeHistory, "#f0a500")}</span>
         <span class="es-trend-val" style="color:var(--gold)">${fmtJpy(pref.perCapitaIncomeJpy)}</span>
@@ -3930,7 +3980,7 @@
 
     ${gdpHistory && gdpHistory.length >= 2 ? `
     <div class="es-trends" style="margin-top:6px">
-      <div class="es-trend-row" onclick="openStatsPanel('japan_gdp','${escHtml(qid)}')" title="Click to see prefecture ranking">
+      <div class="es-trend-row"${safeOnclick("openStatsPanel", "japan_gdp", qid)} title="Click to see prefecture ranking">
         <span class="es-trend-label">Prefectural GDP</span>
         <span>${jpSparkline(gdpHistory, "#3fb950")}</span>
         <span class="es-trend-val" style="color:var(--success)">${fmtBill(pref.gdpJpy)}</span>
@@ -4034,7 +4084,7 @@
       for (const r of TREND_ROWS) {
         const { svg, range } = _eurostatSparkline(es[r.key], r.color, 110, 28);
         const latestVal = es[r.valKey] != null ? r.fmt(es[r.valKey]) : "\u2014";
-        html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('${r.metric}','${escHtml(qid)}')" title="Click to see European ranking">
+        html += `<div class="es-trend-row census-stat-clickable"${safeOnclick("openStatsPanel", r.metric, qid)} title="Click to see European ranking">
         <span class="es-trend-label">${r.label}</span>
         <span class="es-trend-spark">${svg}</span>
         <span class="es-trend-val" style="color:${r.color}">${latestVal}</span>
@@ -4046,6 +4096,12 @@
     html += `<div class="census-source" style="margin-top:8px">Eurostat Urban Audit \xB7 urb_clma \xB7 urb_clivcon \xB7 urb_cecfi \xB7 urb_cenv \xB7 urb_ctour \xB7 urb_cpopstr</div></div>`;
     return html;
   }
+  function openWikiSidebarById(qid) {
+    const city = S.cityByQid.get(qid);
+    if (!city) return;
+    S.map.flyTo([city.lat, city.lng], 8);
+    openWikiSidebar(qid, city.name);
+  }
   async function openWikiSidebar(qid, cityName) {
     closeCountryPanel();
     const sidebar = document.getElementById("wiki-sidebar");
@@ -4056,7 +4112,7 @@
     footer.innerHTML = "";
     sidebar.dataset.qid = qid;
     sidebar.classList.add("open");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
     _updateHash();
     const city = S.cityByQid.get(qid);
     _univLoader.ensure();
@@ -4235,7 +4291,7 @@
         }
         if (errorCount >= 3 && !_terrainFallbackActive) {
           _terrainFallbackActive = true;
-          console.warn("OpenTopoMap unavailable, switching to ESRI World Topo");
+          _warn("terrain", "OpenTopoMap unavailable, switching to ESRI World Topo");
           setTimeout(() => _swapTileLayer(), 100);
         }
       });
@@ -4452,6 +4508,7 @@
         _econZoomDebounce = setTimeout(() => buildEconLayer(), 150);
       }
     });
+    initLightboxListeners();
     S.map.on("click", () => {
       if (!S._drawActive) {
         closeTradePanelFn();
@@ -4485,7 +4542,7 @@
       opacity: 0.6,
       interactive: false
     }).addTo(S.map);
-    setInterval(() => terminator.setTime(/* @__PURE__ */ new Date()), 6e4);
+    S._terminatorInterval = setInterval(() => terminator.setTime(/* @__PURE__ */ new Date()), 6e4);
     showLoading(true, "Loading city dataset\u2026");
     try {
       let _matchCityQid = function(name, isoOrCountry) {
@@ -4510,7 +4567,7 @@
                 matched++;
               }
             }
-            console.log("[kdb] " + label + ": " + matched + "/" + kdbData.length + " matched to cities");
+            _log("kdb", label + ": " + matched + "/" + kdbData.length + " matched to cities");
           }
           return Promise.resolve();
         }
@@ -4526,10 +4583,10 @@
                 matched2++;
               }
             }
-            console.log("[lazy] " + label + ": " + matched2 + "/" + arr.length + " matched to cities");
+            _log("lazy", label + ": " + matched2 + "/" + arr.length + " matched to cities");
           });
         }).catch(function() {
-          console.warn("[lazy] " + label + " failed to load");
+          _warn("lazy", label, "failed to load");
         });
       };
       const [citiesRes, countryRes] = await Promise.all([
@@ -4542,17 +4599,98 @@
       S.rawCities.forEach((c) => {
         c._key = cityKey(c);
       });
+      const _COUNTRY_ISO_MAP = {
+        "netherlands": "NL",
+        "curacao": "CW",
+        "aruba": "AW",
+        "sint maarten": "SX",
+        "somaliland": "SO",
+        "palestinian territories": "PS",
+        "west bank": "PS",
+        "gaza strip": "PS",
+        "british virgin islands": "VG",
+        "virgin islands (u.s.)": "VI",
+        "northern mariana islands": "MP",
+        "american samoa": "AS",
+        "guam": "GU",
+        "puerto rico (us)": "PR",
+        "french polynesia": "PF",
+        "isle of man": "IM",
+        "gibraltar": "GI",
+        "monaco": "MC",
+        "liechtenstein": "LI",
+        "san marino": "SM",
+        "singapore": "SG",
+        "serbia": "RS",
+        "montenegro": "ME",
+        "oman": "OM",
+        "kosovo": "XK",
+        "malta": "MT",
+        "barbados": "BB",
+        "bahamas": "BS",
+        "bahamas, the": "BS",
+        "kuwait": "KW",
+        "iceland": "IS",
+        "luxembourg": "LU",
+        "bahrein": "BH",
+        "bahrain": "BH",
+        "vanuatu": "VU",
+        "tonga": "TO",
+        "tuvalu": "TV",
+        "palau": "PW",
+        "marshall islands": "MH",
+        "micronesia": "FM",
+        "kiribati": "KI",
+        "nauru": "NR",
+        "dominica": "DM",
+        "grenada": "GD",
+        "st. kitts and nevis": "KN",
+        "saint kitts and nevis": "KN",
+        "st. lucia": "LC",
+        "saint lucia": "LC",
+        "st. vincent and the grenadines": "VC",
+        "saint vincent and the grenadines": "VC",
+        "sao tome and principe": "ST",
+        "faroe islands": "FO",
+        "greenland": "GL",
+        "new caledonia": "NC",
+        "bermuda": "BM",
+        "cayman islands": "KY",
+        "channel islands": "JE",
+        "macao": "MO",
+        "macao sar, china": "MO",
+        "sint maarten (dutch part)": "SX",
+        "st. martin (french part)": "MF",
+        "turks and caicos islands": "TC",
+        "tokelau": "TK",
+        "cook islands": "CK",
+        "niue": "NU",
+        "wallis and futuna": "WF",
+        "pitcairn islands": "PN"
+      };
+      let _backfilled = 0;
+      for (var _bi = 0; _bi < S.rawCities.length; _bi++) {
+        var _bc = S.rawCities[_bi];
+        if (!_bc.iso && _bc.country) {
+          var _mapped = _COUNTRY_ISO_MAP[_bc.country.toLowerCase()];
+          if (_mapped) {
+            _bc.iso = _mapped;
+            _backfilled++;
+          }
+        }
+      }
+      if (_backfilled) _log("init", "Backfilled ISO codes for " + _backfilled + " cities");
       migrateEditKeys(S.rawCities);
       if (countryRes && countryRes.ok) {
         try {
           S.countryData = await countryRes.json();
-          console.log(`[init] Country data loaded (${Object.keys(S.countryData).length} countries)`);
+          _log("init", `Country data loaded (${Object.keys(S.countryData).length} countries)`);
           _buildCountryDataCaches();
         } catch {
-          console.warn("[init] country-data.json is malformed \u2014 World Bank data will be unavailable");
+          _warn("init", "country-data.json is malformed \u2014 World Bank data will be unavailable");
         }
       } else {
-        console.info('[init] country-data.json not found \u2014 run "npm run fetch-country" to enable World Bank indicators');
+        _log("init", 'country-data.json not found \u2014 run "npm run fetch-country" to enable World Bank indicators');
       }
       var _cityNameIdx = {};
       for (var _ci = 0; _ci < S.rawCities.length; _ci++) {
@@ -4639,14 +4777,14 @@
           var kdbData = _kdbGet(stem);
           if (kdbData !== null) {
             item.assign(kdbData);
-            console.log("[kdb] " + stem + " loaded");
+            _log("kdb", stem + " loaded");
             return;
           }
           fetch(item.url).then((r) => r.ok ? r.json() : Promise.reject()).then((d) => {
             item.assign(d);
-            console.log(`[lazy] ${item.url} loaded`);
+            _log("lazy", `${item.url} loaded`);
           }).catch(() => {
-            console.warn(`[lazy] ${item.url} failed`);
+            _warn("lazy", `${item.url} failed`);
           });
         });
         _loadCityArrayFromUrl("/ports.json", "Ports", function(qid, d) {
@@ -4673,15 +4811,15 @@
           for (var ri = 0; ri < _uniKdb.length; ri++) {
             S.uniRankings[_uniKdb[ri].qid] = { qs_rank: _uniKdb[ri].qs_rank, the_rank: _uniKdb[ri].the_rank };
           }
-          console.log("[kdb] University rankings loaded: " + _uniKdb.length);
+          _log("kdb", "University rankings loaded:", _uniKdb.length);
         } else {
           fetch("/uni-rankings.json").then((r) => r.ok ? r.json() : Promise.reject()).then(function(ranks) {
             for (var ri2 = 0; ri2 < ranks.length; ri2++) {
               S.uniRankings[ranks[ri2].qid] = { qs_rank: ranks[ri2].qs_rank, the_rank: ranks[ri2].the_rank };
             }
-            console.log("[lazy] University rankings loaded: " + ranks.length);
+            _log("lazy", "University rankings loaded:", ranks.length);
           }).catch(function() {
-            console.warn("[lazy] University rankings failed");
+            _warn("lazy", "University rankings failed");
           });
         }
       };
@@ -4993,7 +5131,7 @@
     _cryptoLoader.ensure();
     if (typeof _renderCountryPanel === "function") _renderCountryPanel(iso2);
     document.getElementById("country-panel").classList.add("open");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
     _updateHash();
     const _spEl = document.getElementById("stats-panel");
     if (_spEl && _spEl.classList.contains("open")) _spEl.style.right = "600px";
@@ -5018,7 +5156,7 @@
     if (!S._cpCurrentIso2) return;
     S._cpCurrentIso2 = null;
     document.getElementById("country-panel").classList.remove("open");
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
     _updateHash();
     if (S._cpEscListener) {
       document.removeEventListener("keydown", S._cpEscListener);
@@ -5104,7 +5242,7 @@
     if (cd.region) metaParts.push(escHtml(cd.region));
     if (cd.income_level) metaParts.push(escHtml(cd.income_level));
     metaParts.push(escHtml(iso2));
-    document.getElementById("cp-header").innerHTML = '<span class="cp-flag">' + isoToFlag(iso2) + '</span><div style="flex:1;min-width:0"><div class="cp-country-name">' + escHtml(cd.name || iso2) + '</div><div class="cp-country-meta">' + metaParts.join(" \xB7 ") + `</div></div><button class="wiki-cmp-btn" onclick="openCountryCompare('` + escAttr(iso2) + `')">Compare</button><button class="cp-close" onclick="closeCountryPanel()">\xD7</button>`;
+    document.getElementById("cp-header").innerHTML = '<span class="cp-flag">' + isoToFlag(iso2) + '</span><div style="flex:1;min-width:0"><div class="cp-country-name">' + escHtml(cd.name || iso2) + '</div><div class="cp-country-meta">' + metaParts.join(" \xB7 ") + '</div></div><button class="wiki-cmp-btn"' + safeOnclick("openCountryCompare", iso2) + '>Compare</button><button class="cp-close" onclick="closeCountryPanel()">\xD7</button>';
     var gdp = cd.gdp_per_capita, inf = cd.cpi_inflation;
     var debt = cd.govt_debt_gdp, fisc = cd.fiscal_balance_gdp;
     var infCls = !Number.isFinite(inf) ? "" : inf > 5 ? "cp-red" : inf > 3 ? "cp-amber" : "cp-green";
@@ -5422,7 +5560,7 @@
         return list.slice(0, 5).map(function(p) {
           var flag = isoToFlag(p.iso2);
           var val = p.value_bn >= 100 ? "$" + Math.round(p.value_bn) + "B" : p.value_bn >= 1 ? "$" + p.value_bn.toFixed(1) + "B" : "$" + (p.value_bn * 1e3).toFixed(0) + "M";
-          return `<div class="cp-trade-partner-row" onclick="openCountryPanel('` + escAttr(p.iso2) + `')"><span class="cp-trade-flag">` + flag + '</span><span class="cp-trade-name">' + escHtml(p.name) + '</span><span class="cp-trade-val">' + val + "</span></div>";
+          return '<div class="cp-trade-partner-row"' + safeOnclick("openCountryPanel", p.iso2) + '><span class="cp-trade-flag">' + flag + '</span><span class="cp-trade-name">' + escHtml(p.name) + '</span><span class="cp-trade-val">' + val + "</span></div>";
         }).join("");
       }
       var html = '<div class="cp-gauge-section-hdr">Top Trade Partners (' + (ct.year || "") + ")</div>";
@@ -5953,7 +6091,15 @@
     }
   }
   async function fetchBeaTrade(beaCountryName) {
-    const url = `https://apps.bea.gov/api/data/?UserID=YOUR_BEA_API_KEY_HERE&method=GetData&DataSetName=ITA&Indicator=ExpGds,ImpGds,ExpSvcs,ImpSvcs&AreaOrCountry=${encodeURIComponent(beaCountryName)}&Frequency=A&Year=ALL&ResultFormat=JSON`;
+    const params = new URLSearchParams({
+      method: "GetData",
+      DataSetName: "ITA",
+      Indicator: "ExpGds,ImpGds,ExpSvcs,ImpSvcs",
+      AreaOrCountry: beaCountryName,
+      Frequency: "A",
+      Year: "ALL"
+    });
+    const url = "/api/bea?" + params;
     const res = await fetch(url);
     const json = await res.json();
     const rows = json?.BEAAPI?.Results?.Data;
@@ -6122,7 +6268,7 @@
     _updateTradePanelNumbers(iso2, data, latestYear);
     drawTradeArrows(iso2, data, latestYear);
     document.getElementById("trade-panel").classList.add("open");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
   }
   function _updateTradePanelNumbers(iso2, data, year) {
     const row = data.find((d) => d.year === year) || data[data.length - 1];
@@ -6153,7 +6299,7 @@
   function closeTradePanelFn() {
     document.getElementById("trade-panel").classList.remove("open");
     clearTradeArrows();
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
     if (window._tradChartDestroy) {
       window._tradChartDestroy();
       window._tradChartDestroy = null;
@@ -6452,7 +6598,7 @@
           S.admin1Layers[iso2] = layer;
         }
       } catch (e) {
-        console.warn("[admin1] Failed to load", iso2, e.message);
+        _warn("admin1", "Failed to load", iso2, e.message);
       } finally {
         delete S._admin1Loading[iso2];
       }
@@ -6562,7 +6708,7 @@
       return "";
     }
     var rd = r.data;
-    var html = '<div class="cp-gauge-section-hdr" style="color:var(--accent)">' + escHtml(r.name) + (r.code ? ' <span style="opacity:.6;font-weight:400">(' + escHtml(r.code) + ")</span>" : "") + `<button onclick="clearRegionSelection('` + escHtml(r.iso2) + `')" style="float:right;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:.75rem" title="Clear region selection">\xD7</button></div>`;
+    var html = '<div class="cp-gauge-section-hdr" style="color:var(--accent)">' + escHtml(r.name) + (r.code ? ' <span style="opacity:.6;font-weight:400">(' + escHtml(r.code) + ")</span>" : "") + "<button" + safeOnclick("clearRegionSelection", r.iso2) + ' style="float:right;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:.75rem" title="Clear region selection">\xD7</button></div>';
     if (rd.gdp_bn_eur != null) {
       html += _cpInfoRow("GDP", "\u20AC" + fmtNum(rd.gdp_bn_eur) + "B");
       if (rd.gdp_per_capita_eur != null) html += _cpInfoRow("GDP/cap", "\u20AC" + fmtNum(rd.gdp_per_capita_eur));
@@ -6598,7 +6744,7 @@
   function closeRegionPanel() {
     var rp = document.getElementById("region-panel");
     if (rp) rp.classList.remove("open");
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
   }
   function _updateMapLegends() {
     const citiesVisible = S.wikiLayer && S.map.hasLayer(S.wikiLayer) && S.cityDotMode !== "hide";
@@ -6712,9 +6858,9 @@
         try {
           var res = await _kdbOrFetch("/submarine-cables.json");
           S.cableData = await res.json();
-          console.log("[cables] Loaded: " + S.cableData.cables.length + " cables, " + S.cableData.landings.length + " landing points");
+          _log("cables", "Loaded:", S.cableData.cables.length, "cables,", S.cableData.landings.length, "landing points");
         } catch (e) {
-          console.warn("[cables] Failed to load submarine-cables.json");
+          _warn("cables", "Failed to load submarine-cables.json");
           S.cableOn = false;
           btn.textContent = "Submarine Cables";
           btn.classList.remove("on");
@@ -6814,9 +6960,9 @@
         try {
           var res = await _kdbOrFetch("/air-routes.json");
           S.airRouteData = await res.json();
-          console.log("[air-routes] Loaded: " + S.airRouteData.routes.length + " routes");
+          _log("air-routes", "Loaded:", S.airRouteData.routes.length, "routes");
         } catch (e) {
-          console.warn("[air-routes] Failed to load");
+          _warn("air-routes", "Failed to load");
           S.airRouteOn = false;
           btn.textContent = "\u2708 Flights: Off";
           btn.classList.remove("on");
@@ -6916,7 +7062,7 @@
           const res = await _kdbOrFetch("/tectonic-plates.json");
           S.tectonicData = await res.json();
         } catch (e) {
-          console.warn("[tectonic] Failed to load");
+          _warn("tectonic", "Failed to load");
           S.tectonicOn = false;
           btn.textContent = "Tectonic Plates";
           btn.classList.remove("on");
@@ -6979,7 +7125,7 @@
       const res = await fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson");
       S.earthquakeData = await res.json();
     } catch (e) {
-      console.warn("[earthquake] Failed to fetch USGS data");
+      _warn("earthquake", "Failed to fetch USGS data");
       return;
     }
     _buildEarthquakeLayer();
@@ -7037,7 +7183,7 @@
           const res = await _kdbOrFetch("/volcanoes_full.json");
           S.volcanoData = await res.json();
         } catch (e) {
-          console.warn("[volcano] Failed to load");
+          _warn("volcano", "Failed to load");
           S.volcanoOn = false;
           btn.textContent = "Volcanoes";
           btn.classList.remove("on");
@@ -7095,7 +7241,7 @@
           const res = await _kdbOrFetch("/launch_sites.json");
           S.launchSiteData = await res.json();
         } catch (e) {
-          console.warn("[launchSite] Failed to load");
+          _warn("launchSite", "Failed to load");
           S.launchSiteOn = false;
           btn.textContent = "Launch Sites";
           btn.classList.remove("on");
@@ -7154,7 +7300,7 @@
             DatasetManager.register("eezData", S.eezData, "low");
           }
         } catch (e) {
-          console.warn("[eez] Failed to load");
+          _warn("eez", "Failed to load");
           S.eezOn = false;
           btn.textContent = "EEZ Boundaries";
           btn.classList.remove("on");
@@ -7250,7 +7396,7 @@
         { direction: "top", className: "admin1-tooltip" }
       );
     } catch (e) {
-      console.warn("[iss] Failed to fetch position");
+      _warn("iss", "Failed to fetch position");
     }
   }
   async function toggleAircraftLayer() {
@@ -7294,7 +7440,7 @@
     try {
       const res = await _kdbOrFetch("/aircraft-live-lite.json");
       if (!res.ok) {
-        console.warn("[aircraft] No data available");
+        _warn("aircraft", "No data available");
         return;
       }
       const data = await res.json();
@@ -7365,9 +7511,9 @@
         count++;
       }
       S.aircraftLayer = L.layerGroup(markers).addTo(S.map);
-      console.log(`[aircraft] Displayed ${count}/${MAX_AIRCRAFT} aircraft (zoom ${zoom})`);
+      _log("aircraft", `Displayed ${count}/${MAX_AIRCRAFT} aircraft (zoom ${zoom})`);
     } catch (e) {
-      console.warn("[aircraft] Failed:", e.message);
+      _warn("aircraft", "Failed:", e.message);
     }
   }
   async function toggleWildfireLayer() {
@@ -7405,7 +7551,7 @@
     try {
       const res = await _kdbOrFetch("/wildfires-live-lite.json");
       if (!res.ok) {
-        console.warn("[wildfire] No data available");
+        _warn("wildfire", "No data available");
         return;
       }
       const data = await res.json();
@@ -7467,9 +7613,9 @@
         count++;
       }
       S.wildfireLayer = L.layerGroup(markers).addTo(S.map);
-      console.log(`[wildfire] Displayed ${count} fires (zoom ${zoom}, viewport: ${outsideCount} culled)`);
+      _log("wildfire", `Displayed ${count} fires (zoom ${zoom}, viewport: ${outsideCount} culled)`);
     } catch (e) {
-      console.warn("[wildfire] Failed:", e.message);
+      _warn("wildfire", "Failed:", e.message);
     }
   }
   async function toggleEonetLayer() {
@@ -7483,7 +7629,7 @@
           const res = await _kdbOrFetch("/eonet-events-lite.json");
           S.eonetData = await res.json();
         } catch (e) {
-          console.warn("[eonet] Failed to load");
+          _warn("eonet", "Failed to load");
           S.eonetOn = false;
           btn.textContent = "Natural Events";
           btn.classList.remove("on");
@@ -7535,7 +7681,7 @@
       layers.push(marker);
     }
     S.eonetLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[eonet] Displayed ${layers.length} events`);
+    _log("eonet", `Displayed ${layers.length} events`);
   }
   async function toggleProtectedAreasLayer() {
     S.protectedAreasOn = !S.protectedAreasOn;
@@ -7548,7 +7694,7 @@
           const res = await _kdbOrFetch("/protected-areas.json");
           S.protectedAreasData = await res.json();
         } catch (e) {
-          console.warn("[protected-areas] Failed to load");
+          _warn("protected-areas", "Failed to load");
           S.protectedAreasOn = false;
           btn.textContent = "\u{1F332} Protected Areas: Off";
           btn.classList.remove("on");
@@ -7601,7 +7747,7 @@
       layers.push(marker);
     }
     S.protectedAreasLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[protected-areas] Displayed ${layers.length} areas`);
+    _log("protected-areas", `Displayed ${layers.length} areas`);
   }
   async function toggleVesselPortsLayer() {
     S.vesselPortsOn = !S.vesselPortsOn;
@@ -7614,7 +7760,7 @@
           const res = await _kdbOrFetch("/vessel-ports.json");
           S.vesselPortsData = await res.json();
         } catch (e) {
-          console.warn("[vessel-ports] Failed to load");
+          _warn("vessel-ports", "Failed to load");
           S.vesselPortsOn = false;
           btn.textContent = "Ports";
           btn.classList.remove("on");
@@ -7658,7 +7804,7 @@
       layers.push(marker);
     }
     S.vesselPortsLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[vessel-ports] Displayed ${layers.length} ports`);
+    _log("vessel-ports", `Displayed ${layers.length} ports`);
   }
   async function togglePeeringdbLayer() {
     S.peeringdbOn = !S.peeringdbOn;
@@ -7670,9 +7816,9 @@
         try {
           const res = await _kdbOrFetch("/peeringdb.json");
           S.peeringdbData = await res.json();
-          console.log("[peeringdb] Loaded:", S.peeringdbData.ixps.length, "IXPs,", S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter((x) => x.lat !== null).length, "with coords");
+          _log("peeringdb", "Loaded:", S.peeringdbData.ixps.length, "IXPs,", S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter((x) => x.lat !== null).length, "with coords");
         } catch (e) {
-          console.warn("[peeringdb] Failed to load:", e);
+          _warn("peeringdb", "Failed to load:", e);
           S.peeringdbOn = false;
           btn.textContent = "Internet Exchanges";
           btn.classList.remove("on");
@@ -7713,7 +7859,7 @@
       layers.push(marker);
     }
     S.peeringdbLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[peeringdb] Displayed ${layers.length} IXPs`);
+    _log("peeringdb", `Displayed ${layers.length} IXPs`);
   }
   async function toggleWaqiLayer() {
     S.waqiOn = !S.waqiOn;
@@ -7726,7 +7872,7 @@
           const res = await _kdbOrFetch("/who-airquality.json");
           S.waqiData = await res.json();
         } catch (e) {
-          console.warn("[waqi] Failed to load");
+          _warn("waqi", "Failed to load");
           S.waqiOn = false;
           btn.textContent = "Air Quality";
           btn.classList.remove("on");
@@ -7784,7 +7930,7 @@
       layers.push(marker);
     }
     S.waqiLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[waqi] Displayed ${layers.length} stations`);
+    _log("waqi", `Displayed ${layers.length} stations`);
   }
   async function toggleWeatherLayer() {
     S.weatherOn = !S.weatherOn;
@@ -7797,7 +7943,7 @@
           const res = await _kdbOrFetch("/weather-stations.json");
           S.weatherData = await res.json();
         } catch (e) {
-          console.warn("[weather] Failed to load");
+          _warn("weather", "Failed to load");
           S.weatherOn = false;
           btn.textContent = "Weather";
           btn.classList.remove("on");
@@ -7859,7 +8005,7 @@
       layers.push(marker);
     }
     S.weatherLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[weather] Displayed ${layers.length} stations`);
+    _log("weather", `Displayed ${layers.length} stations`);
   }
   async function toggleSatelliteLayer() {
     S.satelliteOn = !S.satelliteOn;
@@ -7872,7 +8018,7 @@
           const res = await _kdbOrFetch("/satellites-live-lite.json");
           S.satelliteData = await res.json();
         } catch (e) {
-          console.warn("[satellite] Failed to load");
+          _warn("satellite", "Failed to load");
           S.satelliteOn = false;
           btn.textContent = "Satellites";
           btn.classList.remove("on");
@@ -7928,7 +8074,7 @@
       layers.push(marker);
     }
     S.satelliteLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[satellite] Displayed ${layers.length} satellites`);
+    _log("satellite", `Displayed ${layers.length} satellites`);
   }
   async function toggleUnescoIchLayer() {
     S.unescoIchOn = !S.unescoIchOn;
@@ -7941,7 +8087,7 @@
           const res = await _kdbOrFetch("/unesco-ich.json");
           S.unescoIchData = await res.json();
         } catch (e) {
-          console.warn("[unesco-ich] Failed to load");
+          _warn("unesco-ich", "Failed to load");
           S.unescoIchOn = false;
           btn.textContent = "\u{1F3AD} Heritage: Off";
           btn.classList.remove("on");
@@ -7964,7 +8110,7 @@
       S.unescoIchLayer = null;
     }
     if (!S.unescoIchOn || !S.unescoIchData) return;
-    console.log("[unesco-ich] Data loaded for country panel integration");
+    _log("unesco-ich", "Data loaded for country panel integration");
   }
   async function toggleGtdLayer() {
     S.gtdOn = !S.gtdOn;
@@ -7977,7 +8123,7 @@
           const res = await _kdbOrFetch("/terrorism-incidents-lite.json");
           S.gtdData = await res.json();
         } catch (e) {
-          console.warn("[gtd] Failed to load");
+          _warn("gtd", "Failed to load");
           S.gtdOn = false;
           btn.textContent = "Terrorism";
           btn.classList.remove("on");
@@ -8027,7 +8173,7 @@
       layers.push(marker);
     }
     S.gtdLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[gtd] Displayed ${layers.length} incidents`);
+    _log("gtd", `Displayed ${layers.length} incidents`);
   }
   async function toggleCryptoLayer() {
     S.cryptoOn = !S.cryptoOn;
@@ -8040,7 +8186,7 @@
           const res = await _kdbOrFetch("/crypto-stats-lite.json");
           S.cryptoData = await res.json();
         } catch (e) {
-          console.warn("[crypto] Failed to load");
+          _warn("crypto", "Failed to load");
           S.cryptoOn = false;
           btn.textContent = "Crypto Adoption";
           btn.classList.remove("on");
@@ -8149,7 +8295,7 @@
       layers.push(marker);
     }
     S.cryptoLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[crypto] Displayed ${layers.length} country markers`);
+    _log("crypto", `Displayed ${layers.length} country markers`);
   }
   async function toggleSpaceWeatherLayer() {
     S.spaceWeatherOn = !S.spaceWeatherOn;
@@ -8162,7 +8308,7 @@
           const res = await _kdbOrFetch("/solar-weather-lite.json");
           S.spaceWeatherData = await res.json();
         } catch (e) {
-          console.warn("[space-weather] Failed to load");
+          _warn("space-weather", "Failed to load");
           S.spaceWeatherOn = false;
           btn.textContent = "Space Weather";
           btn.classList.remove("on");
@@ -8206,7 +8352,7 @@
       { direction: "top", className: "admin1-tooltip", sticky: false }
     );
     S.spaceWeatherLayer = L.layerGroup([northBand, southBand]).addTo(S.map);
-    console.log(`[space-weather] Aurora zone displayed (KP: ${kp})`);
+    _log("space-weather", `Aurora zone displayed (KP: ${kp})`);
   }
   async function toggleOceanLayer() {
     S.oceanOn = !S.oceanOn;
@@ -8219,7 +8365,7 @@
           const res = await _kdbOrFetch("/ocean-currents-lite.json");
           S.oceanData = await res.json();
         } catch (e) {
-          console.warn("[ocean] Failed to load");
+          _warn("ocean", "Failed to load");
           S.oceanOn = false;
           btn.textContent = "Ocean Currents";
           btn.classList.remove("on");
@@ -8346,7 +8492,7 @@
     legend.addTo(S.map);
     S.oceanLayer = L.layerGroup(layers).addTo(S.map);
     S.oceanLayer._legend = legend;
-    console.log(`[ocean] Displayed ${layers.length} elements (${S.oceanData.currents?.length || 0} currents)`);
+    _log("ocean", `Displayed ${layers.length} elements (${S.oceanData.currents?.length || 0} currents)`);
   }
   async function toggleFlightAwareLayer() {
     S.flightAwareOn = !S.flightAwareOn;
@@ -8359,7 +8505,7 @@
           const res = await _kdbOrFetch("/flightaware-flights-lite.json");
           S.flightAwareData = await res.json();
         } catch (e) {
-          console.warn("[flightaware] Failed to load");
+          _warn("flightaware", "Failed to load");
           S.flightAwareOn = false;
           btn.textContent = "\u2708\uFE0F FlightAware: Off";
           btn.classList.remove("on");
@@ -8405,7 +8551,7 @@
       layers.push(arrow);
     }
     S.flightAwareLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[flightaware] Displayed ${layers.length} flights`);
+    _log("flightaware", `Displayed ${layers.length} flights`);
   }
   async function toggleMarineTrafficLayer() {
     S.marineTrafficOn = !S.marineTrafficOn;
@@ -8418,7 +8564,7 @@
           const res = await _kdbOrFetch("/ships-live-lite.json");
           S.marineTrafficData = await res.json();
         } catch (e) {
-          console.warn("[marinetraffic] Failed to load");
+          _warn("marinetraffic", "Failed to load");
           S.marineTrafficOn = false;
           btn.textContent = "Ships";
           btn.classList.remove("on");
@@ -8480,7 +8626,7 @@
       layers.push(marker, courseArrow);
     }
     S.marineTrafficLayer = L.layerGroup(layers).addTo(S.map);
-    console.log(`[marinetraffic] Displayed ${layers.length / 2} vessels`);
+    _log("marinetraffic", `Displayed ${layers.length / 2} vessels`);
   }
   function resetAllLayers() {
     setCityDotMode("hide");
@@ -8556,13 +8702,13 @@
       if (layersMenu) layersMenu.style.display = "none";
     }
   }
-  function _mobileBackdropOn() {
+  function _mobileBackdropOn2() {
     if (window.innerWidth <= 768) {
       const b = document.getElementById("mobile-backdrop");
       if (b) b.classList.add("active");
     }
   }
-  function _mobileBackdropOff() {
+  function _mobileBackdropOff2() {
     const b = document.getElementById("mobile-backdrop");
     if (b) b.classList.remove("active");
   }
@@ -8889,7 +9035,7 @@
     document.getElementById("corp-sort").value = "revenue";
     document.getElementById("corp-panel").classList.add("open");
     document.getElementById("wiki-sidebar").classList.add("corp-open");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
     await _companiesLoader.ensure();
     renderCorpList();
   }
@@ -8902,7 +9048,7 @@
     document.getElementById("corp-sort").value = "revenue";
     document.getElementById("corp-panel").classList.add("open");
     document.getElementById("wiki-sidebar").classList.add("corp-open");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
     await _companiesLoader.ensure();
     S.corpOverrideList = cityPoints.flatMap((p) => S.companiesData[p.qid] || []);
     renderCorpList();
@@ -8911,7 +9057,7 @@
     S.corpOverrideList = null;
     document.getElementById("corp-panel").classList.remove("open");
     document.getElementById("wiki-sidebar").classList.remove("corp-open");
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
   }
   function _onDrawContainerClick(e) {
     if (!S._drawActive) return;
@@ -10087,7 +10233,7 @@
         if (!val && val !== 0) return "";
         const v = escHtml(String(val));
         const hasClick = !!(coQid && metric);
-        const onclick = hasClick ? `onclick="openStatsPanel('${metric}','${escHtml(coQid)}')"` : "";
+        const onclick = hasClick ? safeOnclick("openStatsPanel", metric, coQid) : "";
         const title = hasClick ? `title="Click to see global ranking"` : "";
         const cursor = hasClick ? "cursor:pointer;" : "";
         return `<div ${onclick} ${title} style="${cursor}background:var(--bg-elevated);border-radius:6px;padding:5px 9px;min-width:0;overflow:hidden;">
@@ -10196,7 +10342,7 @@
     S._cmpCityB = null;
     const panel = document.getElementById("compare-panel");
     panel.classList.add("visible");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
     document.getElementById("compare-col-a").textContent = S._cmpCityA ? S._cmpCityA.name : "\u2014";
     document.getElementById("compare-col-b").textContent = "\u2014";
     document.getElementById("compare-tbody").innerHTML = "";
@@ -10206,7 +10352,7 @@
   }
   function closeComparePanel() {
     document.getElementById("compare-panel").classList.remove("visible");
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
     S._cmpCityA = null;
     S._cmpCityB = null;
   }
@@ -10354,7 +10500,7 @@
     S._bookmarks.forEach(function(qid) {
       var city = S.cityByQid.get(qid);
       if (!city) return;
-      html += '<div class="bm-item" onclick="map.flyTo([' + city.lat + "," + city.lng + "],8);openWikiSidebar('" + escAttr(qid) + "','" + escAttr(city.name) + `')"><span class="bm-name">` + escHtml(city.name) + '</span><span class="bm-meta">' + escHtml(city.country || "") + (city.pop ? " \xB7 " + fmtPop(city.pop) : "") + `</span><button class="bm-rm" onclick="event.stopPropagation();toggleBookmark('` + escAttr(qid) + `')" title="Remove">\u2715</button></div>`;
+      html += '<div class="bm-item"' + safeOnclick("openWikiSidebarById", qid) + '><span class="bm-name">' + escHtml(city.name) + '</span><span class="bm-meta">' + escHtml(city.country || "") + (city.pop ? " \xB7 " + fmtPop(city.pop) : "") + '</span><button class="bm-rm"' + safeOnclick("toggleBookmark", qid) + ' title="Remove">\u2715</button></div>';
     });
     body.innerHTML = html;
   }
@@ -10366,7 +10512,7 @@
     S._ccIsoB = null;
     const panel = document.getElementById("country-compare-panel");
     panel.classList.add("visible");
-    _mobileBackdropOn();
+    _mobileBackdropOn2();
     const cd = S.countryData[iso2];
     document.getElementById("cc-col-a").textContent = cd ? cd.name : iso2;
     document.getElementById("cc-col-b").textContent = "\u2014";
@@ -10377,7 +10523,7 @@
   }
   function closeCountryCompare() {
     document.getElementById("country-compare-panel").classList.remove("visible");
-    _mobileBackdropOff();
+    _mobileBackdropOff2();
     S._ccIsoA = null;
     S._ccIsoB = null;
   }
@@ -10490,15 +10636,18 @@
     }
     document.getElementById("cc-tbody").innerHTML = rows.join("");
   }
-  var PAGE_SIZE, _worldGeoLoader, _eurostatLoader, _companiesLoader, _companiesDetailLoader, _univLoader, _noaaLoader, _airportLoader, _aqLoader, _metroLoader, _nobelLoader, _powerLoader, _informLoader, _gtdLoader, _cryptoLoader, _URL_TO_KDB, POP_SCALE, tradeCache, countryCentroids, admin1Cache, LS_FX_KEY, LS_EDITS, LS_DELETED, IMG_EXCLUDE, STATS_WIN, VALID_SIDEBAR_TABS, STAT_DEFS, CITY_STAT_DEFS, WB_STAT_DEFS, CORP_STAT_DEFS, EUROSTAT_STAT_DEFS, JAPAN_PREF_STAT_DEFS, ADMIN_TO_NUTS2, SINGLE_NUTS2, _errorTileDataUrl, _terrainFallbackActive, _hashUpdateTimer, ISO2_TO_BEA, LS_TRADE_PREFIX, LS_TRADE_TTL, _nationsPanelOpen, _PLATE_NAMES, _aircraftMoveHandler, _wildfireMoveHandler, GCORP_PAGE;
+  var __DEBUG__, PAGE_SIZE, _worldGeoLoader, _eurostatLoader, _companiesLoader, _companiesDetailLoader, _univLoader, _noaaLoader, _airportLoader, _aqLoader, _metroLoader, _nobelLoader, _powerLoader, _informLoader, _gtdLoader, _cryptoLoader, _URL_TO_KDB, POP_SCALE, tradeCache, countryCentroids, admin1Cache, LS_EDITS, LS_DELETED, IMG_EXCLUDE, STATS_WIN, VALID_SIDEBAR_TABS, STAT_DEFS, CITY_STAT_DEFS, WB_STAT_DEFS, CORP_STAT_DEFS, EUROSTAT_STAT_DEFS, JAPAN_PREF_STAT_DEFS, ADMIN_TO_NUTS2, SINGLE_NUTS2, _errorTileDataUrl, _terrainFallbackActive, _hashUpdateTimer, ISO2_TO_BEA, LS_TRADE_PREFIX, LS_TRADE_TTL, _nationsPanelOpen, _PLATE_NAMES, _aircraftMoveHandler, _wildfireMoveHandler, GCORP_PAGE;
   var init_app_legacy = __esm({
     "src/app-legacy.js"() {
       init_utils();
       init_state();
       init_constants();
+      init_fx_sidebar();
       init_choro_defs();
       init_stat_defs();
       init_viz_defs();
+      init_lightbox();
+      __DEBUG__ = !!window?.__KWDEBUG__;
       PAGE_SIZE = 100;
       _worldGeoLoader = createLazyLoader(
         "/world-countries.json",
@@ -10612,21 +10761,10 @@
       countryCentroids = {};
       admin1Cache = {};
       S.fxRates = { ...FX_TO_USD };
-      LS_FX_KEY = "fx_rates_v2";
       LS_EDITS = "wcm_edits";
       LS_DELETED = "wcm_deleted";
       document.getElementById("edit-modal").addEventListener("click", function(e) {
         if (e.target === this) closeModal();
-      });
-      document.getElementById("wiki-lightbox").addEventListener("click", function(e) {
-        if (e.target === this) closeLightbox();
-      });
-      document.addEventListener("keydown", function(e) {
-        const lb = document.getElementById("wiki-lightbox");
-        if (!lb.classList.contains("open")) return;
-        if (e.key === "ArrowLeft") lightboxNav(-1);
-        if (e.key === "ArrowRight") lightboxNav(1);
-        if (e.key === "Escape") closeLightbox();
       });
       IMG_EXCLUDE = /flag|coat|coa_|locator|location_map|location S.map|icon|emblem|seal|logo|banner|signature|blank|symbol|layout|streets|district|wikisource|wikidata|commons-logo|silhouette|\.svg$/i;
       STATS_WIN = 12;
@@ -12114,6 +12252,8 @@
   var require_main = __commonJS({
     "src/main.js"() {
       init_app_legacy();
+      init_fx_sidebar();
+      init_lightbox();
       Object.assign(window, {
         buildEconLayer,
         clearAllFilters,
@@ -12218,6 +12358,7 @@
         openLightbox,
         openModal,
         openWikiSidebar,
+        openWikiSidebarById,
         statsExpandDown,
         statsExpandUp,
         statsGoToCity,
@@ -12228,6 +12369,26 @@
         toggleNationsPanel,
         closeAllMobileSheets,
         toggleMobileTopbar
+      });
+      initFxCallbacks({
+        onRatesChanged: () => {
+          if (typeof buildEconLayer === "function") buildEconLayer();
+          if (typeof renderCorpList === "function") renderCorpList();
+          const gPanel = document.getElementById("global-corp-panel");
+          if (gPanel && gPanel.classList.contains("panel-open")) {
+            if (typeof renderGlobalCorpList === "function") renderGlobalCorpList();
+          }
+        },
+        mobileBackdropOn: () => {
+          if (window.innerWidth <= 768) {
+            const b = document.getElementById("mobile-backdrop");
+            if (b) b.classList.add("active");
+          }
+        },
+        mobileBackdropOff: () => {
+          const b = document.getElementById("mobile-backdrop");
+          if (b) b.classList.remove("active");
+        }
       });
       init();
     }

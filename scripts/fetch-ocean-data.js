@@ -31,6 +31,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'ocean-currents.json');
@@ -306,12 +307,12 @@ async function fetchOceanData() {
     },
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\n✓ Written ${currents.length} current points and ${sst.length} SST points to ${OUTPUT_PATH}`);
 
   // Write lightweight version
   const lightOutput = path.join(__dirname, '..', 'public', 'ocean-currents-lite.json');
-  fs.writeFileSync(lightOutput, JSON.stringify({
+  atomicWrite(lightOutput, JSON.stringify({
     fetched_at: output.fetched_at,
     source: output.source,
     total_currents: output.total_currents,

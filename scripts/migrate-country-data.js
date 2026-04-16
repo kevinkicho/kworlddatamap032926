@@ -3,6 +3,7 @@
 // Run: node scripts/migrate-country-data.js
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const PUB  = path.join(__dirname, '..', 'public');
@@ -32,6 +33,6 @@ for (const [iso2, data] of Object.entries(fred)) {
   fredMerged++;
 }
 
-fs.writeFileSync(CD, JSON.stringify(cd, null, 2), 'utf8');
+atomicWrite(CD, JSON.stringify(cd, null, 2), 'utf8');
 console.log(`Merged ${imfMerged} IMF + ${fredMerged} FRED records into country-data.json`);
 console.log(`Total countries in file: ${Object.keys(cd).length}`);

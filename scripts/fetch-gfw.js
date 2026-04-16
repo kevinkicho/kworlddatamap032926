@@ -11,6 +11,7 @@
  */
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'forest-data.json');
@@ -243,13 +244,13 @@ async function main() {
     const forestData = await fetchForestData();
 
     // Write raw data
-    fs.writeFileSync(OUTPUT, JSON.stringify(forestData, null, 2));
+    atomicWrite(OUTPUT, JSON.stringify(forestData, null, 2));
     console.log(`[gfw] Wrote forest data to ${OUTPUT}`);
 
     // Merge into country-data.json
     const countryData = JSON.parse(fs.readFileSync(COUNTRY_DATA, 'utf8'));
     mergeIntoCountryData(forestData, countryData);
-    fs.writeFileSync(COUNTRY_DATA, JSON.stringify(countryData, null, 2));
+    atomicWrite(COUNTRY_DATA, JSON.stringify(countryData, null, 2));
     console.log('[gfw] Updated country-data.json');
 
   } catch (err) {

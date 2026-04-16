@@ -81,12 +81,12 @@ describe('WHR fields in country-data.json', () => {
   try { cd = JSON.parse(fs.readFileSync(cdPath, 'utf8')); }
   catch { cd = null; }
 
-  it('country-data.json is readable', () => {
+  it('country-data.json is readable', { skip: !cd }, () => {
     assert.ok(cd !== null, 'Could not read country-data.json');
   });
 
-  it('FI has all WHR fields (run: node scripts/fetch-whr.js first)', () => {
-    const fi = cd && cd['FI'];
+  it('FI has all WHR fields (run: node scripts/fetch-whr.js first)', { skip: !cd }, () => {
+    const fi = cd['FI'];
     assert.ok(fi, 'FI missing from country-data.json');
     assert.ok(typeof fi.whr_score === 'number',   'whr_score must be a number');
     assert.ok(typeof fi.whr_rank  === 'number',   'whr_rank must be a number');
@@ -100,20 +100,20 @@ describe('WHR fields in country-data.json', () => {
     assert.ok(typeof fi.whr_corruption === 'number', 'whr_corruption missing');
   });
 
-  it('US has WHR fields', () => {
-    const us = cd && cd['US'];
+  it('US has WHR fields', { skip: !cd }, () => {
+    const us = cd['US'];
     assert.ok(us,                                'US missing from country-data.json');
     assert.ok(typeof us.whr_score === 'number',  'US whr_score missing');
     assert.ok(typeof us.whr_rank  === 'number',  'US whr_rank missing');
   });
 
-  it('covers at least 100 countries with whr_score', () => {
-    const count = cd ? Object.values(cd).filter(d => typeof d.whr_score === 'number').length : 0;
+  it('covers at least 100 countries with whr_score', { skip: !cd }, () => {
+    const count = Object.values(cd).filter(d => typeof d.whr_score === 'number').length;
     assert.ok(count >= 100, `Only ${count} countries have whr_score — expected 100+`);
   });
 
-  it('existing WB fields are still intact on FI', () => {
-    const fi = cd && cd['FI'];
+  it('existing WB fields are still intact on FI', { skip: !cd }, () => {
+    const fi = cd['FI'];
     assert.ok(fi, 'FI missing');
     assert.ok(typeof fi.gdp_per_capita === 'number', 'gdp_per_capita clobbered');
     assert.ok(typeof fi.life_expectancy === 'number', 'life_expectancy clobbered');

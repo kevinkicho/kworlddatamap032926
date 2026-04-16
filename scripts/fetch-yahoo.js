@@ -35,6 +35,7 @@
 require('dotenv').config();
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 const http = require('https');
 const url  = require('url');
@@ -656,14 +657,14 @@ async function runTickerPhase(companies) {
     // Save checkpoint + file every 100 companies
     if (tried % 100 === 0) {
       saveCheckpoint(cp);
-      fs.writeFileSync(COMPANIES_FILE, JSON.stringify(companies));
+      atomicWrite(COMPANIES_FILE, JSON.stringify(companies));
       console.log(`  [checkpoint saved — ${found} tickers found so far]`);
     }
     await sleep(DELAY_MS);
   }
 
   saveCheckpoint(cp);
-  fs.writeFileSync(COMPANIES_FILE, JSON.stringify(companies));
+  atomicWrite(COMPANIES_FILE, JSON.stringify(companies));
   console.log(`\nPhase 1 done. Found ${found} new tickers out of ${tried} searched.\n`);
 }
 
@@ -705,14 +706,14 @@ async function runFinancialsPhase(companies) {
     // Checkpoint every 50
     if ((fetched + failed) % 50 === 0) {
       saveCheckpoint(cp);
-      fs.writeFileSync(COMPANIES_FILE, JSON.stringify(companies));
+      atomicWrite(COMPANIES_FILE, JSON.stringify(companies));
       console.log(`  [checkpoint — ${fetched} fetched, ${failed} failed]`);
     }
     await sleep(DELAY_MS);
   }
 
   saveCheckpoint(cp);
-  fs.writeFileSync(COMPANIES_FILE, JSON.stringify(companies));
+  atomicWrite(COMPANIES_FILE, JSON.stringify(companies));
   console.log(`\nPhase 2 done. ${fetched} companies enriched, ${failed} failed.\n`);
 }
 

@@ -18,6 +18,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_FILE = path.join(__dirname, '..', 'public', 'oecd-country.json');
@@ -163,7 +164,7 @@ function main() {
     console.log(`  ${ds.label.padEnd(28)} ${count} countries`);
   }
 
-  fs.writeFileSync(OUT_FILE, JSON.stringify(cd, null, 2));
+  atomicWrite(OUT_FILE, JSON.stringify(cd, null, 2));
   console.log(`\n✓ Written to ${OUT_FILE}`);
 
   console.log('\n── Spot-check ──────────────────────────────────────────────────────');

@@ -17,6 +17,7 @@
 const https   = require('https');
 const http    = require('http');
 const fs      = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path    = require('path');
 const { URL } = require('url');
 
@@ -201,7 +202,7 @@ async function main() {
     process.stdout.write(`${batchPatched} patched (${elapsed}s)\n`);
 
     fs.writeFileSync(CHECKPOINT_FILE, JSON.stringify({ done: [...doneSet] }), 'utf8');
-    fs.writeFileSync(OUT_FILE, JSON.stringify(companies), 'utf8');
+    atomicWrite(OUT_FILE, JSON.stringify(companies), 'utf8');
 
     if (i + BATCH < todo.length) await delay(DELAY_MS);
   }

@@ -4,6 +4,7 @@
  * Creates a simple 16x16 and 32x32 ICO file
  */
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'favicon.ico');
@@ -216,5 +217,5 @@ function createMinimalICO() {
 
 // Generate and save
 const ico = createMinimalICO();
-fs.writeFileSync(OUTPUT, ico);
+atomicWrite(OUTPUT, ico);
 console.log(`Created favicon.ico (${ico.length} bytes)`);

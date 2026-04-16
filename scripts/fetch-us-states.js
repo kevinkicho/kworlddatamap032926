@@ -4,6 +4,7 @@
 // Output: public/us-states.json
 
 const { writeFileSync } = require('fs');
+const { atomicWrite } = require('./safe-write');
 const { join } = require('path');
 require('dotenv').config({ path: join(__dirname, '..', '.env') });
 
@@ -165,7 +166,7 @@ async function main() {
     }
   }
 
-  writeFileSync(OUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\nWrote ${Object.keys(output).length} states to ${OUT_PATH}`);
 
   // Spot checks

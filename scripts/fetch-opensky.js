@@ -11,6 +11,7 @@
  */
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'aircraft-live.json');
@@ -159,7 +160,7 @@ async function main() {
     const stats = generateStats(data);
 
     // Write full data
-    fs.writeFileSync(OUTPUT, JSON.stringify(data, null, 2));
+    atomicWrite(OUTPUT, JSON.stringify(data, null, 2));
     console.log(`\n[opensky] Wrote ${data.aircraft.length} aircraft to ${OUTPUT}`);
 
     // Also write a lightweight version for the app (only aircraft with positions)
@@ -181,7 +182,7 @@ async function main() {
     };
 
     const lightOutput = path.join(__dirname, '..', 'public', 'aircraft-live-lite.json');
-    fs.writeFileSync(lightOutput, JSON.stringify(lightweight));
+    atomicWrite(lightOutput, JSON.stringify(lightweight));
     console.log(`[opensky] Wrote lightweight version to ${lightOutput}`);
 
   } catch (err) {

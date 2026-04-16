@@ -17,6 +17,7 @@
 const https   = require('https');
 const http    = require('http');
 const fs      = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path    = require('path');
 const { URL } = require('url');
 
@@ -267,7 +268,7 @@ async function main() {
   }
 
   console.log(`\nDone — patched ${patched} / ${targets.length} US cities with climate data.`);
-  fs.writeFileSync(OUT_FILE, JSON.stringify(cities));
+  atomicWrite(OUT_FILE, JSON.stringify(cities));
   console.log(`Saved ${OUT_FILE}`);
 }
 

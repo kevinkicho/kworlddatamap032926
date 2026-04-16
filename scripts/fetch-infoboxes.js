@@ -29,6 +29,7 @@
 const https   = require('https');
 const http    = require('http');
 const fs      = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path    = require('path');
 const { URL } = require('url');
 
@@ -810,7 +811,7 @@ async function main() {
 
       // Write checkpoint + updated companies.json every batch
       saveCheckpoint(done);
-      fs.writeFileSync(OUT_FILE, JSON.stringify(companies), 'utf8');
+      atomicWrite(OUT_FILE, JSON.stringify(companies), 'utf8');
 
       if (processedCount < titlesToDo.length) await delay(BATCH_DELAY);
     }

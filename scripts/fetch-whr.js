@@ -17,6 +17,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 const xlsx = require('xlsx');
 
@@ -133,7 +134,7 @@ async function main() {
     unmatched.forEach(n => console.warn(`  "${n}"`));
   }
 
-  fs.writeFileSync(CD_PATH, JSON.stringify(cd, null, 2), 'utf8');
+  atomicWrite(CD_PATH, JSON.stringify(cd, null, 2), 'utf8');
   console.log(`\nMerged ${merged} WHR countries into country-data.json`);
   console.log(`Total countries in file: ${Object.keys(cd).length}`);
 }

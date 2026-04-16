@@ -36,6 +36,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/spain-regions.json');
@@ -207,7 +208,7 @@ const output = {
 };
 
 const json = JSON.stringify(output);
-fs.writeFileSync(OUT_PATH, json);
+atomicWrite(OUT_PATH, json);
 console.log(`✓ Written ${(json.length / 1024).toFixed(1)} KB to ${OUT_PATH}`);
 console.log(`  ${Object.keys(REGIONS).length} autonomous communities`);
 console.log(`  ${Object.keys(PROVINCE_TO_REGION).length} provinces mapped`);

@@ -10,6 +10,7 @@
 // are tagged as "static" in the manifest — keep these in Storage, not RTDB.
 // 'use strict';
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const PUB = path.join(__dirname, '..', 'public');
@@ -152,7 +153,7 @@ if (admin1Files.length > 0) {
 
 // Write kdb.json
 const out = JSON.stringify(kdb);
-fs.writeFileSync(OUT, out, 'utf8');
+atomicWrite(OUT, out, 'utf8');
 const outMB = (Buffer.byteLength(out, 'utf8') / 1024 / 1024).toFixed(1);
 console.log(`\nDone! kdb.json written: ${outMB} MB`);
 console.log(`  ${existing.length} data namespaces + 1 admin1 namespace`);
@@ -256,7 +257,7 @@ if (process.argv.includes('--split')) {
     const chunk = chunks[i];
     const chunkJson = JSON.stringify(chunk.data);
     const chunkFile = path.join(CHUNK_DIR, `chunk${i}.json`);
-    fs.writeFileSync(chunkFile, chunkJson, 'utf8');
+    atomicWrite(chunkFile, chunkJson, 'utf8');
     const chunkMB = (Buffer.byteLength(chunkJson, 'utf8') / 1024 / 1024).toFixed(1);
     const keys = Object.keys(chunk.data).join(', ');
     console.log(`  chunk${i}.json: ${chunkMB} MB — ${keys}`);

@@ -17,6 +17,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const CITIES_PATH = path.join(__dirname, '../public/cities-full.json');
@@ -269,7 +270,7 @@ async function main() {
   }
 
   console.log(`\nWriting ${OUTPUT_PATH}...`);
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`Done. Wrote ${covered} entries.`);
 }
 

@@ -15,6 +15,7 @@
  */
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 // Load environment variables from .env
@@ -211,7 +212,7 @@ async function main() {
     const stats = generateStats(data);
 
     // Write full data
-    fs.writeFileSync(OUTPUT, JSON.stringify(data, null, 2));
+    atomicWrite(OUTPUT, JSON.stringify(data, null, 2));
     console.log(`\n[firms] Wrote ${data.fires.length} fires to ${OUTPUT}`);
 
     // Also write lightweight version for the app
@@ -231,7 +232,7 @@ async function main() {
     };
 
     const lightOutput = path.join(__dirname, '..', 'public', 'wildfires-live-lite.json');
-    fs.writeFileSync(lightOutput, JSON.stringify(lightweight));
+    atomicWrite(lightOutput, JSON.stringify(lightweight));
     console.log(`[firms] Wrote lightweight version to ${lightOutput}`);
 
   } catch (err) {

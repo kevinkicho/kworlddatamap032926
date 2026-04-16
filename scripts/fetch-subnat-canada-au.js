@@ -24,6 +24,7 @@
 
 const https      = require('https');
 const fs         = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path       = require('path');
 const os         = require('os');
 const { execFileSync } = require('child_process');
@@ -397,7 +398,7 @@ async function buildCanada() {
     };
   }
 
-  fs.writeFileSync(OUT_CANADA, JSON.stringify(output, null, 2), 'utf8');
+  atomicWrite(OUT_CANADA, JSON.stringify(output, null, 2), 'utf8');
   console.log(`\n  Wrote ${OUT_CANADA}`);
   return output;
 }
@@ -496,7 +497,7 @@ async function buildAustralia() {
     };
   }
 
-  fs.writeFileSync(OUT_AUSTRALIA, JSON.stringify(output, null, 2), 'utf8');
+  atomicWrite(OUT_AUSTRALIA, JSON.stringify(output, null, 2), 'utf8');
   console.log(`  Wrote ${OUT_AUSTRALIA}`);
   return output;
 }

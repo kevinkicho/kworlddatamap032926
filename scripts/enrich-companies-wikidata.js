@@ -12,6 +12,7 @@
 
 const https = require('https');
 const fs    = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path  = require('path');
 
 const COMPANIES_FILE = path.join(__dirname, '..', 'public', 'companies.json');
@@ -197,7 +198,7 @@ async function main() {
   }
 
   // Write back
-  fs.writeFileSync(COMPANIES_FILE, JSON.stringify(companies, null, 2), 'utf8');
+  atomicWrite(COMPANIES_FILE, JSON.stringify(companies, null, 2), 'utf8');
   console.log(`\nDone. ${enriched} companies enriched. Written to ${COMPANIES_FILE}`);
 
   // Coverage report

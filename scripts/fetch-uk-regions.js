@@ -39,6 +39,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/uk-regions.json');
@@ -440,7 +441,7 @@ for (const [key, r] of Object.entries(REGIONS)) {
 
 const output = { regions, la_to_region: LA_TO_REGION };
 
-fs.writeFileSync(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
+atomicWrite(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
 console.log(`Wrote ${Object.keys(regions).length} NUTS-1 regions and ${Object.keys(LA_TO_REGION).length} LA mappings to ${OUT_PATH}`);
 
 // ── Spot-checks ───────────────────────────────────────────────────────────────

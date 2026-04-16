@@ -4,6 +4,7 @@
 // Run: node scripts/enrich-country-central-banks.js
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const COUNTRY_FILE = path.join(__dirname, '..', 'public', 'country-data.json');
@@ -78,6 +79,6 @@ for (const { iso2, sp, moodys, fitch } of CREDIT_RATINGS) {
   ratingsAdded++;
 }
 
-fs.writeFileSync(COUNTRY_FILE, JSON.stringify(countryData, null, 2), 'utf8');
+atomicWrite(COUNTRY_FILE, JSON.stringify(countryData, null, 2), 'utf8');
 console.log(`Central bank rates added to ${cbAdded} countries`);
 console.log(`Credit ratings added to ${ratingsAdded} countries`);

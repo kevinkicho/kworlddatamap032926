@@ -1,10 +1,16 @@
 import {
   wikiCityColor, wikiCityOpacity, wikiCityRadius,
-  fmtPop, fmtNum, escHtml, escAttr, isoToFlag,
+  fmtPop, fmtNum, escHtml, escAttr, isoToFlag, safeOnclick,
   fmtEmployees, fmtRevenue, validateCities, cityKey, COLOR_STOPS
 } from './utils.js';
 import { S } from './state.js';
 import { FX_TO_USD, STATE_NAME_TO_ABBR, ISO2_TO_CURRENCY, CAPITAL_COORDS, FX_LABELS, ISO_TO_WIKI_LANG, CA_PROV_TO_ABBR, AU_STATE_TO_ABBR } from './constants.js';
+import { toUSD, toggleFxSidebar, _fxLoadFromLS, fxFetchRates } from './fx-sidebar.js';
+
+const __DEBUG__ = !!window?.__KWDEBUG__;
+
+function _log(tag, ...args) { if (__DEBUG__) console.log(`[${tag}]`, ...args); }
+function _warn(tag, ...args) { if (__DEBUG__) console.warn(`[${tag}]`, ...args); }
 import { CHORO_INDICATORS } from './choro-defs.js';
 import { AQ_STOPS, CENSUS_METRICS, CENSUS_BRACKET_LABELS, CENSUS_BRACKET_COLORS } from './stat-defs.js';
 import { HEAT_PALETTES, AVAIL_TO_METRIC, VALUE_TO_METRIC, GAWC_TIER_SCORE, GAWC_TIER_COLOR, BASEMAP_URLS, BASEMAP_ATTR } from './viz-defs.js';
@@ -45,7 +51,7 @@ function createLazyLoader(url, assign, shouldRebuild) {
     var kdbData = _kdbGet(stem);
     if (kdbData !== null) {
       assign(kdbData);
-      console.log(`[kdb] lazy hit: ${stem}`);
+      _log('kdb', 'lazy hit:', stem);
       if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
       loaded = true;
       return;
@@ -55,11 +61,11 @@ function createLazyLoader(url, assign, shouldRebuild) {
         const res = await fetch(url);
         if (res.ok) {
           assign(await res.json());
-          console.log(`[lazy] ${url} loaded`);
+          _log('lazy', url, 'loaded');
           if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
         }
       } catch (e) {
-        console.warn(`[lazy] ${url} failed`, e);
+        _warn('lazy', url, 'failed', e);
       } finally {
         loaded = true;
         loading = null;
@@ -167,7 +173,7 @@ async function _kdbOrFetch(url) {
   // Remove cache-busting query params for kdb lookup (e.g. peeringdb.json?v=123)
   var kdbData = _kdbGet(stem);
   if (kdbData !== null) {
-    console.log('[kdb] hit: ' + stem);
+    _log('kdb', 'hit:', stem);
     return { ok: true, status: 200, json: async () => kdbData };
   }
   var res = await fetch(url);
@@ -836,132 +842,7 @@ const admin1Cache    = {};     // iso2 → TopoJSON object
 // Mutable FX rates — start from hardcoded table, overridden by sidebar / localStorage
 S.fxRates = { ...FX_TO_USD };
 
-function toUSD(value, currency) {
-  if (!value || !currency) return 0;
-  const rate = S.fxRates[(currency + '').toUpperCase()];
-  return rate ? value * rate : 0;
-}
-
-// ── FX Sidebar ────────────────────────────────────────────────────────────────
-
-const LS_FX_KEY = 'fx_rates_v2';
-
-function toggleFxSidebar() {
-  const el = document.getElementById('fx-sidebar');
-  const opening = !el.classList.contains('open');
-  el.classList.toggle('open', opening);
-  if (opening) { _fxRenderList(); _mobileBackdropOn(); }
-  else { _mobileBackdropOff(); }
-}
-
-function _fxSaveToLS() {
-  try {
-    const date = document.getElementById('fx-date')?.value || 'latest';
-    localStorage.setItem(LS_FX_KEY, JSON.stringify({ date, rates: S.fxRates }));
-  } catch (_) {}
-}
-
-function _fxLoadFromLS() {
-  try {
-    const raw = localStorage.getItem(LS_FX_KEY);
-    if (!raw) return false;
-    const { date, rates } = JSON.parse(raw);
-    if (rates && typeof rates === 'object') {
-      Object.assign(S.fxRates, rates);
-      const dateEl = document.getElementById('fx-date');
-      if (dateEl && date && date !== 'latest') dateEl.value = date;
-      return true;
-    }
-  } catch (_) {}
-  return false;
-}
-
-async function fxFetchRates() {
-  const date = document.getElementById('fx-date')?.value || 'latest';
-  const statusEl = document.getElementById('fx-status');
-  const btn = document.getElementById('fx-fetch-btn');
-  statusEl.textContent = '⏳ Fetching…';
-  if (btn) btn.disabled = true;
-  try {
-    // Frankfurter returns how many of each currency = 1 USD (ECB reference rates)
-    const apiDate = date || 'latest';
-    const res = await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    if (!json.rates) throw new Error('No rates in response');
-    // Convert: Frankfurter "1 USD = X cur" → our format "1 cur = Y USD" (Y = 1/X)
-    for (const [cur, val] of Object.entries(json.rates)) {
-      if (val > 0) S.fxRates[cur.toUpperCase()] = 1 / val;
-    }
-    const returnedDate = json.date || apiDate;
-    const dateEl = document.getElementById('fx-date');
-    if (dateEl) dateEl.value = returnedDate;
-    statusEl.textContent = `✓ ECB rates · ${returnedDate}`;
-    statusEl.style.color = '#3fb950';
-    _fxSaveToLS();
-    _fxRenderList();
-    _fxApplyRates();
-  } catch (e) {
-    statusEl.textContent = `✗ ${e.message}`;
-    statusEl.style.color = '#f85149';
-  } finally {
-    if (btn) btn.disabled = false;
-  }
-}
-
-function fxResetDefaults() {
-  S.fxRates = { ...FX_TO_USD };
-  localStorage.removeItem(LS_FX_KEY);
-  const statusEl = document.getElementById('fx-status');
-  if (statusEl) { statusEl.textContent = 'Reset to built-in rates'; statusEl.style.color = '#8b949e'; }
-  const dateEl = document.getElementById('fx-date');
-  if (dateEl) dateEl.value = '2025-01-02';
-  _fxRenderList();
-  _fxApplyRates();
-}
-
-function fxInputChanged(cur, val) {
-  const n = parseFloat(val);
-  if (!n || n <= 0) return;
-  S.fxRates[cur] = n;
-  _fxSaveToLS();
-  _fxApplyRates();
-}
-
-function _fxRenderList() {
-  const list = document.getElementById('fx-list');
-  if (!list) return;
-  const curs = Object.keys(FX_TO_USD).filter(c => c !== 'USD').sort();
-  list.innerHTML = curs.map(cur => {
-    const rate = S.fxRates[cur] ?? FX_TO_USD[cur];
-    const def  = FX_TO_USD[cur];
-    const diff = Math.abs(rate - def) / def;
-    const modified = diff > 0.001;
-    // Show: how many units of this currency = 1 USD (inverse, easier to read)
-    const perUSD = rate > 0 ? (1 / rate) : 0;
-    const dispPerUSD = perUSD >= 1000 ? perUSD.toFixed(0)
-                     : perUSD >= 10   ? perUSD.toFixed(2)
-                     : perUSD >= 1    ? perUSD.toFixed(3)
-                     :                  perUSD.toPrecision(3);
-    return `<div class="fx-row${modified ? ' fx-modified' : ''}">
-      <span class="fx-cur">${cur}</span>
-      <span class="fx-label">${FX_LABELS[cur] || ''}</span>
-      <input class="fx-input" type="number" step="any" min="0"
-        value="${rate.toPrecision(4)}"
-        title="1 ${cur} = X USD"
-        onchange="fxInputChanged('${cur}', this.value)" />
-      <span class="fx-per-usd">${dispPerUSD}<span class="fx-per-usd-unit">/USD</span></span>
-    </div>`;
-  }).join('');
-}
-
-function _fxApplyRates() {
-  if (S.econOn) buildEconLayer();
-  if (S.corpCityQid) renderCorpList();
-  // Refresh global corp list if visible
-  const gPanel = document.getElementById('global-corp-panel');
-  if (gPanel && gPanel.classList.contains('panel-open')) renderGlobalCorpList();
-}
+// ── FX Sidebar: extracted to src/fx-sidebar.js ────────────────────────────────
 
 // ── localStorage persistence ──────────────────────────────────────────────────
 const LS_EDITS = 'wcm_edits';
@@ -1004,7 +885,7 @@ function migrateEditKeys(cities) {
       if (newKey) { migrated[newKey] = v; count++; }
     }
     saveEditsStore(migrated);
-    console.log(`[init] Migrated ${count} city edits to QID keys`);
+    _log('init', `Migrated ${count} city edits to QID keys`);
   }
 
   // Deletions
@@ -1017,7 +898,7 @@ function migrateEditKeys(cities) {
       if (newKey) migrated.add(newKey);
     }
     saveDeletedStore(migrated);
-    console.log(`[init] Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
+    _log('init', `Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
   }
 }
 
@@ -1133,8 +1014,8 @@ function rebuildMapLayer() {
       const coCount = S.companiesData[city.qid]?.length || 0;
       const coLabel = coCount > 0 ? `Corporations (${coCount})` : 'Corporations';
       tip += `<br/><span style="display:flex;gap:10px;margin-top:3px">`;
-      tip += `<a href="#" onclick="event.preventDefault();openWikiSidebar('${city.qid}','${escAttr(city.name)}')" style="color:var(--accent);font-size:0.8em">Wikipedia ↗</a>`;
-      tip += `<a href="#" onclick="event.preventDefault();openCorpPanel('${city.qid}','${escAttr(city.name)}')" style="color:var(--purple);font-size:0.8em">${coLabel} ↗</a>`;
+      tip += `<a href="javascript:void(0)"${safeOnclick('openWikiSidebar', city.qid, city.name)} style="color:var(--accent);font-size:0.8em">Wikipedia ↗</a>`;
+      tip += `<a href="javascript:void(0)"${safeOnclick('openCorpPanel', city.qid, city.name)} style="color:var(--purple);font-size:0.8em">${coLabel} ↗</a>`;
       tip += `</span>`;
     }
 
@@ -1286,11 +1167,10 @@ function renderRows() {
     const color = wikiCityColor(city.pop);
     const isEdited = !!edits[city._key];
     const rowClass = isEdited ? 'edited-row' : '';
-    const key = escAttr(city._key);
     return `<tr class="${rowClass}" onclick="flyTo(${city.lat},${city.lng})">
       <td class="city-dot"><span class="dot" style="background:${color}"></span></td>
       <td class="city-edit" onclick="event.stopPropagation()">
-        <button class="edit-btn" onclick="openModal('${key}')">✎</button>
+        <button class="edit-btn"${safeOnclick('openModal', city._key)}>✎</button>
       </td>
       <td class="city-name">${escHtml(city.name)}${isEdited ? ' <span style="color:#f97316;font-size:0.75em" title="Locally edited">✎</span>' : ''}</td>
       <td>${escHtml(city.country || '—')}</td>
@@ -1445,82 +1325,17 @@ document.getElementById('edit-modal').addEventListener('click', function (e) {
   if (e.target === this) closeModal();
 });
 
-// ── Lightbox ──────────────────────────────────────────────────────────────────
-// (lightboxImages moved to state.js)
-// (lightboxIdx moved to state.js)
-function openLightbox(images, idx) {
-  S.lightboxImages = images;
-  S.lightboxIdx = idx;
-  document.getElementById('wiki-lightbox').classList.add('open');
-  renderLightboxFrame();
-}
-function openCarouselLightbox() {
-  openLightbox(window._lbImgs, S.carIdx);
-}
-function closeLightbox() {
-  document.getElementById('wiki-lightbox').classList.remove('open');
-}
-function lightboxNav(dir) {
-  S.lightboxIdx = (S.lightboxIdx + dir + S.lightboxImages.length) % S.lightboxImages.length;
-  renderLightboxFrame();
-}
-function renderLightboxFrame() {
-  document.getElementById('lightbox-img').src = S.lightboxImages[S.lightboxIdx];
-  document.getElementById('lightbox-counter').textContent =
-    S.lightboxImages.length > 1 ? `${S.lightboxIdx + 1} / ${S.lightboxImages.length}` : '';
-  document.getElementById('lightbox-prev').style.display = S.lightboxImages.length > 1 ? '' : 'none';
-  document.getElementById('lightbox-next').style.display = S.lightboxImages.length > 1 ? '' : 'none';
-}
-document.getElementById('wiki-lightbox').addEventListener('click', function (e) {
-  if (e.target === this) closeLightbox();
-});
-document.addEventListener('keydown', function (e) {
-  const lb = document.getElementById('wiki-lightbox');
-  if (!lb.classList.contains('open')) return;
-  if (e.key === 'ArrowLeft') lightboxNav(-1);
-  if (e.key === 'ArrowRight') lightboxNav(1);
-  if (e.key === 'Escape') closeLightbox();
-});
+// ── Lightbox + Carousel ────────────────────────────────────────────────────
+// Extracted to src/lightbox.js
+import {
+  openLightbox, openCarouselLightbox, closeLightbox, lightboxNav,
+  carStart, carStop, carResume, carGo, carJump, initLightboxListeners
+} from './lightbox.js';
 
 // ── Wikipedia image fetching ──────────────────────────────────────────────────
 
 // Filename patterns that indicate non-photo images (icons, flags, maps, etc.)
 const IMG_EXCLUDE = /flag|coat|coa_|locator|location_map|location S.map|icon|emblem|seal|logo|banner|signature|blank|symbol|layout|streets|district|wikisource|wikidata|commons-logo|silhouette|\.svg$/i;
-
-// ── Carousel state ────────────────────────────────────────────────────────────
-// (carImages moved to state.js)
-// (carIdx moved to state.js)
-// (carTimer moved to state.js)
-function carStart(images) {
-  S.carImages = images;
-  S.carIdx = 0;
-  clearInterval(S.carTimer);
-  if (images.length > 1) S.carTimer = setInterval(() => carGo(1), 4500);
-}
-function carStop() { clearInterval(S.carTimer); S.carTimer = null; }
-function carResume() { if (S.carImages.length > 1) S.carTimer = setInterval(() => carGo(1), 4500); }
-function carGo(dir) {
-  S.carIdx = (S.carIdx + dir + S.carImages.length) % S.carImages.length;
-  carRender();
-}
-function carJump(i) {
-  S.carIdx = i; carRender();
-  carStop();
-  if (S.carImages.length > 1) S.carTimer = setInterval(() => carGo(1), 4500);
-}
-function carRender() {
-  const img = document.getElementById('wiki-car-img');
-  const counter = document.getElementById('wiki-car-counter');
-  if (!img) return;
-  img.classList.add('fade');
-  setTimeout(() => {
-    img.src = S.carImages[S.carIdx];
-    img.classList.remove('fade');
-  }, 180);
-  if (counter) counter.textContent = `${S.carIdx + 1} / ${S.carImages.length}`;
-  document.querySelectorAll('.wiki-car-dot').forEach((d, i) =>
-    d.classList.toggle('active', i === S.carIdx));
-}
 
 // ── Wikipedia sidebar ─────────────────────────────────────────────────────────
 
@@ -1890,7 +1705,7 @@ function _updateStatsListHtml() {
   const jpSelfPref = isJapanPrefStat ? _lookupJapanPref(jpSelfCity)?.name : null;
   const rows = S._statsPoints.slice(S._statsWinStart, S._statsWinEnd + 1).map(p => {
     const isCur = isJapanPrefStat ? (p.prefName === jpSelfPref) : (p.qid === curId);
-    const navFn = isWbStat ? `statsGoToCountry('${p.qid}')` : `statsGoToCity('${p.qid}')`;
+    const navFn = isWbStat ? escHtml('statsGoToCountry(' + JSON.stringify(p.qid) + ')') : escHtml('statsGoToCity(' + JSON.stringify(p.qid) + ')');
     const sub = isWbStat ? '' : (p.state ? ` · ${escHtml(p.state)}` : '');
     return `<div class="stats-rank-row${isCur?' stats-rank-current':''}" onclick="${navFn}">
       <span class="stats-rank-num">#${p.rank}</span>
@@ -2061,7 +1876,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     if (!val && val !== 0) return '';
     const v = isHtml ? val : escHtml(String(val));
     const extraCls  = cityMetric ? ' info-chip-clickable' : '';
-    const extraAttr = cityMetric ? ` onclick="openStatsPanel('${cityMetric}','${escHtml(city.qid)}')" title="Click to see world ranking"` : '';
+    const extraAttr = cityMetric ? safeOnclick('openStatsPanel', cityMetric, city.qid) + ` title="Click to see world ranking"` : '';
     return `<div class="info-chip${span2?' info-chip-wide':''}${extraCls}"${extraAttr}><div class="info-chip-lbl">${label}</div><div class="info-chip-val">${v}</div></div>`;
   }
   const infoChips = `<div class="info-chips">
@@ -2136,7 +1951,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     if (!wb || wb[key] == null) return '';
     const yr = wb[key + '_year'] ? ` <span class="wb-chip-yr">${wb[key + '_year']}</span>` : '';
     const extra = wbMetric && city.iso
-      ? ` wb-chip-clickable" onclick="openStatsPanel('${wbMetric}','${escHtml(city.iso)}')" title="Click to see country rankings"`
+      ? ` wb-chip-clickable"${safeOnclick('openStatsPanel', wbMetric, city.iso)} title="Click to see country rankings"`
       : `"`;
     return `<div class="wb-chip${extra}><div class="wb-chip-lbl">${label}</div><div class="wb-chip-val">${escHtml(fmt(wb[key]))}${yr}</div></div>`;
   }
@@ -2160,7 +1975,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
           const e = city.iso ? S.eciData[city.iso] : null;
           if (!e) return '';
           const col = e.eci > 1.5 ? '#3fb950' : e.eci > 0.5 ? '#58a6ff' : e.eci > -0.5 ? '#f0a500' : '#f85149';
-          return `<div class="wb-chip wb-chip-clickable" onclick="openStatsPanel('eci','${escHtml(city.iso)}')" title="Economic Complexity Index — click for country ranking"><div class="wb-chip-lbl">Complexity (ECI)</div><div class="wb-chip-val" style="color:${col}">${e.eci > 0 ? '+' : ''}${e.eci.toFixed(2)} <span class="wb-chip-yr">${e.year}</span></div></div>`;
+          return `<div class="wb-chip wb-chip-clickable"${safeOnclick('openStatsPanel', 'eci', city.iso)} title="Economic Complexity Index — click for country ranking"><div class="wb-chip-lbl">Complexity (ECI)</div><div class="wb-chip-val" style="color:${col}">${e.eci > 0 ? '+' : ''}${e.eci.toFixed(2)} <span class="wb-chip-yr">${e.year}</span></div></div>`;
         })()}
       </div>
     </td></tr>` : '';
@@ -2378,7 +2193,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     infoEl.innerHTML = `
       ${carouselHtml}
       <div class="wiki-city-header">
-        <div class="wiki-city-name">${escHtml(city.name)}<button class="bm-toggle" onclick="toggleBookmark('${escAttr(city.qid)}')" title="Save city">${S._bookmarks.has(city.qid) ? '★' : '☆'}</button></div>
+        <div class="wiki-city-name">${escHtml(city.name)}<button class="bm-toggle"${safeOnclick('toggleBookmark', city.qid)} title="Save city">${S._bookmarks.has(city.qid) ? '★' : '☆'}</button></div>
         ${city.desc ? `<div class="wiki-city-desc">${escHtml(city.desc)}</div>` : ''}
       </div>
       ${infoChips}
@@ -2435,7 +2250,7 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
        </a>`
     : '';
 
-  const cmpBtn = `<button class="wiki-cmp-btn" onclick="openComparePanel('${escHtml(city.qid)}')">Compare</button>`;
+  const cmpBtn = `<button class="wiki-cmp-btn"${safeOnclick('openComparePanel', city.qid)}>Compare</button>`;
   footer.innerHTML = (wikiLink || siteLink)
     ? wikiLink + siteLink + cmpBtn + `<span class="wiki-cache-note">${fromCache ? 'Cached \u00b7 ' : ''}Data from Wikipedia &amp; Wikidata</span>`
     : cmpBtn;
@@ -3148,7 +2963,7 @@ const JAPAN_PREF_STAT_DEFS = {
 
 function statCell(label, val, cls = '', metric = '', qid = '', title = 'Click to see ranking') {
   const extra = metric && qid
-    ? ` census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="${escHtml(title)}"`
+    ? ` census-stat-clickable"${safeOnclick('openStatsPanel', metric, qid)} title="${escHtml(title)}"`
     : `"`;
   return `<div class="census-stat${extra}><div class="census-stat-label">${label}</div><div class="census-stat-value${cls?' '+cls:''}">${val}</div></div>`;
 }
@@ -3243,7 +3058,7 @@ function buildEconomyHtml(acs, biz, qid) {
 
     const growthCls = (pt.growthPct||0) >= 0 ? 'census-gold' : 'census-red';
     const growthStr = popVals.length >= 2
-      ? `<span class="census-stat-value ${growthCls} census-stat-clickable" style="font-size:0.78rem" onclick="openStatsPanel('popGrowthPct','${qid}')" title="Click to see ranking">${(pt.growthPct||0)>=0?'+':''}${(pt.growthPct||0).toFixed(1)}%</span> <span class="census-stat-label">pop 19→22</span>`
+      ? `<span class="census-stat-value ${growthCls} census-stat-clickable" style="font-size:0.78rem"${safeOnclick('openStatsPanel', 'popGrowthPct', qid)} title="Click to see ranking">${(pt.growthPct||0)>=0?'+':''}${(pt.growthPct||0).toFixed(1)}%</span> <span class="census-stat-label">pop 19→22</span>`
       : '';
 
     // Sector bars (compact)
@@ -3304,7 +3119,7 @@ function buildEconomyHtml(acs, biz, qid) {
     <div class="es-trends">`;
     if (zw.zhviHistory?.length >= 2) {
       const { svg, range } = _eurostatSparkline(zw.zhviHistory, '#58a6ff', 110, 28);
-      html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('zhvi','${escHtml(qid)}')" title="Click to see ranking">
+      html += `<div class="es-trend-row census-stat-clickable"${safeOnclick('openStatsPanel', 'zhvi', qid)} title="Click to see ranking">
         <span class="es-trend-label">Home Value</span>
         <span class="es-trend-spark">${svg}</span>
         <span class="es-trend-val" style="color:var(--accent)">${zw.zhvi ? fmtDollar(zw.zhvi) : '—'}</span>
@@ -3313,7 +3128,7 @@ function buildEconomyHtml(acs, biz, qid) {
     }
     if (zw.zoriHistory?.length >= 2) {
       const { svg, range } = _eurostatSparkline(zw.zoriHistory, '#f0a500', 110, 28);
-      html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('zori','${escHtml(qid)}')" title="Click to see ranking">
+      html += `<div class="es-trend-row census-stat-clickable"${safeOnclick('openStatsPanel', 'zori', qid)} title="Click to see ranking">
         <span class="es-trend-label">Rent Index</span>
         <span class="es-trend-spark">${svg}</span>
         <span class="es-trend-val" style="color:var(--gold)">${zw.zori ? fmtDollar(zw.zori) + '/mo' : '—'}</span>
@@ -3879,7 +3694,7 @@ function buildJapanPrefHtml(pref, prefName, qid) {
   const gdpRange = gdpHistory && gdpHistory.length >= 2
     ? `${gdpHistory[0][0]}–${gdpHistory[gdpHistory.length-1][0]}` : '';
 
-  const click = (metric) => `census-stat-clickable" onclick="openStatsPanel('${metric}','${escHtml(qid)}')" title="Click to see Japan prefecture ranking"`;
+  const click = (metric) => `census-stat-clickable"${safeOnclick('openStatsPanel', metric, qid)} title="Click to see Japan prefecture ranking"`;
 
   return `<div class="census-wrap">
     <div class="census-head">Prefecture · Cabinet Office${incYear ? ' · ' + incYear : ''}</div>
@@ -3898,7 +3713,7 @@ function buildJapanPrefHtml(pref, prefName, qid) {
 
     ${(incomeHistory && incomeHistory.length >= 2) ? `
     <div class="es-trends">
-      <div class="es-trend-row" onclick="openStatsPanel('japan_perCapitaIncome','${escHtml(qid)}')" title="Click to see prefecture ranking">
+      <div class="es-trend-row"${safeOnclick('openStatsPanel', 'japan_perCapitaIncome', qid)} title="Click to see prefecture ranking">
         <span class="es-trend-label">Per-Capita Income</span>
         <span>${jpSparkline(incomeHistory, '#f0a500')}</span>
         <span class="es-trend-val" style="color:var(--gold)">${fmtJpy(pref.perCapitaIncomeJpy)}</span>
@@ -3908,7 +3723,7 @@ function buildJapanPrefHtml(pref, prefName, qid) {
 
     ${(gdpHistory && gdpHistory.length >= 2) ? `
     <div class="es-trends" style="margin-top:6px">
-      <div class="es-trend-row" onclick="openStatsPanel('japan_gdp','${escHtml(qid)}')" title="Click to see prefecture ranking">
+      <div class="es-trend-row"${safeOnclick('openStatsPanel', 'japan_gdp', qid)} title="Click to see prefecture ranking">
         <span class="es-trend-label">Prefectural GDP</span>
         <span>${jpSparkline(gdpHistory, '#3fb950')}</span>
         <span class="es-trend-val" style="color:var(--success)">${fmtBill(pref.gdpJpy)}</span>
@@ -4029,7 +3844,7 @@ function buildEurostatHtml(es, qid) {
     for (const r of TREND_ROWS) {
       const { svg, range } = _eurostatSparkline(es[r.key], r.color, 110, 28);
       const latestVal = es[r.valKey] != null ? r.fmt(es[r.valKey]) : '—';
-      html += `<div class="es-trend-row census-stat-clickable" onclick="openStatsPanel('${r.metric}','${escHtml(qid)}')" title="Click to see European ranking">
+      html += `<div class="es-trend-row census-stat-clickable"${safeOnclick('openStatsPanel', r.metric, qid)} title="Click to see European ranking">
         <span class="es-trend-label">${r.label}</span>
         <span class="es-trend-spark">${svg}</span>
         <span class="es-trend-val" style="color:${r.color}">${latestVal}</span>
@@ -4041,6 +3856,13 @@ function buildEurostatHtml(es, qid) {
 
   html += `<div class="census-source" style="margin-top:8px">Eurostat Urban Audit · urb_clma · urb_clivcon · urb_cecfi · urb_cenv · urb_ctour · urb_cpopstr</div></div>`;
   return html;
+}
+
+function openWikiSidebarById(qid) {
+  const city = S.cityByQid.get(qid);
+  if (!city) return;
+  S.map.flyTo([city.lat, city.lng], 8);
+  openWikiSidebar(qid, city.name);
 }
 
 async function openWikiSidebar(qid, cityName) {
@@ -4311,7 +4133,7 @@ function _swapTileLayer() {
       // After 3+ errors, switch to ESRI fallback for subsequent loads
       if (errorCount >= 3 && !_terrainFallbackActive) {
         _terrainFallbackActive = true;
-        console.warn('OpenTopoMap unavailable, switching to ESRI World Topo');
+        _warn('terrain', 'OpenTopoMap unavailable, switching to ESRI World Topo');
         // Re-swap to fallback after a short delay
         setTimeout(() => _swapTileLayer(), 100);
       }
@@ -4565,6 +4387,8 @@ async function init() {
     }
   });
 
+  initLightboxListeners();
+
   // Normal map click → close trade panel + country popup
   S.map.on('click', () => { if (!S._drawActive) { closeTradePanelFn(); closeCountryPopup(); } });
 
@@ -4596,7 +4420,7 @@ async function init() {
     fillColor: '#0a0f1a', fillOpacity: 0.45,
     color: '#334155', weight: 1, opacity: 0.6, interactive: false,
   }).addTo(S.map);
-  setInterval(() => terminator.setTime(new Date()), 60_000);
+  S._terminatorInterval = setInterval(() => terminator.setTime(new Date()), 60_000);
 
   // ── Phase 2: load only critical data (cities + country data) for fast render ──
   // Non-critical datasets are fetched in the background after the UI is visible.
@@ -4627,6 +4451,42 @@ async function init() {
     S.rawCities = validateCities(raw);
     S.rawCities.forEach(c => { c._key = cityKey(c); });
 
+    // ── Phase 3b: backfill missing iso codes from country name ──
+    // Some cities (esp. Netherlands, Somaliland, West Bank) have iso:null from Wikidata
+    const _COUNTRY_ISO_MAP = {
+      'netherlands': 'NL', 'curacao': 'CW', 'aruba': 'AW', 'sint maarten': 'SX',
+      'somaliland': 'SO', 'palestinian territories': 'PS', 'west bank': 'PS',
+      'gaza strip': 'PS', 'british virgin islands': 'VG', 'virgin islands (u.s.)': 'VI',
+      'northern mariana islands': 'MP', 'american samoa': 'AS', 'guam': 'GU',
+      'puerto rico (us)': 'PR', 'french polynesia': 'PF', 'isle of man': 'IM',
+      'gibraltar': 'GI', 'monaco': 'MC', 'liechtenstein': 'LI', 'san marino': 'SM',
+      'singapore': 'SG', 'serbia': 'RS', 'montenegro': 'ME', 'oman': 'OM',
+      'kosovo': 'XK', 'malta': 'MT', 'barbados': 'BB', 'bahamas': 'BS',
+      'bahamas, the': 'BS', 'kuwait': 'KW', 'iceland': 'IS', 'luxembourg': 'LU',
+      'bahrein': 'BH', 'bahrain': 'BH', 'vanuatu': 'VU', 'tonga': 'TO',
+      'tuvalu': 'TV', 'palau': 'PW', 'marshall islands': 'MH', 'micronesia': 'FM',
+      'kiribati': 'KI', 'nauru': 'NR', 'dominica': 'DM', 'grenada': 'GD',
+      'st. kitts and nevis': 'KN', 'saint kitts and nevis': 'KN',
+      'st. lucia': 'LC', 'saint lucia': 'LC',
+      'st. vincent and the grenadines': 'VC',
+      'saint vincent and the grenadines': 'VC',
+      'sao tome and principe': 'ST', 'faroe islands': 'FO', 'greenland': 'GL',
+      'new caledonia': 'NC', 'bermuda': 'BM', 'cayman islands': 'KY',
+      'channel islands': 'JE', 'macao': 'MO', 'macao sar, china': 'MO',
+      'sint maarten (dutch part)': 'SX', 'st. martin (french part)': 'MF',
+      'turks and caicos islands': 'TC', 'tokelau': 'TK', 'cook islands': 'CK',
+      'niue': 'NU', 'wallis and futuna': 'WF', 'pitcairn islands': 'PN',
+    };
+    let _backfilled = 0;
+    for (var _bi = 0; _bi < S.rawCities.length; _bi++) {
+      var _bc = S.rawCities[_bi];
+      if (!_bc.iso && _bc.country) {
+        var _mapped = _COUNTRY_ISO_MAP[_bc.country.toLowerCase()];
+        if (_mapped) { _bc.iso = _mapped; _backfilled++; }
+      }
+    }
+    if (_backfilled) _log('init', 'Backfilled ISO codes for ' + _backfilled + ' cities');
+
     // ── Phase 4: migrate any legacy lat,lng edit keys → QID ──
     migrateEditKeys(S.rawCities);
 
@@ -4634,13 +4494,13 @@ async function init() {
     if (countryRes && countryRes.ok) {
       try {
         S.countryData = await countryRes.json();
-        console.log(`[init] Country data loaded (${Object.keys(S.countryData).length} countries)`);
+        _log('init', `Country data loaded (${Object.keys(S.countryData).length} countries)`);
         _buildCountryDataCaches();
       } catch {
-        console.warn('[init] country-data.json is malformed — World Bank data will be unavailable');
+        _warn('init', 'country-data.json is malformed — World Bank data will be unavailable');
       }
     } else {
-      console.info('[init] country-data.json not found — run "npm run fetch-country" to enable World Bank indicators');
+      _log('init', 'country-data.json not found — run "npm run fetch-country" to enable World Bank indicators');
     }
 
     // ── Build city name lookup once for deferred city-array datasets ──
@@ -4678,7 +4538,7 @@ async function init() {
             var qid = _matchCityQid(kdbData[i].city, kdbData[i].country);
             if (qid) { assign(qid, kdbData[i]); matched++; }
           }
-          console.log('[kdb] ' + label + ': ' + matched + '/' + kdbData.length + ' matched to cities');
+          _log('kdb', label + ': ' + matched + '/' + kdbData.length + ' matched to cities');
         }
         return Promise.resolve();
       }
@@ -4691,9 +4551,9 @@ async function init() {
             var qid = _matchCityQid(arr[i].city, arr[i].country);
             if (qid) { assign(qid, arr[i]); matched++; }
           }
-          console.log('[lazy] ' + label + ': ' + matched + '/' + arr.length + ' matched to cities');
+          _log('lazy', label + ': ' + matched + '/' + arr.length + ' matched to cities');
         });
-      }).catch(function() { console.warn('[lazy] ' + label + ' failed to load'); });
+      }).catch(function() { _warn('lazy', label, 'failed to load'); });
     }
 
     // ── Phase 5b2+: deferred datasets — fetched in background after UI renders ──
@@ -4729,13 +4589,13 @@ async function init() {
         var kdbData = _kdbGet(stem);
         if (kdbData !== null) {
           item.assign(kdbData);
-          console.log('[kdb] ' + stem + ' loaded');
+          _log('kdb', stem + ' loaded');
           return;
         }
         fetch(item.url).then(r => r.ok ? r.json() : Promise.reject()).then(d => {
           item.assign(d);
-          console.log(`[lazy] ${item.url} loaded`);
-        }).catch(() => { console.warn(`[lazy] ${item.url} failed`); });
+          _log('lazy', `${item.url} loaded`);
+        }).catch(() => { _warn('lazy', `${item.url} failed`); });
       });
       _loadCityArrayFromUrl('/ports.json', 'Ports', function(qid, d) {
         S.portData[qid] = { port: d.port, teu_millions: d.teu_millions, teu_year: d.teu_year, rank: d.rank };
@@ -4762,14 +4622,14 @@ async function init() {
         for (var ri = 0; ri < _uniKdb.length; ri++) {
           S.uniRankings[_uniKdb[ri].qid] = { qs_rank: _uniKdb[ri].qs_rank, the_rank: _uniKdb[ri].the_rank };
         }
-        console.log('[kdb] University rankings loaded: ' + _uniKdb.length);
+        _log('kdb', 'University rankings loaded:', _uniKdb.length);
       } else {
         fetch('/uni-rankings.json').then(r => r.ok ? r.json() : Promise.reject()).then(function(ranks) {
           for (var ri = 0; ri < ranks.length; ri++) {
             S.uniRankings[ranks[ri].qid] = { qs_rank: ranks[ri].qs_rank, the_rank: ranks[ri].the_rank };
           }
-          console.log('[lazy] University rankings loaded: ' + ranks.length);
-        }).catch(function() { console.warn('[lazy] University rankings failed'); });
+          _log('lazy', 'University rankings loaded:', ranks.length);
+        }).catch(function() { _warn('lazy', 'University rankings failed'); });
       }
     };
 
@@ -5270,7 +5130,7 @@ function _renderCountryPanel(iso2) {
       "<div class=\"cp-country-name\">" + escHtml(cd.name || iso2) + "</div>" +
       "<div class=\"cp-country-meta\">" + metaParts.join(" \u00b7 ") + "</div>" +
     "</div>" +
-    "<button class=\"wiki-cmp-btn\" onclick=\"openCountryCompare('" + escAttr(iso2) + "')\">Compare</button>" +
+    "<button class=\"wiki-cmp-btn\"" + safeOnclick('openCountryCompare', iso2) + ">Compare</button>" +
     "<button class=\"cp-close\" onclick=\"closeCountryPanel()\">\u00d7</button>";
 
   // ── 4 stat cards ──────────────────────────────────────────────────
@@ -5680,7 +5540,7 @@ function _renderCountryPanel(iso2) {
           var val  = p.value_bn >= 100 ? '$' + Math.round(p.value_bn) + 'B'
                    : p.value_bn >= 1   ? '$' + p.value_bn.toFixed(1) + 'B'
                    :                     '$' + (p.value_bn * 1000).toFixed(0) + 'M';
-          return '<div class="cp-trade-partner-row" onclick="openCountryPanel(\'' + escAttr(p.iso2) + '\')">' +
+          return '<div class="cp-trade-partner-row"' + safeOnclick('openCountryPanel', p.iso2) + '>' +
             '<span class="cp-trade-flag">' + flag + '</span>' +
             '<span class="cp-trade-name">' + escHtml(p.name) + '</span>' +
             '<span class="cp-trade-val">' + val + '</span></div>';
@@ -6376,10 +6236,15 @@ function _computeCountryCentroids() {
 }
 
 async function fetchBeaTrade(beaCountryName) {
-  // Fetch goods AND services in one call
-  const url = 'https://apps.bea.gov/api/data/?UserID=YOUR_BEA_API_KEY_HERE' +
-    '&method=GetData&DataSetName=ITA&Indicator=ExpGds,ImpGds,ExpSvcs,ImpSvcs' +
-    `&AreaOrCountry=${encodeURIComponent(beaCountryName)}&Frequency=A&Year=ALL&ResultFormat=JSON`;
+  const params = new URLSearchParams({
+    method: 'GetData',
+    DataSetName: 'ITA',
+    Indicator: 'ExpGds,ImpGds,ExpSvcs,ImpSvcs',
+    AreaOrCountry: beaCountryName,
+    Frequency: 'A',
+    Year: 'ALL',
+  });
+  const url = '/api/bea?' + params;
   const res = await fetch(url);
   const json = await res.json();
   const rows = json?.BEAAPI?.Results?.Data;
@@ -6917,7 +6782,7 @@ function _loadAdmin1Country(iso2) {
         S.admin1Layers[iso2] = layer;
       }
     } catch (e) {
-      console.warn('[admin1] Failed to load', iso2, e.message);
+      _warn('admin1', 'Failed to load', iso2, e.message);
     } finally {
       delete S._admin1Loading[iso2];
     }
@@ -7043,7 +6908,7 @@ function _buildRegionSection() {
   var rd = r.data;
   var html = '<div class="cp-gauge-section-hdr" style="color:var(--accent)">' +
     escHtml(r.name) + (r.code ? ' <span style="opacity:.6;font-weight:400">(' + escHtml(r.code) + ')</span>' : '') +
-    '<button onclick="clearRegionSelection(\'' + escHtml(r.iso2) + '\')" style="float:right;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:.75rem" title="Clear region selection">\u00d7</button>' +
+    '<button' + safeOnclick('clearRegionSelection', r.iso2) + ' style="float:right;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:.75rem" title="Clear region selection">\u00d7</button>' +
     '</div>';
 
   // Economy
@@ -7313,9 +7178,9 @@ async function toggleCableLayer() {
       try {
         var res = await _kdbOrFetch('/submarine-cables.json');
         S.cableData = await res.json();
-        console.log('[cables] Loaded: ' + S.cableData.cables.length + ' cables, ' + S.cableData.landings.length + ' landing points');
+        _log('cables', 'Loaded:', S.cableData.cables.length, 'cables,', S.cableData.landings.length, 'landing points');
       } catch(e) {
-        console.warn('[cables] Failed to load submarine-cables.json');
+        _warn('cables', 'Failed to load submarine-cables.json');
         S.cableOn = false; btn.textContent = 'Submarine Cables'; btn.classList.remove('on');
         return;
       }
@@ -7412,9 +7277,9 @@ async function toggleAirRouteLayer() {
       try {
         var res = await _kdbOrFetch('/air-routes.json');
         S.airRouteData = await res.json();
-        console.log('[air-routes] Loaded: ' + S.airRouteData.routes.length + ' routes');
+        _log('air-routes', 'Loaded:', S.airRouteData.routes.length, 'routes');
       } catch(e) {
-        console.warn('[air-routes] Failed to load');
+        _warn('air-routes', 'Failed to load');
         S.airRouteOn = false; btn.textContent = '✈ Flights: Off'; btn.classList.remove('on');
         return;
       }
@@ -7517,7 +7382,7 @@ async function toggleTectonicLayer() {
         const res = await _kdbOrFetch('/tectonic-plates.json');
         S.tectonicData = await res.json();
       } catch(e) {
-        console.warn('[tectonic] Failed to load');
+        _warn('tectonic', 'Failed to load');
         S.tectonicOn = false; btn.textContent = 'Tectonic Plates'; btn.classList.remove('on');
         return;
       }
@@ -7569,7 +7434,7 @@ async function _fetchEarthquakes() {
     const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson');
     S.earthquakeData = await res.json();
   } catch(e) {
-    console.warn('[earthquake] Failed to fetch USGS data');
+    _warn('earthquake', 'Failed to fetch USGS data');
     return;
   }
   _buildEarthquakeLayer();
@@ -7638,7 +7503,7 @@ async function toggleVolcanoLayer() {
         const res = await _kdbOrFetch('/volcanoes_full.json');
         S.volcanoData = await res.json();
       } catch(e) {
-        console.warn('[volcano] Failed to load');
+        _warn('volcano', 'Failed to load');
         S.volcanoOn = false; btn.textContent = 'Volcanoes'; btn.classList.remove('on');
         return;
       }
@@ -7693,7 +7558,7 @@ async function toggleLaunchSiteLayer() {
         const res = await _kdbOrFetch('/launch_sites.json');
         S.launchSiteData = await res.json();
       } catch(e) {
-        console.warn('[launchSite] Failed to load');
+        _warn('launchSite', 'Failed to load');
         S.launchSiteOn = false; btn.textContent = 'Launch Sites'; btn.classList.remove('on');
         return;
       }
@@ -7745,7 +7610,7 @@ async function toggleEezLayer() {
           DatasetManager.register('eezData', S.eezData, 'low');
         }
       } catch(e) {
-        console.warn('[eez] Failed to load');
+        _warn('eez', 'Failed to load');
         S.eezOn = false; btn.textContent = 'EEZ Boundaries'; btn.classList.remove('on');
         return;
       }
@@ -7827,7 +7692,7 @@ async function _fetchIssPosition() {
       { direction: 'top', className: 'admin1-tooltip' }
     );
   } catch(e) {
-    console.warn('[iss] Failed to fetch position');
+    _warn('iss', 'Failed to fetch position');
   }
 }
 
@@ -7871,7 +7736,7 @@ async function toggleAircraftLayer() {
 async function _fetchAircraftPositions() {
   try {
       const res = await _kdbOrFetch('/aircraft-live-lite.json');
-    if (!res.ok) { console.warn('[aircraft] No data available'); return; }
+    if (!res.ok) { _warn('aircraft', 'No data available'); return; }
     const data = await res.json();
 
     const zoom = S.map.getZoom();
@@ -7968,9 +7833,9 @@ async function _fetchAircraftPositions() {
     // Add all markers at once (faster)
     S.aircraftLayer = L.layerGroup(markers).addTo(S.map);
 
-    console.log(`[aircraft] Displayed ${count}/${MAX_AIRCRAFT} aircraft (zoom ${zoom})`);
+    _log('aircraft', `Displayed ${count}/${MAX_AIRCRAFT} aircraft (zoom ${zoom})`);
   } catch(e) {
-    console.warn('[aircraft] Failed:', e.message);
+    _warn('aircraft', 'Failed:', e.message);
   }
 }
 
@@ -8010,7 +7875,7 @@ async function toggleWildfireLayer() {
 async function _fetchWildfireData() {
   try {
       const res = await _kdbOrFetch('/wildfires-live-lite.json');
-    if (!res.ok) { console.warn('[wildfire] No data available'); return; }
+    if (!res.ok) { _warn('wildfire', 'No data available'); return; }
     const data = await res.json();
 
     const zoom = S.map.getZoom();
@@ -8089,9 +7954,9 @@ async function _fetchWildfireData() {
     }
 
     S.wildfireLayer = L.layerGroup(markers).addTo(S.map);
-    console.log(`[wildfire] Displayed ${count} fires (zoom ${zoom}, viewport: ${outsideCount} culled)`);
+    _log('wildfire', `Displayed ${count} fires (zoom ${zoom}, viewport: ${outsideCount} culled)`);
   } catch(e) {
-    console.warn('[wildfire] Failed:', e.message);
+    _warn('wildfire', 'Failed:', e.message);
   }
 }
 
@@ -8107,7 +7972,7 @@ export async function toggleEonetLayer() {
         const res = await _kdbOrFetch('/eonet-events-lite.json');
         S.eonetData = await res.json();
       } catch(e) {
-        console.warn('[eonet] Failed to load');
+        _warn('eonet', 'Failed to load');
         S.eonetOn = false; btn.textContent = 'Natural Events'; btn.classList.remove('on');
         return;
       }
@@ -8155,7 +8020,7 @@ function _buildEonetLayer() {
     layers.push(marker);
   }
   S.eonetLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[eonet] Displayed ${layers.length} events`);
+  _log('eonet', `Displayed ${layers.length} events`);
 }
 
 // ── Protected Areas Layer ─────────────────────────────────────────────────────
@@ -8170,7 +8035,7 @@ export async function toggleProtectedAreasLayer() {
         const res = await _kdbOrFetch('/protected-areas.json');
         S.protectedAreasData = await res.json();
       } catch(e) {
-        console.warn('[protected-areas] Failed to load');
+        _warn('protected-areas', 'Failed to load');
         S.protectedAreasOn = false; btn.textContent = '🌲 Protected Areas: Off'; btn.classList.remove('on');
         return;
       }
@@ -8215,7 +8080,7 @@ function _buildProtectedAreasLayer() {
     layers.push(marker);
   }
   S.protectedAreasLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[protected-areas] Displayed ${layers.length} areas`);
+  _log('protected-areas', `Displayed ${layers.length} areas`);
 }
 
 // ── Shipping Ports Layer ──────────────────────────────────────────────────────
@@ -8230,7 +8095,7 @@ export async function toggleVesselPortsLayer() {
         const res = await _kdbOrFetch('/vessel-ports.json');
         S.vesselPortsData = await res.json();
       } catch(e) {
-        console.warn('[vessel-ports] Failed to load');
+        _warn('vessel-ports', 'Failed to load');
         S.vesselPortsOn = false; btn.textContent = 'Ports'; btn.classList.remove('on');
         return;
       }
@@ -8271,7 +8136,7 @@ function _buildVesselPortsLayer() {
     layers.push(marker);
   }
   S.vesselPortsLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[vessel-ports] Displayed ${layers.length} ports`);
+  _log('vessel-ports', `Displayed ${layers.length} ports`);
 }
 
 // ── PeeringDB Internet Infrastructure Layer ────────────────────────────────────
@@ -8285,9 +8150,9 @@ export async function togglePeeringdbLayer() {
       try {
         const res = await _kdbOrFetch('/peeringdb.json');
         S.peeringdbData = await res.json();
-        console.log('[peeringdb] Loaded:', S.peeringdbData.ixps.length, 'IXPs,', S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter(x => x.lat !== null).length, 'with coords');
+        _log('peeringdb', 'Loaded:', S.peeringdbData.ixps.length, 'IXPs,', S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter(x => x.lat !== null).length, 'with coords');
       } catch(e) {
-        console.warn('[peeringdb] Failed to load:', e);
+        _warn('peeringdb', 'Failed to load:', e);
         S.peeringdbOn = false; btn.textContent = 'Internet Exchanges'; btn.classList.remove('on');
         return;
       }
@@ -8324,7 +8189,7 @@ function _buildPeeringdbLayer() {
     layers.push(marker);
   }
   S.peeringdbLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[peeringdb] Displayed ${layers.length} IXPs`);
+  _log('peeringdb', `Displayed ${layers.length} IXPs`);
 }
 
 // ── WAQI Air Quality Layer ─────────────────────────────────────────────────────
@@ -8339,7 +8204,7 @@ export async function toggleWaqiLayer() {
         const res = await _kdbOrFetch('/who-airquality.json');
         S.waqiData = await res.json();
       } catch(e) {
-        console.warn('[waqi] Failed to load');
+        _warn('waqi', 'Failed to load');
         S.waqiOn = false; btn.textContent = 'Air Quality'; btn.classList.remove('on');
         return;
       }
@@ -8385,7 +8250,7 @@ function _buildWaqiLayer() {
     layers.push(marker);
   }
   S.waqiLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[waqi] Displayed ${layers.length} stations`);
+  _log('waqi', `Displayed ${layers.length} stations`);
 }
 
 // ── Open-Meteo Weather Layer ───────────────────────────────────────────────────
@@ -8400,7 +8265,7 @@ export async function toggleWeatherLayer() {
         const res = await _kdbOrFetch('/weather-stations.json');
         S.weatherData = await res.json();
       } catch(e) {
-        console.warn('[weather] Failed to load');
+        _warn('weather', 'Failed to load');
         S.weatherOn = false; btn.textContent = 'Weather'; btn.classList.remove('on');
         return;
       }
@@ -8448,7 +8313,7 @@ function _buildWeatherLayer() {
     layers.push(marker);
   }
   S.weatherLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[weather] Displayed ${layers.length} stations`);
+  _log('weather', `Displayed ${layers.length} stations`);
 }
 
 // ── Celestrak Satellite Layer ──────────────────────────────────────────────────
@@ -8463,7 +8328,7 @@ export async function toggleSatelliteLayer() {
         const res = await _kdbOrFetch('/satellites-live-lite.json');
         S.satelliteData = await res.json();
       } catch(e) {
-        console.warn('[satellite] Failed to load');
+        _warn('satellite', 'Failed to load');
         S.satelliteOn = false; btn.textContent = 'Satellites'; btn.classList.remove('on');
         return;
       }
@@ -8508,7 +8373,7 @@ function _buildSatelliteLayer() {
     layers.push(marker);
   }
   S.satelliteLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[satellite] Displayed ${layers.length} satellites`);
+  _log('satellite', `Displayed ${layers.length} satellites`);
 }
 
 // ── UNESCO Intangible Heritage Layer ───────────────────────────────────────────
@@ -8523,7 +8388,7 @@ export async function toggleUnescoIchLayer() {
         const res = await _kdbOrFetch('/unesco-ich.json');
         S.unescoIchData = await res.json();
       } catch(e) {
-        console.warn('[unesco-ich] Failed to load');
+        _warn('unesco-ich', 'Failed to load');
         S.unescoIchOn = false; btn.textContent = '🎭 Heritage: Off'; btn.classList.remove('on');
         return;
       }
@@ -8540,7 +8405,7 @@ function _buildUnescoIchLayer() {
   if (S.unescoIchLayer) { S.map.removeLayer(S.unescoIchLayer); S.unescoIchLayer = null; }
   if (!S.unescoIchOn || !S.unescoIchData) return;
   // UNESCO ICH doesn't have coordinates - show country panel integration instead
-  console.log('[unesco-ich] Data loaded for country panel integration');
+  _log('unesco-ich', 'Data loaded for country panel integration');
 }
 
 // ── Phase 2 Layers ────────────────────────────────────────────────────────────
@@ -8556,7 +8421,7 @@ export async function toggleGtdLayer() {
         const res = await _kdbOrFetch('/terrorism-incidents-lite.json');
         S.gtdData = await res.json();
       } catch(e) {
-        console.warn('[gtd] Failed to load');
+        _warn('gtd', 'Failed to load');
         S.gtdOn = false; btn.textContent = 'Terrorism'; btn.classList.remove('on');
         return;
       }
@@ -8603,7 +8468,7 @@ function _buildGtdLayer() {
     layers.push(marker);
   }
   S.gtdLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[gtd] Displayed ${layers.length} incidents`);
+  _log('gtd', `Displayed ${layers.length} incidents`);
 }
 
 // CoinGecko Crypto Adoption
@@ -8618,7 +8483,7 @@ export async function toggleCryptoLayer() {
         const res = await _kdbOrFetch('/crypto-stats-lite.json');
         S.cryptoData = await res.json();
       } catch(e) {
-        console.warn('[crypto] Failed to load');
+        _warn('crypto', 'Failed to load');
         S.cryptoOn = false; btn.textContent = 'Crypto Adoption'; btn.classList.remove('on');
         return;
       }
@@ -8736,7 +8601,7 @@ function _buildCryptoLayer() {
   }
 
   S.cryptoLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[crypto] Displayed ${layers.length} country markers`);
+  _log('crypto', `Displayed ${layers.length} country markers`);
 }
 
 // NOAA Space Weather
@@ -8751,7 +8616,7 @@ export async function toggleSpaceWeatherLayer() {
         const res = await _kdbOrFetch('/solar-weather-lite.json');
         S.spaceWeatherData = await res.json();
       } catch(e) {
-        console.warn('[space-weather] Failed to load');
+        _warn('space-weather', 'Failed to load');
         S.spaceWeatherOn = false; btn.textContent = 'Space Weather'; btn.classList.remove('on');
         return;
       }
@@ -8791,7 +8656,7 @@ function _buildSpaceWeatherLayer() {
     { direction: 'top', className: 'admin1-tooltip', sticky: false }
   );
   S.spaceWeatherLayer = L.layerGroup([northBand, southBand]).addTo(S.map);
-  console.log(`[space-weather] Aurora zone displayed (KP: ${kp})`);
+  _log('space-weather', `Aurora zone displayed (KP: ${kp})`);
 }
 
 // Ocean Currents
@@ -8806,7 +8671,7 @@ export async function toggleOceanLayer() {
         const res = await _kdbOrFetch('/ocean-currents-lite.json');
         S.oceanData = await res.json();
       } catch(e) {
-        console.warn('[ocean] Failed to load');
+        _warn('ocean', 'Failed to load');
         S.oceanOn = false; btn.textContent = 'Ocean Currents'; btn.classList.remove('on');
         return;
       }
@@ -8954,7 +8819,7 @@ function _buildOceanLayer() {
 
   S.oceanLayer = L.layerGroup(layers).addTo(S.map);
   S.oceanLayer._legend = legend;
-  console.log(`[ocean] Displayed ${layers.length} elements (${S.oceanData.currents?.length || 0} currents)`);
+  _log('ocean', `Displayed ${layers.length} elements (${S.oceanData.currents?.length || 0} currents)`);
 }
 
 // ── Phase 3 Layers ────────────────────────────────────────────────────────────
@@ -8970,7 +8835,7 @@ export async function toggleFlightAwareLayer() {
         const res = await _kdbOrFetch('/flightaware-flights-lite.json');
         S.flightAwareData = await res.json();
       } catch(e) {
-        console.warn('[flightaware] Failed to load');
+        _warn('flightaware', 'Failed to load');
         S.flightAwareOn = false; btn.textContent = '✈️ FlightAware: Off'; btn.classList.remove('on');
         return;
       }
@@ -9016,7 +8881,7 @@ function _buildFlightAwareLayer() {
     layers.push(arrow);
   }
   S.flightAwareLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[flightaware] Displayed ${layers.length} flights`);
+  _log('flightaware', `Displayed ${layers.length} flights`);
 }
 
 // MarineTraffic Vessel Tracking
@@ -9031,7 +8896,7 @@ export async function toggleMarineTrafficLayer() {
         const res = await _kdbOrFetch('/ships-live-lite.json');
         S.marineTrafficData = await res.json();
       } catch(e) {
-        console.warn('[marinetraffic] Failed to load');
+        _warn('marinetraffic', 'Failed to load');
         S.marineTrafficOn = false; btn.textContent = 'Ships'; btn.classList.remove('on');
         return;
       }
@@ -9092,7 +8957,7 @@ function _buildMarineTrafficLayer() {
     layers.push(marker, courseArrow);
   }
   S.marineTrafficLayer = L.layerGroup(layers).addTo(S.map);
-  console.log(`[marinetraffic] Displayed ${layers.length / 2} vessels`);
+  _log('marinetraffic', `Displayed ${layers.length / 2} vessels`);
 }
 
 export function resetAllLayers() {
@@ -10856,7 +10721,7 @@ async function openCompanyWikiPanel(articleTitle, name, wikiUrl, finData = {}) {
       if (!val && val !== 0) return '';
       const v = escHtml(String(val));
       const hasClick = !!(coQid && metric);
-      const onclick = hasClick ? `onclick="openStatsPanel('${metric}','${escHtml(coQid)}')"` : '';
+      const onclick = hasClick ? safeOnclick('openStatsPanel', metric, coQid) : '';
       const title   = hasClick ? `title="Click to see global ranking"` : '';
       const cursor  = hasClick ? 'cursor:pointer;' : '';
       return `<div ${onclick} ${title} style="${cursor}background:var(--bg-elevated);border-radius:6px;padding:5px 9px;min-width:0;overflow:hidden;">
@@ -11372,10 +11237,10 @@ function renderBookmarksPanel() {
   S._bookmarks.forEach(function(qid) {
     var city = S.cityByQid.get(qid);
     if (!city) return;
-    html += '<div class="bm-item" onclick="map.flyTo([' + city.lat + ',' + city.lng + '],8);openWikiSidebar(\'' + escAttr(qid) + '\',\'' + escAttr(city.name) + '\')">' +
+    html += '<div class="bm-item"' + safeOnclick('openWikiSidebarById', qid) + '>' +
       '<span class="bm-name">' + escHtml(city.name) + '</span>' +
       '<span class="bm-meta">' + escHtml(city.country || '') + (city.pop ? ' · ' + fmtPop(city.pop) : '') + '</span>' +
-      '<button class="bm-rm" onclick="event.stopPropagation();toggleBookmark(\'' + escAttr(qid) + '\')" title="Remove">✕</button>' +
+      '<button class="bm-rm"' + safeOnclick('toggleBookmark', qid) + ' title="Remove">✕</button>' +
     '</div>';
   });
   body.innerHTML = html;
@@ -11592,28 +11457,30 @@ function _renderCountryComparison() {
 })();
 
 // ── Exports for main.js window binding ───────────────────────────────────────
+// NOTE: Functions marked `export function` at their definition are automatically exported.
+// Only list functions here that are NOT `export function` (i.e., `function` without `export`).
 export {
   init,
   buildEconLayer, clearAllFilters, closeComparePanel, closeCorpPanel,
-  closeCountryCompare, closeFilterPanel, closeLightbox, closeModal,
+  closeCountryCompare, closeFilterPanel, closeModal,
   closeStatsPanel, closeTradePanelFn, closeWikiSidebar, deleteCity,
-  fxFetchRates, fxResetDefaults, gcorpCountryChanged, gcorpIndustryChanged,
-  gcorpQueryChanged, gcorpShowMore, gcorpSortChanged, lightboxNav,
-  openStatsPanel, renderCorpList, resetAll, saveEdit, setCensusColorMetric,
+  gcorpCountryChanged, gcorpIndustryChanged,
+  gcorpQueryChanged, gcorpShowMore, gcorpSortChanged,
+  openStatsPanel, renderCorpList, renderGlobalCorpList, resetAll, saveEdit, setCensusColorMetric,
   setCityDotMode, setHeatBlur, setHeatIntensity, setHeatPalette, setHeatRadius,
   setHeatmapMetric, setMatchedColorMode, setMatchedVis, setOtherColorMode,
   setOtherVis, setStatsScope, setValueFilter, switchWikiTab, toggleAdmin1Global,
   toggleAirRouteLayer, toggleAqMode, toggleAvailFilter, toggleBookmarksPanel,
   toggleCableLayer, toggleChoroPlay, toggleChoropleth, toggleDrawMode,
   setBasemap, resetPopRange, toggleCities, toggleEarthquakeLayer, toggleEconLayer, toggleEezLayer, toggleFilterAqColor,
-  toggleFilterPanel, toggleFxSidebar, toggleIssTracker, toggleAircraftLayer, toggleWildfireLayer, toggleLaunchSiteLayer, toggleMoreLayers, toggleTectonicLayer, toggleVolcanoLayer,
+  toggleFilterPanel, toggleIssTracker, toggleAircraftLayer, toggleWildfireLayer, toggleLaunchSiteLayer, toggleMoreLayers, toggleTectonicLayer, toggleVolcanoLayer,
   toggleTheme, toggleUnescoLayer,
   // Functions used in inline onclick handlers
-  _switchRadarTab, _switchTrendTab, _renderCountryPanel, carGo, carJump,
-  carResume, carStop, clearRegionSelection, closeCountryPanel, closeRegionPanel,
-  corpRowClick, flyTo, fxInputChanged, gcorpRowClick, openCarouselLightbox,
+  _switchRadarTab, _switchTrendTab, _renderCountryPanel,
+  clearRegionSelection, closeCountryPanel, closeRegionPanel,
+  corpRowClick, flyTo, gcorpRowClick,
   openComparePanel, openCorpPanel, openCountryCompare, openCountryPanel,
-  openLightbox, openModal, openWikiSidebar, statsExpandDown, statsExpandUp,
+  openModal, openWikiSidebar, openWikiSidebarById, statsExpandDown, statsExpandUp,
   statsGoToCity, statsGoToCountry, toggleBookmark, toggleExtract
 };
 

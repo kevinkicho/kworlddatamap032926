@@ -17,6 +17,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const CITIES_PATH  = path.join(__dirname, '../public/cities-full.json');
@@ -281,7 +282,7 @@ async function main() {
     };
   }
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output));
   console.log(`\nWrote ${Object.keys(output).length} cities to ${OUTPUT_PATH}`);
 
   // Top 15 most connected cities

@@ -41,6 +41,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/patents.json');
@@ -145,7 +146,7 @@ const output = sorted.map((entry, idx) => ({
 }));
 
 // ── Write JSON ────────────────────────────────────────────────────────────────
-fs.writeFileSync(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
+atomicWrite(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
 console.log(`Wrote ${output.length} cities to ${OUT_PATH}`);
 
 // ── Spot-checks ───────────────────────────────────────────────────────────────

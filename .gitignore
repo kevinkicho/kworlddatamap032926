@@ -1,7 +1,9 @@
 # Environment variables - NEVER commit this file
 .env
 .env.local
+.env.*
 .env.*.local
+.envrc
 
 # Credentials and secrets
 *.pem
@@ -26,7 +28,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # OS files
-.DS_Store
+**/.DS_Store
 Thumbs.db
 
 # IDE
@@ -76,7 +78,11 @@ public/volcanoes_100.json
 # Temporary files
 tmp/
 temp/
-*.tmp
+**/*.tmp
+
+# Databases
+*.sqlite
+*.sqlite3
 
 # Testing
 coverage/
@@ -85,6 +91,7 @@ test-results/
 
 # AI tools
 .claude/
+autoresearch.*
 
 # Cache
 .cache/
@@ -92,8 +99,6 @@ test-results/
 
 # Misc
 *.local
-*.bak
-*.pre-*-bak
 
 # Worktrees
 .worktrees/

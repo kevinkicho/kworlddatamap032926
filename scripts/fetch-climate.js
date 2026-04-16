@@ -18,6 +18,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const CITIES_PATH = path.join(__dirname, '../public/cities-full.json');
@@ -145,7 +146,7 @@ async function main() {
       console.log(`  ${label} avg=${climate.annualAvgTemp}°C  precip=${climate.annualPrecipMm}mm  sun=${climate.annualSunHours}h`);
 
       // Save every 10 cities so we can resume if interrupted
-      if (done % 10 === 0) fs.writeFileSync(OUTPUT_PATH, JSON.stringify(existing));
+      if (done % 10 === 0) atomicWrite(OUTPUT_PATH, JSON.stringify(existing));
 
     } catch (e) {
       console.log(`  ${label} FAILED: ${e.message}`);
@@ -156,7 +157,7 @@ async function main() {
     await new Promise(r => setTimeout(r, 2_000));
   }
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(existing));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(existing));
   console.log(`\nDone — ${done} fetched, ${failed} failed`);
   console.log(`Total in climate-extra.json: ${Object.keys(existing).length} cities`);
 }

@@ -30,6 +30,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 // ── Configuration ─────────────────────────────────────────────────────────────
@@ -641,7 +642,7 @@ async function main() {
 
   cities = deduplicateByProximity(cities);
 
-  fs.writeFileSync(OUT_FILE, JSON.stringify(cities, null, 2), 'utf8');
+  atomicWrite(OUT_FILE, JSON.stringify(cities, null, 2), 'utf8');
 
   deleteCheckpoint();
   console.log('Checkpoint deleted (clean finish).\n');

@@ -14,6 +14,7 @@
 // Run: node scripts/enrich-companies-yahoo.js
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const COMPANIES_FILE = path.join(__dirname, '..', 'public', 'companies.json');
@@ -102,5 +103,5 @@ for (const cityCompanies of Object.values(companies)) {
   }
 }
 
-fs.writeFileSync(COMPANIES_FILE, JSON.stringify(companies, null, 2), 'utf8');
+atomicWrite(COMPANIES_FILE, JSON.stringify(companies, null, 2), 'utf8');
 console.log(`Enriched: ${enriched}  (${analystOnly} analyst-only)  Skipped: ${skipped}`);

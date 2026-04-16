@@ -14,6 +14,7 @@
  */
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const FIPS_PATH    = path.join(__dirname, '../public/census-fips.json');
@@ -184,7 +185,7 @@ async function main() {
   }
 
   console.log(`\nParsed ${citiesDone} cities. Writing ${OUTPUT_PATH}…`);
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(existing));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(existing));
 
   const withData = Object.values(existing).filter(v => v && v.medianIncome).length;
   const total    = Object.values(existing).filter(Boolean).length;

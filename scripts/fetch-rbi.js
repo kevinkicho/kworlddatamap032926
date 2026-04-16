@@ -19,6 +19,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'rbi-data.json');
@@ -162,7 +163,7 @@ async function main() {
 
   const data = await fetchRbiData();
 
-  fs.writeFileSync(OUTPUT, JSON.stringify(data, null, 2));
+  atomicWrite(OUTPUT, JSON.stringify(data, null, 2));
   console.log(`\n[rbi] Wrote RBI data to ${OUTPUT}`);
 
   // Merge into country-data.json
@@ -178,7 +179,7 @@ async function main() {
     console.log('[rbi] Merged into IN country data');
   }
 
-  fs.writeFileSync(CD_PATH, JSON.stringify(cd, null, 2));
+  atomicWrite(CD_PATH, JSON.stringify(cd, null, 2));
   console.log('[rbi] Updated country-data.json');
 }
 

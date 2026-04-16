@@ -16,6 +16,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 const { topology } = require('topojson-server');
 
@@ -85,7 +86,7 @@ async function main() {
 
     const outPath = path.join(OUT_DIR, `${iso2}.json`);
     const json = JSON.stringify(topo);
-    fs.writeFileSync(outPath, json);
+    atomicWrite(outPath, json);
 
     const sizeKb = (json.length / 1024).toFixed(1);
     totalSize += json.length;
@@ -112,7 +113,7 @@ async function main() {
     index[s.iso2] = { n: s.regions, kb: s.sizeKb };
   }
   const indexPath = path.join(OUT_DIR, '_index.json');
-  fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
+  atomicWrite(indexPath, JSON.stringify(index, null, 2));
   console.log(`\n✓ Index written to ${indexPath}`);
 }
 

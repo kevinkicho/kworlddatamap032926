@@ -21,6 +21,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/tourism.json');
@@ -108,7 +109,7 @@ for (let i = 1; i < TOURISM_DATA.length; i++) {
   }
 }
 
-fs.writeFileSync(OUT_PATH, JSON.stringify(TOURISM_DATA, null, 2), 'utf8');
+atomicWrite(OUT_PATH, JSON.stringify(TOURISM_DATA, null, 2), 'utf8');
 console.log(`Wrote ${TOURISM_DATA.length} cities to ${OUT_PATH}`);
 
 console.log('\n--- Spot-checks ---');

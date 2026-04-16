@@ -61,6 +61,11 @@ export function escAttr(str) {
   return String(str ?? '').replace(/'/g, '&#39;');
 }
 
+export function safeOnclick(fnName, ...args) {
+  const jsArgs = args.map(a => JSON.stringify(a)).join(',');
+  return ` onclick="${escHtml(fnName + '(' + jsArgs + ')')}"`;
+}
+
 export function isoToFlag(iso2) {
   if (!iso2 || iso2.length !== 2) return '🌐';
   return [...iso2.toUpperCase()].map(c =>

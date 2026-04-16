@@ -18,6 +18,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_FILE = path.join(__dirname, '..', 'public', 'country-data.json');
@@ -136,7 +137,7 @@ async function main() {
     filled++;
   }
 
-  fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
+  atomicWrite(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
   console.log(`\n✓ HDI added for ${filled} countries  (${unmatched} ISO3 unmatched)`);
   console.log(`  Written to ${OUT_FILE}`);
 }

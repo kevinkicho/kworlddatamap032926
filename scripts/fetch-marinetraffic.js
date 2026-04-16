@@ -44,6 +44,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'ships-live.json');
@@ -356,12 +357,12 @@ async function fetchMarineTrafficData() {
     },
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\n✓ Written ${vessels.length} vessels to ${OUTPUT_PATH}`);
 
   // Write lightweight version
   const lightOutput = path.join(__dirname, '..', 'public', 'ships-live-lite.json');
-  fs.writeFileSync(lightOutput, JSON.stringify({
+  atomicWrite(lightOutput, JSON.stringify({
     fetched_at: output.fetched_at,
     source: output.source,
     total_vessels: output.total_vessels,

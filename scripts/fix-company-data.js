@@ -19,6 +19,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const FILE = path.join(__dirname, '..', 'public', 'companies.json');
@@ -261,7 +262,7 @@ for (const [qid, companies] of Object.entries(data)) {
   }
 }
 
-fs.writeFileSync(FILE, JSON.stringify(data), 'utf8');
+atomicWrite(FILE, JSON.stringify(data), 'utf8');
 
 console.log(`✓ Processed ${totalCities} cities`);
 console.log(`✓ Patched    ${patchedCompanies} company records`);

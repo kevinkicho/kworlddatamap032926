@@ -41,6 +41,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 // Load environment variables
@@ -228,7 +229,7 @@ async function fetchWaqiData() {
       stations: stations.sort((a, b) => b.aqi - a.aqi), // Sort by AQI descending
     };
 
-    fs.writeFileSync(OUTPUT_FULL, JSON.stringify(output, null, 2));
+    atomicWrite(OUTPUT_FULL, JSON.stringify(output, null, 2));
     console.log(`\n✓ Written ${stations.length} stations to ${OUTPUT_FULL}`);
 
     // Write lightweight version for map display
@@ -250,7 +251,7 @@ async function fetchWaqiData() {
       })),
     };
 
-    fs.writeFileSync(OUTPUT_LITE, JSON.stringify(lightweight));
+    atomicWrite(OUTPUT_LITE, JSON.stringify(lightweight));
     console.log(`✓ Written lightweight version to ${OUTPUT_LITE}`);
 
     // Return country averages for integration into country-data.json

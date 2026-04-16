@@ -11,6 +11,7 @@
  */
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const COUNTRY_DATA = path.join(__dirname, '..', 'public', 'country-data.json');
@@ -190,14 +191,14 @@ async function main() {
     generateStats(results);
 
     // Write raw data
-    fs.writeFileSync(OUTPUT, JSON.stringify(results, null, 2));
+    atomicWrite(OUTPUT, JSON.stringify(results, null, 2));
     console.log(`\n[migrants] Wrote raw data to ${OUTPUT}`);
 
     // Merge into country-data.json
     const countryData = JSON.parse(fs.readFileSync(COUNTRY_DATA, 'utf8'));
     const merged = buildCountryData(results, countryData);
 
-    fs.writeFileSync(COUNTRY_DATA, JSON.stringify(countryData, null, 2));
+    atomicWrite(COUNTRY_DATA, JSON.stringify(countryData, null, 2));
     console.log(`[migrants] Updated country-data.json`);
 
   } catch (err) {

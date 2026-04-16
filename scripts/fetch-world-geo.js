@@ -20,6 +20,7 @@
 
 const https = require('https');
 const fs    = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path  = require('path');
 
 let topo;
@@ -131,7 +132,7 @@ async function main() {
 
   console.log(`Matched ${matched} / ${geojson.features.length} countries to ISO-2 codes`);
 
-  fs.writeFileSync(OUT_FILE, JSON.stringify(geojson), 'utf8');
+  atomicWrite(OUT_FILE, JSON.stringify(geojson), 'utf8');
   const kb = Math.round(fs.statSync(OUT_FILE).size / 1024);
   console.log(`Saved → ${OUT_FILE}  (${kb} KB, ${geojson.features.length} features)`);
 }

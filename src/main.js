@@ -1,36 +1,36 @@
-// ── Entry point: imports legacy app, exposes HTML-referenced functions to window ──
 import {
   init,
   buildEconLayer, clearAllFilters, closeComparePanel, closeCorpPanel,
-  closeCountryCompare, closeFilterPanel, closeLightbox, closeModal,
+  closeCountryCompare, closeFilterPanel, closeModal,
   closeStatsPanel, closeTradePanelFn, closeWikiSidebar, deleteCity,
   closeGlobalCorpPanel,
-  fxFetchRates, fxResetDefaults, gcorpCountryChanged, gcorpIndustryChanged,
-  gcorpQueryChanged, gcorpShowMore, gcorpSortChanged, lightboxNav,
-  openStatsPanel, renderCorpList, resetAll, resetAllLayers, saveEdit, setCensusColorMetric,
+  gcorpCountryChanged, gcorpIndustryChanged,
+  gcorpQueryChanged, gcorpShowMore, gcorpSortChanged,
+  openStatsPanel, renderCorpList, renderGlobalCorpList, resetAll, resetAllLayers, saveEdit, setCensusColorMetric,
   setCityDotMode, setHeatBlur, setHeatIntensity, setHeatPalette, setHeatRadius,
   setHeatmapMetric, setMatchedColorMode, setMatchedVis, setOtherColorMode,
   setOtherVis, setStatsScope, setValueFilter, switchWikiTab, toggleAdmin1Global,
   toggleAirRouteLayer, toggleAqMode, toggleAvailFilter, toggleBookmarksPanel,
   toggleCableLayer, toggleChoroPlay, toggleChoropleth, toggleDrawMode,
   setBasemap, resetPopRange, toggleCities, toggleEarthquakeLayer, toggleEconLayer, toggleEezLayer, toggleFilterAqColor,
-  toggleFilterPanel, toggleFxSidebar, toggleGtdLayer, toggleIssTracker, toggleAircraftLayer, toggleWildfireLayer, toggleLaunchSiteLayer, toggleMoreLayers, togglePeeringdbLayer, toggleProtectedAreasLayer, toggleSatelliteLayer, toggleTectonicLayer, toggleUnescoIchLayer, toggleVesselPortsLayer, toggleVolcanoLayer, toggleWaqiLayer, toggleWeatherLayer,
+  toggleFilterPanel, toggleGtdLayer, toggleIssTracker, toggleAircraftLayer, toggleWildfireLayer, toggleLaunchSiteLayer, toggleMoreLayers, togglePeeringdbLayer, toggleProtectedAreasLayer, toggleSatelliteLayer, toggleTectonicLayer, toggleUnescoIchLayer, toggleVesselPortsLayer, toggleVolcanoLayer, toggleWaqiLayer, toggleWeatherLayer,
   toggleCryptoLayer, toggleSpaceWeatherLayer, toggleOceanLayer, toggleFlightAwareLayer, toggleMarineTrafficLayer,
   toggleTheme, toggleUnescoLayer, toggleEonetLayer,
   toggleNationsPanel,
   closeAllMobileSheets,
   toggleMobileTopbar,
-  // Functions used in inline onclick handlers
-  _switchRadarTab, _switchTrendTab, _renderCountryPanel, carGo, carJump,
-  carResume, carStop, clearRegionSelection, closeCountryPanel, closeRegionPanel,
-  corpRowClick, flyTo, fxInputChanged, gcorpRowClick, openCarouselLightbox,
+  _switchRadarTab, _switchTrendTab, _renderCountryPanel,
+  clearRegionSelection, closeCountryPanel, closeRegionPanel,
+  corpRowClick, flyTo, gcorpRowClick,
   openComparePanel, openCorpPanel, openCountryCompare, openCountryPanel,
-  openLightbox, openModal, openWikiSidebar, statsExpandDown, statsExpandUp,
+  openModal, openWikiSidebar, openWikiSidebarById, statsExpandDown, statsExpandUp,
   statsGoToCity, statsGoToCountry, toggleBookmark, toggleExtract,
   switchListTab
 } from './app-legacy.js';
 
-// Expose to window for HTML onclick/onchange/oninput handlers
+import { fxFetchRates, fxResetDefaults, fxInputChanged, toggleFxSidebar, initFxCallbacks } from './fx-sidebar.js';
+import { openLightbox, openCarouselLightbox, closeLightbox, lightboxNav, carGo, carJump, carResume, carStop } from './lightbox.js';
+
 Object.assign(window, {
   buildEconLayer, clearAllFilters, closeComparePanel, closeCorpPanel,
   closeCountryCompare, closeFilterPanel, closeLightbox, closeModal,
@@ -51,10 +51,30 @@ Object.assign(window, {
   carResume, carStop, clearRegionSelection, closeCountryPanel, closeRegionPanel,
   corpRowClick, flyTo, fxInputChanged, gcorpRowClick, openCarouselLightbox,
   openComparePanel, openCorpPanel, openCountryCompare, openCountryPanel,
-  openLightbox, openModal, openWikiSidebar, statsExpandDown, statsExpandUp,
+  openLightbox, openModal, openWikiSidebar, openWikiSidebarById, statsExpandDown, statsExpandUp,
   statsGoToCity, statsGoToCountry, toggleBookmark, toggleExtract,
   switchListTab, toggleNationsPanel, closeAllMobileSheets, toggleMobileTopbar
 });
 
-// Boot the app
+initFxCallbacks({
+  onRatesChanged: () => {
+    if (typeof buildEconLayer === 'function') buildEconLayer();
+    if (typeof renderCorpList === 'function') renderCorpList();
+    const gPanel = document.getElementById('global-corp-panel');
+    if (gPanel && gPanel.classList.contains('panel-open')) {
+      if (typeof renderGlobalCorpList === 'function') renderGlobalCorpList();
+    }
+  },
+  mobileBackdropOn: () => {
+    if (window.innerWidth <= 768) {
+      const b = document.getElementById('mobile-backdrop');
+      if (b) b.classList.add('active');
+    }
+  },
+  mobileBackdropOff: () => {
+    const b = document.getElementById('mobile-backdrop');
+    if (b) b.classList.remove('active');
+  }
+});
+
 init();

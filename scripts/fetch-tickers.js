@@ -25,6 +25,7 @@
 require('dotenv').config();
 
 const fs    = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path  = require('path');
 const https = require('https');
 const url   = require('url');
@@ -264,7 +265,7 @@ function saveCheckpoint(done) {
   }
 
   const applied = Object.values(companies).flat().filter(c => c.ticker).length;
-  fs.writeFileSync(COMPANIES_FILE, JSON.stringify(companies));
+  atomicWrite(COMPANIES_FILE, JSON.stringify(companies));
   console.log(`\nSaved to companies.json`);
   console.log(`Ticker coverage: ${applied} / ${Object.values(companies).flat().length} companies`);
 })();

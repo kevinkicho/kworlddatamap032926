@@ -21,6 +21,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 const xlsx = require('xlsx');
 
@@ -296,7 +297,7 @@ async function main() {
       const output = await ghoFallback(cities);
       const count = Object.keys(output).length;
       console.log(`\nGHO fallback matched ${count} cities`);
-      fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+      atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
       printSamples(output);
       return;
     } catch (err2) {
@@ -420,7 +421,7 @@ async function main() {
   console.log(`  Unique QIDs with data:  ${Object.keys(output).length}`);
 
   console.log(`\nWriting ${OUTPUT_PATH}...`);
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`Done. Wrote ${Object.keys(output).length} entries.`);
 
   printSamples(output);

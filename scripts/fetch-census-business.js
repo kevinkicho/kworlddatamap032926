@@ -16,6 +16,7 @@
  */
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const FIPS_PATH   = path.join(__dirname, '../public/census-fips.json');
@@ -254,7 +255,7 @@ async function main() {
     };
   }
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output));
   const withCbp = Object.values(output).filter(v => v?.cbp?.total).length;
   const withPop = Object.values(output).filter(v => v?.popTrend?.pop2019).length;
   console.log(`\nDone: ${withPop} cities with pop trend, ${withCbp} with CBP data.`);

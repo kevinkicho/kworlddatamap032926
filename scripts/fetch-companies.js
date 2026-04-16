@@ -28,6 +28,7 @@
 const https   = require('https');
 const http    = require('http');
 const fs      = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path    = require('path');
 const { URL } = require('url');
 
@@ -662,7 +663,7 @@ async function main() {
   console.log(`  Cities with companies : ${cityCount.toLocaleString()}`);
   console.log(`  Total companies       : ${coCount.toLocaleString()}`);
 
-  fs.writeFileSync(OUT_FILE, JSON.stringify(result), 'utf8');
+  atomicWrite(OUT_FILE, JSON.stringify(result), 'utf8');
   const mb = (fs.statSync(OUT_FILE).size / 1e6).toFixed(1);
   console.log(`\n  Wrote ${OUT_FILE} (${mb} MB)\n`);
 

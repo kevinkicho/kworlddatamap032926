@@ -4,6 +4,7 @@
 // Run: node scripts/write-manifest.js
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const PUB = path.join(__dirname, '..', 'public');
@@ -80,7 +81,7 @@ const manifest = {
 };
 
 const OUT = path.join(PUB, 'data-manifest.json');
-fs.writeFileSync(OUT, JSON.stringify(manifest, null, 2), 'utf8');
+atomicWrite(OUT, JSON.stringify(manifest, null, 2), 'utf8');
 console.log('Written data-manifest.json:');
 for (const [name, entry] of Object.entries(manifest)) {
   console.log(`  ${name.padEnd(24)} key:${entry.key.padEnd(6)} coverage:${String(entry.coverage).padStart(5)}`);

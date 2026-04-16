@@ -36,6 +36,7 @@
  */
 'use strict';
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'protected-areas.json');
@@ -328,7 +329,7 @@ async function main() {
     },
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\n✓ Written to ${OUTPUT_PATH}`);
 
   // Enrich country-data.json
@@ -371,7 +372,7 @@ async function main() {
   }
   console.log(`  Enriched ${enriched} countries`);
 
-  fs.writeFileSync(COUNTRY_DATA_PATH, JSON.stringify(countryData, null, 2));
+  atomicWrite(COUNTRY_DATA_PATH, JSON.stringify(countryData, null, 2));
   console.log(`✓ Updated ${COUNTRY_DATA_PATH}`);
 
   // Spot-check

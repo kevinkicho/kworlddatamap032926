@@ -15,6 +15,7 @@
  */
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 const XLSX = require('xlsx');
 
@@ -192,7 +193,7 @@ async function main() {
     };
   }
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output));
   console.log(`\nWrote ${Object.keys(output).length} prefectures to ${OUTPUT_PATH}`);
 }
 

@@ -30,6 +30,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_FILE    = path.join(__dirname, '..', 'public', 'ecb-bonds.json');
@@ -177,7 +178,7 @@ async function main() {
   }
 
   // ── Write output ──────────────────────────────────────────────────────────
-  fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
+  atomicWrite(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
   const sizeKB = (fs.statSync(OUT_FILE).size / 1024).toFixed(1);
 
   console.log('\n── Spot-check ──');

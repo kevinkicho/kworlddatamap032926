@@ -27,6 +27,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT = path.join(__dirname, '../public/india-states.json');
@@ -265,7 +266,7 @@ function main() {
     count++;
   }
 
-  fs.writeFileSync(OUT, JSON.stringify(output, null, 2), 'utf8');
+  atomicWrite(OUT, JSON.stringify(output, null, 2), 'utf8');
   console.log(`\n  Wrote ${count} entries → ${OUT}`);
 
   // ── Spot-checks ───────────────────────────────────────────────────────────

@@ -43,6 +43,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'terrorism-incidents.json');
@@ -262,7 +263,7 @@ async function fetchGTDData() {
     },
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\n✓ Written ${incidents.length} incidents to ${OUTPUT_PATH}`);
 
   // Write lightweight version (include incidents for map layer, exclude perpetrator for brevity)
@@ -279,7 +280,7 @@ async function fetchGTDData() {
     fatalities: i.fatalities,
     wounded: i.wounded,
   }));
-  fs.writeFileSync(lightOutput, JSON.stringify({
+  atomicWrite(lightOutput, JSON.stringify({
     fetched_at: output.fetched_at,
     source: output.source,
     total_incidents: output.total_incidents,

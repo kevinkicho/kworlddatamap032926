@@ -20,6 +20,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '..', 'public', 'uni-rankings.json');
@@ -150,7 +151,7 @@ function main() {
   rankings.forEach(r => { byCountry[r.country] = (byCountry[r.country] || 0) + 1; });
   console.log(`Countries: ${Object.keys(byCountry).length}`);
 
-  fs.writeFileSync(OUT_PATH, JSON.stringify(rankings, null, 2));
+  atomicWrite(OUT_PATH, JSON.stringify(rankings, null, 2));
   console.log(`✓ Written to ${OUT_PATH}`);
 
   // Spot-check top 10 by QS

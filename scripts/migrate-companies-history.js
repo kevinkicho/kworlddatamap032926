@@ -5,6 +5,7 @@
 // Run: node scripts/migrate-companies-history.js
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const FILE = path.join(__dirname, '..', 'public', 'companies.json');
@@ -39,5 +40,5 @@ for (const [cityQid, companies] of Object.entries(data)) {
   }
 }
 
-fs.writeFileSync(FILE, JSON.stringify(data, null, 2), 'utf8');
+atomicWrite(FILE, JSON.stringify(data, null, 2), 'utf8');
 console.log(`Converted ${converted} history arrays to [[year, value]] tuples`);

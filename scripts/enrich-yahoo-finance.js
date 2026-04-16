@@ -20,6 +20,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 const YahooFinance = require('yahoo-finance2').default;
 
@@ -283,7 +284,7 @@ function applyResults(data, cp) {
     }
   }
 
-  fs.writeFileSync(IN_FILE, JSON.stringify(data));
+  atomicWrite(IN_FILE, JSON.stringify(data));
   console.log(`\n✔ Applied ${companiesUpdated} company updates to companies.json`);
 }
 

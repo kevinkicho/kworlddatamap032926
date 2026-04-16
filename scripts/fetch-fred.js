@@ -22,6 +22,7 @@
 
 require('dotenv').config();
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const API_KEY = process.env.FRED_API_KEY;
@@ -117,12 +118,9 @@ async function main() {
   // Load existing file so we can merge (keeps countries we don't re-fetch)
   let out = {};
   try { out = JSON.parse(fs.readFileSync(OUT_FILE, 'utf8')); } catch { /* start fresh */ }
-  // Clear previous FRED keys to avoid stale data
-  for (const iso of Object.keys(out)) {
-    for (const k of FRED_KEYS) delete out[iso][k];
-  }
 
   let fetched = 0, skipped = 0, errored = 0;
+  const updatedCountries = new Set();
 
   for (const { id, iso2, name } of SERIES) {
     process.stdout.write(`  ${iso2.padEnd(3)} ${name.padEnd(22)} ${id} … `);
@@ -149,6 +147,7 @@ async function main() {
       out[iso2].bond_yield_10y         = latestVal;
       out[iso2].bond_yield_10y_date    = latest.date.slice(0, 7);
       out[iso2].bond_yield_10y_history = history;
+      updatedCountries.add(iso2);
 
       console.log(`${latestVal.toFixed(2)}%  (${latest.date.slice(0, 7)}, ${valid.length} obs)`);
       fetched++;
@@ -160,7 +159,15 @@ async function main() {
     await sleep(DELAY_MS);
   }
 
-  fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
+  // Only clear stale FRED keys from countries in SERIES that failed to refresh
+  const seriesIsos = new Set(SERIES.map(s => s.iso2));
+  for (const iso of Object.keys(out)) {
+    if (!seriesIsos.has(iso)) continue;
+    if (updatedCountries.has(iso)) continue;
+    for (const k of FRED_KEYS) delete out[iso]?.[k];
+  }
+
+  atomicWrite(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
   const sizeKB = (fs.statSync(OUT_FILE).size / 1024).toFixed(1);
 
   console.log('\n╔═══════════════════════════════════════════════════════╗');

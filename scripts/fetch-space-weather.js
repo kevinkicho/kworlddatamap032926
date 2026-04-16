@@ -24,6 +24,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'solar-weather.json');
@@ -296,12 +297,12 @@ async function fetchSpaceWeatherData() {
   }
 
   // Write output
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\n✓ Written space weather data to ${OUTPUT_PATH}`);
 
   // Write lightweight version for country panel
   const lightOutput = path.join(__dirname, '..', 'public', 'solar-weather-lite.json');
-  fs.writeFileSync(lightOutput, JSON.stringify({
+  atomicWrite(lightOutput, JSON.stringify({
     fetched_at: output.fetched_at,
     source: output.source,
     kp_index: output.kp_index?.current || 0,

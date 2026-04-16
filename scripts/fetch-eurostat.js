@@ -24,6 +24,7 @@
  */
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const CITIES_PATH = path.join(__dirname, '../public/cities-full.json');
@@ -489,7 +490,7 @@ async function main() {
     console.log('Unmatched (first 30):', unmatched.slice(0, 30).join(', '));
   }
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(result));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(result));
   console.log(`\nWrote ${Object.keys(result).length} cities to ${OUTPUT_PATH}`);
 }
 

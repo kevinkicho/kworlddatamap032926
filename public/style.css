@@ -226,7 +226,7 @@ body {
 #map-wrapper { position: relative; width: 100%; max-width: 1000px; }
 #map-container {
   width: 100%; height: 580px; border: 1px solid var(--border); border-radius: 10px;
-  overflow: hidden;
+  overflow: hidden; touch-action: manipulation;
   box-shadow: 0 4px 24px var(--shadow-md), 0 0 0 1px var(--accent-glow);
 }
 
@@ -466,16 +466,16 @@ body {
 .wiki-car-btn {
   background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.15);
   color: #fff; font-size: 1.2rem; cursor: pointer; border-radius: 50%;
-  width: 30px; height: 30px; display: flex; align-items: center;
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px; display: flex; align-items: center;
   justify-content: center; line-height: 1; flex-shrink: 0;
   transition: background 0.15s;
 }
 .wiki-car-btn:hover { background: rgba(0,0,0,0.75); }
 .wiki-car-dots { display: flex; gap: 5px; align-items: center; }
 .wiki-car-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(255,255,255,0.35); border: none; cursor: pointer; padding: 0;
-  transition: background 0.2s, transform 0.2s;
+  width: 12px; height: 12px; min-width: 12px; min-height: 12px; border-radius: 50%;
+  background: rgba(255,255,255,0.35); border: none; cursor: pointer; padding: 16px;
+  margin: -16px; transition: background 0.2s, transform 0.2s;
 }
 .wiki-car-dot.active { background: #fff; transform: scale(1.3); }
 .wiki-car-counter {
@@ -769,8 +769,8 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 
 .edit-btn {
   background: none; border: 1px solid var(--border); color: var(--text-faint);
-  border-radius: 4px; padding: 2px 6px; font-size: 0.8rem; cursor: pointer;
-  font-family: inherit; line-height: 1.4;
+  border-radius: 4px; padding: 4px 10px; font-size: 0.8rem; cursor: pointer;
+  font-family: inherit; line-height: 1.4; min-height: 32px; min-width: 32px;
 }
 .edit-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--hover-row); }
 
@@ -923,7 +923,8 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 #choro-year-range { width: 100px; accent-color: var(--accent); cursor: pointer; }
 #choro-play-btn {
   background: none; border: 1px solid var(--border); color: var(--accent); border-radius: 4px;
-  padding: 1px 6px; font-size: 0.72rem; cursor: pointer; font-family: inherit;
+  padding: 4px 10px; font-size: 0.72rem; cursor: pointer; font-family: inherit;
+  min-height: 32px; min-width: 32px;
 }
 #choro-play-btn:hover { border-color: var(--accent); }
 #choro-options { align-items: center; gap: 12px; }
@@ -1182,6 +1183,15 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 .fx-row.fx-modified { background: var(--fx-modified-bg); }
 .fx-row.fx-modified:hover { background: var(--fx-modified-hover); }
 
+@media (max-width: 600px) {
+  .fx-row {
+    grid-template-columns: 32px 1fr 56px 48px;
+    gap: 3px;
+    padding: 3px 6px;
+    font-size: 0.65rem;
+  }
+}
+
 .fx-cur {
   font-weight: 700;
   color: var(--gold);
@@ -1201,7 +1211,8 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
   border-radius: 4px;
   color: var(--text-body);
   font-size: 0.72rem;
-  padding: 2px 5px;
+  padding: 4px 6px;
+  min-height: 28px;
   width: 100%;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -1776,6 +1787,19 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 
 /* two-column body */
 #cp-body { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+
+@media (max-width: 600px) {
+  #cp-body {
+    flex-direction: column !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #cp-body {
+    flex-direction: column !important;
+  }
+}
+
 .cp-left-col {
   width: 55%; border-right: 1px solid var(--bg-elevated); overflow-y: auto;
   padding: 12px 14px; display: flex; flex-direction: column; gap: 4px;
@@ -1979,8 +2003,9 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 }
 #aq-toggle-btn {
   background: none; border: 1px solid var(--border); color: var(--text-faint);
-  border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 0.74rem;
+  border-radius: 5px; padding: 4px 10px; cursor: pointer; font-size: 0.74rem;
   font-family: inherit; transition: border-color 0.15s, color 0.15s, background 0.15s;
+  min-height: 32px; min-width: 32px;
 }
 #aq-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
 #aq-toggle-btn.on { border-color: var(--success); color: var(--success); background: color-mix(in srgb, var(--success) 8%, transparent); }
@@ -2099,7 +2124,7 @@ td.cmp-metric { color: var(--text-secondary); }
 #filter-panel-close {
   background: var(--pa-pill-bg); border: 1px solid var(--pa-pill-border);
   color: var(--text-secondary); font-size: 1rem; cursor: pointer; line-height: 1;
-  width: 28px; height: 28px; border-radius: 14px; padding: 0;
+  width: 44px; height: 44px; min-width: 44px; min-height: 44px; border-radius: 14px; padding: 0;
   display: inline-flex; align-items: center; justify-content: center;
   transition: all 0.15s;
 }
@@ -2255,11 +2280,12 @@ td.cmp-metric { color: var(--text-secondary); }
   border: 1px solid var(--pa-red-border);
   color: var(--pa-red);
   border-radius: 14px;
-  padding: 1px 8px;
+  padding: 4px 10px;
   font-size: 0.66rem;
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s;
+  min-height: 28px; min-width: 28px;
 }
 .pop-slider-reset:hover {
   background: rgba(239,68,68,0.18);
@@ -3101,7 +3127,7 @@ td.cmp-metric { color: var(--text-secondary); }
   /* ════════════════ Filter panel: compact header ════════════════ */
   #filter-panel-header { min-height: 36px; padding: 6px 12px; }
   #filter-panel-title { font-size: 0.82rem; }
-  #filter-panel-close { min-height: 32px; min-width: 32px; font-size: 1rem; border-radius: 14px; }
+  #filter-panel-close { min-height: 44px; min-width: 44px; font-size: 1rem; border-radius: 14px; }
 
   /* ════════════════ Filter section heads: compact ════════════════ */
   .filter-section-head { padding: 6px 12px 3px; font-size: 0.62rem; letter-spacing: 0.06em; }
@@ -3162,7 +3188,7 @@ td.cmp-metric { color: var(--text-secondary); }
   /* ════════════════ Leaflet controls ════════════════ */
   .leaflet-top.leaflet-left {
     left: auto !important; right: 10px !important;
-    top: auto !important; bottom: 66px !important;
+    top: auto !important; bottom: 72px !important;
   }
   .leaflet-top.leaflet-left .leaflet-control {
     margin: 0 0 6px 0;
@@ -3170,14 +3196,21 @@ td.cmp-metric { color: var(--text-secondary); }
     overflow: hidden;
   }
   .leaflet-control-zoom a {
-    width: 38px !important; height: 38px !important;
-    line-height: 38px !important; font-size: 1.1rem !important;
+    width: 44px !important; height: 44px !important;
+    line-height: 44px !important; font-size: 1.2rem !important;
   }
   .leaflet-bottom.leaflet-left { display: none; }
-  /* AQ bar toggle button */
+  #aq-bar {
+    bottom: 72px !important; left: 10px !important; right: auto !important;
+    max-width: calc(100vw - 70px);
+  }
   #aq-toggle-btn {
-    min-height: 36px; min-width: 36px;
+    min-height: 44px; min-width: 44px;
     display: inline-flex; align-items: center; justify-content: center;
+  }
+  #map-legends {
+    bottom: 72px !important; left: 10px !important;
+    max-width: 50vw;
   }
 
   /* ════════════════ Popups: wider on mobile ════════════════ */
@@ -3542,8 +3575,10 @@ td.cmp-metric { color: var(--text-secondary); }
 
   /* ════════════════ Leaflet zoom: reposition for landscape ════════════════ */
   .leaflet-top.leaflet-left {
-    bottom: 44px !important;
+    bottom: 50px !important;
   }
+  #aq-bar { bottom: 50px !important; }
+  #map-legends { bottom: 50px !important; }
 
   /* ════════════════ Side panels: shorter in landscape ════════════════ */
   #wiki-sidebar  { height: 65vh !important; }
@@ -3587,6 +3622,68 @@ td.cmp-metric { color: var(--text-secondary); }
     display: inline-block;
     width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; flex-shrink: 0;
   }
+}
+
+/* ── Phone (≤767px): prevent sidebar content overflow ── */
+@media (max-width: 767px) {
+  #wiki-sidebar, #country-panel, #corp-panel, #trade-panel,
+  #fx-sidebar, #filter-panel, #stats-panel, #region-panel,
+  #compare-panel, #country-compare-panel {
+    overflow: hidden !important;
+  }
+  #wiki-sidebar-body,
+  #cp-body,
+  #corp-list,
+  #fx-list,
+  #trade-panel-body,
+  #stats-panel-body,
+  #rp-body,
+  #compare-body,
+  #cc-body,
+  #nations-panel-body,
+  #bookmarks-body,
+  #filter-value-list {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  #cp-body {
+    flex-direction: column !important;
+  }
+  .cp-left-col, .cp-right-col {
+    width: 100% !important;
+    border-right: none !important;
+    overflow-y: auto;
+  }
+  .fx-row {
+    grid-template-columns: 38px 1fr 52px 42px;
+  }
+  #wiki-sidebar-body {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .leaflet-top.leaflet-left {
+    right: 8px !important;
+    bottom: 72px !important;
+  }
+  .leaflet-control-zoom a {
+    width: 44px !important; height: 44px !important;
+    line-height: 44px !important;
+  }
+  #aq-bar {
+    bottom: 72px !important;
+    max-width: calc(100vw - 60px);
+  }
+  #map-legends {
+    bottom: 72px !important;
+    max-width: 55vw;
+  }
+  .leaflet-popup { max-width: 92vw !important; }
+  .wiki-car-btn { font-size: 1.4rem; }
+  .wiki-car-dot.active { transform: scale(1.5); }
+  .pop-slider::-webkit-slider-thumb { width: 22px; height: 22px; }
+  .pop-slider::-moz-range-thumb { width: 22px; height: 22px; }
+  .census-stat-clickable { padding: 8px 10px; margin: -8px -10px; }
 }
 
 /* Improved dropdown layout - wider and more compact (desktop only) */
@@ -3783,4 +3880,85 @@ td.cmp-metric { color: var(--text-secondary); }
 
 #more-layers-menu button.loading .loading-dots {
   margin-left: 4px;
+}
+
+@media (pointer: coarse) {
+  .wiki-car-btn, .wiki-car-dot, #filter-panel-close, button, .btn, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 768px) {
+  .toast {
+    max-width: calc(100vw - 20px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #keyboard-help-card {
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .es-trend-row {
+    min-width: 0 !important;
+  }
+  .toast {
+    max-width: 100% !important;
+  }
+  .fx-row {
+    min-width: 0 !important;
+    width: auto !important;
+  }
+  #country-panel {
+    width: 100% !important;
+  }
+  #region-panel {
+    width: 100% !important;
+  }
+  #wiki-sidebar {
+    width: 100% !important;
+  }
+  #corp-panel {
+    width: 100% !important;
+  }
+  #global-corp-panel.panel-open {
+    width: 100% !important;
+  }
+  #compare-panel {
+    width: calc(100% - 20px) !important;
+  }
+  #country-compare-panel {
+    width: calc(100% - 20px) !important;
+  }
+  #nations-panel {
+    width: calc(100% - 20px) !important;
+    right: 10px !important;
+    bottom: 10px !important;
+  }
+  #bookmarks-panel {
+    width: calc(100% - 20px) !important;
+    right: 10px !important;
+    bottom: 10px !important;
+  }
+  .legend-ramp {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .legend-tick-row {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .filters input[type="text"] {
+    min-width: 0 !important;
+  }
+  .filters select {
+    min-width: 0 !important;
+  }
+  #gcorp-search {
+    min-width: 0 !important;
+  }
+  .count-dropdown {
+    min-width: 0 !important;
+  }
 }

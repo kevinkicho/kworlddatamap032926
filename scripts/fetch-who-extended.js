@@ -35,6 +35,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const CD_PATH  = path.join(__dirname, '..', 'public', 'country-data.json');
@@ -169,7 +170,7 @@ async function main() {
   }
 
   console.log(`  Enriched ${count} countries with extended WHO data`);
-  fs.writeFileSync(CD_PATH, JSON.stringify(cd, null, 2));
+  atomicWrite(CD_PATH, JSON.stringify(cd, null, 2));
   console.log(`✓ Written to ${CD_PATH}`);
 
   console.log('\n── Spot-check ──────────────────────────────────────────────────────');

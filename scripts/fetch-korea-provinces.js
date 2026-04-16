@@ -37,6 +37,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/korea-provinces.json');
@@ -214,7 +215,7 @@ for (const [key, r] of Object.entries(REGIONS)) {
   };
 }
 
-fs.writeFileSync(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
+atomicWrite(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
 console.log(`Wrote ${Object.keys(output).length} regions to ${OUT_PATH}`);
 
 // ── Spot-checks ───────────────────────────────────────────────────────────────

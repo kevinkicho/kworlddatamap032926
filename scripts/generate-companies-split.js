@@ -2,6 +2,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const COMPANIES_FILE = path.join(__dirname, '..', 'public', 'companies.json');
@@ -63,8 +64,8 @@ function main() {
   const indexJson = JSON.stringify(index);
   const detailJson = JSON.stringify(detail);
 
-  fs.writeFileSync(INDEX_OUT, indexJson);
-  fs.writeFileSync(DETAIL_OUT, detailJson);
+  atomicWrite(INDEX_OUT, indexJson);
+  atomicWrite(DETAIL_OUT, detailJson);
 
   const totalCos = Object.values(companies).flat().length;
   console.log(`Index:  ${(indexJson.length / 1024 / 1024).toFixed(1)} MB — ${Object.keys(index).length} cities, ${Object.values(index).flat().length} companies`);

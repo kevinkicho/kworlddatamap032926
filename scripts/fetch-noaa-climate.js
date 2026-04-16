@@ -25,6 +25,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 // ── Paths ────────────────────────────────────────────────────────────────────
@@ -326,7 +327,7 @@ async function main() {
   }
 
   // Final save
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   if (fs.existsSync(CHECKPOINT_PATH)) fs.unlinkSync(CHECKPOINT_PATH);
 
   console.log('\n── Summary ──────────────────────────────────');

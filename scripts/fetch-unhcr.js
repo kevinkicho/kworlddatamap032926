@@ -10,6 +10,7 @@
  */
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'unhcr-refugees.json');
@@ -250,13 +251,13 @@ async function main() {
     const refugeeData = await fetchRefugeeData();
 
     // Write raw data
-    fs.writeFileSync(OUTPUT, JSON.stringify(refugeeData, null, 2));
+    atomicWrite(OUTPUT, JSON.stringify(refugeeData, null, 2));
     console.log(`[unhcr] Wrote refugee data to ${OUTPUT}`);
 
     // Merge into country-data.json
     const countryData = JSON.parse(fs.readFileSync(COUNTRY_DATA, 'utf8'));
     mergeIntoCountryData(refugeeData, countryData);
-    fs.writeFileSync(COUNTRY_DATA, JSON.stringify(countryData, null, 2));
+    atomicWrite(COUNTRY_DATA, JSON.stringify(countryData, null, 2));
     console.log('[unhcr] Updated country-data.json');
 
   } catch (err) {

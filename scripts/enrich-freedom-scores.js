@@ -18,6 +18,7 @@
 // Run: node scripts/enrich-freedom-scores.js
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_FILE = path.join(__dirname, '..', 'public', 'country-data.json');
@@ -170,7 +171,7 @@ for (const { iso2, score, status } of FH_2024) {
   out[iso2].fh_year   = 2024;
 }
 
-fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
+atomicWrite(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
 console.log(`TI CPI 2023: ${TI_CPI_2023.length} countries`);
 console.log(`Freedom House 2024: ${FH_2024.length} countries`);
 console.log(`Written to ${OUT_FILE}`);

@@ -18,6 +18,7 @@
  */
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH     = path.join(__dirname, '../public/comtrade-partners.json');
@@ -224,13 +225,13 @@ async function main() {
     // Save checkpoint + output every 5 countries
     if (done % 5 === 0 || done === todo.length) {
       fs.writeFileSync(CHECKPOINT_PATH, JSON.stringify(checkpoint, null, 2));
-      fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output));
+      atomicWrite(OUTPUT_PATH, JSON.stringify(output));
       process.stdout.write(`  [checkpoint saved: ${done}/${todo.length}]\n`);
     }
   }
 
   // Final write (pretty for spot-checking)
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\nDone. ${succeeded}/${total} countries with data saved to ${OUTPUT_PATH}`);
 }
 

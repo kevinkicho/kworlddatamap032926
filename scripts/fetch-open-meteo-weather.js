@@ -34,6 +34,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'weather-stations.json');
@@ -273,7 +274,7 @@ async function fetchWeatherData() {
     stations: stations.sort((a, b) => a.name.localeCompare(b.name)),
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\n✓ Written ${stations.length} stations to ${OUTPUT_PATH}`);
 
   // Return country averages for country-data.json integration

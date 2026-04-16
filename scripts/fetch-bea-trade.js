@@ -11,6 +11,7 @@
  */
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '../public/bea-trade.json');
@@ -96,13 +97,13 @@ async function main() {
     done++;
     if (done % 10 === 0 || done === todo.length) {
       process.stdout.write(`\r  ${done}/${todo.length} | with data: ${found}   `);
-      fs.writeFileSync(OUTPUT_PATH, JSON.stringify(existing));
+      atomicWrite(OUTPUT_PATH, JSON.stringify(existing));
     }
     await sleep(DELAY_MS);
   }
 
   console.log(`\nDone. ${found}/${Object.keys(ISO2_TO_BEA).length} countries with trade data.`);
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(existing));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(existing));
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

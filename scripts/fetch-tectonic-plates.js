@@ -5,6 +5,7 @@
  */
 const https = require('https');
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const URL = 'https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json';
@@ -46,7 +47,7 @@ function fetch(url) {
     })),
   };
 
-  fs.writeFileSync(OUT, JSON.stringify(simplified));
+  atomicWrite(OUT, JSON.stringify(simplified));
   const size = (fs.statSync(OUT).size / 1024).toFixed(0);
   console.log(`Written: ${OUT} (${size}KB, ${simplified.features.length} boundaries)`);
 })();

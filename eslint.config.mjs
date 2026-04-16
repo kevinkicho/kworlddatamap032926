@@ -10,6 +10,7 @@ export default [
         ...globals.browser,
         L: "readonly",
         turf: "readonly",
+        DatasetManager: "readonly",
       },
     },
     rules: {

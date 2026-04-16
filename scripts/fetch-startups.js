@@ -19,6 +19,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '..', 'public', 'startups.json');
@@ -90,7 +91,7 @@ function main() {
   console.log(`Total cities: ${startups.length}`);
   console.log(`Total unicorns tracked: ${startups.reduce((s, c) => s + c.unicorns, 0)}`);
 
-  fs.writeFileSync(OUT_PATH, JSON.stringify(startups, null, 2));
+  atomicWrite(OUT_PATH, JSON.stringify(startups, null, 2));
   console.log(`✓ Written to ${OUT_PATH}`);
 
   console.log('\n── Top 10 ──────────────────────────────────────────────────────────');

@@ -18,6 +18,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'carbon-data.json');
@@ -128,7 +129,7 @@ async function main() {
 
   const carbonData = await fetchCarbonData();
 
-  fs.writeFileSync(OUTPUT, JSON.stringify(carbonData, null, 2));
+  atomicWrite(OUTPUT, JSON.stringify(carbonData, null, 2));
   console.log(`\n[carbon] Wrote carbon data to ${OUTPUT}`);
 
   // Merge into country-data.json
@@ -147,7 +148,7 @@ async function main() {
   }
 
   console.log(`[carbon] Merged into ${merged} countries`);
-  fs.writeFileSync(CD_PATH, JSON.stringify(cd, null, 2));
+  atomicWrite(CD_PATH, JSON.stringify(cd, null, 2));
   console.log('[carbon] Updated country-data.json');
 
   // Print top 10 emitters

@@ -22,6 +22,7 @@
 const https   = require('https');
 const http    = require('http');
 const fs      = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path    = require('path');
 const { URL } = require('url');
 
@@ -476,7 +477,7 @@ async function main() {
   const backupPath = COMPANIES_FILE.replace('.json', '-pre-enrich-backup.json');
   fs.copyFileSync(COMPANIES_FILE, backupPath);
   console.log(`Backup saved: ${backupPath}`);
-  fs.writeFileSync(COMPANIES_FILE, JSON.stringify(companies), 'utf8');
+  atomicWrite(COMPANIES_FILE, JSON.stringify(companies), 'utf8');
   console.log('companies.json updated.\n');
 
   // ── Final coverage stats ───────────────────────────────────────────────────

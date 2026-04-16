@@ -19,6 +19,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '..', 'public', 'submarine-cables.json');
@@ -126,7 +127,7 @@ async function main() {
   // Write output
   const output = { cables, landings };
   const json = JSON.stringify(output);
-  fs.writeFileSync(OUT_PATH, json);
+  atomicWrite(OUT_PATH, json);
   console.log(`\n✓ Written ${(json.length / 1024).toFixed(0)} KB to ${OUT_PATH}`);
 
   // Spot-check

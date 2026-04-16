@@ -8,6 +8,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const IN_FILE = path.join(__dirname, '..', 'public', 'companies.json');
@@ -100,7 +101,7 @@ for (const [cityKey, companies] of Object.entries(data)) {
   }
 }
 
-fs.writeFileSync(IN_FILE, JSON.stringify(data));
+atomicWrite(IN_FILE, JSON.stringify(data));
 
 console.log('=== Currency & Financial Data Fix Report ===');
 console.log(`QAR → KRW fixes (all fields):  ${stats.qarToKrw}`);

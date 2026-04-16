@@ -49,6 +49,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 // Try to load satellite.js, provide helpful error if not installed
@@ -361,7 +362,7 @@ async function fetchCelestrakData() {
     satellites: allSatellites.sort((a, b) => a.name.localeCompare(b.name)),
   };
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
   console.log(`\n✓ Written ${allSatellites.length} satellites to ${OUTPUT_PATH}`);
 
   // Also write lightweight version for map display
@@ -382,7 +383,7 @@ async function fetchCelestrakData() {
     })),
   };
 
-  fs.writeFileSync(lightOutput, JSON.stringify(lightweight));
+  atomicWrite(lightOutput, JSON.stringify(lightweight));
   console.log(`✓ Written lightweight version to ${lightOutput}`);
 
   console.log('\n[celestrak] Complete!');

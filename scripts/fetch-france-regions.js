@@ -48,6 +48,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/france-regions.json');
@@ -373,7 +374,7 @@ const output = {
   dept_to_region: DEPT_TO_REGION,
 };
 
-fs.writeFileSync(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
+atomicWrite(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
 console.log(`Wrote ${Object.keys(regionsOut).length} regions and ` +
             `${Object.keys(DEPT_TO_REGION).length} département mappings to ${OUT_PATH}`);
 

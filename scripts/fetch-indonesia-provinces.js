@@ -26,6 +26,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/indonesia-provinces.json');
@@ -78,7 +79,7 @@ for (const key of Object.keys(PROVINCES)) {
 }
 
 const json = JSON.stringify(PROVINCES);
-fs.writeFileSync(OUT_PATH, json);
+atomicWrite(OUT_PATH, json);
 console.log(`✓ Written ${(json.length / 1024).toFixed(1)} KB to ${OUT_PATH}`);
 console.log(`  ${Object.keys(PROVINCES).length} provinces`);
 

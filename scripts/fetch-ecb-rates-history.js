@@ -10,6 +10,7 @@
 'use strict';
 
 const { readFileSync, writeFileSync } = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/ecb-data.json');
@@ -91,7 +92,7 @@ async function main() {
   }
 
   console.log('\nWriting updated ecb-data.json …');
-  writeFileSync(OUT_PATH, JSON.stringify(existing, null, 2));
+  atomicWrite(OUT_PATH, JSON.stringify(existing, null, 2));
   console.log('Done.');
 }
 

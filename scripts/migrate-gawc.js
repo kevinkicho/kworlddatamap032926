@@ -4,6 +4,7 @@
 // Run: node scripts/migrate-gawc.js
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const PUB        = path.join(__dirname, '..', 'public');
@@ -94,7 +95,7 @@ for (const [name, info] of Object.entries(gawc)) {
   }
 }
 
-fs.writeFileSync(GAWC_IN, JSON.stringify(out, null, 2), 'utf8');
+atomicWrite(GAWC_IN, JSON.stringify(out, null, 2), 'utf8');
 console.log(`Matched ${Object.keys(out).length}/${Object.keys(gawc).length} GaWC cities to QIDs`);
 
 if (unmatched.length) {

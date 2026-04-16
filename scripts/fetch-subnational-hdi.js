@@ -38,6 +38,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/subnational-hdi.json');
@@ -861,7 +862,7 @@ const output = {
   MX,
 };
 
-fs.writeFileSync(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
+atomicWrite(OUT_PATH, JSON.stringify(output, null, 2), 'utf8');
 
 // ── Summary ───────────────────────────────────────────────────────────────────
 

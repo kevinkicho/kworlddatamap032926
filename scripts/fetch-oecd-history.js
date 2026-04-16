@@ -16,6 +16,7 @@
 'use strict';
 
 const { readFileSync, writeFileSync } = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '../public/oecd-country.json');
@@ -112,7 +113,7 @@ async function main() {
   }
 
   console.log('\nWriting updated oecd-country.json …');
-  writeFileSync(OUT_PATH, JSON.stringify(data, null, 2));
+  atomicWrite(OUT_PATH, JSON.stringify(data, null, 2));
   console.log('Done.');
 }
 

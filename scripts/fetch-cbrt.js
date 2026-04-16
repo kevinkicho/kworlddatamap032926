@@ -17,6 +17,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'cbrt-data.json');
@@ -141,7 +142,7 @@ async function main() {
 
   const data = await fetchCbrtData();
 
-  fs.writeFileSync(OUTPUT, JSON.stringify(data, null, 2));
+  atomicWrite(OUTPUT, JSON.stringify(data, null, 2));
   console.log(`\n[cbrt] Wrote CBRT data to ${OUTPUT}`);
 
   // Merge into country-data.json
@@ -157,7 +158,7 @@ async function main() {
     console.log('[cbrt] Merged into TR country data');
   }
 
-  fs.writeFileSync(CD_PATH, JSON.stringify(cd, null, 2));
+  atomicWrite(CD_PATH, JSON.stringify(cd, null, 2));
   console.log('[cbrt] Updated country-data.json');
 }
 

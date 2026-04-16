@@ -15,6 +15,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -198,7 +199,7 @@ function main() {
   }
 
   if (!DRY_RUN) {
-    fs.writeFileSync(IN_FILE, JSON.stringify(data));
+    atomicWrite(IN_FILE, JSON.stringify(data));
     console.log('\n✔ companies.json updated');
   }
 

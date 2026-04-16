@@ -20,6 +20,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'pboc-data.json');
@@ -155,7 +156,7 @@ async function main() {
 
   const data = await fetchPbocData();
 
-  fs.writeFileSync(OUTPUT, JSON.stringify(data, null, 2));
+  atomicWrite(OUTPUT, JSON.stringify(data, null, 2));
   console.log(`\n[pboc] Wrote PBoC data to ${OUTPUT}`);
 
   // Merge into country-data.json
@@ -172,7 +173,7 @@ async function main() {
     console.log('[pboc] Merged into CN country data');
   }
 
-  fs.writeFileSync(CD_PATH, JSON.stringify(cd, null, 2));
+  atomicWrite(CD_PATH, JSON.stringify(cd, null, 2));
   console.log('[pboc] Updated country-data.json');
 }
 

@@ -16,6 +16,9 @@ export const S = {
   _hashRestoreCountry: null,
   _hashRestoreChoro: false,
 
+  // ── Timer IDs (for cleanup) ──────────────────────────────────────────────────
+  _terminatorInterval: null,
+
   // ── Core ───────────────────────────────────────────────────────────────────
   map: null,
   wikiLayer: null,

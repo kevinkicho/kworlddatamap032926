@@ -24,6 +24,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '..', 'public', 'unesco.json');
@@ -471,7 +472,7 @@ function main() {
   console.log(`  Countries covered: ${Object.keys(byCountry).length}\n`);
 
   // Write unesco.json
-  fs.writeFileSync(OUT_PATH, JSON.stringify(sites, null, 2));
+  atomicWrite(OUT_PATH, JSON.stringify(sites, null, 2));
   console.log(`✓ Written ${sites.length} sites to ${OUT_PATH}`);
 
   // Enrich country-data.json with counts
@@ -508,7 +509,7 @@ function main() {
   }
   console.log(`  Enriched ${enriched} countries with UNESCO counts`);
 
-  fs.writeFileSync(CD_PATH, JSON.stringify(cd, null, 2));
+  atomicWrite(CD_PATH, JSON.stringify(cd, null, 2));
   console.log(`✓ Written to ${CD_PATH}`);
 
   // Spot-check

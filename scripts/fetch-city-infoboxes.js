@@ -30,6 +30,7 @@
 const https   = require('https');
 const http    = require('http');
 const fs      = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path    = require('path');
 const { URL } = require('url');
 
@@ -645,7 +646,7 @@ async function main() {
   }
 
   // ── Write output ──────────────────────────────────────────────────────────
-  fs.writeFileSync(OUT_FILE, JSON.stringify(cities), 'utf8');
+  atomicWrite(OUT_FILE, JSON.stringify(cities), 'utf8');
   console.log(`\nDone. Patched ${patched} cities → ${path.basename(OUT_FILE)}`);
   if (fs.existsSync(CHECKPOINT_FILE)) fs.unlinkSync(CHECKPOINT_FILE);
 }

@@ -17,6 +17,7 @@
 'use strict';
 
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '../public/eurostat-regions.json');
@@ -279,7 +280,7 @@ async function main() {
     }
   }
 
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(sorted, null, 2));
+  atomicWrite(OUTPUT_PATH, JSON.stringify(sorted, null, 2));
 
   const fileSizeKB = (fs.statSync(OUTPUT_PATH).size / 1024).toFixed(0);
   console.log(`\nWrote ${Object.keys(sorted).length} NUTS-2 regions to ${OUTPUT_PATH} (${fileSizeKB} KB)`);

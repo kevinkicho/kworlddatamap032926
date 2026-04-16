@@ -1,22 +1,28 @@
 #!/bin/sh
 #
 # Pre-commit hook to prevent committing sensitive files
-# Install: Copy to .git/hooks/pre-commit (no extension) and make executable
-#          Or run: git config core.hooksPath .githooks
+# Install: run setup-hooks.bat (Windows) or: git config core.hooksPath .githooks
 #
 
-# Files that should never be committed
-FORBIDDEN_FILES='.env credentials.json secrets.json *.pem *.key'
+# Files/patterns that should never be committed
+FORBIDDEN_PATTERNS='.env .env.local .env.production .env.staging credentials.json secrets.json *.pem *.key'
 
 # Check if any forbidden files are staged
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
 
-for file in $FORBIDDEN_FILES; do
-    if echo "$STAGED_FILES" | grep -qE "(^|/)$file$"; then
-        echo "ERROR: Attempting to commit forbidden file: $file"
+for pattern in $FORBIDDEN_PATTERNS; do
+    if echo "$STAGED_FILES" | grep -qE "(^|/)$pattern$"; then
+        echo "ERROR: Attempting to commit forbidden file: $pattern"
         echo "This file may contain secrets. If you're sure, use: git commit --no-verify"
         exit 1
     fi
 done
+
+# Also check for .env.* patterns (like .env.production, .env.staging)
+if echo "$STAGED_FILES" | grep -qE '^\.env\.[^.]+$'; then
+    echo "ERROR: Attempting to commit an .env.* file"
+    echo "This file may contain secrets. If you're sure, use: git commit --no-verify"
+    exit 1
+fi
 
 exit 0

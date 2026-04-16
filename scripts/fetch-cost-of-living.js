@@ -20,6 +20,7 @@
  */
 'use strict';
 const fs   = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUT_PATH = path.join(__dirname, '..', 'public', 'cost-of-living.json');
@@ -156,7 +157,7 @@ function main() {
   console.log(`Most expensive: ${sorted[0].city} (${sorted[0].col_index})`);
   console.log(`Least expensive: ${sorted[sorted.length - 1].city} (${sorted[sorted.length - 1].col_index})\n`);
 
-  fs.writeFileSync(OUT_PATH, JSON.stringify(sorted, null, 2));
+  atomicWrite(OUT_PATH, JSON.stringify(sorted, null, 2));
   console.log(`✓ Written to ${OUT_PATH}`);
 
   // Spot-check

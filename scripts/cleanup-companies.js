@@ -2,6 +2,7 @@
 'use strict';
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const IN_FILE = path.join(__dirname, '..', 'public', 'companies.json');
@@ -170,7 +171,7 @@ for (const [cityKey, companies] of Object.entries(data)) {
   stats.totalAfter += cleaned.length;
 }
 
-fs.writeFileSync(IN_FILE, JSON.stringify(data));
+atomicWrite(IN_FILE, JSON.stringify(data));
 
 console.log('=== Company Data Cleanup Report ===');
 console.log(`QAR → KRW fixes:              ${stats.qarToKrw}`);

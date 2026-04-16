@@ -39,6 +39,7 @@
  */
 'use strict';
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT_PATH = path.join(__dirname, '..', 'public', 'eonet-events.json');
@@ -151,7 +152,7 @@ async function fetchEonetEvents() {
       events,
     };
 
-    fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2));
+    atomicWrite(OUTPUT_PATH, JSON.stringify(output, null, 2));
     console.log(`\n✓ Written ${events.length} events to ${OUTPUT_PATH}`);
 
     // Also write lightweight version for map display
@@ -171,7 +172,7 @@ async function fetchEonetEvents() {
     };
 
     const lightPath = path.join(__dirname, '..', 'public', 'eonet-events-lite.json');
-    fs.writeFileSync(lightPath, JSON.stringify(lightweight));
+    atomicWrite(lightPath, JSON.stringify(lightweight));
     console.log(`✓ Written lightweight version to ${lightPath}`);
 
     // Recent events spot-check

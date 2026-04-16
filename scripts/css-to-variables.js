@@ -4,6 +4,7 @@
  * Also prepends the variable definitions for dark/light themes.
  */
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const CSS_PATH = path.join(__dirname, '..', 'public', 'style.css');
@@ -130,6 +131,6 @@ css = css.replace(
   'scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track)'
 );
 
-fs.writeFileSync(CSS_PATH, css, 'utf8');
+atomicWrite(CSS_PATH, css, 'utf8');
 console.log('Replaced ' + replaceCount + ' color references with CSS variables');
 console.log('Written: ' + CSS_PATH);

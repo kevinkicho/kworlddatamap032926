@@ -10,6 +10,7 @@
  */
 
 const fs = require('fs');
+const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
 const OUTPUT = path.join(__dirname, '..', 'public', 'openalex-countries.json');
@@ -66,7 +67,7 @@ async function main() {
     const countries = await fetchAllCountries();
 
     // Write raw data
-    fs.writeFileSync(OUTPUT, JSON.stringify(countries, null, 2));
+    atomicWrite(OUTPUT, JSON.stringify(countries, null, 2));
     console.log(`[openalex] Wrote ${countries.length} countries to ${OUTPUT}`);
 
     // Also update country-data.json with new fields
@@ -83,7 +84,7 @@ async function main() {
       }
     }
 
-    fs.writeFileSync(COUNTRY_DATA, JSON.stringify(countryData, null, 2));
+    atomicWrite(COUNTRY_DATA, JSON.stringify(countryData, null, 2));
     console.log(`[openalex] Merged research data into ${merged} countries`);
 
   } catch (err) {
