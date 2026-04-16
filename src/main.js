@@ -2,14 +2,12 @@ import {
   init,
   buildEconLayer, clearAllFilters, closeComparePanel, closeCorpPanel,
   closeCountryCompare, closeFilterPanel, closeModal,
-  closeStatsPanel, closeTradePanelFn, closeWikiSidebar, deleteCity,
+  closeTradePanelFn, closeWikiSidebar, deleteCity,
   closeGlobalCorpPanel,
-  gcorpCountryChanged, gcorpIndustryChanged,
-  gcorpQueryChanged, gcorpShowMore, gcorpSortChanged,
-  openStatsPanel, renderCorpList, renderGlobalCorpList, resetAll, resetAllLayers, saveEdit, setCensusColorMetric,
+  renderCorpList, resetAll, resetAllLayers, saveEdit, setCensusColorMetric,
   setCityDotMode, setHeatBlur, setHeatIntensity, setHeatPalette, setHeatRadius,
   setHeatmapMetric, setMatchedColorMode, setMatchedVis, setOtherColorMode,
-  setOtherVis, setStatsScope, setValueFilter, switchWikiTab, toggleAdmin1Global,
+  setOtherVis, setValueFilter, switchWikiTab, toggleAdmin1Global,
   toggleAirRouteLayer, toggleAqMode, toggleAvailFilter, toggleBookmarksPanel,
   toggleCableLayer, toggleChoroPlay, toggleChoropleth, toggleDrawMode,
   setBasemap, resetPopRange, toggleCities, toggleEarthquakeLayer, toggleEconLayer, toggleEezLayer, toggleFilterAqColor,
@@ -21,15 +19,20 @@ import {
   toggleMobileTopbar,
   _switchRadarTab, _switchTrendTab, _renderCountryPanel,
   clearRegionSelection, closeCountryPanel, closeRegionPanel,
-  corpRowClick, flyTo, gcorpRowClick,
+  corpRowClick, flyTo,
   openComparePanel, openCorpPanel, openCountryCompare, openCountryPanel,
-  openModal, openWikiSidebar, openWikiSidebarById, statsExpandDown, statsExpandUp,
-  statsGoToCity, statsGoToCountry, toggleBookmark, toggleExtract,
-  switchListTab
+  openModal, openWikiSidebar, openWikiSidebarById, openCompanyWikiPanel,
+  toggleBookmark, toggleExtract,
+  switchListTab,
+  STAT_DEFS, CITY_STAT_DEFS, WB_STAT_DEFS, EUROSTAT_STAT_DEFS, JAPAN_PREF_STAT_DEFS, CORP_STAT_DEFS,
+  _lookupJapanPref, _statSourceAttr, CAPITAL_COORDS, countryCentroids
 } from './app-legacy.js';
 
 import { fxFetchRates, fxResetDefaults, fxInputChanged, toggleFxSidebar, initFxCallbacks } from './fx-sidebar.js';
 import { openLightbox, openCarouselLightbox, closeLightbox, lightboxNav, carGo, carJump, carResume, carStop } from './lightbox.js';
+import { initKeyboardNav, setupKeyboardNav, toggleKeyboardHelp } from './keyboard-nav.js';
+import { initStatsPanel, closeStatsPanel, setStatsScope, openStatsPanel, statsExpandUp, statsExpandDown, statsGoToCity, statsGoToCountry } from './stats-panel.js';
+import { initCorporationsList, buildGlobalCorpList, renderGlobalCorpList, gcorpShowMore, gcorpQueryChanged, gcorpCountryChanged, gcorpIndustryChanged, gcorpSortChanged, gcorpRowClick } from './corporations-list.js';
 
 Object.assign(window, {
   buildEconLayer, clearAllFilters, closeComparePanel, closeCorpPanel,
@@ -37,7 +40,7 @@ Object.assign(window, {
   closeStatsPanel, closeTradePanelFn, closeWikiSidebar, closeGlobalCorpPanel, deleteCity,
   fxFetchRates, fxResetDefaults, gcorpCountryChanged, gcorpIndustryChanged,
   gcorpQueryChanged, gcorpShowMore, gcorpSortChanged, lightboxNav,
-  openStatsPanel, renderCorpList, resetAll, resetAllLayers, saveEdit, setCensusColorMetric,
+  openStatsPanel, renderCorpList, renderGlobalCorpList, resetAll, resetAllLayers, saveEdit, setCensusColorMetric,
   setCityDotMode, setHeatBlur, setHeatIntensity, setHeatPalette, setHeatRadius,
   setHeatmapMetric, setMatchedColorMode, setMatchedVis, setOtherColorMode,
   setOtherVis, setStatsScope, setValueFilter, switchWikiTab, toggleAdmin1Global,
@@ -53,7 +56,8 @@ Object.assign(window, {
   openComparePanel, openCorpPanel, openCountryCompare, openCountryPanel,
   openLightbox, openModal, openWikiSidebar, openWikiSidebarById, statsExpandDown, statsExpandUp,
   statsGoToCity, statsGoToCountry, toggleBookmark, toggleExtract,
-  switchListTab, toggleNationsPanel, closeAllMobileSheets, toggleMobileTopbar
+  switchListTab, toggleNationsPanel, closeAllMobileSheets, toggleMobileTopbar,
+  toggleKeyboardHelp
 });
 
 initFxCallbacks({
@@ -75,6 +79,46 @@ initFxCallbacks({
     const b = document.getElementById('mobile-backdrop');
     if (b) b.classList.remove('active');
   }
+});
+
+initStatsPanel({
+  mobileBackdropOn: () => {
+    if (window.innerWidth <= 768) {
+      const b = document.getElementById('mobile-backdrop');
+      if (b) b.classList.add('active');
+    }
+  },
+  mobileBackdropOff: () => {
+    const b = document.getElementById('mobile-backdrop');
+    if (b) b.classList.remove('active');
+  },
+  switchRadarTab: _switchRadarTab,
+  openWikiSidebar,
+  openCountryPanel,
+  lookupJapanPref: _lookupJapanPref,
+  statSourceAttr: _statSourceAttr,
+  STAT_DEFS, CITY_STAT_DEFS, WB_STAT_DEFS, EUROSTAT_STAT_DEFS, JAPAN_PREF_STAT_DEFS, CORP_STAT_DEFS,
+  CAPITAL_COORDS, countryCentroids,
+});
+
+initKeyboardNav({
+  closeCountryCompare,
+  closeComparePanel,
+  closeWikiSidebar,
+  closeCountryPanel: () => { document.getElementById('country-panel').classList.remove('open'); },
+  closeCorpPanel,
+  closeStatsPanel,
+  closeTradePanelFn,
+  toggleFilterPanel,
+  toggleFxSidebar,
+  toggleBookmarksPanel,
+  toggleTheme,
+  switchWikiTab,
+});
+setupKeyboardNav();
+
+initCorporationsList({
+  openCompanyWikiPanel,
 });
 
 init();

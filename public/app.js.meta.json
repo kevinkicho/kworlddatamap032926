@@ -31,6 +31,64 @@
       ],
       "format": "esm"
     },
+    "src/keyboard-nav.js": {
+      "bytes": 5075,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/stats-panel.js": {
+      "bytes": 19354,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/iy-chart.js": {
+      "bytes": 7850,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/corporations-list.js": {
+      "bytes": 10921,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        },
+        {
+          "path": "src/fx-sidebar.js",
+          "kind": "import-statement",
+          "original": "./fx-sidebar.js"
+        },
+        {
+          "path": "src/constants.js",
+          "kind": "import-statement",
+          "original": "./constants.js"
+        }
+      ],
+      "format": "esm"
+    },
     "src/choro-defs.js": {
       "bytes": 3605,
       "imports": [],
@@ -58,7 +116,7 @@
       "format": "esm"
     },
     "src/app-legacy.js": {
-      "bytes": 588158,
+      "bytes": 545196,
       "imports": [
         {
           "path": "src/utils.js",
@@ -79,6 +137,26 @@
           "path": "src/fx-sidebar.js",
           "kind": "import-statement",
           "original": "./fx-sidebar.js"
+        },
+        {
+          "path": "src/keyboard-nav.js",
+          "kind": "import-statement",
+          "original": "./keyboard-nav.js"
+        },
+        {
+          "path": "src/stats-panel.js",
+          "kind": "import-statement",
+          "original": "./stats-panel.js"
+        },
+        {
+          "path": "src/iy-chart.js",
+          "kind": "import-statement",
+          "original": "./iy-chart.js"
+        },
+        {
+          "path": "src/corporations-list.js",
+          "kind": "import-statement",
+          "original": "./corporations-list.js"
         },
         {
           "path": "src/choro-defs.js",
@@ -104,7 +182,7 @@
       "format": "esm"
     },
     "src/main.js": {
-      "bytes": 4949,
+      "bytes": 6434,
       "imports": [
         {
           "path": "src/app-legacy.js",
@@ -120,6 +198,21 @@
           "path": "src/lightbox.js",
           "kind": "import-statement",
           "original": "./lightbox.js"
+        },
+        {
+          "path": "src/keyboard-nav.js",
+          "kind": "import-statement",
+          "original": "./keyboard-nav.js"
+        },
+        {
+          "path": "src/stats-panel.js",
+          "kind": "import-statement",
+          "original": "./stats-panel.js"
+        },
+        {
+          "path": "src/corporations-list.js",
+          "kind": "import-statement",
+          "original": "./corporations-list.js"
         }
       ],
       "format": "cjs"
@@ -130,7 +223,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1059573
+      "bytes": 1063235
     },
     "public/app.js": {
       "imports": [],
@@ -149,6 +242,18 @@
         "src/fx-sidebar.js": {
           "bytesInOutput": 4727
         },
+        "src/keyboard-nav.js": {
+          "bytesInOutput": 5755
+        },
+        "src/stats-panel.js": {
+          "bytesInOutput": 20085
+        },
+        "src/iy-chart.js": {
+          "bytesInOutput": 7995
+        },
+        "src/corporations-list.js": {
+          "bytesInOutput": 11567
+        },
         "src/choro-defs.js": {
           "bytesInOutput": 3250
         },
@@ -162,13 +267,13 @@
           "bytesInOutput": 2782
         },
         "src/app-legacy.js": {
-          "bytesInOutput": 527492
+          "bytesInOutput": 486409
         },
         "src/main.js": {
-          "bytesInOutput": 3909
+          "bytesInOutput": 5504
         }
       },
-      "bytes": 577919
+      "bytes": 583937
     }
   }
 }

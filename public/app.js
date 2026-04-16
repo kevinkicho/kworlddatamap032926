@@ -1099,6 +1099,976 @@
     }
   });
 
+  // src/keyboard-nav.js
+  function initKeyboardNav(callbacks) {
+    _closeCountryCompare = callbacks.closeCountryCompare || _closeCountryCompare;
+    _closeComparePanel = callbacks.closeComparePanel || _closeComparePanel;
+    _closeWikiSidebar = callbacks.closeWikiSidebar || _closeWikiSidebar;
+    _closeCountryPanel = callbacks.closeCountryPanel || _closeCountryPanel;
+    _closeCorpPanel = callbacks.closeCorpPanel || _closeCorpPanel;
+    _closeStatsPanel = callbacks.closeStatsPanel || _closeStatsPanel;
+    _closeTradePanelFn = callbacks.closeTradePanelFn || _closeTradePanelFn;
+    _toggleFilterPanel = callbacks.toggleFilterPanel || _toggleFilterPanel;
+    _toggleFxSidebar = callbacks.toggleFxSidebar || _toggleFxSidebar;
+    _toggleBookmarksPanel = callbacks.toggleBookmarksPanel || _toggleBookmarksPanel;
+    _toggleTheme = callbacks.toggleTheme || _toggleTheme;
+    _switchWikiTab = callbacks.switchWikiTab || _switchWikiTab;
+  }
+  function setupKeyboardNav() {
+    document.addEventListener("keydown", (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (e.isComposing) return;
+      switch (e.key) {
+        case "Escape": {
+          const panels = [
+            { el: "country-compare-panel", close: () => _closeCountryCompare() },
+            { el: "compare-panel", close: () => _closeComparePanel() },
+            { el: "wiki-sidebar", check: "open", close: () => _closeWikiSidebar() },
+            { el: "country-panel", check: "open", close: () => _closeCountryPanel() },
+            { el: "corp-panel", check: "open", close: () => _closeCorpPanel() },
+            { el: "stats-panel", check: "open", close: () => _closeStatsPanel() },
+            { el: "trade-panel", check: "open", close: () => _closeTradePanelFn() },
+            { el: "filter-panel", check: "open", close: () => _toggleFilterPanel() },
+            { el: "fx-sidebar", check: "open", close: () => _toggleFxSidebar() },
+            { el: "bookmarks-panel", check: "visible", close: () => _toggleBookmarksPanel() }
+          ];
+          for (const p of panels) {
+            const el = document.getElementById(p.el);
+            if (!el) continue;
+            if (p.check === "open" && el.classList.contains("open")) {
+              p.close();
+              e.preventDefault();
+              return;
+            }
+            if (p.check === "visible" && el.classList.contains("visible")) {
+              p.close();
+              e.preventDefault();
+              return;
+            }
+            if (!p.check && el.classList.contains("visible")) {
+              p.close();
+              e.preventDefault();
+              return;
+            }
+          }
+          break;
+        }
+        case "/":
+          e.preventDefault();
+          document.getElementById("city-search-input")?.focus();
+          break;
+        case "?":
+          toggleKeyboardHelp();
+          break;
+        case "t":
+          _toggleTheme();
+          break;
+        case "1":
+        case "2":
+        case "3":
+        case "4": {
+          const tabs = ["info", "overview", "economy", "finance"];
+          const idx = parseInt(e.key) - 1;
+          if (document.getElementById("wiki-sidebar")?.classList.contains("open")) {
+            _switchWikiTab(tabs[idx]);
+            e.preventDefault();
+          }
+          break;
+        }
+        case "ArrowLeft":
+        case "ArrowRight": {
+          const sel = document.getElementById("choro-select");
+          if (sel && S.choroOn) {
+            const dir = e.key === "ArrowLeft" ? -1 : 1;
+            const newIdx = Math.max(0, Math.min(sel.options.length - 1, sel.selectedIndex + dir));
+            if (newIdx !== sel.selectedIndex) {
+              sel.selectedIndex = newIdx;
+              sel.dispatchEvent(new Event("change"));
+            }
+            e.preventDefault();
+          }
+          break;
+        }
+      }
+    });
+  }
+  function toggleKeyboardHelp() {
+    let overlay = document.getElementById("keyboard-help");
+    if (overlay) {
+      overlay.remove();
+      return;
+    }
+    overlay = document.createElement("div");
+    overlay.id = "keyboard-help";
+    overlay.className = "keyboard-help-overlay";
+    overlay.innerHTML = `<div class="keyboard-help-card"><h3>Keyboard Shortcuts</h3><div class="kb-row"><kbd>Esc</kbd> Close topmost panel</div><div class="kb-row"><kbd>/</kbd> Focus search</div><div class="kb-row"><kbd>?</kbd> Toggle this help</div><div class="kb-row"><kbd>t</kbd> Toggle dark/light theme</div><div class="kb-row"><kbd>1-4</kbd> Switch sidebar tabs</div><div class="kb-row"><kbd>\u2190 \u2192</kbd> Cycle choropleth indicator</div><button onclick="document.getElementById('keyboard-help').remove()">Close</button></div>`;
+    overlay.addEventListener("click", (ev) => {
+      if (ev.target === overlay) overlay.remove();
+    });
+    document.body.appendChild(overlay);
+  }
+  var _closeCountryCompare, _closeComparePanel, _closeWikiSidebar, _closeCountryPanel, _closeCorpPanel, _closeStatsPanel, _closeTradePanelFn, _toggleFilterPanel, _toggleFxSidebar, _toggleBookmarksPanel, _toggleTheme, _switchWikiTab;
+  var init_keyboard_nav = __esm({
+    "src/keyboard-nav.js"() {
+      init_state();
+      _closeCountryCompare = () => {
+      };
+      _closeComparePanel = () => {
+      };
+      _closeWikiSidebar = () => {
+      };
+      _closeCountryPanel = () => {
+      };
+      _closeCorpPanel = () => {
+      };
+      _closeStatsPanel = () => {
+      };
+      _closeTradePanelFn = () => {
+      };
+      _toggleFilterPanel = () => {
+      };
+      _toggleFxSidebar = () => {
+      };
+      _toggleBookmarksPanel = () => {
+      };
+      _toggleTheme = () => {
+      };
+      _switchWikiTab = () => {
+      };
+    }
+  });
+
+  // src/stats-panel.js
+  function initStatsPanel(callbacks) {
+    _mobileBackdropOn2 = callbacks.mobileBackdropOn || _mobileBackdropOn2;
+    _mobileBackdropOff2 = callbacks.mobileBackdropOff || _mobileBackdropOff2;
+    _switchRadarTab = callbacks.switchRadarTab || _switchRadarTab;
+    _openWikiSidebar = callbacks.openWikiSidebar || _openWikiSidebar;
+    _openCountryPanel = callbacks.openCountryPanel || _openCountryPanel;
+    _lookupJapanPref = callbacks.lookupJapanPref || _lookupJapanPref;
+    _statSourceAttr = callbacks.statSourceAttr || _statSourceAttr;
+    STAT_DEFS = callbacks.STAT_DEFS;
+    CITY_STAT_DEFS = callbacks.CITY_STAT_DEFS;
+    WB_STAT_DEFS = callbacks.WB_STAT_DEFS;
+    EUROSTAT_STAT_DEFS = callbacks.EUROSTAT_STAT_DEFS;
+    JAPAN_PREF_STAT_DEFS = callbacks.JAPAN_PREF_STAT_DEFS;
+    CORP_STAT_DEFS = callbacks.CORP_STAT_DEFS;
+    CAPITAL_COORDS2 = callbacks.CAPITAL_COORDS;
+    countryCentroids = callbacks.countryCentroids;
+  }
+  function closeStatsPanel() {
+    const _sp = document.getElementById("stats-panel");
+    if (_sp) {
+      _sp.classList.remove("open");
+      _sp.style.right = "";
+    }
+    _mobileBackdropOff2();
+    document.querySelectorAll(".census-stat-clickable.stats-active, .info-chip-clickable.stats-active").forEach((el) => el.classList.remove("stats-active"));
+    S._activeStatMetric = null;
+    S._statsCurrent = null;
+    S._statsPoints = [];
+  }
+  function setStatsScope(scope) {
+    S._statsScope = scope;
+    if (S._statsCurrent) _renderStatsPanel();
+  }
+  function openStatsPanel(metric, qid) {
+    if (S._activeStatMetric === metric + ":" + qid) {
+      closeStatsPanel();
+      return;
+    }
+    S._activeStatMetric = metric + ":" + qid;
+    S._statsCurrent = { metric, qid };
+    _renderStatsPanel();
+    var radarPane = metric.indexOf("wb_energy_") === 0 ? "energy" : null;
+    if (radarPane) {
+      var btn = document.querySelector('.cp-radar-tab[onclick*="' + radarPane + '"]');
+      if (btn && !btn.classList.contains("cp-radar-tab-active")) _switchRadarTab(btn, radarPane);
+    }
+  }
+  function _renderStatsPanel() {
+    const { metric, qid } = S._statsCurrent;
+    const censusDef = STAT_DEFS[metric];
+    const cityDef = CITY_STAT_DEFS[metric];
+    const wbDef = WB_STAT_DEFS[metric];
+    const eurostatDef = EUROSTAT_STAT_DEFS[metric];
+    const japanDef = JAPAN_PREF_STAT_DEFS[metric];
+    const corpDef = CORP_STAT_DEFS[metric];
+    const def = censusDef || cityDef || wbDef || eurostatDef || japanDef || corpDef;
+    if (!def) return;
+    const isCityStat = !!cityDef;
+    const isWbStat = !!wbDef;
+    const isEurostatStat = !!eurostatDef;
+    const isJapanPrefStat = !!japanDef;
+    const isCorpStat = !!corpDef;
+    document.querySelectorAll(".census-stat-clickable.stats-active, .info-chip-clickable.stats-active, .wb-chip-clickable.stats-active").forEach((el) => el.classList.remove("stats-active"));
+    document.querySelectorAll(`[onclick*="openStatsPanel('${metric}'"]`).forEach((el) => el.classList.add("stats-active"));
+    const selfCity = isWbStat ? null : S.cityByQid.get(qid);
+    const selfIso = isWbStat ? qid : selfCity?.iso || "";
+    const selfState = selfCity?.admin || "";
+    const selfCountry = isWbStat ? S.countryData[qid]?.name || qid : selfCity?.country || selfIso;
+    const points = [];
+    if (isWbStat) {
+      if (wbDef.src === "oecd") {
+        for (const [iso2, odata] of Object.entries(S.oecdData)) {
+          if (!odata) continue;
+          const rawVal = odata[wbDef.key];
+          if (rawVal == null || isNaN(rawVal)) continue;
+          const cdata = S.countryData[iso2];
+          points.push({ qid: iso2, val: rawVal, name: cdata && cdata.name || iso2, region: cdata && cdata.region || "", iso: iso2 });
+        }
+      } else if (wbDef.src === "eci") {
+        for (const [iso2, edata] of Object.entries(S.eciData)) {
+          if (!edata) continue;
+          const rawVal = edata[wbDef.key];
+          if (rawVal == null || isNaN(rawVal)) continue;
+          const cdata = S.countryData[iso2];
+          points.push({ qid: iso2, val: rawVal, name: cdata && cdata.name || iso2, region: cdata && cdata.region || "", iso: iso2 });
+        }
+      } else {
+        for (const [iso2, cdata] of Object.entries(S.countryData)) {
+          if (!cdata || !cdata.region || cdata.region === "Aggregates") continue;
+          const rawVal = cdata[wbDef.key];
+          if (rawVal == null || isNaN(rawVal)) continue;
+          points.push({ qid: iso2, val: rawVal, name: cdata.name || iso2, region: cdata.region || "", iso: iso2 });
+        }
+      }
+    } else if (isCityStat) {
+      const pool = S._statsScope === "country" && selfIso ? S.allCities.filter((c) => c.iso === selfIso) : S.allCities;
+      for (const c of pool) {
+        const val = def.key(c);
+        if (val == null || isNaN(val)) continue;
+        points.push({ qid: c.qid, val, name: c.name, state: c.admin || "", iso: c.iso || "", country: c.country || "" });
+      }
+    } else if (isJapanPrefStat) {
+      const jpCities = S.allCities.filter((c) => c.iso === "JP");
+      const prefRepCity = {};
+      for (const c of jpCities) {
+        const match = _lookupJapanPref(c);
+        if (!match) continue;
+        const existing = prefRepCity[match.name];
+        if (!existing || (c.pop || 0) > (existing.pop || 0)) prefRepCity[match.name] = c;
+      }
+      for (const [prefName, data] of Object.entries(S.japanPrefData)) {
+        const val = data[japanDef.key];
+        if (val == null || isNaN(val)) continue;
+        const repCity = prefRepCity[prefName];
+        if (!repCity) continue;
+        points.push({ qid: repCity.qid, val, name: prefName, state: "Japan", iso: "JP", country: "Japan", prefName });
+      }
+    } else if (isEurostatStat) {
+      for (const [cqid, data] of Object.entries(S.eurostatCities)) {
+        if (!data) continue;
+        const val = data[eurostatDef.key];
+        if (val == null || isNaN(val)) continue;
+        const city = S.cityByQid.get(cqid);
+        if (!city) continue;
+        points.push({ qid: cqid, val, name: city.name, state: data.country || city.iso || "", iso: city.iso || "", country: city.country || city.iso || "" });
+      }
+    } else if (isCorpStat) {
+      for (const arr of Object.values(S.companiesData)) {
+        for (const co of arr) {
+          if (!co.qid) continue;
+          const val = corpDef.key(co);
+          if (val == null || isNaN(val) || val <= 0) continue;
+          points.push({ qid: co.qid, val, name: co.name, state: co.industry || "", iso: "", country: co.exchange || "" });
+        }
+      }
+    } else {
+      const src = def.src === "acs" ? S.censusCities : S.censusBusiness;
+      for (const [cqid, data] of Object.entries(src)) {
+        if (!data) continue;
+        const val = typeof def.key === "function" ? def.key(data) : data[def.key];
+        if (val == null || isNaN(val)) continue;
+        const city = S.cityByQid.get(cqid);
+        if (!city) continue;
+        points.push({ qid: cqid, val, name: city.name, state: city.admin || "", iso: "US", country: "United States" });
+      }
+    }
+    if (!points.length) return;
+    const ascending = def.higherBetter === false;
+    points.sort((a, b) => ascending ? a.val - b.val : b.val - a.val);
+    points.forEach((p, i) => {
+      p.rank = i + 1;
+    });
+    const selfJapanPref = isJapanPrefStat ? _lookupJapanPref(selfCity)?.name : null;
+    const entityIdx = isWbStat ? points.findIndex((p) => p.qid === selfIso) : isJapanPrefStat ? points.findIndex((p) => p.prefName === selfJapanPref) : points.findIndex((p) => p.qid === qid);
+    if (entityIdx < 0) {
+      closeStatsPanel();
+      return;
+    }
+    const cp = points[entityIdx];
+    S._statsPoints = points;
+    S._statsWinStart = Math.max(0, entityIdx - 5);
+    S._statsWinEnd = Math.min(points.length - 1, entityIdx + 5);
+    let subRank = 0, subTotal = 0, subLabel = "";
+    if (isWbStat && cp.region) {
+      const regionPts = points.filter((p) => p.region === cp.region);
+      subRank = regionPts.findIndex((p) => p.qid === cp.qid) + 1;
+      subTotal = regionPts.length;
+      subLabel = cp.region;
+    } else if (isEurostatStat && selfIso) {
+      const countryPts = points.filter((p) => p.iso === selfIso);
+      subRank = countryPts.findIndex((p) => p.qid === qid) + 1;
+      subTotal = countryPts.length;
+      subLabel = selfCountry || selfIso;
+    } else if (isCityStat && S._statsScope === "world" && selfIso) {
+      const countryPts = points.filter((p) => p.iso === selfIso);
+      subRank = countryPts.findIndex((p) => p.qid === qid) + 1;
+      subTotal = countryPts.length;
+      subLabel = selfCountry;
+    } else if (!isCityStat && !isWbStat && !isEurostatStat && selfState) {
+      const statePts = points.filter((p) => p.state === selfState);
+      subRank = statePts.findIndex((p) => p.qid === qid) + 1;
+      subTotal = statePts.length;
+      subLabel = selfState;
+    }
+    const vals = points.map((p) => p.val);
+    const minV = Math.min(...vals), maxV = Math.max(...vals);
+    const BUCKETS = 14;
+    const bSize = (maxV - minV) / BUCKETS || 1;
+    const counts = Array(BUCKETS).fill(0);
+    const entityBkt = Math.min(BUCKETS - 1, Math.floor((cp.val - minV) / bSize));
+    for (const { val } of points) counts[Math.min(BUCKETS - 1, Math.floor((val - minV) / bSize))]++;
+    const maxCnt = Math.max(...counts, 1);
+    const HW = 262, HH = 56, HPAD = 2;
+    const bw = (HW - HPAD * 2) / BUCKETS;
+    const histBars = counts.map((cnt, i) => {
+      const bh = Math.max(2, cnt / maxCnt * (HH - HPAD * 2));
+      const x = HPAD + i * bw, y = HH - HPAD - bh;
+      return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw - 1).toFixed(1)}" height="${bh.toFixed(1)}" rx="1.5"
+      fill="${i === entityBkt ? "#f0a500" : "#2a8ee8"}" opacity="${i === entityBkt ? 1 : 0.45}"/>`;
+    }).join("");
+    const markerX = HPAD + (entityBkt + 0.5) * bw;
+    const histSvg = `<svg viewBox="0 0 ${HW} ${HH + 14}" width="${HW}" height="${HH + 14}" style="display:block">
+    ${histBars}
+    <line x1="${markerX.toFixed(1)}" y1="0" x2="${markerX.toFixed(1)}" y2="${HH}" stroke="#f0a500" stroke-width="1.5" stroke-dasharray="3 2"/>
+    <text x="${HPAD}" y="${HH + 11}" font-size="7" fill="#6e7681" text-anchor="start">${def.fmt(minV)}</text>
+    <text x="${HW / 2}" y="${HH + 11}" font-size="7" fill="#6e7681" text-anchor="middle">${def.fmt((minV + maxV) / 2)}</text>
+    <text x="${HW - HPAD}" y="${HH + 11}" font-size="7" fill="#6e7681" text-anchor="end">${def.fmt(maxV)}</text>
+  </svg>`;
+    const note = def.higherBetter === true ? "\u2191 higher ranked = higher value" : def.higherBetter === false ? "\u2191 higher ranked = lower value" : "";
+    const primaryLabel = isWbStat ? "countries worldwide" : isJapanPrefStat ? "Japanese prefectures" : isEurostatStat ? "European cities (Eurostat)" : isCityStat ? S._statsScope === "world" ? "worldwide" : escHtml(selfCountry) : isCorpStat ? "companies worldwide" : "US cities with Census data";
+    const scopeToggle = isCityStat ? `
+    <div id="stats-scope-row">
+      <button class="stats-scope-btn${S._statsScope === "world" ? " active" : ""}" onclick="setStatsScope('world')">\u{1F30D} World</button>
+      <button class="stats-scope-btn${S._statsScope === "country" ? " active" : ""}" onclick="setStatsScope('country')"
+        >\u{1F4CD} ${escHtml(selfCountry)}</button>
+    </div>` : "";
+    let trendChartHtml = "";
+    if (isJapanPrefStat && selfCity) {
+      const jpMatch = _lookupJapanPref(selfCity);
+      const histKey = metric === "japan_perCapitaIncome" ? "perCapitaIncomeHistory" : "gdpHistory";
+      const history2 = jpMatch?.data?.[histKey];
+      if (history2 && history2.length >= 2) {
+        const TW = 262, TH = 54, TPAD = 4;
+        const xs = history2.map(([y]) => y);
+        const vs = history2.map(([, v]) => v);
+        const minX = Math.min(...xs), maxX = Math.max(...xs);
+        const minVt = Math.min(...vs), maxVt = Math.max(...vs);
+        const rangeV = maxVt - minVt || 1;
+        const toX = (x) => TPAD + (x - minX) / (maxX - minX || 1) * (TW - TPAD * 2);
+        const toY = (v) => TH - TPAD - (v - minVt) / rangeV * (TH - TPAD * 2);
+        const pts = history2.map(([x, v]) => `${toX(x).toFixed(1)},${toY(v).toFixed(1)}`).join(" ");
+        const dots = history2.map(([x, v]) => `<circle cx="${toX(x).toFixed(1)}" cy="${toY(v).toFixed(1)}" r="1.8" fill="#f0a500" opacity="0.7"/>`).join("");
+        const firstLbl = `${xs[0]}: ${def.fmt(vs[0])}`;
+        const lastLbl = `${xs[xs.length - 1]}: ${def.fmt(vs[vs.length - 1])}`;
+        trendChartHtml = `<div class="stats-trend-wrap">
+        <svg viewBox="0 0 ${TW} ${TH + 16}" width="${TW}" height="${TH + 16}" style="display:block">
+          <polyline points="${pts}" fill="none" stroke="#58a6ff" stroke-width="1.8" stroke-linejoin="round" opacity="0.85"/>
+          ${dots}
+          <text x="${TPAD}" y="${TH + 13}" font-size="7" fill="#6e7681">${escHtml(firstLbl)}</text>
+          <text x="${TW - TPAD}" y="${TH + 13}" font-size="7" fill="#f0a500" text-anchor="end">${escHtml(lastLbl)}</text>
+        </svg>
+      </div>`;
+      }
+    } else if (isEurostatStat && eurostatDef.histKey) {
+      const esRecord = S.eurostatCities[qid];
+      const history2 = esRecord?.[eurostatDef.histKey];
+      if (history2 && history2.length >= 2) {
+        const TW = 262, TH = 54, TPAD = 4;
+        const xs = history2.map(([y]) => y);
+        const vs = history2.map(([, v]) => v);
+        const minX = Math.min(...xs), maxX = Math.max(...xs);
+        const minV2 = Math.min(...vs), maxV2 = Math.max(...vs);
+        const rangeV = maxV2 - minV2 || 1;
+        const toX = (x) => TPAD + (x - minX) / (maxX - minX || 1) * (TW - TPAD * 2);
+        const toY = (v) => TH - TPAD - (v - minV2) / rangeV * (TH - TPAD * 2);
+        const pts = history2.map(([x, v]) => `${toX(x).toFixed(1)},${toY(v).toFixed(1)}`).join(" ");
+        const dots = history2.map(([x, v]) => `<circle cx="${toX(x).toFixed(1)}" cy="${toY(v).toFixed(1)}" r="1.8" fill="#f0a500" opacity="0.7"/>`).join("");
+        const firstLbl = `${xs[0]}: ${def.fmt(vs[0])}`;
+        const lastLbl = `${xs[xs.length - 1]}: ${def.fmt(vs[vs.length - 1])}`;
+        trendChartHtml = `<div class="stats-trend-wrap">
+        <svg viewBox="0 0 ${TW} ${TH + 16}" width="${TW}" height="${TH + 16}" style="display:block">
+          <polyline points="${pts}" fill="none" stroke="#58a6ff" stroke-width="1.8" stroke-linejoin="round" opacity="0.85"/>
+          ${dots}
+          <text x="${TPAD}" y="${TH + 13}" font-size="7" fill="#6e7681">${escHtml(firstLbl)}</text>
+          <text x="${TW - TPAD}" y="${TH + 13}" font-size="7" fill="#f0a500" text-anchor="end">${escHtml(lastLbl)}</text>
+        </svg>
+      </div>`;
+      }
+    }
+    document.getElementById("stats-panel-title").textContent = def.label;
+    document.getElementById("stats-panel-city").textContent = cp.name + (selfState || !isWbStat && selfCountry ? " \xB7 " + (selfState || selfCountry) : "");
+    document.getElementById("stats-panel-body").innerHTML = `
+    ${scopeToggle}
+    ${trendChartHtml}
+    <div class="stats-hist-wrap">${histSvg}</div>
+    <div class="stats-ranks">
+      <div class="stats-rank-badge">
+        <span class="stats-rank-n">#${cp.rank} / ${points.length}</span>
+        <span class="stats-rank-lbl">${primaryLabel}</span>
+      </div>
+      ${subRank > 0 ? `<div class="stats-rank-badge">
+        <span class="stats-rank-n">#${subRank} / ${subTotal}</span>
+        <span class="stats-rank-lbl">${escHtml(subLabel)}</span>
+      </div>` : ""}
+    </div>
+    ${note ? `<div class="stats-note">${note}</div>` : ""}
+    <div id="stats-rank-list-wrap" class="stats-rank-list"></div>
+    <div class="stats-source">${points.length} ${primaryLabel}</div>
+    <div class="stats-source-attr">${_statSourceAttr(metric)}</div>
+  `;
+    const _sp = document.getElementById("stats-panel");
+    const _wikiOpen = document.getElementById("wiki-sidebar")?.classList.contains("open");
+    const _corpOpen = document.getElementById("corp-panel")?.classList.contains("open");
+    const _cpOpen = document.getElementById("country-panel")?.classList.contains("open");
+    const _baseRight = _cpOpen ? 600 : _wikiOpen && _corpOpen ? 880 : _corpOpen ? 460 : 420;
+    _sp.style.right = _baseRight + "px";
+    _sp.classList.add("open");
+    _mobileBackdropOn2();
+    _updateStatsListHtml();
+  }
+  function _updateStatsListHtml() {
+    const metric = S._statsCurrent?.metric;
+    const def = STAT_DEFS[metric] || CITY_STAT_DEFS[metric] || WB_STAT_DEFS[metric] || EUROSTAT_STAT_DEFS[metric] || JAPAN_PREF_STAT_DEFS[metric];
+    const listEl = document.getElementById("stats-rank-list-wrap");
+    if (!listEl || !def || !S._statsPoints.length) return;
+    const { qid } = S._statsCurrent;
+    const isWbStat = !!WB_STAT_DEFS[metric];
+    const isJapanPrefStat = !!JAPAN_PREF_STAT_DEFS[metric];
+    const curId = isWbStat ? S._statsCurrent.qid : qid;
+    const aboveCount = S._statsWinStart;
+    const belowCount = S._statsPoints.length - 1 - S._statsWinEnd;
+    const jpSelfCity = isJapanPrefStat ? S.cityByQid.get(qid) : null;
+    const jpSelfPref = isJapanPrefStat ? _lookupJapanPref(jpSelfCity)?.name : null;
+    const rows = S._statsPoints.slice(S._statsWinStart, S._statsWinEnd + 1).map((p) => {
+      const isCur = isJapanPrefStat ? p.prefName === jpSelfPref : p.qid === curId;
+      const navFn = isWbStat ? escHtml("statsGoToCountry(" + JSON.stringify(p.qid) + ")") : escHtml("statsGoToCity(" + JSON.stringify(p.qid) + ")");
+      const sub = isWbStat ? "" : p.state ? ` \xB7 ${escHtml(p.state)}` : "";
+      return `<div class="stats-rank-row${isCur ? " stats-rank-current" : ""}" onclick="${navFn}">
+      <span class="stats-rank-num">#${p.rank}</span>
+      <span class="stats-rank-name">${escHtml(p.name)}<span class="stats-rank-sub">${sub}</span></span>
+      <span class="stats-rank-val">${def.fmt(p.val)}</span>
+    </div>`;
+    }).join("");
+    listEl.innerHTML = `
+    ${aboveCount > 0 ? `<button class="stats-rank-more" onclick="statsExpandUp()">\u25B2 ${aboveCount.toLocaleString()} more above</button>` : ""}
+    ${rows}
+    ${belowCount > 0 ? `<button class="stats-rank-more" onclick="statsExpandDown()">\u25BC ${belowCount.toLocaleString()} more below</button>` : ""}
+  `;
+    listEl.querySelector(".stats-rank-current")?.scrollIntoView({ block: "nearest" });
+  }
+  function statsExpandUp() {
+    S._statsWinStart = Math.max(0, S._statsWinStart - STATS_WIN);
+    _updateStatsListHtml();
+    document.getElementById("stats-rank-list-wrap")?.scrollTo({ top: 0 });
+  }
+  function statsExpandDown() {
+    S._statsWinEnd = Math.min(S._statsPoints.length - 1, S._statsWinEnd + STATS_WIN);
+    _updateStatsListHtml();
+  }
+  function statsGoToCity(qid) {
+    const city = S.cityByQid.get(qid);
+    if (!city || city.lat == null) return;
+    S.map.flyTo([city.lat, city.lng], Math.max(S.map.getZoom(), 5), { duration: 1 });
+    _openWikiSidebar(qid, city.name);
+    if (S._statsCurrent && S._statsCurrent.qid !== qid) openStatsPanel(S._statsCurrent.metric, qid);
+  }
+  function statsGoToCountry(iso2) {
+    const pt = CAPITAL_COORDS2[iso2] || countryCentroids[iso2];
+    if (pt) S.map.flyTo(pt, Math.max(S.map.getZoom(), 4), { duration: 1 });
+    if (S._statsCurrent && S._statsCurrent.qid !== iso2) openStatsPanel(S._statsCurrent.metric, iso2);
+    if (typeof _openCountryPanel === "function" && S.countryData[iso2]) _openCountryPanel(iso2);
+  }
+  var _mobileBackdropOn2, _mobileBackdropOff2, _switchRadarTab, _openWikiSidebar, _openCountryPanel, _lookupJapanPref, _statSourceAttr, STAT_DEFS, CITY_STAT_DEFS, WB_STAT_DEFS, EUROSTAT_STAT_DEFS, JAPAN_PREF_STAT_DEFS, CORP_STAT_DEFS, CAPITAL_COORDS2, countryCentroids, STATS_WIN;
+  var init_stats_panel = __esm({
+    "src/stats-panel.js"() {
+      init_state();
+      init_utils();
+      _mobileBackdropOn2 = () => {
+      };
+      _mobileBackdropOff2 = () => {
+      };
+      _switchRadarTab = () => {
+      };
+      _openWikiSidebar = () => {
+      };
+      _openCountryPanel = () => {
+      };
+      _lookupJapanPref = () => null;
+      _statSourceAttr = () => "";
+      STATS_WIN = 12;
+    }
+  });
+
+  // src/iy-chart.js
+  function IYChart(containerEl, points, opts = {}) {
+    const {
+      color = "#58a6ff",
+      height = 80,
+      isTimestamp = true,
+      autoColor = true,
+      yFmt = (v) => v.toLocaleString(),
+      xFmt = isTimestamp ? (t) => new Date(t * 1e3).toLocaleDateString("en-US", { month: "short", year: "2-digit" }) : (t) => String(t),
+      showXLabels = false,
+      showYLabels = false,
+      ranges = null,
+      defaultDays = 0
+    } = opts;
+    containerEl.innerHTML = "";
+    containerEl.style.userSelect = "none";
+    let activeDays = defaultDays;
+    let btnRow = null;
+    if (ranges?.length) {
+      btnRow = document.createElement("div");
+      btnRow.className = "iyc-range-row";
+      ranges.forEach((r) => {
+        const btn = document.createElement("button");
+        btn.className = "iyc-range" + (r.days === activeDays ? " active" : "");
+        btn.textContent = r.label;
+        btn.dataset.days = r.days;
+        btn.onclick = () => {
+          activeDays = r.days;
+          btnRow.querySelectorAll(".iyc-range").forEach(
+            (b) => b.classList.toggle("active", +b.dataset.days === activeDays)
+          );
+          draw();
+        };
+        btnRow.appendChild(btn);
+      });
+      containerEl.appendChild(btnRow);
+    }
+    const wrap = document.createElement("div");
+    wrap.style.cssText = "position:relative;overflow:hidden";
+    const canvas = document.createElement("canvas");
+    canvas.style.cssText = `width:100%;height:${height}px;display:block;cursor:crosshair`;
+    const tt = document.createElement("div");
+    tt.className = "iyc-tooltip";
+    tt.style.display = "none";
+    wrap.appendChild(canvas);
+    wrap.appendChild(tt);
+    containerEl.appendChild(wrap);
+    const DPR = window.devicePixelRatio || 1;
+    let _L = null;
+    function getVisible() {
+      if (!activeDays) return points;
+      if (isTimestamp) {
+        const last = points[points.length - 1]?.t || 0;
+        return points.filter((p) => p.t >= last - activeDays * 86400);
+      }
+      return points.slice(-Math.max(2, Math.round(activeDays / 365)));
+    }
+    function draw() {
+      const W = wrap.offsetWidth || containerEl.offsetWidth || 280;
+      const H = height;
+      canvas.width = W * DPR;
+      canvas.height = H * DPR;
+      const vis = getVisible();
+      if (vis.length < 2) {
+        _L = null;
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const PT = 6 * DPR, PB = (showXLabels ? 16 : 4) * DPR;
+      const PL = 2 * DPR, PR = (showYLabels ? 48 : 2) * DPR;
+      const pW = canvas.width - PL - PR, pH = canvas.height - PT - PB;
+      const tMin = vis[0].t, tMax = vis[vis.length - 1].t;
+      const vals = vis.map((p) => p.v);
+      const vMin = Math.min(...vals), vMax = Math.max(...vals);
+      const vPad = (vMax - vMin) * 0.1 || Math.abs(vMax) * 0.05 || 1;
+      const vLo = vMin - vPad, vHi = vMax + vPad;
+      const xOf = (t) => PL + (tMax === tMin ? pW / 2 : (t - tMin) / (tMax - tMin) * pW);
+      const yOf = (v) => PT + pH - (vHi === vLo ? pH / 2 : (v - vLo) / (vHi - vLo) * pH);
+      const lineClr = autoColor ? vis[vis.length - 1].v >= vis[0].v ? "#3fb950" : "#f85149" : color;
+      ctx.strokeStyle = "rgba(48,54,61,0.5)";
+      ctx.lineWidth = DPR * 0.5;
+      for (let i = 1; i <= 3; i++) {
+        const y = PT + pH * i / 4;
+        ctx.beginPath();
+        ctx.moveTo(PL, y);
+        ctx.lineTo(PL + pW, y);
+        ctx.stroke();
+      }
+      if (showYLabels) {
+        ctx.fillStyle = "#484f58";
+        ctx.font = `${9 * DPR}px system-ui,sans-serif`;
+        ctx.textAlign = "right";
+        [0, 0.5, 1].forEach((f) => {
+          const v = vLo + (vHi - vLo) * f;
+          ctx.fillText(yFmt(v), canvas.width - DPR, PT + pH * (1 - f) + 3 * DPR);
+        });
+      }
+      const grad = ctx.createLinearGradient(0, PT, 0, canvas.height - PB);
+      grad.addColorStop(0, lineClr + "33");
+      grad.addColorStop(1, lineClr + "00");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(xOf(tMin), canvas.height - PB);
+      vis.forEach((p) => ctx.lineTo(xOf(p.t), yOf(p.v)));
+      ctx.lineTo(xOf(tMax), canvas.height - PB);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = lineClr;
+      ctx.lineWidth = 1.5 * DPR;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      vis.forEach((p, i) => i === 0 ? ctx.moveTo(xOf(p.t), yOf(p.v)) : ctx.lineTo(xOf(p.t), yOf(p.v)));
+      ctx.stroke();
+      if (showXLabels) {
+        ctx.fillStyle = "#484f58";
+        ctx.textAlign = "center";
+        ctx.font = `${8 * DPR}px system-ui,sans-serif`;
+        const n = Math.min(vis.length - 1, Math.max(2, Math.floor(W / 80)));
+        for (let i = 0; i <= n; i++) {
+          const idx = Math.round(i / n * (vis.length - 1));
+          ctx.fillText(xFmt(vis[idx].t), xOf(vis[idx].t), canvas.height - 2 * DPR);
+        }
+      }
+      _L = { vis, xOf, yOf, tMin, tMax, pW, pH, PT, PB, PL, PR, lineClr, DPR, cW: canvas.width, cH: canvas.height, W };
+    }
+    function _crosshair(pt) {
+      if (!_L) return;
+      const { xOf, yOf, PT, PB, PL, PR, lineClr, DPR: DPR2, cW, cH } = _L;
+      const ctx = canvas.getContext("2d");
+      const cx = xOf(pt.t), cy = yOf(pt.v);
+      ctx.setLineDash([3 * DPR2, 3 * DPR2]);
+      ctx.strokeStyle = "rgba(180,180,180,0.22)";
+      ctx.lineWidth = DPR2;
+      ctx.beginPath();
+      ctx.moveTo(cx, PT);
+      ctx.lineTo(cx, cH - PB);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(PL, cy);
+      ctx.lineTo(cW - PR, cy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = lineClr;
+      ctx.strokeStyle = "#0d1117";
+      ctx.lineWidth = 2 * DPR2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3.5 * DPR2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+    function _nearest(mx) {
+      if (!_L) return null;
+      const { vis, tMin, tMax, pW, PL, DPR: DPR2 } = _L;
+      const tAt = tMin + (mx * DPR2 - PL) / pW * (tMax - tMin);
+      let best = null, bestD = Infinity;
+      vis.forEach((p) => {
+        const d = Math.abs(p.t - tAt);
+        if (d < bestD) {
+          bestD = d;
+          best = p;
+        }
+      });
+      return best;
+    }
+    canvas.addEventListener("mousemove", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+      const pt = _nearest(mx);
+      if (!pt || !_L) return;
+      draw();
+      _crosshair(pt);
+      const vis = _L.vis;
+      const pct = vis.length > 1 ? ((pt.v - vis[0].v) / vis[0].v * 100).toFixed(1) : null;
+      const pctHtml = pct != null ? ` <span class="iyc-tt-p" style="color:${parseFloat(pct) >= 0 ? "var(--success)" : "var(--danger)"}">${parseFloat(pct) >= 0 ? "+" : ""}${pct}%</span>` : "";
+      tt.innerHTML = `<span class="iyc-tt-x">${xFmt(pt.t)}</span> <span class="iyc-tt-v">${yFmt(pt.v)}</span>${pctHtml}`;
+      tt.style.display = "block";
+      const tw = tt.offsetWidth, th = tt.offsetHeight;
+      let tx = mx - tw / 2;
+      if (tx < 0) tx = 0;
+      if (tx + tw > rect.width) tx = rect.width - tw;
+      tt.style.left = tx + "px";
+      tt.style.top = (my < rect.height / 2 ? my + 12 : my - th - 6) + "px";
+    });
+    canvas.addEventListener("mouseleave", () => {
+      tt.style.display = "none";
+      draw();
+    });
+    canvas.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      if (!ranges?.length || !btnRow) return;
+      const btns = [...btnRow.querySelectorAll(".iyc-range")];
+      const cur = btns.findIndex((b) => +b.dataset.days === activeDays);
+      const next = Math.max(0, Math.min(btns.length - 1, cur + (e.deltaY > 0 ? 1 : -1)));
+      if (next !== cur) btns[next].click();
+    }, { passive: false });
+    const ro = new ResizeObserver(() => draw());
+    ro.observe(containerEl);
+    draw();
+    return { draw, destroy: () => ro.disconnect() };
+  }
+  var init_iy_chart = __esm({
+    "src/iy-chart.js"() {
+    }
+  });
+
+  // src/corporations-list.js
+  function initCorporationsList(callbacks) {
+    _openCompanyWikiPanel = callbacks.openCompanyWikiPanel || _openCompanyWikiPanel;
+  }
+  function buildGlobalCorpList() {
+    S.globalCorpList = [];
+    const _globalSeenQids = /* @__PURE__ */ new Set();
+    for (const [qid, companies] of Object.entries(S.companiesData)) {
+      const city = S.cityByQid.get(qid);
+      const cityName = city ? city.name : "\u2014";
+      const country = city ? city.country || "" : "";
+      for (const co of companies) {
+        if (co.qid && _globalSeenQids.has(co.qid)) continue;
+        if (co.qid) _globalSeenQids.add(co.qid);
+        const fallbackCur = city ? ISO2_TO_CURRENCY[city.iso] || null : null;
+        let revenueUSD = co.revenue ? toUSD(co.revenue, co.revenue_currency || fallbackCur) : 0;
+        if (revenueUSD > 5e12 && fallbackCur && fallbackCur !== co.revenue_currency) {
+          const altUSD = toUSD(co.revenue, fallbackCur);
+          if (altUSD > 0 && altUSD < revenueUSD) revenueUSD = altUSD;
+        }
+        S.globalCorpList.push({ co, cityName, country, cityQid: qid, revenueUSD });
+      }
+    }
+    const countryCounts = {};
+    S.globalCorpList.forEach((e) => {
+      if (e.country) countryCounts[e.country] = (countryCounts[e.country] || 0) + 1;
+    });
+    const countries = Object.keys(countryCounts).sort();
+    const cDrop = document.getElementById("gcorp-country");
+    _populateCountDropdown(cDrop, "All countries", "", countries, countryCounts, S.globalCorpList.length);
+    const industryCounts = {};
+    S.globalCorpList.forEach((e) => {
+      if (e.co && e.co.industry) industryCounts[e.co.industry] = (industryCounts[e.co.industry] || 0) + 1;
+    });
+    const industries = Object.keys(industryCounts).sort();
+    const iDrop = document.getElementById("gcorp-industry");
+    _populateCountDropdown(iDrop, "All industries", "", industries, industryCounts, S.globalCorpList.length);
+    renderGlobalCorpList();
+    if (window.innerWidth <= 768) {
+      const activeTab = document.querySelector(".list-tab.active");
+      document.getElementById("global-corp-panel").style.display = activeTab && activeTab.dataset.tab === "corps" ? "" : "none";
+    }
+  }
+  function _gcorpFinJson2(co) {
+    const detail = S.companiesDetailData?.[co.qid] || {};
+    return escHtml(JSON.stringify({
+      qid: co.qid || null,
+      description: detail.description || null,
+      industry: co.industry || null,
+      exchange: co.exchange || null,
+      ticker: co.ticker || null,
+      traded_as: detail.traded_as || null,
+      founded: co.founded || null,
+      company_type: co.company_type || null,
+      website: detail.website || null,
+      ceo: detail.ceo || null,
+      key_people: detail.key_people || null,
+      founders: detail.founders || null,
+      parent_org: detail.parent_org || null,
+      products: detail.products || null,
+      subsidiaries: detail.subsidiaries || null,
+      employees: co.employees || null,
+      employees_history: detail.employees_history || [],
+      revenue: co.revenue || null,
+      revenue_year: co.revenue_year || null,
+      revenue_currency: co.revenue_currency || null,
+      revenue_history: detail.revenue_history || [],
+      net_income: co.net_income || null,
+      net_income_currency: co.net_income_currency || null,
+      net_income_history: detail.net_income_history || [],
+      operating_income: detail.operating_income || null,
+      operating_income_currency: detail.operating_income_currency || null,
+      operating_income_history: detail.operating_income_history || [],
+      total_assets: detail.total_assets || null,
+      total_assets_currency: detail.total_assets_currency || null,
+      total_assets_history: detail.total_assets_history || [],
+      total_equity: detail.total_equity || null,
+      total_equity_currency: detail.total_equity_currency || null,
+      total_equity_history: detail.total_equity_history || [],
+      market_cap: co.market_cap || null,
+      market_cap_year: co.market_cap_year || null,
+      market_cap_currency: co.market_cap_currency || null,
+      analyst_rating: detail.analyst_rating || null,
+      analyst_target_price: detail.analyst_target_price || null,
+      analyst_count: detail.analyst_count || null,
+      gross_margin: detail.gross_margin || null,
+      operating_margin: detail.operating_margin || null,
+      profit_margin: detail.profit_margin || null,
+      return_on_equity: detail.return_on_equity || null,
+      beta: detail.beta || null,
+      pe_forward: detail.pe_forward || null
+    }));
+  }
+  function renderGlobalCorpList() {
+    const q = S.gcorpQuery.toLowerCase();
+    let list = S.globalCorpList.filter((e) => {
+      if (q && !e.co.name.toLowerCase().includes(q) && !e.cityName.toLowerCase().includes(q) && !e.country.toLowerCase().includes(q)) return false;
+      if (S.gcorpCountry && e.country !== S.gcorpCountry) return false;
+      if (S.gcorpIndustry && e.co.industry !== S.gcorpIndustry) return false;
+      return true;
+    });
+    list.sort((a, b) => {
+      if (S.gcorpSort === "revenue_usd") return (b.revenueUSD || 0) - (a.revenueUSD || 0);
+      if (S.gcorpSort === "employees") return (b.co.employees || 0) - (a.co.employees || 0);
+      if (S.gcorpSort === "country") return (a.country || "").localeCompare(b.country || "");
+      return a.co.name.localeCompare(b.co.name);
+    });
+    const total = list.length;
+    const visible = list.slice(0, S.globalCorpVis);
+    document.getElementById("gcorp-count").textContent = total.toLocaleString() + " corporation" + (total !== 1 ? "s" : "");
+    const tbody = document.getElementById("gcorp-tbody");
+    tbody.innerHTML = visible.map(({ co, cityName, country, cityQid, revenueUSD }) => {
+      const wikiAttrs = co.wikipedia ? ` data-wiki="${escAttr(co.wikipedia)}" data-name="${escAttr(co.name)}"` : ` data-name="${escAttr(co.name)}"`;
+      let revDisp;
+      if (revenueUSD > 0) {
+        revDisp = `$${fmtRevenue(revenueUSD)}`;
+      } else if (co.revenue) {
+        const curLabel = co.revenue_currency && co.revenue_currency !== "USD" ? ` ${escHtml(co.revenue_currency)}` : "";
+        revDisp = `${fmtRevenue(co.revenue)}${curLabel}`;
+      } else {
+        revDisp = "\u2014";
+      }
+      const empDisp = fmtEmployees(co.employees) || "\u2014";
+      const location = [cityName, country].filter(Boolean).join(", ");
+      return `<tr${wikiAttrs} data-fin="${_gcorpFinJson2(co)}" data-qid="${escAttr(cityQid)}" data-city="${escAttr(cityName)}" onclick="gcorpRowClick(this)">
+      <td class="gcorp-name-cell"><span class="gcorp-card-row1"><span class="gcorp-card-name">${escHtml(co.name)}</span><span class="gcorp-card-rev">${revDisp}</span></span><span class="gcorp-card-row2"><span class="gcorp-card-loc">${escHtml(location || "\u2014")}${co.industry ? " \xB7 " + escHtml(co.industry) : ""}</span><span class="gcorp-card-emp">${empDisp !== "\u2014" ? empDisp : ""}</span></span></td>
+      <td class="gcorp-city-cell">${escHtml(cityName)}</td>
+      <td class="gcorp-country-cell">${escHtml(country || "\u2014")}</td>
+      <td class="gcorp-industry-cell">${co.industry ? escHtml(co.industry) : "\u2014"}</td>
+      <td class="gcorp-num">${revDisp}</td>
+      <td class="gcorp-neutral">${empDisp}</td>
+    </tr>`;
+    }).join("");
+    const moreRow = document.getElementById("gcorp-more-row");
+    if (total > S.globalCorpVis) {
+      moreRow.style.display = "";
+      document.getElementById("gcorp-more-btn").textContent = `Show ${Math.min(GCORP_PAGE, total - S.globalCorpVis)} more (${(total - S.globalCorpVis).toLocaleString()} remaining)`;
+    } else {
+      moreRow.style.display = "none";
+    }
+  }
+  function gcorpShowMore() {
+    S.globalCorpVis += GCORP_PAGE;
+    renderGlobalCorpList();
+  }
+  function gcorpQueryChanged(v) {
+    S.gcorpQuery = v;
+    S.globalCorpVis = GCORP_PAGE;
+    renderGlobalCorpList();
+  }
+  function _populateCountDropdown(el, allLabel, allValue, items, counts, totalCount) {
+    const label = el.querySelector(".count-dropdown-label");
+    const count = el.querySelector(".count-dropdown-count");
+    const menu = el.querySelector(".count-dropdown-menu");
+    label.textContent = allLabel;
+    count.textContent = totalCount;
+    menu.innerHTML = "";
+    const allItem = document.createElement("div");
+    allItem.className = "count-dropdown-item active";
+    allItem.dataset.value = allValue;
+    allItem.innerHTML = `<span class="count-dropdown-item-name">${allLabel}</span><span class="count-dropdown-item-count">${totalCount}</span>`;
+    allItem.addEventListener("click", (e) => {
+      e.stopPropagation();
+      _selectCountDropdownItem(el, allValue, allLabel, totalCount);
+      el.dataset.value = allValue;
+      if (el.id === "gcorp-country") gcorpCountryChanged(allValue);
+      else gcorpIndustryChanged(allValue);
+    });
+    menu.appendChild(allItem);
+    items.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "count-dropdown-item";
+      div.dataset.value = item;
+      div.innerHTML = `<span class="count-dropdown-item-name">${escHtml(item)}</span><span class="count-dropdown-item-count">${counts[item]}</span>`;
+      div.addEventListener("click", (e) => {
+        e.stopPropagation();
+        _selectCountDropdownItem(el, item, item, counts[item]);
+        el.dataset.value = item;
+        if (el.id === "gcorp-country") gcorpCountryChanged(item);
+        else gcorpIndustryChanged(item);
+      });
+      menu.appendChild(div);
+    });
+  }
+  function _selectCountDropdownItem(el, value, label, count) {
+    el.dataset.value = value;
+    el.querySelector(".count-dropdown-label").textContent = label;
+    el.querySelector(".count-dropdown-count").textContent = count;
+    el.classList.remove("open");
+    el.querySelectorAll(".count-dropdown-item").forEach((i) => {
+      i.classList.toggle("active", i.dataset.value === value);
+    });
+  }
+  function gcorpCountryChanged(v) {
+    S.gcorpCountry = v;
+    S.globalCorpVis = GCORP_PAGE;
+    renderGlobalCorpList();
+  }
+  function gcorpIndustryChanged(v) {
+    S.gcorpIndustry = v;
+    S.globalCorpVis = GCORP_PAGE;
+    renderGlobalCorpList();
+  }
+  function gcorpSortChanged(v) {
+    S.gcorpSort = v;
+    S.globalCorpVis = GCORP_PAGE;
+    renderGlobalCorpList();
+  }
+  function gcorpRowClick(row) {
+    const wikiUrl = row.dataset.wiki;
+    const name = row.dataset.name;
+    const qid = row.dataset.qid;
+    const city = row.dataset.city;
+    if (qid && city) {
+      S.corpCityQid = qid;
+      S.corpCityName = city;
+    }
+    if (!wikiUrl || !name) return;
+    const finData = row.dataset.fin ? JSON.parse(row.dataset.fin) : {};
+    const titleMatch = wikiUrl.match(/\/wiki\/([^#?]+)/);
+    if (!titleMatch) return;
+    _openCompanyWikiPanel(decodeURIComponent(titleMatch[1]), name, wikiUrl, finData);
+  }
+  var _openCompanyWikiPanel, GCORP_PAGE;
+  var init_corporations_list = __esm({
+    "src/corporations-list.js"() {
+      init_state();
+      init_utils();
+      init_fx_sidebar();
+      init_constants();
+      _openCompanyWikiPanel = () => {
+      };
+      GCORP_PAGE = 100;
+      document.addEventListener("click", (e) => {
+        const trigger = e.target.closest(".count-dropdown-trigger");
+        if (trigger) {
+          const dd = trigger.parentElement;
+          document.querySelectorAll(".count-dropdown.open").forEach((d) => {
+            if (d !== dd) d.classList.remove("open");
+          });
+          dd.classList.toggle("open");
+          return;
+        }
+        document.querySelectorAll(".count-dropdown.open").forEach((d) => d.classList.remove("open"));
+      });
+    }
+  });
+
   // src/choro-defs.js
   var CHORO_INDICATORS;
   var init_choro_defs = __esm({
@@ -1553,12 +2523,12 @@
     _eurostatLoader.ensure();
     document.getElementById("filter-panel").classList.add("open");
     document.getElementById("filter-fab").classList.add("active");
-    _mobileBackdropOn2();
+    _mobileBackdropOn3();
   }
   function closeFilterPanel() {
     document.getElementById("filter-panel").classList.remove("open");
     document.getElementById("filter-fab").classList.remove("active");
-    _mobileBackdropOff2();
+    _mobileBackdropOff3();
   }
   function _updateDotControls() {
     const active = _anyFilterActive() || !!S._heatmapMetric;
@@ -2229,7 +3199,7 @@
         if (corpsPanel.classList.contains("panel-open")) {
           corpsPanel.classList.remove("panel-open");
           corpsPanel.style.display = "none";
-          _mobileBackdropOff2();
+          _mobileBackdropOff3();
           document.querySelectorAll(".list-tab").forEach((b) => b.classList.remove("active"));
           return;
         }
@@ -2241,13 +3211,13 @@
         }
         corpsPanel.style.display = "";
         corpsPanel.classList.add("panel-open");
-        _mobileBackdropOn2();
+        _mobileBackdropOn3();
         document.querySelectorAll(".list-tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === "corps"));
       } else {
         if (citiesPanel.classList.contains("panel-open")) {
           citiesPanel.style.display = "none";
           citiesPanel.classList.remove("panel-open");
-          _mobileBackdropOff2();
+          _mobileBackdropOff3();
           document.querySelectorAll(".list-tab").forEach((b) => b.classList.remove("active"));
           return;
         }
@@ -2255,7 +3225,7 @@
         corpsPanel.style.display = "none";
         citiesPanel.style.display = "";
         citiesPanel.classList.add("panel-open");
-        _mobileBackdropOn2();
+        _mobileBackdropOn3();
         document.querySelectorAll(".list-tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === "cities"));
       }
       return;
@@ -2433,343 +3403,8 @@
     carStop();
     document.getElementById("wiki-sidebar").classList.remove("open");
     closeStatsPanel();
-    _mobileBackdropOff2();
+    _mobileBackdropOff3();
     _updateHash();
-  }
-  function closeStatsPanel() {
-    const _sp = document.getElementById("stats-panel");
-    if (_sp) {
-      _sp.classList.remove("open");
-      _sp.style.right = "";
-    }
-    _mobileBackdropOff2();
-    document.querySelectorAll(".census-stat-clickable.stats-active, .info-chip-clickable.stats-active").forEach((el) => el.classList.remove("stats-active"));
-    S._activeStatMetric = null;
-    S._statsCurrent = null;
-    S._statsPoints = [];
-  }
-  function setStatsScope(scope) {
-    S._statsScope = scope;
-    if (S._statsCurrent) _renderStatsPanel();
-  }
-  function openStatsPanel(metric, qid) {
-    if (S._activeStatMetric === metric + ":" + qid) {
-      closeStatsPanel();
-      return;
-    }
-    S._activeStatMetric = metric + ":" + qid;
-    S._statsCurrent = { metric, qid };
-    _renderStatsPanel();
-    var radarPane = metric.indexOf("wb_energy_") === 0 ? "energy" : null;
-    if (radarPane) {
-      var btn = document.querySelector('.cp-radar-tab[onclick*="' + radarPane + '"]');
-      if (btn && !btn.classList.contains("cp-radar-tab-active")) _switchRadarTab(btn, radarPane);
-    }
-  }
-  function _renderStatsPanel() {
-    const { metric, qid } = S._statsCurrent;
-    const censusDef = STAT_DEFS[metric];
-    const cityDef = CITY_STAT_DEFS[metric];
-    const wbDef = WB_STAT_DEFS[metric];
-    const eurostatDef = EUROSTAT_STAT_DEFS[metric];
-    const japanDef = JAPAN_PREF_STAT_DEFS[metric];
-    const corpDef = CORP_STAT_DEFS[metric];
-    const def = censusDef || cityDef || wbDef || eurostatDef || japanDef || corpDef;
-    if (!def) return;
-    const isCityStat = !!cityDef;
-    const isWbStat = !!wbDef;
-    const isEurostatStat = !!eurostatDef;
-    const isJapanPrefStat = !!japanDef;
-    const isCorpStat = !!corpDef;
-    document.querySelectorAll(".census-stat-clickable.stats-active, .info-chip-clickable.stats-active, .wb-chip-clickable.stats-active").forEach((el) => el.classList.remove("stats-active"));
-    document.querySelectorAll(`[onclick*="openStatsPanel('${metric}'"]`).forEach((el) => el.classList.add("stats-active"));
-    const selfCity = isWbStat ? null : S.cityByQid.get(qid);
-    const selfIso = isWbStat ? qid : selfCity?.iso || "";
-    const selfState = selfCity?.admin || "";
-    const selfCountry = isWbStat ? S.countryData[qid]?.name || qid : selfCity?.country || selfIso;
-    const points = [];
-    if (isWbStat) {
-      if (wbDef.src === "oecd") {
-        for (const [iso2, odata] of Object.entries(S.oecdData)) {
-          if (!odata) continue;
-          const rawVal = odata[wbDef.key];
-          if (rawVal == null || isNaN(rawVal)) continue;
-          const cdata = S.countryData[iso2];
-          points.push({ qid: iso2, val: rawVal, name: cdata && cdata.name || iso2, region: cdata && cdata.region || "", iso: iso2 });
-        }
-      } else if (wbDef.src === "eci") {
-        for (const [iso2, edata] of Object.entries(S.eciData)) {
-          if (!edata) continue;
-          const rawVal = edata[wbDef.key];
-          if (rawVal == null || isNaN(rawVal)) continue;
-          const cdata = S.countryData[iso2];
-          points.push({ qid: iso2, val: rawVal, name: cdata && cdata.name || iso2, region: cdata && cdata.region || "", iso: iso2 });
-        }
-      } else {
-        for (const [iso2, cdata] of Object.entries(S.countryData)) {
-          if (!cdata || !cdata.region || cdata.region === "Aggregates") continue;
-          const rawVal = cdata[wbDef.key];
-          if (rawVal == null || isNaN(rawVal)) continue;
-          points.push({ qid: iso2, val: rawVal, name: cdata.name || iso2, region: cdata.region || "", iso: iso2 });
-        }
-      }
-    } else if (isCityStat) {
-      const pool = S._statsScope === "country" && selfIso ? S.allCities.filter((c) => c.iso === selfIso) : S.allCities;
-      for (const c of pool) {
-        const val = def.key(c);
-        if (val == null || isNaN(val)) continue;
-        points.push({ qid: c.qid, val, name: c.name, state: c.admin || "", iso: c.iso || "", country: c.country || "" });
-      }
-    } else if (isJapanPrefStat) {
-      const jpCities = S.allCities.filter((c) => c.iso === "JP");
-      const prefRepCity = {};
-      for (const c of jpCities) {
-        const match = _lookupJapanPref(c);
-        if (!match) continue;
-        const existing = prefRepCity[match.name];
-        if (!existing || (c.pop || 0) > (existing.pop || 0)) prefRepCity[match.name] = c;
-      }
-      for (const [prefName, data] of Object.entries(S.japanPrefData)) {
-        const val = data[japanDef.key];
-        if (val == null || isNaN(val)) continue;
-        const repCity = prefRepCity[prefName];
-        if (!repCity) continue;
-        points.push({ qid: repCity.qid, val, name: prefName, state: "Japan", iso: "JP", country: "Japan", prefName });
-      }
-    } else if (isEurostatStat) {
-      for (const [cqid, data] of Object.entries(S.eurostatCities)) {
-        if (!data) continue;
-        const val = data[eurostatDef.key];
-        if (val == null || isNaN(val)) continue;
-        const city = S.cityByQid.get(cqid);
-        if (!city) continue;
-        points.push({ qid: cqid, val, name: city.name, state: data.country || city.iso || "", iso: city.iso || "", country: city.country || city.iso || "" });
-      }
-    } else if (isCorpStat) {
-      for (const arr of Object.values(S.companiesData)) {
-        for (const co of arr) {
-          if (!co.qid) continue;
-          const val = corpDef.key(co);
-          if (val == null || isNaN(val) || val <= 0) continue;
-          points.push({ qid: co.qid, val, name: co.name, state: co.industry || "", iso: "", country: co.exchange || "" });
-        }
-      }
-    } else {
-      const src = def.src === "acs" ? S.censusCities : S.censusBusiness;
-      for (const [cqid, data] of Object.entries(src)) {
-        if (!data) continue;
-        const val = typeof def.key === "function" ? def.key(data) : data[def.key];
-        if (val == null || isNaN(val)) continue;
-        const city = S.cityByQid.get(cqid);
-        if (!city) continue;
-        points.push({ qid: cqid, val, name: city.name, state: city.admin || "", iso: "US", country: "United States" });
-      }
-    }
-    if (!points.length) return;
-    const ascending = def.higherBetter === false;
-    points.sort((a, b) => ascending ? a.val - b.val : b.val - a.val);
-    points.forEach((p, i) => {
-      p.rank = i + 1;
-    });
-    const selfJapanPref = isJapanPrefStat ? _lookupJapanPref(selfCity)?.name : null;
-    const entityIdx = isWbStat ? points.findIndex((p) => p.qid === selfIso) : isJapanPrefStat ? points.findIndex((p) => p.prefName === selfJapanPref) : points.findIndex((p) => p.qid === qid);
-    if (entityIdx < 0) {
-      closeStatsPanel();
-      return;
-    }
-    const cp = points[entityIdx];
-    S._statsPoints = points;
-    S._statsWinStart = Math.max(0, entityIdx - 5);
-    S._statsWinEnd = Math.min(points.length - 1, entityIdx + 5);
-    let subRank = 0, subTotal = 0, subLabel = "";
-    if (isWbStat && cp.region) {
-      const regionPts = points.filter((p) => p.region === cp.region);
-      subRank = regionPts.findIndex((p) => p.qid === cp.qid) + 1;
-      subTotal = regionPts.length;
-      subLabel = cp.region;
-    } else if (isEurostatStat && selfIso) {
-      const countryPts = points.filter((p) => p.iso === selfIso);
-      subRank = countryPts.findIndex((p) => p.qid === qid) + 1;
-      subTotal = countryPts.length;
-      subLabel = selfCountry || selfIso;
-    } else if (isCityStat && S._statsScope === "world" && selfIso) {
-      const countryPts = points.filter((p) => p.iso === selfIso);
-      subRank = countryPts.findIndex((p) => p.qid === qid) + 1;
-      subTotal = countryPts.length;
-      subLabel = selfCountry;
-    } else if (!isCityStat && !isWbStat && !isEurostatStat && selfState) {
-      const statePts = points.filter((p) => p.state === selfState);
-      subRank = statePts.findIndex((p) => p.qid === qid) + 1;
-      subTotal = statePts.length;
-      subLabel = selfState;
-    }
-    const vals = points.map((p) => p.val);
-    const minV = Math.min(...vals), maxV = Math.max(...vals);
-    const BUCKETS = 14;
-    const bSize = (maxV - minV) / BUCKETS || 1;
-    const counts = Array(BUCKETS).fill(0);
-    const entityBkt = Math.min(BUCKETS - 1, Math.floor((cp.val - minV) / bSize));
-    for (const { val } of points) counts[Math.min(BUCKETS - 1, Math.floor((val - minV) / bSize))]++;
-    const maxCnt = Math.max(...counts, 1);
-    const HW = 262, HH = 56, HPAD = 2;
-    const bw = (HW - HPAD * 2) / BUCKETS;
-    const histBars = counts.map((cnt, i) => {
-      const bh = Math.max(2, cnt / maxCnt * (HH - HPAD * 2));
-      const x = HPAD + i * bw, y = HH - HPAD - bh;
-      return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw - 1).toFixed(1)}" height="${bh.toFixed(1)}" rx="1.5"
-      fill="${i === entityBkt ? "#f0a500" : "#2a8ee8"}" opacity="${i === entityBkt ? 1 : 0.45}"/>`;
-    }).join("");
-    const markerX = HPAD + (entityBkt + 0.5) * bw;
-    const histSvg = `<svg viewBox="0 0 ${HW} ${HH + 14}" width="${HW}" height="${HH + 14}" style="display:block">
-    ${histBars}
-    <line x1="${markerX.toFixed(1)}" y1="0" x2="${markerX.toFixed(1)}" y2="${HH}" stroke="#f0a500" stroke-width="1.5" stroke-dasharray="3 2"/>
-    <text x="${HPAD}" y="${HH + 11}" font-size="7" fill="#6e7681" text-anchor="start">${def.fmt(minV)}</text>
-    <text x="${HW / 2}" y="${HH + 11}" font-size="7" fill="#6e7681" text-anchor="middle">${def.fmt((minV + maxV) / 2)}</text>
-    <text x="${HW - HPAD}" y="${HH + 11}" font-size="7" fill="#6e7681" text-anchor="end">${def.fmt(maxV)}</text>
-  </svg>`;
-    const note = def.higherBetter === true ? "\u2191 higher ranked = higher value" : def.higherBetter === false ? "\u2191 higher ranked = lower value" : "";
-    const primaryLabel = isWbStat ? "countries worldwide" : isJapanPrefStat ? "Japanese prefectures" : isEurostatStat ? "European cities (Eurostat)" : isCityStat ? S._statsScope === "world" ? "worldwide" : escHtml(selfCountry) : isCorpStat ? "companies worldwide" : "US cities with Census data";
-    const scopeToggle = isCityStat ? `
-    <div id="stats-scope-row">
-      <button class="stats-scope-btn${S._statsScope === "world" ? " active" : ""}" onclick="setStatsScope('world')">\u{1F30D} World</button>
-      <button class="stats-scope-btn${S._statsScope === "country" ? " active" : ""}" onclick="setStatsScope('country')"
-        >\u{1F4CD} ${escHtml(selfCountry)}</button>
-    </div>` : "";
-    let trendChartHtml = "";
-    if (isJapanPrefStat && selfCity) {
-      const jpMatch = _lookupJapanPref(selfCity);
-      const histKey = metric === "japan_perCapitaIncome" ? "perCapitaIncomeHistory" : "gdpHistory";
-      const history2 = jpMatch?.data?.[histKey];
-      if (history2 && history2.length >= 2) {
-        const TW = 262, TH = 54, TPAD = 4;
-        const xs = history2.map(([y]) => y);
-        const vs = history2.map(([, v]) => v);
-        const minX = Math.min(...xs), maxX = Math.max(...xs);
-        const minVt = Math.min(...vs), maxVt = Math.max(...vs);
-        const rangeV = maxVt - minVt || 1;
-        const toX = (x) => TPAD + (x - minX) / (maxX - minX || 1) * (TW - TPAD * 2);
-        const toY = (v) => TH - TPAD - (v - minVt) / rangeV * (TH - TPAD * 2);
-        const pts = history2.map(([x, v]) => `${toX(x).toFixed(1)},${toY(v).toFixed(1)}`).join(" ");
-        const dots = history2.map(([x, v]) => `<circle cx="${toX(x).toFixed(1)}" cy="${toY(v).toFixed(1)}" r="1.8" fill="#f0a500" opacity="0.7"/>`).join("");
-        const firstLbl = `${xs[0]}: ${def.fmt(vs[0])}`;
-        const lastLbl = `${xs[xs.length - 1]}: ${def.fmt(vs[vs.length - 1])}`;
-        trendChartHtml = `<div class="stats-trend-wrap">
-        <svg viewBox="0 0 ${TW} ${TH + 16}" width="${TW}" height="${TH + 16}" style="display:block">
-          <polyline points="${pts}" fill="none" stroke="#58a6ff" stroke-width="1.8" stroke-linejoin="round" opacity="0.85"/>
-          ${dots}
-          <text x="${TPAD}" y="${TH + 13}" font-size="7" fill="#6e7681">${escHtml(firstLbl)}</text>
-          <text x="${TW - TPAD}" y="${TH + 13}" font-size="7" fill="#f0a500" text-anchor="end">${escHtml(lastLbl)}</text>
-        </svg>
-      </div>`;
-      }
-    } else if (isEurostatStat && eurostatDef.histKey) {
-      const esRecord = S.eurostatCities[qid];
-      const history2 = esRecord?.[eurostatDef.histKey];
-      if (history2 && history2.length >= 2) {
-        const TW = 262, TH = 54, TPAD = 4;
-        const xs = history2.map(([y]) => y);
-        const vs = history2.map(([, v]) => v);
-        const minX = Math.min(...xs), maxX = Math.max(...xs);
-        const minV2 = Math.min(...vs), maxV2 = Math.max(...vs);
-        const rangeV = maxV2 - minV2 || 1;
-        const toX = (x) => TPAD + (x - minX) / (maxX - minX || 1) * (TW - TPAD * 2);
-        const toY = (v) => TH - TPAD - (v - minV2) / rangeV * (TH - TPAD * 2);
-        const pts = history2.map(([x, v]) => `${toX(x).toFixed(1)},${toY(v).toFixed(1)}`).join(" ");
-        const dots = history2.map(([x, v]) => `<circle cx="${toX(x).toFixed(1)}" cy="${toY(v).toFixed(1)}" r="1.8" fill="#f0a500" opacity="0.7"/>`).join("");
-        const firstLbl = `${xs[0]}: ${def.fmt(vs[0])}`;
-        const lastLbl = `${xs[xs.length - 1]}: ${def.fmt(vs[vs.length - 1])}`;
-        trendChartHtml = `<div class="stats-trend-wrap">
-        <svg viewBox="0 0 ${TW} ${TH + 16}" width="${TW}" height="${TH + 16}" style="display:block">
-          <polyline points="${pts}" fill="none" stroke="#58a6ff" stroke-width="1.8" stroke-linejoin="round" opacity="0.85"/>
-          ${dots}
-          <text x="${TPAD}" y="${TH + 13}" font-size="7" fill="#6e7681">${escHtml(firstLbl)}</text>
-          <text x="${TW - TPAD}" y="${TH + 13}" font-size="7" fill="#f0a500" text-anchor="end">${escHtml(lastLbl)}</text>
-        </svg>
-      </div>`;
-      }
-    }
-    document.getElementById("stats-panel-title").textContent = def.label;
-    document.getElementById("stats-panel-city").textContent = cp.name + (selfState || !isWbStat && selfCountry ? " \xB7 " + (selfState || selfCountry) : "");
-    document.getElementById("stats-panel-body").innerHTML = `
-    ${scopeToggle}
-    ${trendChartHtml}
-    <div class="stats-hist-wrap">${histSvg}</div>
-    <div class="stats-ranks">
-      <div class="stats-rank-badge">
-        <span class="stats-rank-n">#${cp.rank} / ${points.length}</span>
-        <span class="stats-rank-lbl">${primaryLabel}</span>
-      </div>
-      ${subRank > 0 ? `<div class="stats-rank-badge">
-        <span class="stats-rank-n">#${subRank} / ${subTotal}</span>
-        <span class="stats-rank-lbl">${escHtml(subLabel)}</span>
-      </div>` : ""}
-    </div>
-    ${note ? `<div class="stats-note">${note}</div>` : ""}
-    <div id="stats-rank-list-wrap" class="stats-rank-list"></div>
-    <div class="stats-source">${points.length} ${primaryLabel}</div>
-    <div class="stats-source-attr">${_statSourceAttr(metric)}</div>
-  `;
-    const _sp = document.getElementById("stats-panel");
-    const _wikiOpen = document.getElementById("wiki-sidebar")?.classList.contains("open");
-    const _corpOpen = document.getElementById("corp-panel")?.classList.contains("open");
-    const _cpOpen = document.getElementById("country-panel")?.classList.contains("open");
-    const _baseRight = _cpOpen ? 600 : _wikiOpen && _corpOpen ? 880 : _corpOpen ? 460 : 420;
-    _sp.style.right = _baseRight + "px";
-    _sp.classList.add("open");
-    _mobileBackdropOn2();
-    _updateStatsListHtml();
-  }
-  function _updateStatsListHtml() {
-    const metric = S._statsCurrent?.metric;
-    const def = STAT_DEFS[metric] || CITY_STAT_DEFS[metric] || WB_STAT_DEFS[metric] || EUROSTAT_STAT_DEFS[metric] || JAPAN_PREF_STAT_DEFS[metric];
-    const listEl = document.getElementById("stats-rank-list-wrap");
-    if (!listEl || !def || !S._statsPoints.length) return;
-    const { qid } = S._statsCurrent;
-    const isWbStat = !!WB_STAT_DEFS[metric];
-    const isJapanPrefStat = !!JAPAN_PREF_STAT_DEFS[metric];
-    const curId = isWbStat ? S._statsCurrent.qid : qid;
-    const aboveCount = S._statsWinStart;
-    const belowCount = S._statsPoints.length - 1 - S._statsWinEnd;
-    const jpSelfCity = isJapanPrefStat ? S.cityByQid.get(qid) : null;
-    const jpSelfPref = isJapanPrefStat ? _lookupJapanPref(jpSelfCity)?.name : null;
-    const rows = S._statsPoints.slice(S._statsWinStart, S._statsWinEnd + 1).map((p) => {
-      const isCur = isJapanPrefStat ? p.prefName === jpSelfPref : p.qid === curId;
-      const navFn = isWbStat ? escHtml("statsGoToCountry(" + JSON.stringify(p.qid) + ")") : escHtml("statsGoToCity(" + JSON.stringify(p.qid) + ")");
-      const sub = isWbStat ? "" : p.state ? ` \xB7 ${escHtml(p.state)}` : "";
-      return `<div class="stats-rank-row${isCur ? " stats-rank-current" : ""}" onclick="${navFn}">
-      <span class="stats-rank-num">#${p.rank}</span>
-      <span class="stats-rank-name">${escHtml(p.name)}<span class="stats-rank-sub">${sub}</span></span>
-      <span class="stats-rank-val">${def.fmt(p.val)}</span>
-    </div>`;
-    }).join("");
-    listEl.innerHTML = `
-    ${aboveCount > 0 ? `<button class="stats-rank-more" onclick="statsExpandUp()">\u25B2 ${aboveCount.toLocaleString()} more above</button>` : ""}
-    ${rows}
-    ${belowCount > 0 ? `<button class="stats-rank-more" onclick="statsExpandDown()">\u25BC ${belowCount.toLocaleString()} more below</button>` : ""}
-  `;
-    listEl.querySelector(".stats-rank-current")?.scrollIntoView({ block: "nearest" });
-  }
-  function statsExpandUp() {
-    S._statsWinStart = Math.max(0, S._statsWinStart - STATS_WIN);
-    _updateStatsListHtml();
-    document.getElementById("stats-rank-list-wrap")?.scrollTo({ top: 0 });
-  }
-  function statsExpandDown() {
-    S._statsWinEnd = Math.min(S._statsPoints.length - 1, S._statsWinEnd + STATS_WIN);
-    _updateStatsListHtml();
-  }
-  function statsGoToCity(qid) {
-    const city = S.cityByQid.get(qid);
-    if (!city || city.lat == null) return;
-    S.map.flyTo([city.lat, city.lng], Math.max(S.map.getZoom(), 5), { duration: 1 });
-    openWikiSidebar(qid, city.name);
-    if (S._statsCurrent && S._statsCurrent.qid !== qid) openStatsPanel(S._statsCurrent.metric, qid);
-  }
-  function statsGoToCountry(iso2) {
-    const pt = CAPITAL_COORDS[iso2] || countryCentroids[iso2];
-    if (pt) S.map.flyTo(pt, Math.max(S.map.getZoom(), 4), { duration: 1 });
-    if (S._statsCurrent && S._statsCurrent.qid !== iso2) openStatsPanel(S._statsCurrent.metric, iso2);
-    if (typeof openCountryPanel === "function" && S.countryData[iso2]) openCountryPanel(iso2);
   }
   function switchWikiTab(tab) {
     if (!VALID_SIDEBAR_TABS.has(tab)) tab = "info";
@@ -3122,7 +3757,7 @@
     const censusData = city.iso === "US" ? getCensusData(city) : null;
     const businessData = city.iso === "US" ? S.censusBusiness[city.qid] || null : null;
     const eurostatData = S.eurostatCities[city.qid] || null;
-    const japanPref = city.iso === "JP" ? _lookupJapanPref(city) : null;
+    const japanPref = city.iso === "JP" ? _lookupJapanPref2(city) : null;
     const hasCensus = !!(censusData || businessData);
     const hasEurostat = !!eurostatData;
     const hasJapan = !!japanPref;
@@ -3387,7 +4022,7 @@
       coldestTemp: coldest.mean_c ?? (coldest.high_c + coldest.low_c) / 2
     };
   }
-  function _statSourceAttr(metric) {
+  function _statSourceAttr2(metric) {
     var sources = {
       // World Bank
       wb_gdp_per_capita: "World Bank \xB7 WDI (NY.GDP.PCAP.CD)",
@@ -3903,7 +4538,7 @@
     ${sparks}
   </div>`;
   }
-  function _lookupJapanPref(city) {
+  function _lookupJapanPref2(city) {
     if (!city || !Object.keys(S.japanPrefData).length) return null;
     const stripDiac = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     const clean = (s) => stripDiac(s || "").replace(/\s*(Prefecture|Metropolis|Metro|Subprefecture|府|県|都|道)\s*/gi, "").trim().toLowerCase();
@@ -4112,7 +4747,7 @@
     footer.innerHTML = "";
     sidebar.dataset.qid = qid;
     sidebar.classList.add("open");
-    _mobileBackdropOn2();
+    _mobileBackdropOn3();
     _updateHash();
     const city = S.cityByQid.get(qid);
     _univLoader.ensure();
@@ -4349,103 +4984,6 @@
     if (params.city) S._hashRestoreCity = params.city;
     if (params.country) S._hashRestoreCountry = params.country;
   }
-  function _initKeyboardNav() {
-    document.addEventListener("keydown", (e) => {
-      const tag = document.activeElement?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-      if (e.isComposing) return;
-      switch (e.key) {
-        case "Escape": {
-          const panels = [
-            { el: "country-compare-panel", close: () => closeCountryCompare() },
-            { el: "compare-panel", close: () => closeComparePanel() },
-            { el: "wiki-sidebar", check: "open", close: () => closeWikiSidebar() },
-            { el: "country-panel", check: "open", close: () => {
-              document.getElementById("country-panel").classList.remove("open");
-              S._cpCurrentIso2 = null;
-            } },
-            { el: "corp-panel", check: "open", close: () => closeCorpPanel() },
-            { el: "stats-panel", check: "open", close: () => closeStatsPanel() },
-            { el: "trade-panel", check: "open", close: () => closeTradePanelFn() },
-            { el: "filter-panel", check: "open", close: () => toggleFilterPanel() },
-            { el: "fx-sidebar", check: "open", close: () => toggleFxSidebar() },
-            { el: "bookmarks-panel", check: "visible", close: () => toggleBookmarksPanel() }
-          ];
-          for (const p of panels) {
-            const el = document.getElementById(p.el);
-            if (!el) continue;
-            if (p.check === "open" && el.classList.contains("open")) {
-              p.close();
-              e.preventDefault();
-              return;
-            }
-            if (p.check === "visible" && el.classList.contains("visible")) {
-              p.close();
-              e.preventDefault();
-              return;
-            }
-            if (!p.check && el.classList.contains("visible")) {
-              p.close();
-              e.preventDefault();
-              return;
-            }
-          }
-          break;
-        }
-        case "/":
-          e.preventDefault();
-          document.getElementById("city-search-input")?.focus();
-          break;
-        case "?":
-          _toggleKeyboardHelp();
-          break;
-        case "t":
-          toggleTheme();
-          break;
-        case "1":
-        case "2":
-        case "3":
-        case "4": {
-          const tabs = ["info", "overview", "economy", "finance"];
-          const idx = parseInt(e.key) - 1;
-          if (document.getElementById("wiki-sidebar")?.classList.contains("open")) {
-            switchWikiTab(tabs[idx]);
-            e.preventDefault();
-          }
-          break;
-        }
-        case "ArrowLeft":
-        case "ArrowRight": {
-          const sel = document.getElementById("choro-select");
-          if (sel && S.choroOn) {
-            const dir = e.key === "ArrowLeft" ? -1 : 1;
-            const newIdx = Math.max(0, Math.min(sel.options.length - 1, sel.selectedIndex + dir));
-            if (newIdx !== sel.selectedIndex) {
-              sel.selectedIndex = newIdx;
-              sel.dispatchEvent(new Event("change"));
-            }
-            e.preventDefault();
-          }
-          break;
-        }
-      }
-    });
-  }
-  function _toggleKeyboardHelp() {
-    let overlay = document.getElementById("keyboard-help");
-    if (overlay) {
-      overlay.remove();
-      return;
-    }
-    overlay = document.createElement("div");
-    overlay.id = "keyboard-help";
-    overlay.className = "keyboard-help-overlay";
-    overlay.innerHTML = `<div class="keyboard-help-card"><h3>Keyboard Shortcuts</h3><div class="kb-row"><kbd>Esc</kbd> Close topmost panel</div><div class="kb-row"><kbd>/</kbd> Focus search</div><div class="kb-row"><kbd>?</kbd> Toggle this help</div><div class="kb-row"><kbd>t</kbd> Toggle dark/light theme</div><div class="kb-row"><kbd>1-4</kbd> Switch sidebar tabs</div><div class="kb-row"><kbd>\u2190 \u2192</kbd> Cycle choropleth indicator</div><button onclick="document.getElementById('keyboard-help').remove()">Close</button></div>`;
-    overlay.addEventListener("click", (ev) => {
-      if (ev.target === overlay) overlay.remove();
-    });
-    document.body.appendChild(overlay);
-  }
   async function init() {
     showLoading(true, "Loading world S.map\u2026");
     S.map = L.map("map-container", {
@@ -4492,7 +5030,24 @@
     const savedCitiesMode = localStorage.getItem("wdm_citiesMode") || "show";
     if (savedCitiesMode !== "show") setCityDotMode(savedCitiesMode);
     _initPopSlider();
-    _initKeyboardNav();
+    initKeyboardNav({
+      closeCountryCompare,
+      closeComparePanel,
+      closeWikiSidebar,
+      closeCountryPanel: () => {
+        document.getElementById("country-panel").classList.remove("open");
+        S._cpCurrentIso2 = null;
+      },
+      closeCorpPanel,
+      closeStatsPanel,
+      closeTradePanelFn,
+      toggleFilterPanel,
+      toggleFxSidebar,
+      toggleBookmarksPanel,
+      toggleTheme,
+      switchWikiTab
+    });
+    setupKeyboardNav();
     _restoreFromHash();
     window.addEventListener("hashchange", () => _restoreFromHash());
     let _econZoomDebounce = null;
@@ -5131,7 +5686,7 @@
     _cryptoLoader.ensure();
     if (typeof _renderCountryPanel === "function") _renderCountryPanel(iso2);
     document.getElementById("country-panel").classList.add("open");
-    _mobileBackdropOn2();
+    _mobileBackdropOn3();
     _updateHash();
     const _spEl = document.getElementById("stats-panel");
     if (_spEl && _spEl.classList.contains("open")) _spEl.style.right = "600px";
@@ -5156,7 +5711,7 @@
     if (!S._cpCurrentIso2) return;
     S._cpCurrentIso2 = null;
     document.getElementById("country-panel").classList.remove("open");
-    _mobileBackdropOff2();
+    _mobileBackdropOff3();
     _updateHash();
     if (S._cpEscListener) {
       document.removeEventListener("keydown", S._cpEscListener);
@@ -5816,7 +6371,7 @@
     if (!econHtml) return energyHtml;
     return `<div class="cp-radar-card"><div class="cp-radar-tabs"><button class="cp-radar-tab cp-radar-tab-active" onclick="_switchRadarTab(this,'economy')">Economy</button><button class="cp-radar-tab" onclick="_switchRadarTab(this,'energy')">Energy</button></div><div class="cp-radar-pane" data-pane="economy">` + econHtml + '</div><div class="cp-radar-pane cp-radar-pane-hidden" data-pane="energy">' + energyHtml + "</div></div>";
   }
-  function _switchRadarTab(btn, pane) {
+  function _switchRadarTab2(btn, pane) {
     var card = btn;
     while (card && !card.classList.contains("cp-radar-card")) card = card.parentElement;
     if (!card) return;
@@ -6083,7 +6638,7 @@
       if (g.type === "Polygon") g.coordinates.forEach(collect);
       else if (g.type === "MultiPolygon") g.coordinates.forEach((p) => p.forEach(collect));
       if (pts.length) {
-        countryCentroids[iso2] = [
+        countryCentroids2[iso2] = [
           pts.reduce((s, c) => s + c[0], 0) / pts.length,
           pts.reduce((s, c) => s + c[1], 0) / pts.length
         ];
@@ -6167,7 +6722,7 @@
   }
   function drawTradeArrows(iso2, data, year) {
     clearTradeArrows();
-    const targetPt = CAPITAL_COORDS[iso2] || countryCentroids[iso2];
+    const targetPt = CAPITAL_COORDS[iso2] || countryCentroids2[iso2];
     const usPt = CAPITAL_COORDS["US"];
     if (!targetPt) return;
     const row = data.find((d) => d.year === year) || data[data.length - 1];
@@ -6268,7 +6823,7 @@
     _updateTradePanelNumbers(iso2, data, latestYear);
     drawTradeArrows(iso2, data, latestYear);
     document.getElementById("trade-panel").classList.add("open");
-    _mobileBackdropOn2();
+    _mobileBackdropOn3();
   }
   function _updateTradePanelNumbers(iso2, data, year) {
     const row = data.find((d) => d.year === year) || data[data.length - 1];
@@ -6299,7 +6854,7 @@
   function closeTradePanelFn() {
     document.getElementById("trade-panel").classList.remove("open");
     clearTradeArrows();
-    _mobileBackdropOff2();
+    _mobileBackdropOff3();
     if (window._tradChartDestroy) {
       window._tradChartDestroy();
       window._tradChartDestroy = null;
@@ -6744,7 +7299,7 @@
   function closeRegionPanel() {
     var rp = document.getElementById("region-panel");
     if (rp) rp.classList.remove("open");
-    _mobileBackdropOff2();
+    _mobileBackdropOff3();
   }
   function _updateMapLegends() {
     const citiesVisible = S.wikiLayer && S.map.hasLayer(S.wikiLayer) && S.cityDotMode !== "hide";
@@ -8218,7 +8773,7 @@
       if (rank <= 35) return "#f97316";
       return "#ef4444";
     };
-    const countryCentroids2 = {
+    const countryCentroids3 = {
       "IN": { lat: 20.59, lng: 78.96, name: "India" },
       "NG": { lat: 9.08, lng: 8.68, name: "Nigeria" },
       "VN": { lat: 14.06, lng: 108.28, name: "Vietnam" },
@@ -8276,7 +8831,7 @@
       "NZ": { lat: -40.9, lng: 174.89, name: "New Zealand" }
     };
     for (const [code, data] of Object.entries(byCountry)) {
-      const centroid = countryCentroids2[code];
+      const centroid = countryCentroids3[code];
       if (!centroid) continue;
       const color = getAdoptionColor(data.adoption_rank);
       const radius = Math.max(5, Math.min(15, 20 - data.adoption_rank / 3));
@@ -8702,13 +9257,13 @@
       if (layersMenu) layersMenu.style.display = "none";
     }
   }
-  function _mobileBackdropOn2() {
+  function _mobileBackdropOn3() {
     if (window.innerWidth <= 768) {
       const b = document.getElementById("mobile-backdrop");
       if (b) b.classList.add("active");
     }
   }
-  function _mobileBackdropOff2() {
+  function _mobileBackdropOff3() {
     const b = document.getElementById("mobile-backdrop");
     if (b) b.classList.remove("active");
   }
@@ -9035,7 +9590,7 @@
     document.getElementById("corp-sort").value = "revenue";
     document.getElementById("corp-panel").classList.add("open");
     document.getElementById("wiki-sidebar").classList.add("corp-open");
-    _mobileBackdropOn2();
+    _mobileBackdropOn3();
     await _companiesLoader.ensure();
     renderCorpList();
   }
@@ -9048,7 +9603,7 @@
     document.getElementById("corp-sort").value = "revenue";
     document.getElementById("corp-panel").classList.add("open");
     document.getElementById("wiki-sidebar").classList.add("corp-open");
-    _mobileBackdropOn2();
+    _mobileBackdropOn3();
     await _companiesLoader.ensure();
     S.corpOverrideList = cityPoints.flatMap((p) => S.companiesData[p.qid] || []);
     renderCorpList();
@@ -9057,7 +9612,7 @@
     S.corpOverrideList = null;
     document.getElementById("corp-panel").classList.remove("open");
     document.getElementById("wiki-sidebar").classList.remove("corp-open");
-    _mobileBackdropOff2();
+    _mobileBackdropOff3();
   }
   function _onDrawContainerClick(e) {
     if (!S._drawActive) return;
@@ -9340,427 +9895,6 @@
     const titleMatch = wikiUrl.match(/\/wiki\/([^#?]+)/);
     if (!titleMatch) return;
     openCompanyWikiPanel(decodeURIComponent(titleMatch[1]), name, wikiUrl, finData);
-  }
-  function buildGlobalCorpList() {
-    S.globalCorpList = [];
-    const _globalSeenQids = /* @__PURE__ */ new Set();
-    for (const [qid, companies] of Object.entries(S.companiesData)) {
-      const city = S.cityByQid.get(qid);
-      const cityName = city ? city.name : "\u2014";
-      const country = city ? city.country || "" : "";
-      for (const co of companies) {
-        if (co.qid && _globalSeenQids.has(co.qid)) continue;
-        if (co.qid) _globalSeenQids.add(co.qid);
-        const fallbackCur = city ? ISO2_TO_CURRENCY[city.iso] || null : null;
-        let revenueUSD = co.revenue ? toUSD(co.revenue, co.revenue_currency || fallbackCur) : 0;
-        if (revenueUSD > 5e12 && fallbackCur && fallbackCur !== co.revenue_currency) {
-          const altUSD = toUSD(co.revenue, fallbackCur);
-          if (altUSD > 0 && altUSD < revenueUSD) revenueUSD = altUSD;
-        }
-        S.globalCorpList.push({ co, cityName, country, cityQid: qid, revenueUSD });
-      }
-    }
-    const countryCounts = {};
-    S.globalCorpList.forEach((e) => {
-      if (e.country) countryCounts[e.country] = (countryCounts[e.country] || 0) + 1;
-    });
-    const countries = Object.keys(countryCounts).sort();
-    const cDrop = document.getElementById("gcorp-country");
-    _populateCountDropdown(cDrop, "All countries", "", countries, countryCounts, S.globalCorpList.length);
-    const industryCounts = {};
-    S.globalCorpList.forEach((e) => {
-      if (e.co && e.co.industry) industryCounts[e.co.industry] = (industryCounts[e.co.industry] || 0) + 1;
-    });
-    const industries = Object.keys(industryCounts).sort();
-    const iDrop = document.getElementById("gcorp-industry");
-    _populateCountDropdown(iDrop, "All industries", "", industries, industryCounts, S.globalCorpList.length);
-    renderGlobalCorpList();
-    if (window.innerWidth <= 768) {
-      const activeTab = document.querySelector(".list-tab.active");
-      document.getElementById("global-corp-panel").style.display = activeTab && activeTab.dataset.tab === "corps" ? "" : "none";
-    }
-  }
-  function _gcorpFinJson(co) {
-    const detail = S.companiesDetailData?.[co.qid] || {};
-    return escHtml(JSON.stringify({
-      qid: co.qid || null,
-      description: detail.description || null,
-      industry: co.industry || null,
-      exchange: co.exchange || null,
-      ticker: co.ticker || null,
-      traded_as: detail.traded_as || null,
-      founded: co.founded || null,
-      company_type: co.company_type || null,
-      website: detail.website || null,
-      ceo: detail.ceo || null,
-      key_people: detail.key_people || null,
-      founders: detail.founders || null,
-      parent_org: detail.parent_org || null,
-      products: detail.products || null,
-      subsidiaries: detail.subsidiaries || null,
-      employees: co.employees || null,
-      employees_history: detail.employees_history || [],
-      revenue: co.revenue || null,
-      revenue_year: co.revenue_year || null,
-      revenue_currency: co.revenue_currency || null,
-      revenue_history: detail.revenue_history || [],
-      net_income: co.net_income || null,
-      net_income_currency: co.net_income_currency || null,
-      net_income_history: detail.net_income_history || [],
-      operating_income: detail.operating_income || null,
-      operating_income_currency: detail.operating_income_currency || null,
-      operating_income_history: detail.operating_income_history || [],
-      total_assets: detail.total_assets || null,
-      total_assets_currency: detail.total_assets_currency || null,
-      total_assets_history: detail.total_assets_history || [],
-      total_equity: detail.total_equity || null,
-      total_equity_currency: detail.total_equity_currency || null,
-      total_equity_history: detail.total_equity_history || [],
-      market_cap: co.market_cap || null,
-      market_cap_year: co.market_cap_year || null,
-      market_cap_currency: co.market_cap_currency || null,
-      analyst_rating: detail.analyst_rating || null,
-      analyst_target_price: detail.analyst_target_price || null,
-      analyst_count: detail.analyst_count || null,
-      gross_margin: detail.gross_margin || null,
-      operating_margin: detail.operating_margin || null,
-      profit_margin: detail.profit_margin || null,
-      return_on_equity: detail.return_on_equity || null,
-      beta: detail.beta || null,
-      pe_forward: detail.pe_forward || null
-    }));
-  }
-  function renderGlobalCorpList() {
-    const q = S.gcorpQuery.toLowerCase();
-    let list = S.globalCorpList.filter((e) => {
-      if (q && !e.co.name.toLowerCase().includes(q) && !e.cityName.toLowerCase().includes(q) && !e.country.toLowerCase().includes(q)) return false;
-      if (S.gcorpCountry && e.country !== S.gcorpCountry) return false;
-      if (S.gcorpIndustry && e.co.industry !== S.gcorpIndustry) return false;
-      return true;
-    });
-    list.sort((a, b) => {
-      if (S.gcorpSort === "revenue_usd") return (b.revenueUSD || 0) - (a.revenueUSD || 0);
-      if (S.gcorpSort === "employees") return (b.co.employees || 0) - (a.co.employees || 0);
-      if (S.gcorpSort === "country") return (a.country || "").localeCompare(b.country || "");
-      return a.co.name.localeCompare(b.co.name);
-    });
-    const total = list.length;
-    const visible = list.slice(0, S.globalCorpVis);
-    document.getElementById("gcorp-count").textContent = total.toLocaleString() + " corporation" + (total !== 1 ? "s" : "");
-    const tbody = document.getElementById("gcorp-tbody");
-    tbody.innerHTML = visible.map(({ co, cityName, country, cityQid, revenueUSD }) => {
-      const wikiAttrs = co.wikipedia ? ` data-wiki="${escAttr(co.wikipedia)}" data-name="${escAttr(co.name)}"` : ` data-name="${escAttr(co.name)}"`;
-      let revDisp;
-      if (revenueUSD > 0) {
-        revDisp = `$${fmtRevenue(revenueUSD)}`;
-      } else if (co.revenue) {
-        const curLabel = co.revenue_currency && co.revenue_currency !== "USD" ? ` ${escHtml(co.revenue_currency)}` : "";
-        revDisp = `${fmtRevenue(co.revenue)}${curLabel}`;
-      } else {
-        revDisp = "\u2014";
-      }
-      const empDisp = fmtEmployees(co.employees) || "\u2014";
-      const location = [cityName, country].filter(Boolean).join(", ");
-      return `<tr${wikiAttrs} data-fin="${_gcorpFinJson(co)}" data-qid="${escAttr(cityQid)}" data-city="${escAttr(cityName)}" onclick="gcorpRowClick(this)">
-      <td class="gcorp-name-cell"><span class="gcorp-card-row1"><span class="gcorp-card-name">${escHtml(co.name)}</span><span class="gcorp-card-rev">${revDisp}</span></span><span class="gcorp-card-row2"><span class="gcorp-card-loc">${escHtml(location || "\u2014")}${co.industry ? " \xB7 " + escHtml(co.industry) : ""}</span><span class="gcorp-card-emp">${empDisp !== "\u2014" ? empDisp : ""}</span></span></td>
-      <td class="gcorp-city-cell">${escHtml(cityName)}</td>
-      <td class="gcorp-country-cell">${escHtml(country || "\u2014")}</td>
-      <td class="gcorp-industry-cell">${co.industry ? escHtml(co.industry) : "\u2014"}</td>
-      <td class="gcorp-num">${revDisp}</td>
-      <td class="gcorp-neutral">${empDisp}</td>
-    </tr>`;
-    }).join("");
-    const moreRow = document.getElementById("gcorp-more-row");
-    if (total > S.globalCorpVis) {
-      moreRow.style.display = "";
-      document.getElementById("gcorp-more-btn").textContent = `Show ${Math.min(GCORP_PAGE, total - S.globalCorpVis)} more (${(total - S.globalCorpVis).toLocaleString()} remaining)`;
-    } else {
-      moreRow.style.display = "none";
-    }
-  }
-  function gcorpShowMore() {
-    S.globalCorpVis += GCORP_PAGE;
-    renderGlobalCorpList();
-  }
-  function gcorpQueryChanged(v) {
-    S.gcorpQuery = v;
-    S.globalCorpVis = GCORP_PAGE;
-    renderGlobalCorpList();
-  }
-  function _populateCountDropdown(el, allLabel, allValue, items, counts, totalCount) {
-    const label = el.querySelector(".count-dropdown-label");
-    const count = el.querySelector(".count-dropdown-count");
-    const menu = el.querySelector(".count-dropdown-menu");
-    label.textContent = allLabel;
-    count.textContent = totalCount;
-    menu.innerHTML = "";
-    const allItem = document.createElement("div");
-    allItem.className = "count-dropdown-item active";
-    allItem.dataset.value = allValue;
-    allItem.innerHTML = `<span class="count-dropdown-item-name">${allLabel}</span><span class="count-dropdown-item-count">${totalCount}</span>`;
-    allItem.addEventListener("click", (e) => {
-      e.stopPropagation();
-      _selectCountDropdownItem(el, allValue, allLabel, totalCount);
-      el.dataset.value = allValue;
-      if (el.id === "gcorp-country") gcorpCountryChanged(allValue);
-      else gcorpIndustryChanged(allValue);
-    });
-    menu.appendChild(allItem);
-    items.forEach((item) => {
-      const div = document.createElement("div");
-      div.className = "count-dropdown-item";
-      div.dataset.value = item;
-      div.innerHTML = `<span class="count-dropdown-item-name">${escHtml(item)}</span><span class="count-dropdown-item-count">${counts[item]}</span>`;
-      div.addEventListener("click", (e) => {
-        e.stopPropagation();
-        _selectCountDropdownItem(el, item, item, counts[item]);
-        el.dataset.value = item;
-        if (el.id === "gcorp-country") gcorpCountryChanged(item);
-        else gcorpIndustryChanged(item);
-      });
-      menu.appendChild(div);
-    });
-  }
-  function _selectCountDropdownItem(el, value, label, count) {
-    el.dataset.value = value;
-    el.querySelector(".count-dropdown-label").textContent = label;
-    el.querySelector(".count-dropdown-count").textContent = count;
-    el.classList.remove("open");
-    el.querySelectorAll(".count-dropdown-item").forEach((i) => {
-      i.classList.toggle("active", i.dataset.value === value);
-    });
-  }
-  function gcorpCountryChanged(v) {
-    S.gcorpCountry = v;
-    S.globalCorpVis = GCORP_PAGE;
-    renderGlobalCorpList();
-  }
-  function gcorpIndustryChanged(v) {
-    S.gcorpIndustry = v;
-    S.globalCorpVis = GCORP_PAGE;
-    renderGlobalCorpList();
-  }
-  function gcorpSortChanged(v) {
-    S.gcorpSort = v;
-    S.globalCorpVis = GCORP_PAGE;
-    renderGlobalCorpList();
-  }
-  function gcorpRowClick(row) {
-    const wikiUrl = row.dataset.wiki;
-    const name = row.dataset.name;
-    const qid = row.dataset.qid;
-    const city = row.dataset.city;
-    if (qid && city) {
-      S.corpCityQid = qid;
-      S.corpCityName = city;
-    }
-    if (!wikiUrl || !name) return;
-    const finData = row.dataset.fin ? JSON.parse(row.dataset.fin) : {};
-    const titleMatch = wikiUrl.match(/\/wiki\/([^#?]+)/);
-    if (!titleMatch) return;
-    openCompanyWikiPanel(decodeURIComponent(titleMatch[1]), name, wikiUrl, finData);
-  }
-  function _IYChart(containerEl, points, opts = {}) {
-    const {
-      color = "#58a6ff",
-      height = 80,
-      isTimestamp = true,
-      autoColor = true,
-      yFmt = (v) => v.toLocaleString(),
-      xFmt = isTimestamp ? (t) => new Date(t * 1e3).toLocaleDateString("en-US", { month: "short", year: "2-digit" }) : (t) => String(t),
-      showXLabels = false,
-      showYLabels = false,
-      ranges = null,
-      defaultDays = 0
-    } = opts;
-    containerEl.innerHTML = "";
-    containerEl.style.userSelect = "none";
-    let activeDays = defaultDays;
-    let btnRow = null;
-    if (ranges?.length) {
-      btnRow = document.createElement("div");
-      btnRow.className = "iyc-range-row";
-      ranges.forEach((r) => {
-        const btn = document.createElement("button");
-        btn.className = "iyc-range" + (r.days === activeDays ? " active" : "");
-        btn.textContent = r.label;
-        btn.dataset.days = r.days;
-        btn.onclick = () => {
-          activeDays = r.days;
-          btnRow.querySelectorAll(".iyc-range").forEach(
-            (b) => b.classList.toggle("active", +b.dataset.days === activeDays)
-          );
-          draw();
-        };
-        btnRow.appendChild(btn);
-      });
-      containerEl.appendChild(btnRow);
-    }
-    const wrap = document.createElement("div");
-    wrap.style.cssText = "position:relative;overflow:hidden";
-    const canvas = document.createElement("canvas");
-    canvas.style.cssText = `width:100%;height:${height}px;display:block;cursor:crosshair`;
-    const tt = document.createElement("div");
-    tt.className = "iyc-tooltip";
-    tt.style.display = "none";
-    wrap.appendChild(canvas);
-    wrap.appendChild(tt);
-    containerEl.appendChild(wrap);
-    const DPR = window.devicePixelRatio || 1;
-    let _L = null;
-    function getVisible() {
-      if (!activeDays) return points;
-      if (isTimestamp) {
-        const last = points[points.length - 1]?.t || 0;
-        return points.filter((p) => p.t >= last - activeDays * 86400);
-      }
-      return points.slice(-Math.max(2, Math.round(activeDays / 365)));
-    }
-    function draw() {
-      const W = wrap.offsetWidth || containerEl.offsetWidth || 280;
-      const H = height;
-      canvas.width = W * DPR;
-      canvas.height = H * DPR;
-      const vis = getVisible();
-      if (vis.length < 2) {
-        _L = null;
-        return;
-      }
-      const ctx = canvas.getContext("2d");
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const PT = 6 * DPR, PB = (showXLabels ? 16 : 4) * DPR;
-      const PL = 2 * DPR, PR = (showYLabels ? 48 : 2) * DPR;
-      const pW = canvas.width - PL - PR, pH = canvas.height - PT - PB;
-      const tMin = vis[0].t, tMax = vis[vis.length - 1].t;
-      const vals = vis.map((p) => p.v);
-      const vMin = Math.min(...vals), vMax = Math.max(...vals);
-      const vPad = (vMax - vMin) * 0.1 || Math.abs(vMax) * 0.05 || 1;
-      const vLo = vMin - vPad, vHi = vMax + vPad;
-      const xOf = (t) => PL + (tMax === tMin ? pW / 2 : (t - tMin) / (tMax - tMin) * pW);
-      const yOf = (v) => PT + pH - (vHi === vLo ? pH / 2 : (v - vLo) / (vHi - vLo) * pH);
-      const lineClr = autoColor ? vis[vis.length - 1].v >= vis[0].v ? "#3fb950" : "#f85149" : color;
-      ctx.strokeStyle = "rgba(48,54,61,0.5)";
-      ctx.lineWidth = DPR * 0.5;
-      for (let i = 1; i <= 3; i++) {
-        const y = PT + pH * i / 4;
-        ctx.beginPath();
-        ctx.moveTo(PL, y);
-        ctx.lineTo(PL + pW, y);
-        ctx.stroke();
-      }
-      if (showYLabels) {
-        ctx.fillStyle = "#484f58";
-        ctx.font = `${9 * DPR}px system-ui,sans-serif`;
-        ctx.textAlign = "right";
-        [0, 0.5, 1].forEach((f) => {
-          const v = vLo + (vHi - vLo) * f;
-          ctx.fillText(yFmt(v), canvas.width - DPR, PT + pH * (1 - f) + 3 * DPR);
-        });
-      }
-      const grad = ctx.createLinearGradient(0, PT, 0, canvas.height - PB);
-      grad.addColorStop(0, lineClr + "33");
-      grad.addColorStop(1, lineClr + "00");
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.moveTo(xOf(tMin), canvas.height - PB);
-      vis.forEach((p) => ctx.lineTo(xOf(p.t), yOf(p.v)));
-      ctx.lineTo(xOf(tMax), canvas.height - PB);
-      ctx.closePath();
-      ctx.fill();
-      ctx.strokeStyle = lineClr;
-      ctx.lineWidth = 1.5 * DPR;
-      ctx.lineJoin = "round";
-      ctx.lineCap = "round";
-      ctx.setLineDash([]);
-      ctx.beginPath();
-      vis.forEach((p, i) => i === 0 ? ctx.moveTo(xOf(p.t), yOf(p.v)) : ctx.lineTo(xOf(p.t), yOf(p.v)));
-      ctx.stroke();
-      if (showXLabels) {
-        ctx.fillStyle = "#484f58";
-        ctx.textAlign = "center";
-        ctx.font = `${8 * DPR}px system-ui,sans-serif`;
-        const n = Math.min(vis.length - 1, Math.max(2, Math.floor(W / 80)));
-        for (let i = 0; i <= n; i++) {
-          const idx = Math.round(i / n * (vis.length - 1));
-          ctx.fillText(xFmt(vis[idx].t), xOf(vis[idx].t), canvas.height - 2 * DPR);
-        }
-      }
-      _L = { vis, xOf, yOf, tMin, tMax, pW, pH, PT, PB, PL, PR, lineClr, DPR, cW: canvas.width, cH: canvas.height, W };
-    }
-    function _crosshair(pt) {
-      if (!_L) return;
-      const { xOf, yOf, PT, PB, PL, PR, lineClr, DPR: DPR2, cW, cH } = _L;
-      const ctx = canvas.getContext("2d");
-      const cx = xOf(pt.t), cy = yOf(pt.v);
-      ctx.setLineDash([3 * DPR2, 3 * DPR2]);
-      ctx.strokeStyle = "rgba(180,180,180,0.22)";
-      ctx.lineWidth = DPR2;
-      ctx.beginPath();
-      ctx.moveTo(cx, PT);
-      ctx.lineTo(cx, cH - PB);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(PL, cy);
-      ctx.lineTo(cW - PR, cy);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = lineClr;
-      ctx.strokeStyle = "#0d1117";
-      ctx.lineWidth = 2 * DPR2;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 3.5 * DPR2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-    }
-    function _nearest(mx) {
-      if (!_L) return null;
-      const { vis, tMin, tMax, pW, PL, DPR: DPR2 } = _L;
-      const tAt = tMin + (mx * DPR2 - PL) / pW * (tMax - tMin);
-      let best = null, bestD = Infinity;
-      vis.forEach((p) => {
-        const d = Math.abs(p.t - tAt);
-        if (d < bestD) {
-          bestD = d;
-          best = p;
-        }
-      });
-      return best;
-    }
-    canvas.addEventListener("mousemove", (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-      const pt = _nearest(mx);
-      if (!pt || !_L) return;
-      draw();
-      _crosshair(pt);
-      const vis = _L.vis;
-      const pct = vis.length > 1 ? ((pt.v - vis[0].v) / vis[0].v * 100).toFixed(1) : null;
-      const pctHtml = pct != null ? ` <span class="iyc-tt-p" style="color:${parseFloat(pct) >= 0 ? "var(--success)" : "var(--danger)"}">${parseFloat(pct) >= 0 ? "+" : ""}${pct}%</span>` : "";
-      tt.innerHTML = `<span class="iyc-tt-x">${xFmt(pt.t)}</span> <span class="iyc-tt-v">${yFmt(pt.v)}</span>${pctHtml}`;
-      tt.style.display = "block";
-      const tw = tt.offsetWidth, th = tt.offsetHeight;
-      let tx = mx - tw / 2;
-      if (tx < 0) tx = 0;
-      if (tx + tw > rect.width) tx = rect.width - tw;
-      tt.style.left = tx + "px";
-      tt.style.top = (my < rect.height / 2 ? my + 12 : my - th - 6) + "px";
-    });
-    canvas.addEventListener("mouseleave", () => {
-      tt.style.display = "none";
-      draw();
-    });
-    canvas.addEventListener("wheel", (e) => {
-      e.preventDefault();
-      if (!ranges?.length || !btnRow) return;
-      const btns = [...btnRow.querySelectorAll(".iyc-range")];
-      const cur = btns.findIndex((b) => +b.dataset.days === activeDays);
-      const next = Math.max(0, Math.min(btns.length - 1, cur + (e.deltaY > 0 ? 1 : -1)));
-      if (next !== cur) btns[next].click();
-    }, { passive: false });
-    const ro = new ResizeObserver(() => draw());
-    ro.observe(containerEl);
-    draw();
-    return { draw, destroy: () => ro.disconnect() };
   }
   async function _fetchWikiImages(articleTitle) {
     try {
@@ -10342,7 +10476,7 @@
     S._cmpCityB = null;
     const panel = document.getElementById("compare-panel");
     panel.classList.add("visible");
-    _mobileBackdropOn2();
+    _mobileBackdropOn3();
     document.getElementById("compare-col-a").textContent = S._cmpCityA ? S._cmpCityA.name : "\u2014";
     document.getElementById("compare-col-b").textContent = "\u2014";
     document.getElementById("compare-tbody").innerHTML = "";
@@ -10352,7 +10486,7 @@
   }
   function closeComparePanel() {
     document.getElementById("compare-panel").classList.remove("visible");
-    _mobileBackdropOff2();
+    _mobileBackdropOff3();
     S._cmpCityA = null;
     S._cmpCityB = null;
   }
@@ -10512,7 +10646,7 @@
     S._ccIsoB = null;
     const panel = document.getElementById("country-compare-panel");
     panel.classList.add("visible");
-    _mobileBackdropOn2();
+    _mobileBackdropOn3();
     const cd = S.countryData[iso2];
     document.getElementById("cc-col-a").textContent = cd ? cd.name : iso2;
     document.getElementById("cc-col-b").textContent = "\u2014";
@@ -10523,7 +10657,7 @@
   }
   function closeCountryCompare() {
     document.getElementById("country-compare-panel").classList.remove("visible");
-    _mobileBackdropOff2();
+    _mobileBackdropOff3();
     S._ccIsoA = null;
     S._ccIsoB = null;
   }
@@ -10636,13 +10770,17 @@
     }
     document.getElementById("cc-tbody").innerHTML = rows.join("");
   }
-  var __DEBUG__, PAGE_SIZE, _worldGeoLoader, _eurostatLoader, _companiesLoader, _companiesDetailLoader, _univLoader, _noaaLoader, _airportLoader, _aqLoader, _metroLoader, _nobelLoader, _powerLoader, _informLoader, _gtdLoader, _cryptoLoader, _URL_TO_KDB, POP_SCALE, tradeCache, countryCentroids, admin1Cache, LS_EDITS, LS_DELETED, IMG_EXCLUDE, STATS_WIN, VALID_SIDEBAR_TABS, STAT_DEFS, CITY_STAT_DEFS, WB_STAT_DEFS, CORP_STAT_DEFS, EUROSTAT_STAT_DEFS, JAPAN_PREF_STAT_DEFS, ADMIN_TO_NUTS2, SINGLE_NUTS2, _errorTileDataUrl, _terrainFallbackActive, _hashUpdateTimer, ISO2_TO_BEA, LS_TRADE_PREFIX, LS_TRADE_TTL, _nationsPanelOpen, _PLATE_NAMES, _aircraftMoveHandler, _wildfireMoveHandler, GCORP_PAGE;
+  var __DEBUG__, PAGE_SIZE, _worldGeoLoader, _eurostatLoader, _companiesLoader, _companiesDetailLoader, _univLoader, _noaaLoader, _airportLoader, _aqLoader, _metroLoader, _nobelLoader, _powerLoader, _informLoader, _gtdLoader, _cryptoLoader, _URL_TO_KDB, POP_SCALE, tradeCache, countryCentroids2, admin1Cache, LS_EDITS, LS_DELETED, IMG_EXCLUDE, VALID_SIDEBAR_TABS, STAT_DEFS2, CITY_STAT_DEFS2, WB_STAT_DEFS2, CORP_STAT_DEFS2, EUROSTAT_STAT_DEFS2, JAPAN_PREF_STAT_DEFS2, ADMIN_TO_NUTS2, SINGLE_NUTS2, _errorTileDataUrl, _terrainFallbackActive, _hashUpdateTimer, ISO2_TO_BEA, LS_TRADE_PREFIX, LS_TRADE_TTL, _nationsPanelOpen, _PLATE_NAMES, _aircraftMoveHandler, _wildfireMoveHandler, _IYChart;
   var init_app_legacy = __esm({
     "src/app-legacy.js"() {
       init_utils();
       init_state();
       init_constants();
       init_fx_sidebar();
+      init_keyboard_nav();
+      init_stats_panel();
+      init_iy_chart();
+      init_corporations_list();
       init_choro_defs();
       init_stat_defs();
       init_viz_defs();
@@ -10758,7 +10896,7 @@
       };
       POP_SCALE = { min: 3, max: 8 };
       tradeCache = {};
-      countryCentroids = {};
+      countryCentroids2 = {};
       admin1Cache = {};
       S.fxRates = { ...FX_TO_USD };
       LS_EDITS = "wcm_edits";
@@ -10767,9 +10905,8 @@
         if (e.target === this) closeModal();
       });
       IMG_EXCLUDE = /flag|coat|coa_|locator|location_map|location S.map|icon|emblem|seal|logo|banner|signature|blank|symbol|layout|streets|district|wikisource|wikidata|commons-logo|silhouette|\.svg$/i;
-      STATS_WIN = 12;
       VALID_SIDEBAR_TABS = /* @__PURE__ */ new Set(["info", "economy", "finance", "overview"]);
-      STAT_DEFS = {
+      STAT_DEFS2 = {
         medianIncome: { label: "Median Income", src: "acs", key: "medianIncome", fmt: (v) => "$" + fmtNum(Math.round(v)), higherBetter: true },
         povertyPct: { label: "Poverty Rate", src: "acs", key: "povertyPct", fmt: (v) => v.toFixed(1) + "%", higherBetter: false },
         unemploymentPct: { label: "Unemployment Rate", src: "acs", key: "unemploymentPct", fmt: (v) => v.toFixed(1) + "%", higherBetter: false },
@@ -10794,7 +10931,7 @@
           return p != null && p < 35 ? p : null;
         }, fmt: (v) => v.toFixed(1) + "%", higherBetter: null }
       };
-      CITY_STAT_DEFS = {
+      CITY_STAT_DEFS2 = {
         pop: { label: "City Population", key: (c) => c.pop, fmt: (v) => fmtNum(v), higherBetter: null },
         pop_metro: { label: "Metro Population", key: (c) => c.pop_metro, fmt: (v) => fmtNum(v), higherBetter: null },
         area_km2: { label: "City Area", key: (c) => c.area_km2, fmt: (v) => fmtNum(Math.round(v)) + " km\xB2", higherBetter: null },
@@ -10946,7 +11083,7 @@
           higherBetter: true
         }
       };
-      WB_STAT_DEFS = {
+      WB_STAT_DEFS2 = {
         wb_gdp_per_capita: { label: "GDP per Capita", key: "gdp_per_capita", fmt: (v) => "$" + Math.round(v).toLocaleString(), higherBetter: true },
         wb_life_expectancy: { label: "Life Expectancy", key: "life_expectancy", fmt: (v) => v.toFixed(1) + " yrs", higherBetter: true },
         wb_urban_pct: { label: "Urban Population", key: "urban_pct", fmt: (v) => v.toFixed(1) + "%", higherBetter: null },
@@ -11090,7 +11227,7 @@
         wb_research_citations: { label: "Research Citations", key: "research_citations", fmt: (v) => v >= 1e9 ? (v / 1e9).toFixed(1) + "B" : v >= 1e6 ? (v / 1e6).toFixed(1) + "M" : v >= 1e3 ? (v / 1e3).toFixed(0) + "k" : String(v), higherBetter: true },
         wb_research_cites_per_paper: { label: "Citations per Paper", key: "research_citations_per_paper", fmt: (v) => v.toFixed(1), higherBetter: true }
       };
-      CORP_STAT_DEFS = {
+      CORP_STAT_DEFS2 = {
         corp_revenue: {
           label: "Revenue (USD equiv.)",
           fmt: (v) => "$" + fmtRevenue(v),
@@ -11125,7 +11262,7 @@
           key: (co) => co.employees > 0 ? co.employees : null
         }
       };
-      EUROSTAT_STAT_DEFS = {
+      EUROSTAT_STAT_DEFS2 = {
         // Labour market & living conditions (original 7)
         eurostat_unemploymentPct: { label: "Unemployment Rate", key: "unemploymentPct", histKey: "unemploymentHistory", fmt: (v) => v.toFixed(1) + "%", higherBetter: false },
         eurostat_activityRate: { label: "Activity Rate", key: "activityRate", histKey: "activityHistory", fmt: (v) => v.toFixed(1) + "%", higherBetter: true },
@@ -11153,7 +11290,7 @@
         eurostat_popChangePct: { label: "Population Change/yr", key: "popChangePct", histKey: "popChangePctHistory", fmt: (v) => (v >= 0 ? "+" : "") + v.toFixed(2) + "%", higherBetter: null },
         eurostat_ageDependency: { label: "Age Dependency Ratio", key: "ageDependency", histKey: "ageDependencyHistory", fmt: (v) => v.toFixed(1) + "%", higherBetter: null }
       };
-      JAPAN_PREF_STAT_DEFS = {
+      JAPAN_PREF_STAT_DEFS2 = {
         japan_perCapitaIncome: {
           label: "Per-Capita Prefecture Income",
           key: "perCapitaIncomeJpy",
@@ -12017,19 +12154,7 @@
       };
       _aircraftMoveHandler = null;
       _wildfireMoveHandler = null;
-      GCORP_PAGE = 100;
-      document.addEventListener("click", (e) => {
-        const trigger = e.target.closest(".count-dropdown-trigger");
-        if (trigger) {
-          const dd = trigger.parentElement;
-          document.querySelectorAll(".count-dropdown.open").forEach((d) => {
-            if (d !== dd) d.classList.remove("open");
-          });
-          dd.classList.toggle("open");
-          return;
-        }
-        document.querySelectorAll(".count-dropdown.open").forEach((d) => d.classList.remove("open"));
-      });
+      _IYChart = IYChart;
       (function initCompareSearch() {
         const input = document.getElementById("compare-search-input");
         const results = document.getElementById("compare-search-results");
@@ -12254,6 +12379,9 @@
       init_app_legacy();
       init_fx_sidebar();
       init_lightbox();
+      init_keyboard_nav();
+      init_stats_panel();
+      init_corporations_list();
       Object.assign(window, {
         buildEconLayer,
         clearAllFilters,
@@ -12278,6 +12406,7 @@
         lightboxNav,
         openStatsPanel,
         renderCorpList,
+        renderGlobalCorpList,
         resetAll,
         resetAllLayers,
         saveEdit,
@@ -12336,7 +12465,7 @@
         toggleTheme,
         toggleUnescoLayer,
         toggleEonetLayer,
-        _switchRadarTab,
+        _switchRadarTab: _switchRadarTab2,
         _switchTrendTab,
         _renderCountryPanel,
         carGo,
@@ -12368,7 +12497,8 @@
         switchListTab,
         toggleNationsPanel,
         closeAllMobileSheets,
-        toggleMobileTopbar
+        toggleMobileTopbar,
+        toggleKeyboardHelp
       });
       initFxCallbacks({
         onRatesChanged: () => {
@@ -12389,6 +12519,51 @@
           const b = document.getElementById("mobile-backdrop");
           if (b) b.classList.remove("active");
         }
+      });
+      initStatsPanel({
+        mobileBackdropOn: () => {
+          if (window.innerWidth <= 768) {
+            const b = document.getElementById("mobile-backdrop");
+            if (b) b.classList.add("active");
+          }
+        },
+        mobileBackdropOff: () => {
+          const b = document.getElementById("mobile-backdrop");
+          if (b) b.classList.remove("active");
+        },
+        switchRadarTab: _switchRadarTab2,
+        openWikiSidebar,
+        openCountryPanel,
+        lookupJapanPref: _lookupJapanPref2,
+        statSourceAttr: _statSourceAttr2,
+        STAT_DEFS: STAT_DEFS2,
+        CITY_STAT_DEFS: CITY_STAT_DEFS2,
+        WB_STAT_DEFS: WB_STAT_DEFS2,
+        EUROSTAT_STAT_DEFS: EUROSTAT_STAT_DEFS2,
+        JAPAN_PREF_STAT_DEFS: JAPAN_PREF_STAT_DEFS2,
+        CORP_STAT_DEFS: CORP_STAT_DEFS2,
+        CAPITAL_COORDS,
+        countryCentroids: countryCentroids2
+      });
+      initKeyboardNav({
+        closeCountryCompare,
+        closeComparePanel,
+        closeWikiSidebar,
+        closeCountryPanel: () => {
+          document.getElementById("country-panel").classList.remove("open");
+        },
+        closeCorpPanel,
+        closeStatsPanel,
+        closeTradePanelFn,
+        toggleFilterPanel,
+        toggleFxSidebar,
+        toggleBookmarksPanel,
+        toggleTheme,
+        switchWikiTab
+      });
+      setupKeyboardNav();
+      initCorporationsList({
+        openCompanyWikiPanel
       });
       init();
     }
