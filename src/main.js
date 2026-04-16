@@ -11,8 +11,8 @@ import {
   toggleAirRouteLayer, toggleAqMode, toggleAvailFilter, toggleBookmarksPanel,
   toggleCableLayer, toggleChoroPlay, toggleChoropleth, toggleDrawMode,
   setBasemap, resetPopRange, toggleCities, toggleEarthquakeLayer, toggleEconLayer, toggleEezLayer, toggleFilterAqColor,
-  toggleFilterPanel, toggleGtdLayer, toggleIssTracker, toggleAircraftLayer, toggleWildfireLayer, toggleLaunchSiteLayer, toggleMoreLayers, togglePeeringdbLayer, toggleProtectedAreasLayer, toggleSatelliteLayer, toggleTectonicLayer, toggleUnescoIchLayer, toggleVesselPortsLayer, toggleVolcanoLayer, toggleWaqiLayer, toggleWeatherLayer,
-  toggleCryptoLayer, toggleSpaceWeatherLayer, toggleOceanLayer, toggleFlightAwareLayer, toggleMarineTrafficLayer,
+  toggleFilterPanel, toggleIssTracker, toggleAircraftLayer, toggleWildfireLayer, toggleLaunchSiteLayer, toggleMoreLayers, togglePeeringdbLayer, toggleProtectedAreasLayer, toggleSatelliteLayer, toggleTectonicLayer, toggleUnescoIchLayer, toggleVesselPortsLayer, toggleVolcanoLayer, toggleWaqiLayer, toggleWeatherLayer,
+  toggleFlightAwareLayer, toggleMarineTrafficLayer,
   toggleTheme, toggleUnescoLayer, toggleEonetLayer,
   toggleNationsPanel,
   closeAllMobileSheets,
@@ -33,6 +33,7 @@ import { openLightbox, openCarouselLightbox, closeLightbox, lightboxNav, carGo, 
 import { initKeyboardNav, setupKeyboardNav, toggleKeyboardHelp } from './keyboard-nav.js';
 import { initStatsPanel, closeStatsPanel, setStatsScope, openStatsPanel, statsExpandUp, statsExpandDown, statsGoToCity, statsGoToCountry } from './stats-panel.js';
 import { initCorporationsList, buildGlobalCorpList, renderGlobalCorpList, gcorpShowMore, gcorpQueryChanged, gcorpCountryChanged, gcorpIndustryChanged, gcorpSortChanged, gcorpRowClick } from './corporations-list.js';
+import { toggleGtdLayer, toggleCryptoLayer, toggleSpaceWeatherLayer, toggleOceanLayer } from './layers-phase2.js';
 
 Object.assign(window, {
   buildEconLayer, clearAllFilters, closeComparePanel, closeCorpPanel,

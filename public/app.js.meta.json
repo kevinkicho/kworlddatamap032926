@@ -89,6 +89,17 @@
       ],
       "format": "esm"
     },
+    "src/layers-phase2.js": {
+      "bytes": 16893,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
     "src/choro-defs.js": {
       "bytes": 3605,
       "imports": [],
@@ -116,7 +127,7 @@
       "format": "esm"
     },
     "src/app-legacy.js": {
-      "bytes": 545196,
+      "bytes": 527833,
       "imports": [
         {
           "path": "src/utils.js",
@@ -159,6 +170,11 @@
           "original": "./corporations-list.js"
         },
         {
+          "path": "src/layers-phase2.js",
+          "kind": "import-statement",
+          "original": "./layers-phase2.js"
+        },
+        {
           "path": "src/choro-defs.js",
           "kind": "import-statement",
           "original": "./choro-defs.js"
@@ -182,7 +198,7 @@
       "format": "esm"
     },
     "src/main.js": {
-      "bytes": 6434,
+      "bytes": 6471,
       "imports": [
         {
           "path": "src/app-legacy.js",
@@ -213,6 +229,11 @@
           "path": "src/corporations-list.js",
           "kind": "import-statement",
           "original": "./corporations-list.js"
+        },
+        {
+          "path": "src/layers-phase2.js",
+          "kind": "import-statement",
+          "original": "./layers-phase2.js"
         }
       ],
       "format": "cjs"
@@ -223,7 +244,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1063235
+      "bytes": 1063336
     },
     "public/app.js": {
       "imports": [],
@@ -254,6 +275,9 @@
         "src/corporations-list.js": {
           "bytesInOutput": 11567
         },
+        "src/layers-phase2.js": {
+          "bytesInOutput": 17329
+        },
         "src/choro-defs.js": {
           "bytesInOutput": 3250
         },
@@ -267,13 +291,13 @@
           "bytesInOutput": 2782
         },
         "src/app-legacy.js": {
-          "bytesInOutput": 486409
+          "bytesInOutput": 469714
         },
         "src/main.js": {
-          "bytesInOutput": 5504
+          "bytesInOutput": 5532
         }
       },
-      "bytes": 583937
+      "bytes": 584626
     }
   }
 }

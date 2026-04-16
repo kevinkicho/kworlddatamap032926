@@ -2069,6 +2069,411 @@
     }
   });
 
+  // src/layers-phase2.js
+  async function _kdbOrFetch(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleGtdLayer() {
+    S.gtdOn = !S.gtdOn;
+    const btn = document.getElementById("gtd-toggle-btn");
+    if (S.gtdOn) {
+      btn.textContent = "Terrorism";
+      btn.classList.add("on");
+      if (!S.gtdData) {
+        try {
+          const res = await _kdbOrFetch("/terrorism-incidents-lite.json");
+          S.gtdData = await res.json();
+        } catch (e) {
+          _warn("gtd", "Failed to load");
+          S.gtdOn = false;
+          btn.textContent = "Terrorism";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildGtdLayer();
+    } else {
+      btn.textContent = "Terrorism";
+      btn.classList.remove("on");
+      if (S.gtdLayer) {
+        S.map.removeLayer(S.gtdLayer);
+        S.gtdLayer = null;
+      }
+    }
+  }
+  function _buildGtdLayer() {
+    if (S.gtdLayer) {
+      S.map.removeLayer(S.gtdLayer);
+      S.gtdLayer = null;
+    }
+    if (!S.gtdOn || !S.gtdData) return;
+    const layers = [];
+    const attackColors = {
+      "Bombing/Explosion": "#ef4444",
+      "Armed Assault": "#f97316",
+      "Abduction": "#8b5cf6",
+      "Facility/Infrastructure Attack": "#6366f1",
+      "Hostage Taking": "#ec4899"
+    };
+    for (const inc of S.gtdData.incidents || []) {
+      const color = attackColors[inc.attack_type] || "#888";
+      const radius = Math.max(6, Math.min(14, inc.fatalities / 25));
+      const marker = L2.circleMarker([inc.lat, inc.lng], {
+        pane: "overlayLayersPane",
+        radius,
+        fillColor: color,
+        color: "#000",
+        weight: 1,
+        fillOpacity: 0.85
+      });
+      const date = new Date(inc.date).toLocaleDateString();
+      marker.bindTooltip(
+        `<b style="color:${color}">\u26A0\uFE0F ${inc.attack_type}</b><br><b>${inc.city}, ${inc.country}</b><br><span style="color:var(--text-muted)">${date}</span><br><span style="color:var(--text-secondary)">Fatalities: ${inc.fatalities} | Wounded: ${inc.wounded}</span>` + (inc.perpetrator ? `<br><span style="color:var(--text-secondary)">Perpetrator: ${inc.perpetrator}</span>` : ""),
+        { direction: "top", className: "admin1-tooltip", sticky: true }
+      );
+      layers.push(marker);
+    }
+    S.gtdLayer = L2.layerGroup(layers).addTo(S.map);
+    _log("gtd", `Displayed ${layers.length} incidents`);
+  }
+  async function toggleCryptoLayer() {
+    S.cryptoOn = !S.cryptoOn;
+    const btn = document.getElementById("crypto-toggle-btn");
+    if (S.cryptoOn) {
+      btn.textContent = "Crypto Adoption";
+      btn.classList.add("on");
+      if (!S.cryptoData) {
+        try {
+          const res = await _kdbOrFetch("/crypto-stats-lite.json");
+          S.cryptoData = await res.json();
+        } catch (e) {
+          _warn("crypto", "Failed to load");
+          S.cryptoOn = false;
+          btn.textContent = "Crypto Adoption";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildCryptoLayer();
+    } else {
+      btn.textContent = "Crypto Adoption";
+      btn.classList.remove("on");
+      if (S.cryptoLayer) {
+        S.map.removeLayer(S.cryptoLayer);
+        S.cryptoLayer = null;
+      }
+    }
+  }
+  function _buildCryptoLayer() {
+    if (S.cryptoLayer) {
+      S.map.removeLayer(S.cryptoLayer);
+      S.cryptoLayer = null;
+    }
+    if (!S.cryptoOn || !S.cryptoData) return;
+    const layers = [];
+    const byCountry = S.cryptoData.byCountry || {};
+    const getAdoptionColor = (rank) => {
+      if (rank <= 5) return "#22c55e";
+      if (rank <= 10) return "#84cc16";
+      if (rank <= 20) return "#eab308";
+      if (rank <= 35) return "#f97316";
+      return "#ef4444";
+    };
+    const countryCentroids3 = {
+      "IN": { lat: 20.59, lng: 78.96, name: "India" },
+      "NG": { lat: 9.08, lng: 8.68, name: "Nigeria" },
+      "VN": { lat: 14.06, lng: 108.28, name: "Vietnam" },
+      "US": { lat: 37.09, lng: -95.71, name: "United States" },
+      "PK": { lat: 30.38, lng: 69.35, name: "Pakistan" },
+      "ID": { lat: -0.79, lng: 113.92, name: "Indonesia" },
+      "UA": { lat: 48.38, lng: 31.17, name: "Ukraine" },
+      "PH": { lat: 12.88, lng: 121.77, name: "Philippines" },
+      "TR": { lat: 38.96, lng: 35.24, name: "Turkey" },
+      "BR": { lat: -14.24, lng: -51.93, name: "Brazil" },
+      "TH": { lat: 15.87, lng: 100.99, name: "Thailand" },
+      "RU": { lat: 61.52, lng: 105.32, name: "Russia" },
+      "CO": { lat: 4.57, lng: -74.3, name: "Colombia" },
+      "AR": { lat: -38.42, lng: -63.62, name: "Argentina" },
+      "ZA": { lat: -30.56, lng: 22.94, name: "South Africa" },
+      "MY": { lat: 4.21, lng: 101.98, name: "Malaysia" },
+      "VE": { lat: 6.42, lng: -66.59, name: "Venezuela" },
+      "GB": { lat: 55.38, lng: -3.44, name: "United Kingdom" },
+      "SG": { lat: 1.35, lng: 103.82, name: "Singapore" },
+      "KR": { lat: 35.91, lng: 127.77, name: "South Korea" },
+      "JP": { lat: 36.2, lng: 138.25, name: "Japan" },
+      "DE": { lat: 51.17, lng: 10.45, name: "Germany" },
+      "FR": { lat: 46.23, lng: 2.21, name: "France" },
+      "AU": { lat: -25.27, lng: 133.78, name: "Australia" },
+      "CA": { lat: 56.13, lng: -106.35, name: "Canada" },
+      "NL": { lat: 52.13, lng: 5.29, name: "Netherlands" },
+      "CH": { lat: 46.82, lng: 8.23, name: "Switzerland" },
+      "AE": { lat: 23.42, lng: 53.85, name: "UAE" },
+      "HK": { lat: 22.4, lng: 114.11, name: "Hong Kong" },
+      "TW": { lat: 23.69, lng: 120.96, name: "Taiwan" },
+      "EG": { lat: 26.82, lng: 30.8, name: "Egypt" },
+      "KE": { lat: -0.02, lng: 37.68, name: "Kenya" },
+      "GH": { lat: 7.95, lng: -1.02, name: "Ghana" },
+      "BD": { lat: 23.68, lng: 90.36, name: "Bangladesh" },
+      "CL": { lat: -35.68, lng: -71.54, name: "Chile" },
+      "PE": { lat: -9.19, lng: -75.02, name: "Peru" },
+      "MX": { lat: 23.63, lng: -102.55, name: "Mexico" },
+      "PL": { lat: 51.92, lng: 19.15, name: "Poland" },
+      "IT": { lat: 41.87, lng: 12.57, name: "Italy" },
+      "ES": { lat: 40.46, lng: -3.75, name: "Spain" },
+      "SE": { lat: 60.13, lng: 18.64, name: "Sweden" },
+      "NO": { lat: 60.47, lng: 8.47, name: "Norway" },
+      "DK": { lat: 56.26, lng: 9.5, name: "Denmark" },
+      "FI": { lat: 61.92, lng: 25.75, name: "Finland" },
+      "AT": { lat: 47.52, lng: 14.55, name: "Austria" },
+      "BE": { lat: 50.5, lng: 4.47, name: "Belgium" },
+      "PT": { lat: 39.4, lng: -8.23, name: "Portugal" },
+      "GR": { lat: 39.07, lng: 21.82, name: "Greece" },
+      "CZ": { lat: 49.82, lng: 15.47, name: "Czech Republic" },
+      "IL": { lat: 31.05, lng: 34.85, name: "Israel" },
+      "CN": { lat: 35.86, lng: 104.19, name: "China" },
+      "SA": { lat: 23.89, lng: 45.08, name: "Saudi Arabia" },
+      "KZ": { lat: 48.02, lng: 66.92, name: "Kazakhstan" },
+      "UZ": { lat: 41.38, lng: 64.59, name: "Uzbekistan" },
+      "NZ": { lat: -40.9, lng: 174.89, name: "New Zealand" }
+    };
+    for (const [code, data] of Object.entries(byCountry)) {
+      const centroid = countryCentroids3[code];
+      if (!centroid) continue;
+      const color = getAdoptionColor(data.adoption_rank);
+      const radius = Math.max(5, Math.min(15, 20 - data.adoption_rank / 3));
+      const marker = L2.circleMarker([centroid.lat, centroid.lng], {
+        pane: "overlayLayersPane",
+        radius,
+        fillColor: color,
+        color: "#000",
+        weight: 1,
+        fillOpacity: 0.85
+      });
+      marker.bindTooltip(
+        `<b style="color:${color}">\u20BF ${centroid.name}</b><br><span style="color:var(--text-secondary)">Rank: #${data.adoption_rank}</span><br><span style="color:var(--text-muted)">Users: ${data.crypto_users_pct.toFixed(1)}%</span><br><span style="color:var(--text-muted)">Est. users: ${(data.estimated_users / 1e6).toFixed(1)}M</span><br><span style="color:var(--text-secondary)">DeFi: $${(data.defi_value_usd / 1e9).toFixed(1)}B</span><br><span style="color:var(--text-muted)">Exchanges: ${data.exchanges}</span>`,
+        { direction: "top", className: "admin1-tooltip", sticky: false }
+      );
+      layers.push(marker);
+    }
+    S.cryptoLayer = L2.layerGroup(layers).addTo(S.map);
+    _log("crypto", `Displayed ${layers.length} country markers`);
+  }
+  async function toggleSpaceWeatherLayer() {
+    S.spaceWeatherOn = !S.spaceWeatherOn;
+    const btn = document.getElementById("spaceweather-toggle-btn");
+    if (S.spaceWeatherOn) {
+      btn.textContent = "Space Weather";
+      btn.classList.add("on");
+      if (!S.spaceWeatherData) {
+        try {
+          const res = await _kdbOrFetch("/solar-weather-lite.json");
+          S.spaceWeatherData = await res.json();
+        } catch (e) {
+          _warn("space-weather", "Failed to load");
+          S.spaceWeatherOn = false;
+          btn.textContent = "Space Weather";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildSpaceWeatherLayer();
+    } else {
+      btn.textContent = "Space Weather";
+      btn.classList.remove("on");
+      if (S.spaceWeatherLayer) {
+        S.map.removeLayer(S.spaceWeatherLayer);
+        S.spaceWeatherLayer = null;
+      }
+    }
+  }
+  function _buildSpaceWeatherLayer() {
+    if (S.spaceWeatherLayer) {
+      S.map.removeLayer(S.spaceWeatherLayer);
+      S.spaceWeatherLayer = null;
+    }
+    if (!S.spaceWeatherOn || !S.spaceWeatherData) return;
+    const kp = S.spaceWeatherData.kp_index || 0;
+    const auroraLat = S.spaceWeatherData.aurora_visible_below_lat || 66;
+    const outerLat = Math.min(auroraLat + 5, 89);
+    function makeAuroraBand(innerLat, outerLatAbs, isNorth) {
+      const pts = [];
+      const sign = isNorth ? 1 : -1;
+      for (let lng = -180; lng <= 180; lng += 4) pts.push([sign * outerLatAbs, lng]);
+      for (let lng = 180; lng >= -180; lng -= 4) pts.push([sign * innerLat, lng]);
+      return L2.polygon(pts, { fillColor: "#8b5cf6", color: "#a78bfa", weight: 2, fillOpacity: 0.25, dashArray: "8, 8" });
+    }
+    const northBand = makeAuroraBand(auroraLat, outerLat, true);
+    northBand.bindTooltip(
+      `<b>\u{1F30C} Aurora Zone (North)</b><br><span style="color:var(--text-secondary)">KP Index: ${kp}</span><br><span style="color:var(--text-muted)">Visible below ${auroraLat}\xB0N</span>`,
+      { direction: "top", className: "admin1-tooltip", sticky: false }
+    );
+    const southBand = makeAuroraBand(auroraLat, outerLat, false);
+    southBand.bindTooltip(
+      `<b>\u{1F30C} Aurora Zone (South)</b><br><span style="color:var(--text-muted)">Visible above ${-auroraLat}\xB0S</span>`,
+      { direction: "top", className: "admin1-tooltip", sticky: false }
+    );
+    S.spaceWeatherLayer = L2.layerGroup([northBand, southBand]).addTo(S.map);
+    _log("space-weather", `Aurora zone displayed (KP: ${kp})`);
+  }
+  async function toggleOceanLayer() {
+    S.oceanOn = !S.oceanOn;
+    const btn = document.getElementById("ocean-toggle-btn");
+    if (S.oceanOn) {
+      btn.textContent = "Ocean Currents";
+      btn.classList.add("on");
+      if (!S.oceanData) {
+        try {
+          const res = await _kdbOrFetch("/ocean-currents-lite.json");
+          S.oceanData = await res.json();
+        } catch (e) {
+          _warn("ocean", "Failed to load");
+          S.oceanOn = false;
+          btn.textContent = "Ocean Currents";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildOceanLayer();
+    } else {
+      btn.textContent = "Ocean Currents";
+      btn.classList.remove("on");
+      if (S.oceanLayer) {
+        if (S.oceanLayer._legend) {
+          S.map.removeControl(S.oceanLayer._legend);
+          S.oceanLayer._legend = null;
+        }
+        S.map.removeLayer(S.oceanLayer);
+        S.oceanLayer = null;
+      }
+    }
+  }
+  function _buildOceanLayer() {
+    if (S.oceanLayer) {
+      S.map.removeLayer(S.oceanLayer);
+      S.oceanLayer = null;
+    }
+    if (!S.oceanOn || !S.oceanData) return;
+    const layers = [];
+    const getSpeedColor = (speed) => {
+      if (speed >= 150) return "#ef4444";
+      if (speed >= 100) return "#f97316";
+      if (speed >= 70) return "#eab308";
+      if (speed >= 40) return "#22c55e";
+      return "#3b82f6";
+    };
+    const getArrowLength = (speed) => {
+      if (speed >= 150) return 0.8;
+      if (speed >= 100) return 0.6;
+      if (speed >= 70) return 0.45;
+      if (speed >= 40) return 0.3;
+      return 0.2;
+    };
+    const getArrowWeight = (speed) => {
+      if (speed >= 150) return 4;
+      if (speed >= 100) return 3;
+      if (speed >= 70) return 2.5;
+      return 2;
+    };
+    for (const c of S.oceanData.currents || []) {
+      const dirRad = c.dir * Math.PI / 180;
+      const arrowLen = getArrowLength(c.spd);
+      const weight = getArrowWeight(c.spd);
+      const color = getSpeedColor(c.spd);
+      const startLat = c.lat - Math.cos(dirRad) * arrowLen;
+      const startLng = c.lng - Math.sin(dirRad) * arrowLen;
+      const endLat = c.lat + Math.cos(dirRad) * arrowLen;
+      const endLng = c.lng + Math.sin(dirRad) * arrowLen;
+      const arrow = L2.polyline([[startLat, startLng], [endLat, endLng]], {
+        pane: "overlayLayersPane",
+        color,
+        weight,
+        opacity: 0.85,
+        lineCap: "round"
+      });
+      const arrowhead = L2.marker([endLat, endLng], {
+        pane: "overlayLayersPane",
+        icon: L2.divIcon({
+          className: "ocean-arrowhead",
+          html: `<svg width="20" height="20" viewBox="0 0 20 20" style="transform: rotate(${c.dir - 90}deg); filter: drop-shadow(0 0 2px #000);">
+          <polygon points="10,0 20,20 10,15 0,20" fill="${color}" stroke="#000" stroke-width="0.5"/>
+        </svg>`,
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
+        })
+      });
+      if (c.spd >= 100) {
+        const glow = L2.circleMarker([c.lat, c.lng], {
+          pane: "overlayLayersPane",
+          radius: 8,
+          fillColor: color,
+          color: "transparent",
+          fillOpacity: 0.15,
+          weight: 0
+        });
+        layers.push(glow);
+      }
+      const dirLabels = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+      const dirIndex = Math.round(c.dir / 45) % 8;
+      const dirLabel = dirLabels[dirIndex];
+      arrow.bindTooltip(
+        `<b style="color:${color}">\u{1F30A} ${c.name || c.region || "Ocean Current"}</b><br><span style="color:var(--text-secondary)">Speed: <b>${c.spd} cm/s</b> (${(c.spd / 50).toFixed(1)} km/h)</span><br><span style="color:var(--text-muted)">Direction: ${c.dir}\xB0 (${dirLabel})</span><br><span style="color:var(--text-muted)">Region: ${c.region || "Unknown"}</span>` + (c.spd >= 150 ? `<br><span style="color:#ef4444">\u26A1 Very fast current</span>` : "") + (c.spd >= 100 && c.spd < 150 ? `<br><span style="color:#f97316">\u26A1 Fast current</span>` : ""),
+        { direction: "top", className: "admin1-tooltip", sticky: false }
+      );
+      layers.push(arrow, arrowhead);
+    }
+    const legend = L2.control({ position: "bottomright" });
+    legend.onAdd = () => {
+      const div = L2.DomUtil.create("div", "ocean-legend");
+      div.style.cssText = "background:var(--panel-bg); padding:10px; border-radius:8px; border:1px solid var(--border); font-size:11px;";
+      div.innerHTML = `
+      <div style="font-weight:600; margin-bottom:6px; color:var(--text);">\u{1F30A} Current Speed</div>
+      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
+        <span style="display:inline-block; width:20px; height:4px; background:#ef4444; border-radius:2px;"></span>
+        <span style="color:var(--text-secondary);">\u2265150 cm/s (Very Fast)</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
+        <span style="display:inline-block; width:20px; height:4px; background:#f97316; border-radius:2px;"></span>
+        <span style="color:var(--text-secondary);">100-149 cm/s (Fast)</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
+        <span style="display:inline-block; width:20px; height:4px; background:#eab308; border-radius:2px;"></span>
+        <span style="color:var(--text-secondary);">70-99 cm/s (Moderate)</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
+        <span style="display:inline-block; width:20px; height:4px; background:#22c55e; border-radius:2px;"></span>
+        <span style="color:var(--text-secondary);">40-69 cm/s (Slow)</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
+        <span style="display:inline-block; width:20px; height:4px; background:#3b82f6; border-radius:2px;"></span>
+        <span style="color:var(--text-secondary);">&lt;40 cm/s (Very Slow)</span>
+      </div>
+    `;
+      return div;
+    };
+    legend.addTo(S.map);
+    S.oceanLayer = L2.layerGroup(layers).addTo(S.map);
+    S.oceanLayer._legend = legend;
+    _log("ocean", `Displayed ${layers.length} elements (${S.oceanData.currents?.length || 0} currents)`);
+  }
+  var L2;
+  var init_layers_phase2 = __esm({
+    "src/layers-phase2.js"() {
+      init_state();
+      L2 = window.L;
+    }
+  });
+
   // src/choro-defs.js
   var CHORO_INDICATORS;
   var init_choro_defs = __esm({
@@ -2374,10 +2779,10 @@
   });
 
   // src/app-legacy.js
-  function _log(tag, ...args) {
+  function _log2(tag, ...args) {
     if (__DEBUG__) ;
   }
-  function _warn(tag, ...args) {
+  function _warn2(tag, ...args) {
     if (__DEBUG__) ;
   }
   function createLazyLoader(url, assign, shouldRebuild) {
@@ -2389,7 +2794,7 @@
       var kdbData = _kdbGet(stem);
       if (kdbData !== null) {
         assign(kdbData);
-        _log("kdb", "lazy hit:", stem);
+        _log2("kdb", "lazy hit:", stem);
         if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
         loaded = true;
         return;
@@ -2399,11 +2804,11 @@
           const res = await fetch(url);
           if (res.ok) {
             assign(await res.json());
-            _log("lazy", url, "loaded");
+            _log2("lazy", url, "loaded");
             if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
           }
         } catch (e) {
-          _warn("lazy", url, "failed", e);
+          _warn2("lazy", url, "failed", e);
         } finally {
           loaded = true;
           loading = null;
@@ -2429,11 +2834,11 @@
     }
     return val;
   }
-  async function _kdbOrFetch(url) {
+  async function _kdbOrFetch2(url) {
     var stem = url.replace(/^\//, "").replace(/\.json(\?.*)?$/, "");
     var kdbData = _kdbGet(stem);
     if (kdbData !== null) {
-      _log("kdb", "hit:", stem);
+      _log2("kdb", "hit:", stem);
       return { ok: true, status: 200, json: async () => kdbData };
     }
     var res = await fetch(url);
@@ -3010,7 +3415,7 @@
         }
       }
       saveEditsStore(migrated);
-      _log("init", `Migrated ${count} city edits to QID keys`);
+      _log2("init", `Migrated ${count} city edits to QID keys`);
     }
     const deleted = loadDeleted();
     const oldDelKeys = [...deleted].filter((k) => /^-?\d/.test(k) && k.includes(","));
@@ -3021,7 +3426,7 @@
         if (newKey) migrated.add(newKey);
       }
       saveDeletedStore(migrated);
-      _log("init", `Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
+      _log2("init", `Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
     }
   }
   function applyOverrides() {
@@ -4926,7 +5331,7 @@
         }
         if (errorCount >= 3 && !_terrainFallbackActive) {
           _terrainFallbackActive = true;
-          _warn("terrain", "OpenTopoMap unavailable, switching to ESRI World Topo");
+          _warn2("terrain", "OpenTopoMap unavailable, switching to ESRI World Topo");
           setTimeout(() => _swapTileLayer(), 100);
         }
       });
@@ -5122,7 +5527,7 @@
                 matched++;
               }
             }
-            _log("kdb", label + ": " + matched + "/" + kdbData.length + " matched to cities");
+            _log2("kdb", label + ": " + matched + "/" + kdbData.length + " matched to cities");
           }
           return Promise.resolve();
         }
@@ -5138,10 +5543,10 @@
                 matched2++;
               }
             }
-            _log("lazy", label + ": " + matched2 + "/" + arr.length + " matched to cities");
+            _log2("lazy", label + ": " + matched2 + "/" + arr.length + " matched to cities");
           });
         }).catch(function() {
-          _warn("lazy", label, "failed to load");
+          _warn2("lazy", label, "failed to load");
         });
       };
       const [citiesRes, countryRes] = await Promise.all([
@@ -5234,18 +5639,18 @@
           }
         }
       }
-      if (_backfilled) _log("init", "Backfilled ISO codes for " + _backfilled + " cities");
+      if (_backfilled) _log2("init", "Backfilled ISO codes for " + _backfilled + " cities");
       migrateEditKeys(S.rawCities);
       if (countryRes && countryRes.ok) {
         try {
           S.countryData = await countryRes.json();
-          _log("init", `Country data loaded (${Object.keys(S.countryData).length} countries)`);
+          _log2("init", `Country data loaded (${Object.keys(S.countryData).length} countries)`);
           _buildCountryDataCaches();
         } catch {
-          _warn("init", "country-data.json is malformed \u2014 World Bank data will be unavailable");
+          _warn2("init", "country-data.json is malformed \u2014 World Bank data will be unavailable");
         }
       } else {
-        _log("init", 'country-data.json not found \u2014 run "npm run fetch-country" to enable World Bank indicators');
+        _log2("init", 'country-data.json not found \u2014 run "npm run fetch-country" to enable World Bank indicators');
       }
       var _cityNameIdx = {};
       for (var _ci = 0; _ci < S.rawCities.length; _ci++) {
@@ -5332,14 +5737,14 @@
           var kdbData = _kdbGet(stem);
           if (kdbData !== null) {
             item.assign(kdbData);
-            _log("kdb", stem + " loaded");
+            _log2("kdb", stem + " loaded");
             return;
           }
           fetch(item.url).then((r) => r.ok ? r.json() : Promise.reject()).then((d) => {
             item.assign(d);
-            _log("lazy", `${item.url} loaded`);
+            _log2("lazy", `${item.url} loaded`);
           }).catch(() => {
-            _warn("lazy", `${item.url} failed`);
+            _warn2("lazy", `${item.url} failed`);
           });
         });
         _loadCityArrayFromUrl("/ports.json", "Ports", function(qid, d) {
@@ -5366,15 +5771,15 @@
           for (var ri = 0; ri < _uniKdb.length; ri++) {
             S.uniRankings[_uniKdb[ri].qid] = { qs_rank: _uniKdb[ri].qs_rank, the_rank: _uniKdb[ri].the_rank };
           }
-          _log("kdb", "University rankings loaded:", _uniKdb.length);
+          _log2("kdb", "University rankings loaded:", _uniKdb.length);
         } else {
           fetch("/uni-rankings.json").then((r) => r.ok ? r.json() : Promise.reject()).then(function(ranks) {
             for (var ri2 = 0; ri2 < ranks.length; ri2++) {
               S.uniRankings[ranks[ri2].qid] = { qs_rank: ranks[ri2].qs_rank, the_rank: ranks[ri2].the_rank };
             }
-            _log("lazy", "University rankings loaded:", ranks.length);
+            _log2("lazy", "University rankings loaded:", ranks.length);
           }).catch(function() {
-            _warn("lazy", "University rankings failed");
+            _warn2("lazy", "University rankings failed");
           });
         }
       };
@@ -7124,7 +7529,7 @@
         var fetches = [];
         if (!admin1Cache[iso2]) {
           fetches.push(
-            _kdbOrFetch("/admin1/" + iso2 + ".json").then(function(r) {
+            _kdbOrFetch2("/admin1/" + iso2 + ".json").then(function(r) {
               return r.json();
             }).then(function(d) {
               if (d) admin1Cache[iso2] = d;
@@ -7153,7 +7558,7 @@
           S.admin1Layers[iso2] = layer;
         }
       } catch (e) {
-        _warn("admin1", "Failed to load", iso2, e.message);
+        _warn2("admin1", "Failed to load", iso2, e.message);
       } finally {
         delete S._admin1Loading[iso2];
       }
@@ -7235,7 +7640,7 @@
       btn.disabled = true;
       await _worldGeoLoader.ensure();
       if (!S.admin1Index) {
-        var idxRes = await _kdbOrFetch("/admin1/_index.json");
+        var idxRes = await _kdbOrFetch2("/admin1/_index.json");
         if (idxRes.ok) S.admin1Index = await idxRes.json();
         else S.admin1Index = {};
       }
@@ -7411,11 +7816,11 @@
       btn.classList.add("on");
       if (!S.cableData) {
         try {
-          var res = await _kdbOrFetch("/submarine-cables.json");
+          var res = await _kdbOrFetch2("/submarine-cables.json");
           S.cableData = await res.json();
-          _log("cables", "Loaded:", S.cableData.cables.length, "cables,", S.cableData.landings.length, "landing points");
+          _log2("cables", "Loaded:", S.cableData.cables.length, "cables,", S.cableData.landings.length, "landing points");
         } catch (e) {
-          _warn("cables", "Failed to load submarine-cables.json");
+          _warn2("cables", "Failed to load submarine-cables.json");
           S.cableOn = false;
           btn.textContent = "Submarine Cables";
           btn.classList.remove("on");
@@ -7513,11 +7918,11 @@
       btn.classList.add("on");
       if (!S.airRouteData) {
         try {
-          var res = await _kdbOrFetch("/air-routes.json");
+          var res = await _kdbOrFetch2("/air-routes.json");
           S.airRouteData = await res.json();
-          _log("air-routes", "Loaded:", S.airRouteData.routes.length, "routes");
+          _log2("air-routes", "Loaded:", S.airRouteData.routes.length, "routes");
         } catch (e) {
-          _warn("air-routes", "Failed to load");
+          _warn2("air-routes", "Failed to load");
           S.airRouteOn = false;
           btn.textContent = "\u2708 Flights: Off";
           btn.classList.remove("on");
@@ -7614,10 +8019,10 @@
       btn.classList.add("on");
       if (!S.tectonicData) {
         try {
-          const res = await _kdbOrFetch("/tectonic-plates.json");
+          const res = await _kdbOrFetch2("/tectonic-plates.json");
           S.tectonicData = await res.json();
         } catch (e) {
-          _warn("tectonic", "Failed to load");
+          _warn2("tectonic", "Failed to load");
           S.tectonicOn = false;
           btn.textContent = "Tectonic Plates";
           btn.classList.remove("on");
@@ -7680,7 +8085,7 @@
       const res = await fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson");
       S.earthquakeData = await res.json();
     } catch (e) {
-      _warn("earthquake", "Failed to fetch USGS data");
+      _warn2("earthquake", "Failed to fetch USGS data");
       return;
     }
     _buildEarthquakeLayer();
@@ -7735,10 +8140,10 @@
       btn.classList.add("on");
       if (!S.volcanoData) {
         try {
-          const res = await _kdbOrFetch("/volcanoes_full.json");
+          const res = await _kdbOrFetch2("/volcanoes_full.json");
           S.volcanoData = await res.json();
         } catch (e) {
-          _warn("volcano", "Failed to load");
+          _warn2("volcano", "Failed to load");
           S.volcanoOn = false;
           btn.textContent = "Volcanoes";
           btn.classList.remove("on");
@@ -7793,10 +8198,10 @@
       btn.classList.add("on");
       if (!S.launchSiteData) {
         try {
-          const res = await _kdbOrFetch("/launch_sites.json");
+          const res = await _kdbOrFetch2("/launch_sites.json");
           S.launchSiteData = await res.json();
         } catch (e) {
-          _warn("launchSite", "Failed to load");
+          _warn2("launchSite", "Failed to load");
           S.launchSiteOn = false;
           btn.textContent = "Launch Sites";
           btn.classList.remove("on");
@@ -7849,13 +8254,13 @@
       btn.classList.add("on");
       if (!S.eezData) {
         try {
-          const res = await _kdbOrFetch("/eez_boundaries.json");
+          const res = await _kdbOrFetch2("/eez_boundaries.json");
           S.eezData = await res.json();
           if (typeof DatasetManager !== "undefined") {
             DatasetManager.register("eezData", S.eezData, "low");
           }
         } catch (e) {
-          _warn("eez", "Failed to load");
+          _warn2("eez", "Failed to load");
           S.eezOn = false;
           btn.textContent = "EEZ Boundaries";
           btn.classList.remove("on");
@@ -7951,7 +8356,7 @@
         { direction: "top", className: "admin1-tooltip" }
       );
     } catch (e) {
-      _warn("iss", "Failed to fetch position");
+      _warn2("iss", "Failed to fetch position");
     }
   }
   async function toggleAircraftLayer() {
@@ -7993,9 +8398,9 @@
   }
   async function _fetchAircraftPositions() {
     try {
-      const res = await _kdbOrFetch("/aircraft-live-lite.json");
+      const res = await _kdbOrFetch2("/aircraft-live-lite.json");
       if (!res.ok) {
-        _warn("aircraft", "No data available");
+        _warn2("aircraft", "No data available");
         return;
       }
       const data = await res.json();
@@ -8066,9 +8471,9 @@
         count++;
       }
       S.aircraftLayer = L.layerGroup(markers).addTo(S.map);
-      _log("aircraft", `Displayed ${count}/${MAX_AIRCRAFT} aircraft (zoom ${zoom})`);
+      _log2("aircraft", `Displayed ${count}/${MAX_AIRCRAFT} aircraft (zoom ${zoom})`);
     } catch (e) {
-      _warn("aircraft", "Failed:", e.message);
+      _warn2("aircraft", "Failed:", e.message);
     }
   }
   async function toggleWildfireLayer() {
@@ -8104,9 +8509,9 @@
   }
   async function _fetchWildfireData() {
     try {
-      const res = await _kdbOrFetch("/wildfires-live-lite.json");
+      const res = await _kdbOrFetch2("/wildfires-live-lite.json");
       if (!res.ok) {
-        _warn("wildfire", "No data available");
+        _warn2("wildfire", "No data available");
         return;
       }
       const data = await res.json();
@@ -8168,9 +8573,9 @@
         count++;
       }
       S.wildfireLayer = L.layerGroup(markers).addTo(S.map);
-      _log("wildfire", `Displayed ${count} fires (zoom ${zoom}, viewport: ${outsideCount} culled)`);
+      _log2("wildfire", `Displayed ${count} fires (zoom ${zoom}, viewport: ${outsideCount} culled)`);
     } catch (e) {
-      _warn("wildfire", "Failed:", e.message);
+      _warn2("wildfire", "Failed:", e.message);
     }
   }
   async function toggleEonetLayer() {
@@ -8181,10 +8586,10 @@
       btn.classList.add("on");
       if (!S.eonetData) {
         try {
-          const res = await _kdbOrFetch("/eonet-events-lite.json");
+          const res = await _kdbOrFetch2("/eonet-events-lite.json");
           S.eonetData = await res.json();
         } catch (e) {
-          _warn("eonet", "Failed to load");
+          _warn2("eonet", "Failed to load");
           S.eonetOn = false;
           btn.textContent = "Natural Events";
           btn.classList.remove("on");
@@ -8236,7 +8641,7 @@
       layers.push(marker);
     }
     S.eonetLayer = L.layerGroup(layers).addTo(S.map);
-    _log("eonet", `Displayed ${layers.length} events`);
+    _log2("eonet", `Displayed ${layers.length} events`);
   }
   async function toggleProtectedAreasLayer() {
     S.protectedAreasOn = !S.protectedAreasOn;
@@ -8246,10 +8651,10 @@
       btn.classList.add("on");
       if (!S.protectedAreasData) {
         try {
-          const res = await _kdbOrFetch("/protected-areas.json");
+          const res = await _kdbOrFetch2("/protected-areas.json");
           S.protectedAreasData = await res.json();
         } catch (e) {
-          _warn("protected-areas", "Failed to load");
+          _warn2("protected-areas", "Failed to load");
           S.protectedAreasOn = false;
           btn.textContent = "\u{1F332} Protected Areas: Off";
           btn.classList.remove("on");
@@ -8302,7 +8707,7 @@
       layers.push(marker);
     }
     S.protectedAreasLayer = L.layerGroup(layers).addTo(S.map);
-    _log("protected-areas", `Displayed ${layers.length} areas`);
+    _log2("protected-areas", `Displayed ${layers.length} areas`);
   }
   async function toggleVesselPortsLayer() {
     S.vesselPortsOn = !S.vesselPortsOn;
@@ -8312,10 +8717,10 @@
       btn.classList.add("on");
       if (!S.vesselPortsData) {
         try {
-          const res = await _kdbOrFetch("/vessel-ports.json");
+          const res = await _kdbOrFetch2("/vessel-ports.json");
           S.vesselPortsData = await res.json();
         } catch (e) {
-          _warn("vessel-ports", "Failed to load");
+          _warn2("vessel-ports", "Failed to load");
           S.vesselPortsOn = false;
           btn.textContent = "Ports";
           btn.classList.remove("on");
@@ -8359,7 +8764,7 @@
       layers.push(marker);
     }
     S.vesselPortsLayer = L.layerGroup(layers).addTo(S.map);
-    _log("vessel-ports", `Displayed ${layers.length} ports`);
+    _log2("vessel-ports", `Displayed ${layers.length} ports`);
   }
   async function togglePeeringdbLayer() {
     S.peeringdbOn = !S.peeringdbOn;
@@ -8369,11 +8774,11 @@
       btn.classList.add("on");
       if (!S.peeringdbData) {
         try {
-          const res = await _kdbOrFetch("/peeringdb.json");
+          const res = await _kdbOrFetch2("/peeringdb.json");
           S.peeringdbData = await res.json();
-          _log("peeringdb", "Loaded:", S.peeringdbData.ixps.length, "IXPs,", S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter((x) => x.lat !== null).length, "with coords");
+          _log2("peeringdb", "Loaded:", S.peeringdbData.ixps.length, "IXPs,", S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter((x) => x.lat !== null).length, "with coords");
         } catch (e) {
-          _warn("peeringdb", "Failed to load:", e);
+          _warn2("peeringdb", "Failed to load:", e);
           S.peeringdbOn = false;
           btn.textContent = "Internet Exchanges";
           btn.classList.remove("on");
@@ -8414,7 +8819,7 @@
       layers.push(marker);
     }
     S.peeringdbLayer = L.layerGroup(layers).addTo(S.map);
-    _log("peeringdb", `Displayed ${layers.length} IXPs`);
+    _log2("peeringdb", `Displayed ${layers.length} IXPs`);
   }
   async function toggleWaqiLayer() {
     S.waqiOn = !S.waqiOn;
@@ -8424,10 +8829,10 @@
       btn.classList.add("on");
       if (!S.waqiData) {
         try {
-          const res = await _kdbOrFetch("/who-airquality.json");
+          const res = await _kdbOrFetch2("/who-airquality.json");
           S.waqiData = await res.json();
         } catch (e) {
-          _warn("waqi", "Failed to load");
+          _warn2("waqi", "Failed to load");
           S.waqiOn = false;
           btn.textContent = "Air Quality";
           btn.classList.remove("on");
@@ -8485,7 +8890,7 @@
       layers.push(marker);
     }
     S.waqiLayer = L.layerGroup(layers).addTo(S.map);
-    _log("waqi", `Displayed ${layers.length} stations`);
+    _log2("waqi", `Displayed ${layers.length} stations`);
   }
   async function toggleWeatherLayer() {
     S.weatherOn = !S.weatherOn;
@@ -8495,10 +8900,10 @@
       btn.classList.add("on");
       if (!S.weatherData) {
         try {
-          const res = await _kdbOrFetch("/weather-stations.json");
+          const res = await _kdbOrFetch2("/weather-stations.json");
           S.weatherData = await res.json();
         } catch (e) {
-          _warn("weather", "Failed to load");
+          _warn2("weather", "Failed to load");
           S.weatherOn = false;
           btn.textContent = "Weather";
           btn.classList.remove("on");
@@ -8560,7 +8965,7 @@
       layers.push(marker);
     }
     S.weatherLayer = L.layerGroup(layers).addTo(S.map);
-    _log("weather", `Displayed ${layers.length} stations`);
+    _log2("weather", `Displayed ${layers.length} stations`);
   }
   async function toggleSatelliteLayer() {
     S.satelliteOn = !S.satelliteOn;
@@ -8570,10 +8975,10 @@
       btn.classList.add("on");
       if (!S.satelliteData) {
         try {
-          const res = await _kdbOrFetch("/satellites-live-lite.json");
+          const res = await _kdbOrFetch2("/satellites-live-lite.json");
           S.satelliteData = await res.json();
         } catch (e) {
-          _warn("satellite", "Failed to load");
+          _warn2("satellite", "Failed to load");
           S.satelliteOn = false;
           btn.textContent = "Satellites";
           btn.classList.remove("on");
@@ -8629,7 +9034,7 @@
       layers.push(marker);
     }
     S.satelliteLayer = L.layerGroup(layers).addTo(S.map);
-    _log("satellite", `Displayed ${layers.length} satellites`);
+    _log2("satellite", `Displayed ${layers.length} satellites`);
   }
   async function toggleUnescoIchLayer() {
     S.unescoIchOn = !S.unescoIchOn;
@@ -8639,10 +9044,10 @@
       btn.classList.add("on");
       if (!S.unescoIchData) {
         try {
-          const res = await _kdbOrFetch("/unesco-ich.json");
+          const res = await _kdbOrFetch2("/unesco-ich.json");
           S.unescoIchData = await res.json();
         } catch (e) {
-          _warn("unesco-ich", "Failed to load");
+          _warn2("unesco-ich", "Failed to load");
           S.unescoIchOn = false;
           btn.textContent = "\u{1F3AD} Heritage: Off";
           btn.classList.remove("on");
@@ -8665,389 +9070,7 @@
       S.unescoIchLayer = null;
     }
     if (!S.unescoIchOn || !S.unescoIchData) return;
-    _log("unesco-ich", "Data loaded for country panel integration");
-  }
-  async function toggleGtdLayer() {
-    S.gtdOn = !S.gtdOn;
-    const btn = document.getElementById("gtd-toggle-btn");
-    if (S.gtdOn) {
-      btn.textContent = "Terrorism";
-      btn.classList.add("on");
-      if (!S.gtdData) {
-        try {
-          const res = await _kdbOrFetch("/terrorism-incidents-lite.json");
-          S.gtdData = await res.json();
-        } catch (e) {
-          _warn("gtd", "Failed to load");
-          S.gtdOn = false;
-          btn.textContent = "Terrorism";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildGtdLayer();
-    } else {
-      btn.textContent = "Terrorism";
-      btn.classList.remove("on");
-      if (S.gtdLayer) {
-        S.map.removeLayer(S.gtdLayer);
-        S.gtdLayer = null;
-      }
-    }
-  }
-  function _buildGtdLayer() {
-    if (S.gtdLayer) {
-      S.map.removeLayer(S.gtdLayer);
-      S.gtdLayer = null;
-    }
-    if (!S.gtdOn || !S.gtdData) return;
-    const layers = [];
-    const attackColors = {
-      "Bombing/Explosion": "#ef4444",
-      "Armed Assault": "#f97316",
-      "Abduction": "#8b5cf6",
-      "Facility/Infrastructure Attack": "#6366f1",
-      "Hostage Taking": "#ec4899"
-    };
-    for (const inc of S.gtdData.incidents || []) {
-      const color = attackColors[inc.attack_type] || "#888";
-      const radius = Math.max(6, Math.min(14, inc.fatalities / 25));
-      const marker = L.circleMarker([inc.lat, inc.lng], {
-        pane: "overlayLayersPane",
-        radius,
-        fillColor: color,
-        color: "#000",
-        weight: 1,
-        fillOpacity: 0.85
-      });
-      const date = new Date(inc.date).toLocaleDateString();
-      marker.bindTooltip(
-        `<b style="color:${color}">\u26A0\uFE0F ${inc.attack_type}</b><br><b>${inc.city}, ${inc.country}</b><br><span style="color:var(--text-muted)">${date}</span><br><span style="color:var(--text-secondary)">Fatalities: ${inc.fatalities} | Wounded: ${inc.wounded}</span>` + (inc.perpetrator ? `<br><span style="color:var(--text-secondary)">Perpetrator: ${inc.perpetrator}</span>` : ""),
-        { direction: "top", className: "admin1-tooltip", sticky: true }
-      );
-      layers.push(marker);
-    }
-    S.gtdLayer = L.layerGroup(layers).addTo(S.map);
-    _log("gtd", `Displayed ${layers.length} incidents`);
-  }
-  async function toggleCryptoLayer() {
-    S.cryptoOn = !S.cryptoOn;
-    const btn = document.getElementById("crypto-toggle-btn");
-    if (S.cryptoOn) {
-      btn.textContent = "Crypto Adoption";
-      btn.classList.add("on");
-      if (!S.cryptoData) {
-        try {
-          const res = await _kdbOrFetch("/crypto-stats-lite.json");
-          S.cryptoData = await res.json();
-        } catch (e) {
-          _warn("crypto", "Failed to load");
-          S.cryptoOn = false;
-          btn.textContent = "Crypto Adoption";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildCryptoLayer();
-    } else {
-      btn.textContent = "Crypto Adoption";
-      btn.classList.remove("on");
-      if (S.cryptoLayer) {
-        S.map.removeLayer(S.cryptoLayer);
-        S.cryptoLayer = null;
-      }
-    }
-  }
-  function _buildCryptoLayer() {
-    if (S.cryptoLayer) {
-      S.map.removeLayer(S.cryptoLayer);
-      S.cryptoLayer = null;
-    }
-    if (!S.cryptoOn || !S.cryptoData) return;
-    const layers = [];
-    const byCountry = S.cryptoData.byCountry || {};
-    const getAdoptionColor = (rank) => {
-      if (rank <= 5) return "#22c55e";
-      if (rank <= 10) return "#84cc16";
-      if (rank <= 20) return "#eab308";
-      if (rank <= 35) return "#f97316";
-      return "#ef4444";
-    };
-    const countryCentroids3 = {
-      "IN": { lat: 20.59, lng: 78.96, name: "India" },
-      "NG": { lat: 9.08, lng: 8.68, name: "Nigeria" },
-      "VN": { lat: 14.06, lng: 108.28, name: "Vietnam" },
-      "US": { lat: 37.09, lng: -95.71, name: "United States" },
-      "PK": { lat: 30.38, lng: 69.35, name: "Pakistan" },
-      "ID": { lat: -0.79, lng: 113.92, name: "Indonesia" },
-      "UA": { lat: 48.38, lng: 31.17, name: "Ukraine" },
-      "PH": { lat: 12.88, lng: 121.77, name: "Philippines" },
-      "TR": { lat: 38.96, lng: 35.24, name: "Turkey" },
-      "BR": { lat: -14.24, lng: -51.93, name: "Brazil" },
-      "TH": { lat: 15.87, lng: 100.99, name: "Thailand" },
-      "RU": { lat: 61.52, lng: 105.32, name: "Russia" },
-      "CO": { lat: 4.57, lng: -74.3, name: "Colombia" },
-      "AR": { lat: -38.42, lng: -63.62, name: "Argentina" },
-      "ZA": { lat: -30.56, lng: 22.94, name: "South Africa" },
-      "MY": { lat: 4.21, lng: 101.98, name: "Malaysia" },
-      "VE": { lat: 6.42, lng: -66.59, name: "Venezuela" },
-      "GB": { lat: 55.38, lng: -3.44, name: "United Kingdom" },
-      "SG": { lat: 1.35, lng: 103.82, name: "Singapore" },
-      "KR": { lat: 35.91, lng: 127.77, name: "South Korea" },
-      "JP": { lat: 36.2, lng: 138.25, name: "Japan" },
-      "DE": { lat: 51.17, lng: 10.45, name: "Germany" },
-      "FR": { lat: 46.23, lng: 2.21, name: "France" },
-      "AU": { lat: -25.27, lng: 133.78, name: "Australia" },
-      "CA": { lat: 56.13, lng: -106.35, name: "Canada" },
-      "NL": { lat: 52.13, lng: 5.29, name: "Netherlands" },
-      "CH": { lat: 46.82, lng: 8.23, name: "Switzerland" },
-      "AE": { lat: 23.42, lng: 53.85, name: "UAE" },
-      "HK": { lat: 22.4, lng: 114.11, name: "Hong Kong" },
-      "TW": { lat: 23.69, lng: 120.96, name: "Taiwan" },
-      "EG": { lat: 26.82, lng: 30.8, name: "Egypt" },
-      "KE": { lat: -0.02, lng: 37.68, name: "Kenya" },
-      "GH": { lat: 7.95, lng: -1.02, name: "Ghana" },
-      "BD": { lat: 23.68, lng: 90.36, name: "Bangladesh" },
-      "CL": { lat: -35.68, lng: -71.54, name: "Chile" },
-      "PE": { lat: -9.19, lng: -75.02, name: "Peru" },
-      "MX": { lat: 23.63, lng: -102.55, name: "Mexico" },
-      "PL": { lat: 51.92, lng: 19.15, name: "Poland" },
-      "IT": { lat: 41.87, lng: 12.57, name: "Italy" },
-      "ES": { lat: 40.46, lng: -3.75, name: "Spain" },
-      "SE": { lat: 60.13, lng: 18.64, name: "Sweden" },
-      "NO": { lat: 60.47, lng: 8.47, name: "Norway" },
-      "DK": { lat: 56.26, lng: 9.5, name: "Denmark" },
-      "FI": { lat: 61.92, lng: 25.75, name: "Finland" },
-      "AT": { lat: 47.52, lng: 14.55, name: "Austria" },
-      "BE": { lat: 50.5, lng: 4.47, name: "Belgium" },
-      "PT": { lat: 39.4, lng: -8.23, name: "Portugal" },
-      "GR": { lat: 39.07, lng: 21.82, name: "Greece" },
-      "CZ": { lat: 49.82, lng: 15.47, name: "Czech Republic" },
-      "IL": { lat: 31.05, lng: 34.85, name: "Israel" },
-      "CN": { lat: 35.86, lng: 104.19, name: "China" },
-      "SA": { lat: 23.89, lng: 45.08, name: "Saudi Arabia" },
-      "KZ": { lat: 48.02, lng: 66.92, name: "Kazakhstan" },
-      "UZ": { lat: 41.38, lng: 64.59, name: "Uzbekistan" },
-      "NZ": { lat: -40.9, lng: 174.89, name: "New Zealand" }
-    };
-    for (const [code, data] of Object.entries(byCountry)) {
-      const centroid = countryCentroids3[code];
-      if (!centroid) continue;
-      const color = getAdoptionColor(data.adoption_rank);
-      const radius = Math.max(5, Math.min(15, 20 - data.adoption_rank / 3));
-      const marker = L.circleMarker([centroid.lat, centroid.lng], {
-        pane: "overlayLayersPane",
-        radius,
-        fillColor: color,
-        color: "#000",
-        weight: 1,
-        fillOpacity: 0.85
-      });
-      marker.bindTooltip(
-        `<b style="color:${color}">\u20BF ${centroid.name}</b><br><span style="color:var(--text-secondary)">Rank: #${data.adoption_rank}</span><br><span style="color:var(--text-muted)">Users: ${data.crypto_users_pct.toFixed(1)}%</span><br><span style="color:var(--text-muted)">Est. users: ${(data.estimated_users / 1e6).toFixed(1)}M</span><br><span style="color:var(--text-secondary)">DeFi: $${(data.defi_value_usd / 1e9).toFixed(1)}B</span><br><span style="color:var(--text-muted)">Exchanges: ${data.exchanges}</span>`,
-        { direction: "top", className: "admin1-tooltip", sticky: false }
-      );
-      layers.push(marker);
-    }
-    S.cryptoLayer = L.layerGroup(layers).addTo(S.map);
-    _log("crypto", `Displayed ${layers.length} country markers`);
-  }
-  async function toggleSpaceWeatherLayer() {
-    S.spaceWeatherOn = !S.spaceWeatherOn;
-    const btn = document.getElementById("spaceweather-toggle-btn");
-    if (S.spaceWeatherOn) {
-      btn.textContent = "Space Weather";
-      btn.classList.add("on");
-      if (!S.spaceWeatherData) {
-        try {
-          const res = await _kdbOrFetch("/solar-weather-lite.json");
-          S.spaceWeatherData = await res.json();
-        } catch (e) {
-          _warn("space-weather", "Failed to load");
-          S.spaceWeatherOn = false;
-          btn.textContent = "Space Weather";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildSpaceWeatherLayer();
-    } else {
-      btn.textContent = "Space Weather";
-      btn.classList.remove("on");
-      if (S.spaceWeatherLayer) {
-        S.map.removeLayer(S.spaceWeatherLayer);
-        S.spaceWeatherLayer = null;
-      }
-    }
-  }
-  function _buildSpaceWeatherLayer() {
-    if (S.spaceWeatherLayer) {
-      S.map.removeLayer(S.spaceWeatherLayer);
-      S.spaceWeatherLayer = null;
-    }
-    if (!S.spaceWeatherOn || !S.spaceWeatherData) return;
-    const kp = S.spaceWeatherData.kp_index || 0;
-    const auroraLat = S.spaceWeatherData.aurora_visible_below_lat || 66;
-    const outerLat = Math.min(auroraLat + 5, 89);
-    function makeAuroraBand(innerLat, outerLatAbs, isNorth) {
-      const pts = [];
-      const sign = isNorth ? 1 : -1;
-      for (let lng = -180; lng <= 180; lng += 4) pts.push([sign * outerLatAbs, lng]);
-      for (let lng = 180; lng >= -180; lng -= 4) pts.push([sign * innerLat, lng]);
-      return L.polygon(pts, { fillColor: "#8b5cf6", color: "#a78bfa", weight: 2, fillOpacity: 0.25, dashArray: "8, 8" });
-    }
-    const northBand = makeAuroraBand(auroraLat, outerLat, true);
-    northBand.bindTooltip(
-      `<b>\u{1F30C} Aurora Zone (North)</b><br><span style="color:var(--text-secondary)">KP Index: ${kp}</span><br><span style="color:var(--text-muted)">Visible below ${auroraLat}\xB0N</span>`,
-      { direction: "top", className: "admin1-tooltip", sticky: false }
-    );
-    const southBand = makeAuroraBand(auroraLat, outerLat, false);
-    southBand.bindTooltip(
-      `<b>\u{1F30C} Aurora Zone (South)</b><br><span style="color:var(--text-muted)">Visible above ${-auroraLat}\xB0S</span>`,
-      { direction: "top", className: "admin1-tooltip", sticky: false }
-    );
-    S.spaceWeatherLayer = L.layerGroup([northBand, southBand]).addTo(S.map);
-    _log("space-weather", `Aurora zone displayed (KP: ${kp})`);
-  }
-  async function toggleOceanLayer() {
-    S.oceanOn = !S.oceanOn;
-    const btn = document.getElementById("ocean-toggle-btn");
-    if (S.oceanOn) {
-      btn.textContent = "Ocean Currents";
-      btn.classList.add("on");
-      if (!S.oceanData) {
-        try {
-          const res = await _kdbOrFetch("/ocean-currents-lite.json");
-          S.oceanData = await res.json();
-        } catch (e) {
-          _warn("ocean", "Failed to load");
-          S.oceanOn = false;
-          btn.textContent = "Ocean Currents";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildOceanLayer();
-    } else {
-      btn.textContent = "Ocean Currents";
-      btn.classList.remove("on");
-      if (S.oceanLayer) {
-        if (S.oceanLayer._legend) {
-          S.map.removeControl(S.oceanLayer._legend);
-          S.oceanLayer._legend = null;
-        }
-        S.map.removeLayer(S.oceanLayer);
-        S.oceanLayer = null;
-      }
-    }
-  }
-  function _buildOceanLayer() {
-    if (S.oceanLayer) {
-      S.map.removeLayer(S.oceanLayer);
-      S.oceanLayer = null;
-    }
-    if (!S.oceanOn || !S.oceanData) return;
-    const layers = [];
-    const getSpeedColor = (speed) => {
-      if (speed >= 150) return "#ef4444";
-      if (speed >= 100) return "#f97316";
-      if (speed >= 70) return "#eab308";
-      if (speed >= 40) return "#22c55e";
-      return "#3b82f6";
-    };
-    const getArrowLength = (speed) => {
-      if (speed >= 150) return 0.8;
-      if (speed >= 100) return 0.6;
-      if (speed >= 70) return 0.45;
-      if (speed >= 40) return 0.3;
-      return 0.2;
-    };
-    const getArrowWeight = (speed) => {
-      if (speed >= 150) return 4;
-      if (speed >= 100) return 3;
-      if (speed >= 70) return 2.5;
-      return 2;
-    };
-    for (const c of S.oceanData.currents || []) {
-      const dirRad = c.dir * Math.PI / 180;
-      const arrowLen = getArrowLength(c.spd);
-      const weight = getArrowWeight(c.spd);
-      const color = getSpeedColor(c.spd);
-      const startLat = c.lat - Math.cos(dirRad) * arrowLen;
-      const startLng = c.lng - Math.sin(dirRad) * arrowLen;
-      const endLat = c.lat + Math.cos(dirRad) * arrowLen;
-      const endLng = c.lng + Math.sin(dirRad) * arrowLen;
-      const arrow = L.polyline([[startLat, startLng], [endLat, endLng]], {
-        pane: "overlayLayersPane",
-        color,
-        weight,
-        opacity: 0.85,
-        lineCap: "round"
-      });
-      const arrowhead = L.marker([endLat, endLng], {
-        pane: "overlayLayersPane",
-        icon: L.divIcon({
-          className: "ocean-arrowhead",
-          html: `<svg width="20" height="20" viewBox="0 0 20 20" style="transform: rotate(${c.dir - 90}deg); filter: drop-shadow(0 0 2px #000);">
-          <polygon points="10,0 20,20 10,15 0,20" fill="${color}" stroke="#000" stroke-width="0.5"/>
-        </svg>`,
-          iconSize: [20, 20],
-          iconAnchor: [10, 10]
-        })
-      });
-      if (c.spd >= 100) {
-        const glow = L.circleMarker([c.lat, c.lng], {
-          pane: "overlayLayersPane",
-          radius: 8,
-          fillColor: color,
-          color: "transparent",
-          fillOpacity: 0.15,
-          weight: 0
-        });
-        layers.push(glow);
-      }
-      const dirLabels = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-      const dirIndex = Math.round(c.dir / 45) % 8;
-      const dirLabel = dirLabels[dirIndex];
-      arrow.bindTooltip(
-        `<b style="color:${color}">\u{1F30A} ${c.name || c.region || "Ocean Current"}</b><br><span style="color:var(--text-secondary)">Speed: <b>${c.spd} cm/s</b> (${(c.spd / 50).toFixed(1)} km/h)</span><br><span style="color:var(--text-muted)">Direction: ${c.dir}\xB0 (${dirLabel})</span><br><span style="color:var(--text-muted)">Region: ${c.region || "Unknown"}</span>` + (c.spd >= 150 ? `<br><span style="color:#ef4444">\u26A1 Very fast current</span>` : "") + (c.spd >= 100 && c.spd < 150 ? `<br><span style="color:#f97316">\u26A1 Fast current</span>` : ""),
-        { direction: "top", className: "admin1-tooltip", sticky: false }
-      );
-      layers.push(arrow, arrowhead);
-    }
-    const legend = L.control({ position: "bottomright" });
-    legend.onAdd = () => {
-      const div = L.DomUtil.create("div", "ocean-legend");
-      div.style.cssText = "background:var(--panel-bg); padding:10px; border-radius:8px; border:1px solid var(--border); font-size:11px;";
-      div.innerHTML = `
-      <div style="font-weight:600; margin-bottom:6px; color:var(--text);">\u{1F30A} Current Speed</div>
-      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
-        <span style="display:inline-block; width:20px; height:4px; background:#ef4444; border-radius:2px;"></span>
-        <span style="color:var(--text-secondary);">\u2265150 cm/s (Very Fast)</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
-        <span style="display:inline-block; width:20px; height:4px; background:#f97316; border-radius:2px;"></span>
-        <span style="color:var(--text-secondary);">100-149 cm/s (Fast)</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
-        <span style="display:inline-block; width:20px; height:4px; background:#eab308; border-radius:2px;"></span>
-        <span style="color:var(--text-secondary);">70-99 cm/s (Moderate)</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
-        <span style="display:inline-block; width:20px; height:4px; background:#22c55e; border-radius:2px;"></span>
-        <span style="color:var(--text-secondary);">40-69 cm/s (Slow)</span>
-      </div>
-      <div style="display:flex; align-items:center; gap:6px; margin:3px 0;">
-        <span style="display:inline-block; width:20px; height:4px; background:#3b82f6; border-radius:2px;"></span>
-        <span style="color:var(--text-secondary);">&lt;40 cm/s (Very Slow)</span>
-      </div>
-    `;
-      return div;
-    };
-    legend.addTo(S.map);
-    S.oceanLayer = L.layerGroup(layers).addTo(S.map);
-    S.oceanLayer._legend = legend;
-    _log("ocean", `Displayed ${layers.length} elements (${S.oceanData.currents?.length || 0} currents)`);
+    _log2("unesco-ich", "Data loaded for country panel integration");
   }
   async function toggleFlightAwareLayer() {
     S.flightAwareOn = !S.flightAwareOn;
@@ -9057,10 +9080,10 @@
       btn.classList.add("on");
       if (!S.flightAwareData) {
         try {
-          const res = await _kdbOrFetch("/flightaware-flights-lite.json");
+          const res = await _kdbOrFetch2("/flightaware-flights-lite.json");
           S.flightAwareData = await res.json();
         } catch (e) {
-          _warn("flightaware", "Failed to load");
+          _warn2("flightaware", "Failed to load");
           S.flightAwareOn = false;
           btn.textContent = "\u2708\uFE0F FlightAware: Off";
           btn.classList.remove("on");
@@ -9106,7 +9129,7 @@
       layers.push(arrow);
     }
     S.flightAwareLayer = L.layerGroup(layers).addTo(S.map);
-    _log("flightaware", `Displayed ${layers.length} flights`);
+    _log2("flightaware", `Displayed ${layers.length} flights`);
   }
   async function toggleMarineTrafficLayer() {
     S.marineTrafficOn = !S.marineTrafficOn;
@@ -9116,10 +9139,10 @@
       btn.classList.add("on");
       if (!S.marineTrafficData) {
         try {
-          const res = await _kdbOrFetch("/ships-live-lite.json");
+          const res = await _kdbOrFetch2("/ships-live-lite.json");
           S.marineTrafficData = await res.json();
         } catch (e) {
-          _warn("marinetraffic", "Failed to load");
+          _warn2("marinetraffic", "Failed to load");
           S.marineTrafficOn = false;
           btn.textContent = "Ships";
           btn.classList.remove("on");
@@ -9181,7 +9204,7 @@
       layers.push(marker, courseArrow);
     }
     S.marineTrafficLayer = L.layerGroup(layers).addTo(S.map);
-    _log("marinetraffic", `Displayed ${layers.length / 2} vessels`);
+    _log2("marinetraffic", `Displayed ${layers.length / 2} vessels`);
   }
   function resetAllLayers() {
     setCityDotMode("hide");
@@ -10781,6 +10804,7 @@
       init_stats_panel();
       init_iy_chart();
       init_corporations_list();
+      init_layers_phase2();
       init_choro_defs();
       init_stat_defs();
       init_viz_defs();
@@ -12382,6 +12406,7 @@
       init_keyboard_nav();
       init_stats_panel();
       init_corporations_list();
+      init_layers_phase2();
       Object.assign(window, {
         buildEconLayer,
         clearAllFilters,
