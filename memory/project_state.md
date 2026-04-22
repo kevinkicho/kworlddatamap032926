@@ -4,13 +4,23 @@ description: Full feature list and current commit state of the world cities map 
 type: project
 originSessionId: 1205a473-4859-4531-9892-74ff6102f51e
 ---
-**Last commit:** c11be65 (2026-04-09) — README updates + live aircraft tracking
+**Last commit:** 2f7bd82 (2026-04-16) — Extract layers-phase2 module (GTD, crypto, space weather, ocean toggles)
+**Build unblocked:** 2026-04-22 — econ-layer duplicate declarations removed (-371 lines from app-legacy.js), missing earthquake/volcano imports added, 10 missing re-exports added. Bundle 582.5KB, 133 pure-utils tests passing. 3 unpushed commits on main.
 **Phase 2 & 3 Complete:** 2026-04-10 — 6 new APIs implemented + map layer integration
 **Checkpoint:** 2026-04-10 — Build 542.6KB, 203 tests passing, 32+ map layers
 **Audit Complete:** 2026-04-10 — GTD lite incidents bug fixed, crypto KE/GH centroids added
 **Corp Data Cleanup:** 2026-04-13 — Yahoo Finance enrichment (4,048 tickers), QAR/KRW fix, currency fixes, universe patch (245 companies)
 **Mobile UI + Palo Alto:** 2026-04-13 — Mobile breakpoint 768→1024px (landscape fix), Palo Alto theme on filters/toolbar/FABs, pill buttons, glassmorphism
 **Live URL:** https://kevinkicho.github.io/kworlddatamap032926
+
+**In-flight extraction from app-legacy.js (as of 2026-04-22):**
+- 22 layer modules extracted to src/*-layer.js (econ, cable, air-route, earthquake, volcano, eez, iss, aircraft, firms/wildfire, launch-site, peeringdb, protected-areas, satellite, unesco, unesco-ich, vessel-ports, waqi, weather, eonet, flightaware, marine-traffic, tectonic-plates). All untracked — not yet git-added.
+- app-legacy.js down from ~9,800 → 8,498 lines
+- Extraction pattern: module exports `toggleXLayer` + `_buildXLayer`; legacy file imports them and re-exports via `export {...}` block at bottom so main.js can resolve them. Helpers wired via `S._helperName = helperName` (e.g. S._drawEconColorRamp, S._companiesLoader, S._openCorpPanel).
+
+**Known remaining bug:** `_gcorpFinJson` is used in app-legacy.js (~line 7130 in global corp list render) but only defined in corporations-list.js without being exported — runtime ReferenceError on that render path. Needs: add `export` to corp-list definition + import in app-legacy.
+
+**WSL/Windows gotcha:** node_modules contains only @esbuild/win32-x64 binary. Bundle from WSL requires separate linux-x64 install; Kevin normally runs `npm run build` from Windows terminal.
 
 **All 6 sub-projects from data-layer cleanup completed (2026-04-05 to 2026-04-06):**
 1. Data Layer Cleanup — source consolidation, module boundaries

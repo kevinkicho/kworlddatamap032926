@@ -46,7 +46,7 @@ An interactive world map that layers city demographics, corporate headquarters, 
 
 **Live demo:** https://kevinkicho.github.io/kworlddatamap032926
 
-**Build status:** 560KB bundled · 106 fetch scripts · 203 tests passing · ESLint clean (2026-04-14)
+**Build status:** 582KB bundled · 106 fetch scripts · 133 pure-utils tests passing · ESLint clean (2026-04-22)
 
 > **Built with Claude Code:** Nearly all of this codebase — from the data pipeline scripts to the frontend map logic — was written collaboratively with [Claude Code](https://claude.ai/code) (Anthropic's AI CLI). The human contributor directed features, reviewed output, and provided domain context; Claude Code did the implementation.
 
@@ -496,7 +496,11 @@ public/
 
 src/
   main.js                     # entry point (esbuild bundle root)
-  app-legacy.js               # ~9,700-line frontend (vanilla JS)
+  app-legacy.js               # ~8,500-line frontend (vanilla JS) — progressively extracted into layer modules
+  *-layer.js                  # per-layer modules: econ, cable, air-route, earthquake, volcano, eez, iss,
+                              #   aircraft, firms, launch-site, peeringdb, protected-areas, satellite,
+                              #   unesco, unesco-ich, vessel-ports, waqi, weather, eonet, flightaware,
+                              #   marine-traffic, tectonic-plates (22 modules extracted from app-legacy)
   state.js                    # centralised app state
   utils.js                    # shared pure utilities
 

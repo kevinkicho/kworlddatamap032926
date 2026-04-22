@@ -126,8 +126,335 @@
       ],
       "format": "esm"
     },
+    "src/unesco-layer.js": {
+      "bytes": 1597,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/cable-layer.js": {
+      "bytes": 2864,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/air-route-layer.js": {
+      "bytes": 5278,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/tectonic-plates-layer.js": {
+      "bytes": 3194,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/launch-site-layer.js": {
+      "bytes": 2385,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/eez-layer.js": {
+      "bytes": 2308,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/iss-layer.js": {
+      "bytes": 1898,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/aircraft-layer.js": {
+      "bytes": 5752,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/earthquake-layer.js": {
+      "bytes": 2567,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/volcano-layer.js": {
+      "bytes": 2942,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/firms-layer.js": {
+      "bytes": 4521,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/eonet-layer.js": {
+      "bytes": 2663,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/protected-areas-layer.js": {
+      "bytes": 3140,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/vessel-ports-layer.js": {
+      "bytes": 2833,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/peeringdb-layer.js": {
+      "bytes": 2670,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/waqi-layer.js": {
+      "bytes": 2893,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/weather-layer.js": {
+      "bytes": 3228,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/satellite-layer.js": {
+      "bytes": 2930,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/unesco-ich-layer.js": {
+      "bytes": 1661,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/flightaware-layer.js": {
+      "bytes": 3088,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/marine-traffic-layer.js": {
+      "bytes": 3242,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/econ-layer.js": {
+      "bytes": 13141,
+      "imports": [
+        {
+          "path": "src/state.js",
+          "kind": "import-statement",
+          "original": "./state.js"
+        },
+        {
+          "path": "src/constants.js",
+          "kind": "import-statement",
+          "original": "./constants.js"
+        },
+        {
+          "path": "src/fx-sidebar.js",
+          "kind": "import-statement",
+          "original": "./fx-sidebar.js"
+        },
+        {
+          "path": "src/utils.js",
+          "kind": "import-statement",
+          "original": "./utils.js"
+        }
+      ],
+      "format": "esm"
+    },
     "src/app-legacy.js": {
-      "bytes": 527833,
+      "bytes": 461060,
       "imports": [
         {
           "path": "src/utils.js",
@@ -193,6 +520,116 @@
           "path": "src/lightbox.js",
           "kind": "import-statement",
           "original": "./lightbox.js"
+        },
+        {
+          "path": "src/unesco-layer.js",
+          "kind": "import-statement",
+          "original": "./unesco-layer.js"
+        },
+        {
+          "path": "src/cable-layer.js",
+          "kind": "import-statement",
+          "original": "./cable-layer.js"
+        },
+        {
+          "path": "src/air-route-layer.js",
+          "kind": "import-statement",
+          "original": "./air-route-layer.js"
+        },
+        {
+          "path": "src/tectonic-plates-layer.js",
+          "kind": "import-statement",
+          "original": "./tectonic-plates-layer.js"
+        },
+        {
+          "path": "src/launch-site-layer.js",
+          "kind": "import-statement",
+          "original": "./launch-site-layer.js"
+        },
+        {
+          "path": "src/eez-layer.js",
+          "kind": "import-statement",
+          "original": "./eez-layer.js"
+        },
+        {
+          "path": "src/iss-layer.js",
+          "kind": "import-statement",
+          "original": "./iss-layer.js"
+        },
+        {
+          "path": "src/aircraft-layer.js",
+          "kind": "import-statement",
+          "original": "./aircraft-layer.js"
+        },
+        {
+          "path": "src/earthquake-layer.js",
+          "kind": "import-statement",
+          "original": "./earthquake-layer.js"
+        },
+        {
+          "path": "src/volcano-layer.js",
+          "kind": "import-statement",
+          "original": "./volcano-layer.js"
+        },
+        {
+          "path": "src/firms-layer.js",
+          "kind": "import-statement",
+          "original": "./firms-layer.js"
+        },
+        {
+          "path": "src/eonet-layer.js",
+          "kind": "import-statement",
+          "original": "./eonet-layer.js"
+        },
+        {
+          "path": "src/protected-areas-layer.js",
+          "kind": "import-statement",
+          "original": "./protected-areas-layer.js"
+        },
+        {
+          "path": "src/vessel-ports-layer.js",
+          "kind": "import-statement",
+          "original": "./vessel-ports-layer.js"
+        },
+        {
+          "path": "src/peeringdb-layer.js",
+          "kind": "import-statement",
+          "original": "./peeringdb-layer.js"
+        },
+        {
+          "path": "src/waqi-layer.js",
+          "kind": "import-statement",
+          "original": "./waqi-layer.js"
+        },
+        {
+          "path": "src/weather-layer.js",
+          "kind": "import-statement",
+          "original": "./weather-layer.js"
+        },
+        {
+          "path": "src/satellite-layer.js",
+          "kind": "import-statement",
+          "original": "./satellite-layer.js"
+        },
+        {
+          "path": "src/unesco-ich-layer.js",
+          "kind": "import-statement",
+          "original": "./unesco-ich-layer.js"
+        },
+        {
+          "path": "src/flightaware-layer.js",
+          "kind": "import-statement",
+          "original": "./flightaware-layer.js"
+        },
+        {
+          "path": "src/marine-traffic-layer.js",
+          "kind": "import-statement",
+          "original": "./marine-traffic-layer.js"
+        },
+        {
+          "path": "src/econ-layer.js",
+          "kind": "import-statement",
+          "original": "./econ-layer.js"
         }
       ],
       "format": "esm"
@@ -244,7 +681,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1063336
+      "bytes": 1083872
     },
     "public/app.js": {
       "imports": [],
@@ -290,14 +727,80 @@
         "src/lightbox.js": {
           "bytesInOutput": 2782
         },
+        "src/unesco-layer.js": {
+          "bytesInOutput": 1612
+        },
+        "src/cable-layer.js": {
+          "bytesInOutput": 2958
+        },
+        "src/air-route-layer.js": {
+          "bytesInOutput": 5379
+        },
+        "src/tectonic-plates-layer.js": {
+          "bytesInOutput": 3004
+        },
+        "src/launch-site-layer.js": {
+          "bytesInOutput": 2427
+        },
+        "src/eez-layer.js": {
+          "bytesInOutput": 2354
+        },
+        "src/iss-layer.js": {
+          "bytesInOutput": 1893
+        },
+        "src/aircraft-layer.js": {
+          "bytesInOutput": 5341
+        },
+        "src/earthquake-layer.js": {
+          "bytesInOutput": 2497
+        },
+        "src/volcano-layer.js": {
+          "bytesInOutput": 2890
+        },
+        "src/firms-layer.js": {
+          "bytesInOutput": 4352
+        },
+        "src/eonet-layer.js": {
+          "bytesInOutput": 2661
+        },
+        "src/protected-areas-layer.js": {
+          "bytesInOutput": 3155
+        },
+        "src/vessel-ports-layer.js": {
+          "bytesInOutput": 2803
+        },
+        "src/peeringdb-layer.js": {
+          "bytesInOutput": 2658
+        },
+        "src/waqi-layer.js": {
+          "bytesInOutput": 2935
+        },
+        "src/weather-layer.js": {
+          "bytesInOutput": 3401
+        },
+        "src/satellite-layer.js": {
+          "bytesInOutput": 2975
+        },
+        "src/unesco-ich-layer.js": {
+          "bytesInOutput": 1656
+        },
+        "src/flightaware-layer.js": {
+          "bytesInOutput": 3106
+        },
+        "src/marine-traffic-layer.js": {
+          "bytesInOutput": 3284
+        },
+        "src/econ-layer.js": {
+          "bytesInOutput": 13627
+        },
         "src/app-legacy.js": {
-          "bytesInOutput": 469714
+          "bytesInOutput": 403985
         },
         "src/main.js": {
           "bytesInOutput": 5532
         }
       },
-      "bytes": 584626
+      "bytes": 596487
     }
   }
 }

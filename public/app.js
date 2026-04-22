@@ -2778,11 +2778,2249 @@
     }
   });
 
+  // src/unesco-layer.js
+  function toggleUnescoLayer() {
+    S.unescoOn = !S.unescoOn;
+    var btn = document.getElementById("unesco-toggle-btn");
+    if (S.unescoOn) {
+      btn.textContent = "UNESCO";
+      btn.classList.add("on");
+      buildUnescoLayer();
+    } else {
+      btn.textContent = "UNESCO";
+      btn.classList.remove("on");
+      if (S.unescoLayer) {
+        S.map.removeLayer(S.unescoLayer);
+        S.unescoLayer = null;
+      }
+    }
+  }
+  function buildUnescoLayer() {
+    if (S.unescoLayer) {
+      S.map.removeLayer(S.unescoLayer);
+      S.unescoLayer = null;
+    }
+    if (!S.unescoOn || !S.unescoSites.length) return;
+    var typeColor = { Cultural: "#e6a817", Natural: "#3fb950", Mixed: "#a371f7" };
+    var markers = S.unescoSites.map(function(s) {
+      var color = typeColor[s.type] || "#8b949e";
+      var marker = L3.circleMarker([s.lat, s.lng], {
+        pane: "overlayLayersPane",
+        radius: 5,
+        fillColor: color,
+        color: "#0d1117",
+        weight: 1,
+        fillOpacity: 0.85
+      });
+      marker.bindTooltip(
+        '<b style="color:' + color + '">' + escHtml(s.name) + '</b><br><span style="color:var(--text-secondary)">' + s.type + " \xB7 " + s.year + " \xB7 " + s.iso2 + "</span>",
+        { direction: "top", className: "admin1-tooltip" }
+      );
+      marker.on("click", function() {
+        window.openCountryPanel(s.iso2);
+      });
+      return marker;
+    });
+    S.unescoLayer = L3.layerGroup(markers).addTo(S.map);
+  }
+  var L3;
+  var init_unesco_layer = __esm({
+    "src/unesco-layer.js"() {
+      init_state();
+      init_utils();
+      L3 = window.L;
+    }
+  });
+
+  // src/cable-layer.js
+  async function _kdbOrFetch2(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log2(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn2(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleCableLayer() {
+    S.cableOn = !S.cableOn;
+    var btn = document.getElementById("cable-toggle-btn");
+    if (S.cableOn) {
+      btn.textContent = "\u{1F4E1} Cables: \u2026";
+      btn.classList.add("on");
+      if (!S.cableData) {
+        try {
+          var res = await _kdbOrFetch2("/submarine-cables.json");
+          S.cableData = await res.json();
+          _log2("cables", "Loaded:", S.cableData.cables.length, "cables,", S.cableData.landings.length, "landing points");
+        } catch (e) {
+          _warn2("cables", "Failed to load submarine-cables.json");
+          S.cableOn = false;
+          btn.textContent = "Submarine Cables";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      btn.textContent = "Submarine Cables";
+      buildCableLayer();
+    } else {
+      btn.textContent = "Submarine Cables";
+      btn.classList.remove("on");
+      if (S.cableLayer) {
+        S.map.removeLayer(S.cableLayer);
+        S.cableLayer = null;
+      }
+    }
+  }
+  function buildCableLayer() {
+    if (S.cableLayer) {
+      S.map.removeLayer(S.cableLayer);
+      S.cableLayer = null;
+    }
+    if (!S.cableOn || !S.cableData) return;
+    var layers = [];
+    for (var i = 0; i < S.cableData.cables.length; i++) {
+      var c = S.cableData.cables[i];
+      for (var j = 0; j < c.segments.length; j++) {
+        var latlngs = c.segments[j].map(function(p) {
+          return [p[1], p[0]];
+        });
+        var line = L4.polyline(latlngs, {
+          pane: "overlayLayersPane",
+          color: c.color || "#58a6ff",
+          weight: 1.5,
+          opacity: 0.6
+        });
+        line.bindTooltip('<b style="color:var(--accent)">' + escHtml(c.name) + "</b>", {
+          direction: "top",
+          className: "admin1-tooltip",
+          sticky: true
+        });
+        layers.push(line);
+      }
+    }
+    for (var k = 0; k < S.cableData.landings.length; k++) {
+      var lp = S.cableData.landings[k];
+      var dot = L4.circleMarker([lp.lat, lp.lng], {
+        pane: "overlayLayersPane",
+        radius: 2.5,
+        fillColor: "#58a6ff",
+        color: "#0d1117",
+        weight: 0.5,
+        fillOpacity: 0.7
+      });
+      dot.bindTooltip('<b style="color:var(--accent)">' + escHtml(lp.name) + "</b>", {
+        direction: "top",
+        className: "admin1-tooltip"
+      });
+      layers.push(dot);
+    }
+    S.cableLayer = L4.layerGroup(layers).addTo(S.map);
+  }
+  var L4;
+  var init_cable_layer = __esm({
+    "src/cable-layer.js"() {
+      init_state();
+      init_utils();
+      L4 = window.L;
+    }
+  });
+
+  // src/air-route-layer.js
+  async function _kdbOrFetch3(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log3(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn3(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _greatCirclePoints(lat1, lng1, lat2, lng2, n) {
+    var toRad = Math.PI / 180, toDeg = 180 / Math.PI;
+    var la1 = lat1 * toRad, lo1 = lng1 * toRad, la2 = lat2 * toRad, lo2 = lng2 * toRad;
+    var dLon = Math.abs(lo2 - lo1);
+    var crossesAnti = dLon > Math.PI;
+    if (crossesAnti) {
+      if (lo2 > lo1) lo1 += 2 * Math.PI;
+      else lo2 += 2 * Math.PI;
+    }
+    var d = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin((la2 - la1) / 2), 2) + Math.cos(la1) * Math.cos(la2) * Math.pow(Math.sin((lo2 - lo1) / 2), 2)));
+    if (d < 0.01) return { pts: [[lat1, lng1], [lat2, lng2]], crossesAnti: false };
+    var pts = [];
+    for (var i = 0; i <= n; i++) {
+      var f = i / n;
+      var A = Math.sin((1 - f) * d) / Math.sin(d);
+      var B = Math.sin(f * d) / Math.sin(d);
+      var x = A * Math.cos(la1) * Math.cos(lo1) + B * Math.cos(la2) * Math.cos(lo2);
+      var y = A * Math.cos(la1) * Math.sin(lo1) + B * Math.cos(la2) * Math.sin(lo2);
+      var z = A * Math.sin(la1) + B * Math.sin(la2);
+      var lat = Math.atan2(z, Math.sqrt(x * x + y * y)) * toDeg;
+      var lng = Math.atan2(y, x) * toDeg;
+      if (lng > 180) lng -= 360;
+      if (lng < -180) lng += 360;
+      pts.push([lat, lng]);
+    }
+    return { pts, crossesAnti };
+  }
+  async function toggleAirRouteLayer() {
+    S.airRouteOn = !S.airRouteOn;
+    var btn = document.getElementById("airroute-toggle-btn");
+    if (S.airRouteOn) {
+      btn.textContent = "\u2708 Flights: \u2026";
+      btn.classList.add("on");
+      if (!S.airRouteData) {
+        try {
+          var res = await _kdbOrFetch3("/air-routes.json");
+          S.airRouteData = await res.json();
+          _log3("air-routes", "Loaded:", S.airRouteData.routes.length, "routes");
+        } catch (e) {
+          _warn3("air-routes", "Failed to load");
+          S.airRouteOn = false;
+          btn.textContent = "\u2708 Flights: Off";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      btn.textContent = "\u2708 Flights: On";
+      buildAirRouteLayer();
+    } else {
+      btn.textContent = "\u2708 Flights: Off";
+      btn.classList.remove("on");
+      if (S.airRouteLayer) {
+        S.map.removeLayer(S.airRouteLayer);
+        S.airRouteLayer = null;
+      }
+    }
+  }
+  function buildAirRouteLayer() {
+    if (S.airRouteLayer) {
+      S.map.removeLayer(S.airRouteLayer);
+      S.airRouteLayer = null;
+    }
+    if (!S.airRouteOn || !S.airRouteData) return;
+    var layers = [];
+    var maxAirlines = S.airRouteData.routes[0]?.airlines || 24;
+    for (var i = 0; i < S.airRouteData.routes.length; i++) {
+      var r = S.airRouteData.routes[i];
+      var result = _greatCirclePoints(r.lat1, r.lng1, r.lat2, r.lng2, 20);
+      var pts = result.pts;
+      var weight = 0.5 + r.airlines / maxAirlines * 2;
+      var opacity = 0.15 + r.airlines / maxAirlines * 0.4;
+      if (result.crossesAnti) {
+        var splitIdx = -1;
+        for (var j = 1; j < pts.length; j++) {
+          var dLng = Math.abs(pts[j][1] - pts[j - 1][1]);
+          if (dLng > 170) {
+            splitIdx = j;
+            break;
+          }
+        }
+        if (splitIdx > 0) {
+          var pts1 = pts.slice(0, splitIdx);
+          var line1 = L5.polyline(pts1, { pane: "overlayLayersPane", color: "#58a6ff", weight, opacity });
+          layers.push(line1);
+          var pts2 = pts.slice(splitIdx);
+          var line2 = L5.polyline(pts2, { pane: "overlayLayersPane", color: "#58a6ff", weight, opacity });
+          layers.push(line2);
+          continue;
+        }
+      }
+      var line = L5.polyline(pts, {
+        pane: "overlayLayersPane",
+        color: "#58a6ff",
+        weight,
+        opacity
+      });
+      line.bindTooltip(
+        '<b style="color:var(--accent)">' + escHtml(r.fromIata) + " \u2194 " + escHtml(r.toIata) + '</b><br><span style="color:var(--text-secondary)">' + escHtml(r.from) + " \u2194 " + escHtml(r.to) + '</span><br><span style="color:var(--univ-gold)">' + r.airlines + " airlines</span>",
+        { direction: "top", className: "admin1-tooltip", sticky: true }
+      );
+      layers.push(line);
+    }
+    if (S.airRouteData.hubs) {
+      for (var j = 0; j < S.airRouteData.hubs.length; j++) {
+        var h = S.airRouteData.hubs[j];
+        var dot = L5.circleMarker([h.lat, h.lng], {
+          pane: "overlayLayersPane",
+          radius: 3 + h.routes / 5,
+          fillColor: "#e3b341",
+          color: "#0d1117",
+          weight: 1,
+          fillOpacity: 0.8
+        });
+        dot.bindTooltip(
+          '<b style="color:var(--univ-gold)">' + escHtml(h.iata) + "</b> " + escHtml(h.city) + '<br><span style="color:var(--text-secondary)">' + h.routes + " top intl routes</span>",
+          { direction: "top", className: "admin1-tooltip" }
+        );
+        layers.push(dot);
+      }
+    }
+    S.airRouteLayer = L5.layerGroup(layers).addTo(S.map);
+  }
+  var L5;
+  var init_air_route_layer = __esm({
+    "src/air-route-layer.js"() {
+      init_state();
+      init_utils();
+      L5 = window.L;
+    }
+  });
+
+  // src/tectonic-plates-layer.js
+  async function _kdbOrFetch4(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _warn4(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _parsePlateName(code) {
+    const parts = code.split("-");
+    if (parts.length !== 2) return code;
+    const [a, b] = parts.map((p) => _PLATE_NAMES[p] || p);
+    return `${a} \u2013 ${b} Boundary`;
+  }
+  async function toggleTectonicLayer() {
+    S.tectonicOn = !S.tectonicOn;
+    const btn = document.getElementById("tectonic-toggle-btn");
+    if (S.tectonicOn) {
+      btn.textContent = "\u{1F5FA} Plates: \u2026";
+      btn.classList.add("on");
+      if (!S.tectonicData) {
+        try {
+          const res = await _kdbOrFetch4("/tectonic-plates.json");
+          S.tectonicData = await res.json();
+        } catch (e) {
+          _warn4("tectonic", "Failed to load");
+          S.tectonicOn = false;
+          btn.textContent = "Tectonic Plates";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      btn.textContent = "Tectonic Plates";
+      S.tectonicLayer = L6.geoJSON(S.tectonicData, {
+        style: () => ({ color: "#e85d04", weight: 2, opacity: 0.7, interactive: false }),
+        pane: "choroplethPane",
+        onEachFeature: (feature, layer) => {
+          if (feature.properties.name) {
+            const displayName = _parsePlateName(feature.properties.name);
+            layer.bindTooltip(escHtml(displayName), {
+              direction: "top",
+              className: "admin1-tooltip",
+              sticky: true
+            });
+            layer.options.interactive = true;
+          }
+        }
+      }).addTo(S.map);
+    } else {
+      btn.textContent = "Tectonic Plates";
+      btn.classList.remove("on");
+      if (S.tectonicLayer) {
+        S.map.removeLayer(S.tectonicLayer);
+        S.tectonicLayer = null;
+      }
+    }
+  }
+  function toggleMoreLayers(e) {
+    e.stopPropagation();
+    const btn = document.getElementById("more-layers-btn");
+    const menu = document.getElementById("more-layers-menu");
+    const isOpen = menu.classList.contains("open");
+    btn.classList.toggle("open", !isOpen);
+    menu.classList.toggle("open", !isOpen);
+  }
+  var L6, _PLATE_NAMES;
+  var init_tectonic_plates_layer = __esm({
+    "src/tectonic-plates-layer.js"() {
+      init_state();
+      init_utils();
+      L6 = window.L;
+      _PLATE_NAMES = {
+        AF: "African",
+        AN: "Antarctic",
+        SO: "South American",
+        NA: "North American",
+        PA: "Pacific",
+        AU: "Australian",
+        EU: "Eurasian",
+        IN: "Indian",
+        AR: "Arabian",
+        CO: "Cocos",
+        NZ: "Nazca",
+        PH: "Philippine",
+        CA: "Caribbean",
+        JF: "Juan de Fuca",
+        OK: "Okhotsk",
+        AM: "Amur",
+        SM: "Somalia",
+        NB: "Nubia",
+        SC: "Scotia"
+      };
+    }
+  });
+
+  // src/launch-site-layer.js
+  async function _kdbOrFetch5(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _warn5(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleLaunchSiteLayer() {
+    S.launchSiteOn = !S.launchSiteOn;
+    const btn = document.getElementById("launchsite-toggle-btn");
+    if (S.launchSiteOn) {
+      btn.textContent = "\u{1F680} Launch: \u2026";
+      btn.classList.add("on");
+      if (!S.launchSiteData) {
+        try {
+          const res = await _kdbOrFetch5("/launch_sites.json");
+          S.launchSiteData = await res.json();
+        } catch (e) {
+          _warn5("launchSite", "Failed to load");
+          S.launchSiteOn = false;
+          btn.textContent = "Launch Sites";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      btn.textContent = "Launch Sites";
+      _buildLaunchSiteLayer();
+    } else {
+      btn.textContent = "Launch Sites";
+      btn.classList.remove("on");
+      if (S.launchSiteLayer) {
+        S.map.removeLayer(S.launchSiteLayer);
+        S.launchSiteLayer = null;
+      }
+    }
+  }
+  function _buildLaunchSiteLayer() {
+    if (S.launchSiteLayer) {
+      S.map.removeLayer(S.launchSiteLayer);
+      S.launchSiteLayer = null;
+    }
+    if (!S.launchSiteOn || !S.launchSiteData) return;
+    const layers = [];
+    for (const f of S.launchSiteData.features) {
+      const [lng, lat] = f.geometry.coordinates;
+      const props = f.properties;
+      const marker = L7.marker([lat, lng], {
+        pane: "overlayLayersPane",
+        icon: L7.divIcon({
+          html: '<span style="font-size:16px">\u{1F680}</span>',
+          className: "launchsite-icon",
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
+        })
+      });
+      marker.bindTooltip(
+        '<b style="color:var(--accent)">\u{1F680} ' + escHtml(props.name) + '</b><br><span style="color:var(--text-muted);font-size:0.85em">' + escHtml(props.abbr || "") + "</span>",
+        { direction: "top", className: "admin1-tooltip" }
+      );
+      layers.push(marker);
+    }
+    S.launchSiteLayer = L7.layerGroup(layers).addTo(S.map);
+  }
+  var L7;
+  var init_launch_site_layer = __esm({
+    "src/launch-site-layer.js"() {
+      init_state();
+      init_utils();
+      L7 = window.L;
+    }
+  });
+
+  // src/eez-layer.js
+  async function _kdbOrFetch6(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _warn6(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleEezLayer() {
+    S.eezOn = !S.eezOn;
+    const btn = document.getElementById("eez-toggle-btn");
+    if (S.eezOn) {
+      btn.textContent = "EEZ Boundaries";
+      btn.classList.add("on");
+      if (!S.eezData) {
+        try {
+          const res = await _kdbOrFetch6("/eez_boundaries.json");
+          S.eezData = await res.json();
+          if (typeof DatasetManager !== "undefined") {
+            DatasetManager.register("eezData", S.eezData, "low");
+          }
+        } catch (e) {
+          _warn6("eez", "Failed to load");
+          S.eezOn = false;
+          btn.textContent = "EEZ Boundaries";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      btn.textContent = "EEZ Boundaries";
+      _buildEezLayer();
+    } else {
+      btn.textContent = "EEZ Boundaries";
+      btn.classList.remove("on");
+      if (S.eezLayer) {
+        S.map.removeLayer(S.eezLayer);
+        S.eezLayer = null;
+      }
+      if (typeof DatasetManager !== "undefined") {
+        DatasetManager.unregister("eezData");
+      }
+    }
+  }
+  function _buildEezLayer() {
+    if (S.eezLayer) {
+      S.map.removeLayer(S.eezLayer);
+      S.eezLayer = null;
+    }
+    if (typeof DatasetManager !== "undefined") {
+      DatasetManager.unregister("eezData");
+    }
+    if (!S.eezOn || !S.eezData) return;
+    S.eezLayer = L8.geoJSON(S.eezData, {
+      style: () => ({
+        color: "#58a6ff",
+        weight: 1,
+        fillOpacity: 0.05,
+        fillColor: "#58a6ff"
+      }),
+      pane: "choroplethPane",
+      onEachFeature: (feature, layer) => {
+        const props = feature.properties;
+        if (props.name) {
+          layer.bindTooltip(escHtml(props.name), {
+            direction: "top",
+            className: "admin1-tooltip",
+            sticky: true
+          });
+          layer.options.interactive = true;
+        }
+      }
+    }).addTo(S.map);
+  }
+  var L8;
+  var init_eez_layer = __esm({
+    "src/eez-layer.js"() {
+      init_state();
+      init_utils();
+      L8 = window.L;
+    }
+  });
+
+  // src/iss-layer.js
+  function _warn7(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleIssTracker() {
+    S.issOn = !S.issOn;
+    const btn = document.getElementById("iss-toggle-btn");
+    if (S.issOn) {
+      btn.textContent = "ISS Tracker";
+      btn.classList.add("on");
+      await _fetchIssPosition();
+      S._issTimer = setInterval(() => _fetchIssPosition(), 5e3);
+    } else {
+      btn.textContent = "ISS Tracker";
+      btn.classList.remove("on");
+      if (S._issTimer) {
+        clearInterval(S._issTimer);
+        S._issTimer = null;
+      }
+      if (S.issMarker) {
+        S.map.removeLayer(S.issMarker);
+        S.issMarker = null;
+      }
+    }
+  }
+  async function _fetchIssPosition() {
+    try {
+      const res = await fetch("http://api.open-notify.org/iss-now.json");
+      const data = await res.json();
+      const lat = parseFloat(data.iss_position.latitude);
+      const lng = parseFloat(data.iss_position.longitude);
+      if (S.issMarker) {
+        S.issMarker.setLatLng([lat, lng]);
+      } else {
+        S.issMarker = L9.marker([lat, lng], {
+          pane: "overlayLayersPane",
+          icon: L9.divIcon({
+            html: '<span style="font-size:24px">\u{1F6F0}\uFE0F</span>',
+            className: "iss-icon",
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+          })
+        }).addTo(S.map);
+      }
+      S.issMarker.bindTooltip(
+        '<b style="color:var(--accent)">ISS</b><br><span style="color:var(--text-secondary)">' + lat.toFixed(2) + "\xB0, " + lng.toFixed(2) + '\xB0</span><br><span style="color:var(--text-muted)">~408 km altitude \xB7 ~28,000 km/h</span>',
+        { direction: "top", className: "admin1-tooltip" }
+      );
+    } catch (e) {
+      _warn7("iss", "Failed to fetch position");
+    }
+  }
+  var L9;
+  var init_iss_layer = __esm({
+    "src/iss-layer.js"() {
+      init_state();
+      L9 = window.L;
+    }
+  });
+
+  // src/aircraft-layer.js
+  async function _kdbOrFetch7(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log4(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn8(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleAircraftLayer() {
+    S.aircraftOn = !S.aircraftOn;
+    const btn = document.getElementById("aircraft-toggle-btn");
+    if (S.aircraftOn) {
+      btn.textContent = "\u2708\uFE0F Aircraft: On";
+      btn.classList.add("on");
+      await _fetchAircraftPositions();
+      S._aircraftTimer = setInterval(() => _fetchAircraftPositions(), 3e4);
+      if (!_aircraftMoveHandler) {
+        _aircraftMoveHandler = () => {
+          if (S.aircraftOn && S.map.getZoom() >= 5) {
+            _fetchAircraftPositions();
+          }
+        };
+        S.map.on("moveend", _aircraftMoveHandler);
+      }
+    } else {
+      btn.textContent = "\u2708\uFE0F Aircraft: Off";
+      btn.classList.remove("on");
+      if (S._aircraftTimer) {
+        clearInterval(S._aircraftTimer);
+        S._aircraftTimer = null;
+      }
+      if (S.aircraftLayer) {
+        S.map.removeLayer(S.aircraftLayer);
+        S.aircraftLayer = null;
+      }
+      if (_aircraftMoveHandler) {
+        S.map.off("moveend", _aircraftMoveHandler);
+        _aircraftMoveHandler = null;
+      }
+      if (S.layersInfo && S.layersInfo.includes("\u2708\uFE0F Zoom in")) {
+        document.getElementById("layers-info").textContent = "";
+        S.layersInfo = "";
+      }
+    }
+  }
+  async function _fetchAircraftPositions() {
+    try {
+      const res = await _kdbOrFetch7("/aircraft-live-lite.json");
+      if (!res.ok) {
+        _warn8("aircraft", "No data available");
+        return;
+      }
+      const data = await res.json();
+      const zoom = S.map.getZoom();
+      if (!S.aircraftLayer) {
+        S.aircraftLayer = L10.layerGroup();
+      } else {
+        S.aircraftLayer.clearLayers();
+      }
+      if (zoom < 5) {
+        S.layersInfo = "\u2708\uFE0F Zoom in to see aircraft (need zoom 5+)";
+        document.getElementById("layers-info").textContent = S.layersInfo;
+        return;
+      } else if (S.layersInfo && S.layersInfo.includes("Zoom in")) {
+        document.getElementById("layers-info").textContent = "";
+        S.layersInfo = "";
+      }
+      const bounds = S.map.getBounds();
+      const padding = zoom >= 10 ? 0.2 : zoom >= 7 ? 0.5 : 1;
+      const south = Math.max(-90, bounds.getSouth() - padding);
+      const north = Math.min(90, bounds.getNorth() + padding);
+      let west = bounds.getWest() - padding;
+      let east = bounds.getEast() + padding;
+      const MAX_AIRCRAFT = zoom >= 13 ? 1e3 : zoom >= 11 ? 500 : zoom >= 8 ? 250 : 100;
+      let lastClickedMarker = null;
+      const markers = [];
+      let count = 0;
+      for (const a of data.aircraft || []) {
+        if (count >= MAX_AIRCRAFT) break;
+        if (a.lo === null || a.la === null) continue;
+        let inBounds = a.la >= south && a.la <= north;
+        if (inBounds) {
+          if (east > 180 || west < -180) {
+            inBounds = a.lo >= west || a.lo >= 180 || (a.lo <= east || a.lo <= -180);
+          } else {
+            inBounds = a.lo >= west && a.lo <= east;
+          }
+        }
+        if (!inBounds) continue;
+        const heading = a.t || 0;
+        const icon = L10.divIcon({
+          html: `<div style="width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:8px solid #3b82f6;transform:rotate(${heading}deg)"></div>`,
+          className: "aircraft-icon",
+          iconSize: [10, 10],
+          iconAnchor: [5, 5]
+        });
+        const marker = L10.marker([a.la, a.lo], { pane: "overlayLayersPane", icon });
+        const tooltipData = {
+          callsign: a.c || "N/A",
+          country: a.n || "",
+          alt: a.a ? Math.round(a.a / 0.3048) : null,
+          speed: a.v ? Math.round(a.v * 1.944) : null,
+          ground: a.g
+        };
+        marker.on("click", function() {
+          if (lastClickedMarker && lastClickedMarker !== this) {
+            lastClickedMarker.closeTooltip();
+          }
+          const tt = L10.tooltip({
+            content: `<b style="color:var(--accent)">${escHtml(tooltipData.callsign)}</b><br><span style="color:var(--text-secondary)">${escHtml(tooltipData.country)}${tooltipData.ground ? " (Ground)" : ""}</span><br><span style="color:var(--text-muted)">${tooltipData.alt ? tooltipData.alt.toLocaleString() + " ft" : "N/A"} \xB7 ${tooltipData.speed ? tooltipData.speed + " kts" : "N/A"}</span>`,
+            direction: "top",
+            className: "admin1-tooltip"
+          });
+          this.bindTooltip(tt).openTooltip();
+          lastClickedMarker = this;
+        });
+        markers.push(marker);
+        count++;
+      }
+      S.aircraftLayer = L10.layerGroup(markers).addTo(S.map);
+      _log4("aircraft", `Displayed ${count}/${MAX_AIRCRAFT} aircraft (zoom ${zoom})`);
+    } catch (e) {
+      _warn8("aircraft", "Failed:", e.message);
+    }
+  }
+  var L10, _aircraftMoveHandler;
+  var init_aircraft_layer = __esm({
+    "src/aircraft-layer.js"() {
+      init_state();
+      init_utils();
+      L10 = window.L;
+      _aircraftMoveHandler = null;
+    }
+  });
+
+  // src/earthquake-layer.js
+  function _warn9(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _quakeColor(depth) {
+    if (depth < 70) return "#ffd166";
+    if (depth < 300) return "#ef8354";
+    return "#d62828";
+  }
+  async function toggleEarthquakeLayer() {
+    S.earthquakeOn = !S.earthquakeOn;
+    const btn = document.getElementById("earthquake-toggle-btn");
+    if (S.earthquakeOn) {
+      btn.textContent = "Earthquakes";
+      btn.classList.add("on");
+      await _fetchEarthquakes();
+      S._earthquakeTimer = setInterval(() => _fetchEarthquakes(), 5 * 6e4);
+    } else {
+      btn.textContent = "Earthquakes";
+      btn.classList.remove("on");
+      if (S._earthquakeTimer) {
+        clearInterval(S._earthquakeTimer);
+        S._earthquakeTimer = null;
+      }
+      if (S.earthquakeLayer) {
+        S.map.removeLayer(S.earthquakeLayer);
+        S.earthquakeLayer = null;
+      }
+    }
+  }
+  async function _fetchEarthquakes() {
+    try {
+      const res = await fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson");
+      S.earthquakeData = await res.json();
+    } catch (e) {
+      _warn9("earthquake", "Failed to fetch USGS data");
+      return;
+    }
+    _buildEarthquakeLayer();
+  }
+  function _buildEarthquakeLayer() {
+    if (S.earthquakeLayer) {
+      S.map.removeLayer(S.earthquakeLayer);
+      S.earthquakeLayer = null;
+    }
+    if (!S.earthquakeOn || !S.earthquakeData) return;
+    const layers = [];
+    for (const f of S.earthquakeData.features) {
+      const [lng, lat, depth] = f.geometry.coordinates;
+      const mag = f.properties.mag || 0;
+      const marker = L11.circleMarker([lat, lng], {
+        pane: "overlayLayersPane",
+        radius: 2 + mag * 2,
+        fillColor: _quakeColor(depth),
+        color: "#000",
+        weight: 0.5,
+        fillOpacity: 0.75
+      });
+      const time = new Date(f.properties.time).toLocaleString();
+      marker.bindTooltip(
+        '<b style="color:var(--gold)">M' + mag.toFixed(1) + "</b> " + escHtml(f.properties.place || "") + '<br><span style="color:var(--text-secondary)">Depth: ' + (depth || 0).toFixed(0) + ' km</span><br><span style="color:var(--text-muted)">' + time + "</span>",
+        { direction: "top", className: "admin1-tooltip" }
+      );
+      layers.push(marker);
+    }
+    S.earthquakeLayer = L11.layerGroup(layers).addTo(S.map);
+  }
+  var L11;
+  var init_earthquake_layer = __esm({
+    "src/earthquake-layer.js"() {
+      init_state();
+      init_utils();
+      L11 = window.L;
+    }
+  });
+
+  // src/volcano-layer.js
+  async function _kdbOrFetch8(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _warn10(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _volcanoColor(lastEruption) {
+    if (lastEruption == null) return "#888";
+    if (lastEruption > 1900) return "#d62828";
+    if (lastEruption > 0) return "#ef8354";
+    if (lastEruption > -1e4) return "#ffd166";
+    return "#888";
+  }
+  async function toggleVolcanoLayer() {
+    S.volcanoOn = !S.volcanoOn;
+    const btn = document.getElementById("volcano-toggle-btn");
+    if (S.volcanoOn) {
+      btn.textContent = "Volcanoes";
+      btn.classList.add("on");
+      if (!S.volcanoData) {
+        try {
+          const res = await _kdbOrFetch8("/volcanoes_full.json");
+          S.volcanoData = await res.json();
+        } catch (e) {
+          _warn10("volcano", "Failed to load");
+          S.volcanoOn = false;
+          btn.textContent = "Volcanoes";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      btn.textContent = "Volcanoes";
+      _buildVolcanoLayer();
+    } else {
+      btn.textContent = "Volcanoes";
+      btn.classList.remove("on");
+      if (S.volcanoLayer) {
+        S.map.removeLayer(S.volcanoLayer);
+        S.volcanoLayer = null;
+      }
+    }
+  }
+  function _buildVolcanoLayer() {
+    if (S.volcanoLayer) {
+      S.map.removeLayer(S.volcanoLayer);
+      S.volcanoLayer = null;
+    }
+    if (!S.volcanoOn || !S.volcanoData) return;
+    const layers = [];
+    for (const f of S.volcanoData.features) {
+      const [lng, lat] = f.geometry.coordinates;
+      const props = f.properties;
+      const marker = L12.circleMarker([lat, lng], {
+        pane: "overlayLayersPane",
+        radius: 5,
+        fillColor: _volcanoColor(props.Last_Eruption_Year),
+        color: "#000",
+        weight: 0.5,
+        fillOpacity: 0.85
+      });
+      const elev = props.Elevation || 0;
+      const lastYr = props.Last_Eruption_Year;
+      const lastStr = lastYr == null ? "Unknown" : lastYr < 0 ? `${Math.abs(lastYr)} BCE` : `${lastYr}`;
+      marker.bindTooltip(
+        '<b style="color:var(--red)">' + escHtml(props.Volcano_Name || "Volcano") + '</b><br><span style="color:var(--text-secondary)">' + escHtml(props.Country || "") + "</span><br>Elevation: " + elev + " m<br>Last eruption: " + lastStr + '<br><span style="color:var(--text-muted)">' + escHtml(props.Primary_Volcano_Type || "") + "</span>",
+        { direction: "top", className: "admin1-tooltip" }
+      );
+      layers.push(marker);
+    }
+    S.volcanoLayer = L12.layerGroup(layers).addTo(S.map);
+  }
+  var L12;
+  var init_volcano_layer = __esm({
+    "src/volcano-layer.js"() {
+      init_state();
+      init_utils();
+      L12 = window.L;
+    }
+  });
+
+  // src/firms-layer.js
+  async function _kdbOrFetch9(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log5(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn11(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleWildfireLayer() {
+    S.wildfireOn = !S.wildfireOn;
+    const btn = document.getElementById("wildfire-toggle-btn");
+    if (S.wildfireOn) {
+      btn.textContent = "Wildfires";
+      btn.classList.add("on");
+      await _fetchWildfireData();
+      if (!_wildfireMoveHandler) {
+        _wildfireMoveHandler = () => {
+          if (S.wildfireOn && S.map.getZoom() >= 4) {
+            _fetchWildfireData();
+          }
+        };
+        S.map.on("moveend", _wildfireMoveHandler);
+      }
+    } else {
+      btn.textContent = "Wildfires";
+      btn.classList.remove("on");
+      if (S.wildfireLayer) {
+        S.map.removeLayer(S.wildfireLayer);
+        S.wildfireLayer = null;
+      }
+      if (typeof DatasetManager !== "undefined") {
+        DatasetManager.unregister("wildfireData");
+      }
+      if (_wildfireMoveHandler) {
+        S.map.off("moveend", _wildfireMoveHandler);
+        _wildfireMoveHandler = null;
+      }
+    }
+  }
+  async function _fetchWildfireData() {
+    try {
+      const res = await _kdbOrFetch9("/wildfires-live-lite.json");
+      if (!res.ok) {
+        _warn11("wildfire", "No data available");
+        return;
+      }
+      const data = await res.json();
+      const zoom = S.map.getZoom();
+      if (!S.wildfireLayer) {
+        S.wildfireLayer = L13.layerGroup();
+      } else {
+        S.wildfireLayer.clearLayers();
+      }
+      if (S.layersInfo && S.layersInfo.includes("Zoom in")) {
+        document.getElementById("layers-info").textContent = "";
+        S.layersInfo = "";
+      }
+      const bounds = S.map.getBounds();
+      const padding = zoom >= 8 ? 0.5 : zoom >= 6 ? 2 : 5;
+      const south = Math.max(-90, bounds.getSouth() - padding);
+      const north = Math.min(90, bounds.getNorth() + padding);
+      let west = bounds.getWest() - padding;
+      let east = bounds.getEast() + padding;
+      const MAX_FIRES = data.fires?.length || 1e3;
+      const markers = [];
+      let count = 0;
+      let outsideCount = 0;
+      for (const f of data.fires || []) {
+        if (f.lo === null || f.la === null) continue;
+        let inBounds = f.la >= south && f.la <= north;
+        if (inBounds) {
+          if (east > 180 || west < -180) {
+            inBounds = f.lo >= west || f.lo >= 180 || (f.lo <= east || f.lo <= -180);
+          } else {
+            inBounds = f.lo >= west && f.lo <= east;
+          }
+        }
+        if (!inBounds) {
+          outsideCount++;
+          continue;
+        }
+        const conf = f.c || 70;
+        const color = conf >= 70 ? "#ff3333" : conf >= 40 ? "#ff8800" : "#ffcc00";
+        const radius = f.s === 1 ? 2.5 : 3.5;
+        const marker = L13.circleMarker([f.la, f.lo], {
+          pane: "overlayLayersPane",
+          radius,
+          fillColor: color,
+          color: "#000",
+          weight: 0.5,
+          opacity: 0.7,
+          fillOpacity: 0.8
+        });
+        const sat = f.s === 1 ? "VIIRS" : "MODIS";
+        const time = f.d === 1 ? "Day" : "Night";
+        const brightness = f.b ? `${Math.round(f.b)}K` : "N/A";
+        const date = f.date || "N/A";
+        marker.bindTooltip(
+          `<b style="color:${color}">\u{1F525} Wildfire</b><br><span style="color:var(--text-secondary)">Confidence: ${conf}%</span><br><span style="color:var(--text-muted)">${sat} \xB7 ${time} \xB7 ${brightness}</span><br><span style="color:var(--text-muted)">${date}</span>`,
+          { direction: "top", className: "admin1-tooltip", sticky: false, permanent: false }
+        );
+        markers.push(marker);
+        count++;
+      }
+      S.wildfireLayer = L13.layerGroup(markers).addTo(S.map);
+      _log5("wildfire", `Displayed ${count} fires (zoom ${zoom}, viewport: ${outsideCount} culled)`);
+    } catch (e) {
+      _warn11("wildfire", "Failed:", e.message);
+    }
+  }
+  var L13, _wildfireMoveHandler;
+  var init_firms_layer = __esm({
+    "src/firms-layer.js"() {
+      init_state();
+      L13 = window.L;
+      _wildfireMoveHandler = null;
+    }
+  });
+
+  // src/eonet-layer.js
+  async function _kdbOrFetch10(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log6(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn12(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleEonetLayer() {
+    S.eonetOn = !S.eonetOn;
+    const btn = document.getElementById("eonet-toggle-btn");
+    if (S.eonetOn) {
+      btn.textContent = "Natural Events";
+      btn.classList.add("on");
+      if (!S.eonetData) {
+        try {
+          const res = await _kdbOrFetch10("/eonet-events-lite.json");
+          S.eonetData = await res.json();
+        } catch (e) {
+          _warn12("eonet", "Failed to load");
+          S.eonetOn = false;
+          btn.textContent = "Natural Events";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildEonetLayer();
+    } else {
+      btn.textContent = "Natural Events";
+      btn.classList.remove("on");
+      if (S.eonetLayer) {
+        S.map.removeLayer(S.eonetLayer);
+        S.eonetLayer = null;
+      }
+    }
+  }
+  function _buildEonetLayer() {
+    if (S.eonetLayer) {
+      S.map.removeLayer(S.eonetLayer);
+      S.eonetLayer = null;
+    }
+    if (!S.eonetOn || !S.eonetData) return;
+    const layers = [];
+    for (const e of S.eonetData.events || []) {
+      if (e.lo === null || e.la === null) continue;
+      const colorMap = {
+        "Wildfires": "#ff6b6b",
+        "Volcanoes": "#ffd93d",
+        "Severe Storms": "#6b9bff",
+        "Dust Storms": "#d4a574",
+        "Landslides": "#a574d4",
+        "Sea and Lake Ice": "#74d4d4",
+        "Smoke": "#a5a5a5"
+      };
+      const color = colorMap[e.c] || "#888888";
+      const size = e.s === 2 ? 8 : e.s === 1 ? 6 : 4;
+      const marker = L14.circleMarker([e.la, e.lo], {
+        pane: "overlayLayersPane",
+        radius: size,
+        fillColor: color,
+        color: "#000",
+        weight: 1,
+        fillOpacity: 0.8
+      });
+      marker.bindTooltip(
+        `<b style="color:${color}">${escHtml(e.t)}</b><br><span style="color:var(--text-secondary)">${escHtml(e.c)}</span><br><span style="color:var(--text-muted)">Date: ${e.d}</span>`,
+        { direction: "top", className: "admin1-tooltip" }
+      );
+      layers.push(marker);
+    }
+    S.eonetLayer = L14.layerGroup(layers).addTo(S.map);
+    _log6("eonet", `Displayed ${layers.length} events`);
+  }
+  var L14;
+  var init_eonet_layer = __esm({
+    "src/eonet-layer.js"() {
+      init_state();
+      init_utils();
+      L14 = window.L;
+    }
+  });
+
+  // src/protected-areas-layer.js
+  async function _kdbOrFetch11(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log7(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn13(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleProtectedAreasLayer() {
+    S.protectedAreasOn = !S.protectedAreasOn;
+    const btn = document.getElementById("protected-areas-toggle-btn");
+    if (S.protectedAreasOn) {
+      btn.textContent = "\u{1F332} Protected Areas: On";
+      btn.classList.add("on");
+      if (!S.protectedAreasData) {
+        try {
+          const res = await _kdbOrFetch11("/protected-areas.json");
+          S.protectedAreasData = await res.json();
+        } catch (e) {
+          _warn13("protected-areas", "Failed to load");
+          S.protectedAreasOn = false;
+          btn.textContent = "\u{1F332} Protected Areas: Off";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildProtectedAreasLayer();
+    } else {
+      btn.textContent = "\u{1F332} Protected Areas: Off";
+      btn.classList.remove("on");
+      if (S.protectedAreasLayer) {
+        S.map.removeLayer(S.protectedAreasLayer);
+        S.protectedAreasLayer = null;
+      }
+    }
+  }
+  function _buildProtectedAreasLayer() {
+    if (S.protectedAreasLayer) {
+      S.map.removeLayer(S.protectedAreasLayer);
+      S.protectedAreasLayer = null;
+    }
+    if (!S.protectedAreasOn || !S.protectedAreasData) return;
+    const layers = [];
+    for (const area of S.protectedAreasData.areas || []) {
+      if (area.lat === null || area.lng === null) continue;
+      const colorMap = {
+        "Ia": "#006400",
+        "Ib": "#006400",
+        "II": "#228B22",
+        "III": "#32CD32",
+        "IV": "#90EE90",
+        "V": "#98FB98",
+        "VI": "#00CED1"
+      };
+      const color = colorMap[area.iucn] || "#228B22";
+      const size = area.area_km2 > 1e4 ? 10 : area.area_km2 > 1e3 ? 7 : 5;
+      const marker = L15.circleMarker([area.lat, area.lng], {
+        pane: "overlayLayersPane",
+        radius: size,
+        fillColor: color,
+        color: "#000",
+        weight: 1,
+        fillOpacity: 0.7
+      });
+      const areaStr = area.area_km2 >= 1e3 ? `${(area.area_km2 / 1e3).toFixed(1)}k km\xB2` : `${area.area_km2} km\xB2`;
+      marker.bindTooltip(
+        `<b style="color:${color}">\u{1F332} ${escHtml(area.name)}</b><br><span style="color:var(--text-secondary)">${escHtml(area.country)}</span><br><span style="color:var(--text-muted)">${escHtml(area.type)} \xB7 ${areaStr}</span><br><span style="color:var(--text-muted)">Est. ${area.established}</span>`,
+        { direction: "top", className: "admin1-tooltip" }
+      );
+      layers.push(marker);
+    }
+    S.protectedAreasLayer = L15.layerGroup(layers).addTo(S.map);
+    _log7("protected-areas", `Displayed ${layers.length} areas`);
+  }
+  var L15;
+  var init_protected_areas_layer = __esm({
+    "src/protected-areas-layer.js"() {
+      init_state();
+      init_utils();
+      L15 = window.L;
+    }
+  });
+
+  // src/vessel-ports-layer.js
+  async function _kdbOrFetch12(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log8(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn14(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleVesselPortsLayer() {
+    S.vesselPortsOn = !S.vesselPortsOn;
+    const btn = document.getElementById("vessel-ports-toggle-btn");
+    if (S.vesselPortsOn) {
+      btn.textContent = "Ports";
+      btn.classList.add("on");
+      if (!S.vesselPortsData) {
+        try {
+          const res = await _kdbOrFetch12("/vessel-ports.json");
+          S.vesselPortsData = await res.json();
+        } catch (e) {
+          _warn14("vessel-ports", "Failed to load");
+          S.vesselPortsOn = false;
+          btn.textContent = "Ports";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildVesselPortsLayer();
+    } else {
+      btn.textContent = "Ports";
+      btn.classList.remove("on");
+      if (S.vesselPortsLayer) {
+        S.map.removeLayer(S.vesselPortsLayer);
+        S.vesselPortsLayer = null;
+      }
+    }
+  }
+  function _buildVesselPortsLayer() {
+    if (S.vesselPortsLayer) {
+      S.map.removeLayer(S.vesselPortsLayer);
+      S.vesselPortsLayer = null;
+    }
+    if (!S.vesselPortsOn || !S.vesselPortsData) return;
+    const layers = [];
+    for (const port of S.vesselPortsData.ports || []) {
+      if (port.lat === null || port.lng === null) continue;
+      const colorMap = { "Large": "#ff4444", "Medium": "#ffaa00", "Small": "#888888" };
+      const color = colorMap[port.harbor_size] || "#888888";
+      const size = port.harbor_size === "Large" ? 10 : port.harbor_size === "Medium" ? 7 : 5;
+      const marker = L16.circleMarker([port.lat, port.lng], {
+        pane: "overlayLayersPane",
+        radius: size,
+        fillColor: color,
+        color: "#000",
+        weight: 1,
+        fillOpacity: 0.8
+      });
+      marker.bindTooltip(
+        `<b style="color:${color}">\u2693 ${escHtml(port.name)}</b><br><span style="color:var(--text-secondary)">${escHtml(port.city)}, ${escHtml(port.country)}</span><br><span style="color:var(--text-muted)">${escHtml(port.facilities)}</span><br><span style="color:var(--text-muted)">Size: ${port.harbor_size}</span>`,
+        { direction: "top", className: "admin1-tooltip" }
+      );
+      layers.push(marker);
+    }
+    S.vesselPortsLayer = L16.layerGroup(layers).addTo(S.map);
+    _log8("vessel-ports", `Displayed ${layers.length} ports`);
+  }
+  var L16;
+  var init_vessel_ports_layer = __esm({
+    "src/vessel-ports-layer.js"() {
+      init_state();
+      init_utils();
+      L16 = window.L;
+    }
+  });
+
+  // src/peeringdb-layer.js
+  async function _kdbOrFetch13(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log9(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn15(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function togglePeeringdbLayer() {
+    S.peeringdbOn = !S.peeringdbOn;
+    const btn = document.getElementById("peeringdb-toggle-btn");
+    if (S.peeringdbOn) {
+      btn.textContent = "Internet Exchanges";
+      btn.classList.add("on");
+      if (!S.peeringdbData) {
+        try {
+          const res = await _kdbOrFetch13("/peeringdb.json");
+          S.peeringdbData = await res.json();
+          _log9("peeringdb", "Loaded:", S.peeringdbData.ixps.length, "IXPs,", S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter((x) => x.lat !== null).length, "with coords");
+        } catch (e) {
+          _warn15("peeringdb", "Failed to load:", e);
+          S.peeringdbOn = false;
+          btn.textContent = "Internet Exchanges";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildPeeringdbLayer();
+    } else {
+      btn.textContent = "Internet Exchanges";
+      btn.classList.remove("on");
+      if (S.peeringdbLayer) {
+        S.map.removeLayer(S.peeringdbLayer);
+        S.peeringdbLayer = null;
+      }
+    }
+  }
+  function _buildPeeringdbLayer() {
+    if (S.peeringdbLayer) {
+      S.map.removeLayer(S.peeringdbLayer);
+      S.peeringdbLayer = null;
+    }
+    if (!S.peeringdbOn || !S.peeringdbData) return;
+    const layers = [];
+    for (const ixp of S.peeringdbData.ixps || []) {
+      if (ixp.lat === null || ixp.lng === null) continue;
+      const marker = L17.circleMarker([ixp.lat, ixp.lng], {
+        pane: "overlayLayersPane",
+        radius: 6,
+        fillColor: "#3b82f6",
+        color: "#1d4ed8",
+        weight: 2,
+        fillOpacity: 0.8
+      });
+      marker.bindTooltip(
+        `<b style="color:#3b82f6">\u{1F310} ${escHtml(ixp.name)}</b><br><span style="color:var(--text-secondary)">IXP \xB7 ${escHtml(ixp.city)}</span><br><span style="color:var(--text-muted)">${ixp.networks_count} networks</span>`,
+        { direction: "top", className: "admin1-tooltip" }
+      );
+      layers.push(marker);
+    }
+    S.peeringdbLayer = L17.layerGroup(layers).addTo(S.map);
+    _log9("peeringdb", `Displayed ${layers.length} IXPs`);
+  }
+  var L17;
+  var init_peeringdb_layer = __esm({
+    "src/peeringdb-layer.js"() {
+      init_state();
+      init_utils();
+      L17 = window.L;
+    }
+  });
+
+  // src/waqi-layer.js
+  async function _kdbOrFetch14(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log10(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn16(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleWaqiLayer() {
+    S.waqiOn = !S.waqiOn;
+    const btn = document.getElementById("waqi-toggle-btn");
+    if (S.waqiOn) {
+      btn.textContent = "Air Quality";
+      btn.classList.add("on");
+      if (!S.waqiData) {
+        try {
+          const res = await _kdbOrFetch14("/who-airquality.json");
+          S.waqiData = await res.json();
+        } catch (e) {
+          _warn16("waqi", "Failed to load");
+          S.waqiOn = false;
+          btn.textContent = "Air Quality";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildWaqiLayer();
+    } else {
+      btn.textContent = "Air Quality";
+      btn.classList.remove("on");
+      if (S.waqiLayer) {
+        S.map.removeLayer(S.waqiLayer);
+        S.waqiLayer = null;
+      }
+    }
+  }
+  function _buildWaqiLayer() {
+    if (S.waqiLayer) {
+      S.map.removeLayer(S.waqiLayer);
+      S.waqiLayer = null;
+    }
+    if (!S.waqiOn || !S.waqiData) return;
+    const layers = [];
+    const AQ_COLORS = [
+      [50, "#22c55e"],
+      [100, "#eab308"],
+      [150, "#f97316"],
+      [200, "#ef4444"],
+      [300, "#7c3aed"],
+      [500, "#7f1d1d"]
+    ];
+    function aqColor(pm25) {
+      for (const [threshold, color] of AQ_COLORS) {
+        if (pm25 <= threshold) return color;
+      }
+      return "#7f1d1d";
+    }
+    for (const [qid, aq] of Object.entries(S.waqiData)) {
+      if (!aq || aq.pm25 == null) continue;
+      const city = S.cityByQid && S.cityByQid.get(qid);
+      if (!city || city.lat == null || city.lng == null) continue;
+      const color = aqColor(aq.pm25);
+      const marker = L18.circleMarker([city.lat, city.lng], {
+        pane: "overlayLayersPane",
+        radius: aq.pm25 > 150 ? 7 : aq.pm25 > 100 ? 5 : 4,
+        fillColor: color,
+        color: "#000",
+        weight: 0.5,
+        fillOpacity: 0.85
+      });
+      marker.bindTooltip(
+        `<b style="color:${color}">\u{1F32B}\uFE0F ${escHtml(city.name)}</b><br><span style="color:var(--text-secondary)">PM2.5: ${aq.pm25} \xB5g/m\xB3 (${aq.category || "\u2014"})</span><br><span style="color:var(--text-muted)">${escHtml(city.country || "")} \xB7 ${aq.year || "\u2014"}</span>`,
+        { direction: "top", className: "admin1-tooltip", sticky: false }
+      );
+      layers.push(marker);
+    }
+    S.waqiLayer = L18.layerGroup(layers).addTo(S.map);
+    _log10("waqi", `Displayed ${layers.length} stations`);
+  }
+  var L18;
+  var init_waqi_layer = __esm({
+    "src/waqi-layer.js"() {
+      init_state();
+      init_utils();
+      L18 = window.L;
+    }
+  });
+
+  // src/weather-layer.js
+  async function _kdbOrFetch15(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log11(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn17(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleWeatherLayer() {
+    S.weatherOn = !S.weatherOn;
+    const btn = document.getElementById("weather-toggle-btn");
+    if (S.weatherOn) {
+      btn.textContent = "Weather";
+      btn.classList.add("on");
+      if (!S.weatherData) {
+        try {
+          const res = await _kdbOrFetch15("/weather-stations.json");
+          S.weatherData = await res.json();
+        } catch (e) {
+          _warn17("weather", "Failed to load");
+          S.weatherOn = false;
+          btn.textContent = "Weather";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildWeatherLayer();
+    } else {
+      btn.textContent = "Weather";
+      btn.classList.remove("on");
+      if (S.weatherLayer) {
+        S.map.removeLayer(S.weatherLayer);
+        S.weatherLayer = null;
+      }
+    }
+  }
+  function _buildWeatherLayer() {
+    if (S.weatherLayer) {
+      S.map.removeLayer(S.weatherLayer);
+      S.weatherLayer = null;
+    }
+    if (!S.weatherOn || !S.weatherData) return;
+    const layers = [];
+    const conditionIcons = {
+      "Clear sky": "\u2600\uFE0F",
+      "Mainly clear": "\u{1F324}\uFE0F",
+      "Partly cloudy": "\u26C5",
+      "Overcast": "\u2601\uFE0F",
+      "Fog": "\u{1F32B}\uFE0F",
+      "Light drizzle": "\u{1F326}\uFE0F",
+      "Moderate drizzle": "\u{1F327}\uFE0F",
+      "Dense drizzle": "\u{1F327}\uFE0F",
+      "Slight rain": "\u{1F326}\uFE0F",
+      "Moderate rain": "\u{1F327}\uFE0F",
+      "Heavy rain": "\u26C8\uFE0F",
+      "Slight snow": "\u{1F328}\uFE0F",
+      "Moderate snow": "\u{1F328}\uFE0F",
+      "Heavy snow": "\u2744\uFE0F",
+      "Thunderstorm": "\u26A1"
+    };
+    for (const s of S.weatherData.stations || []) {
+      if (s.lng === null || s.lat === null) continue;
+      const icon = conditionIcons[s.condition] || "\u{1F321}\uFE0F";
+      const temp = s.temperature !== null ? `${Math.round(s.temperature)}\xB0C` : "N/A";
+      const humidity = s.humidity !== null ? `${s.humidity}%` : "N/A";
+      const wind = s.wind_speed !== null ? `${Math.round(s.wind_speed)} km/h` : "N/A";
+      const marker = L19.circleMarker([s.lat, s.lng], {
+        pane: "overlayLayersPane",
+        radius: 5,
+        fillColor: s.temperature > 25 ? "#ff6b6b" : s.temperature < 0 ? "#74c0fc" : "#ffd93d",
+        color: "#000",
+        weight: 0.5,
+        fillOpacity: 0.85
+      });
+      marker.bindTooltip(
+        `<b>${icon} ${s.name}</b><br><span style="color:var(--text-secondary)">${s.condition}</span><br><span style="color:var(--text-muted)">Temp: ${temp} \xB7 Humidity: ${humidity}</span><br><span style="color:var(--text-muted)">Wind: ${wind} \xB7 ${s.country}</span>`,
+        { direction: "top", className: "admin1-tooltip", sticky: false }
+      );
+      layers.push(marker);
+    }
+    S.weatherLayer = L19.layerGroup(layers).addTo(S.map);
+    _log11("weather", `Displayed ${layers.length} stations`);
+  }
+  var L19;
+  var init_weather_layer = __esm({
+    "src/weather-layer.js"() {
+      init_state();
+      L19 = window.L;
+    }
+  });
+
+  // src/satellite-layer.js
+  async function _kdbOrFetch16(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log12(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn18(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleSatelliteLayer() {
+    S.satelliteOn = !S.satelliteOn;
+    const btn = document.getElementById("satellite-toggle-btn");
+    if (S.satelliteOn) {
+      btn.textContent = "Satellites";
+      btn.classList.add("on");
+      if (!S.satelliteData) {
+        try {
+          const res = await _kdbOrFetch16("/satellites-live-lite.json");
+          S.satelliteData = await res.json();
+        } catch (e) {
+          _warn18("satellite", "Failed to load");
+          S.satelliteOn = false;
+          btn.textContent = "Satellites";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildSatelliteLayer();
+    } else {
+      btn.textContent = "Satellites";
+      btn.classList.remove("on");
+      if (S.satelliteLayer) {
+        S.map.removeLayer(S.satelliteLayer);
+        S.satelliteLayer = null;
+      }
+    }
+  }
+  function _buildSatelliteLayer() {
+    if (S.satelliteLayer) {
+      S.map.removeLayer(S.satelliteLayer);
+      S.satelliteLayer = null;
+    }
+    if (!S.satelliteOn || !S.satelliteData) return;
+    const layers = [];
+    const categoryColors = {
+      "GPS Operational": "#3b82f6",
+      "GLONASS Operational": "#ef4444",
+      "Galileo": "#22c55e",
+      "BeiDou": "#eab308",
+      "Geostationary": "#a855f7",
+      "Iridium": "#f97316",
+      "Starlink": "#06b6d4",
+      "ISS": "#ec4899",
+      "Weather": "#6366f1",
+      "Scientific": "#14b8a6",
+      "Military": "#64748b"
+    };
+    for (const s of S.satelliteData.satellites || []) {
+      if (s.lo === null || s.la === null) continue;
+      const isGeo = s.a > 35e3;
+      const color = categoryColors[s.c] || "#888";
+      const marker = L20.circleMarker([s.la, s.lo], {
+        pane: "overlayLayersPane",
+        radius: isGeo ? 2 : 4,
+        fillColor: color,
+        color: isGeo ? color : "#000",
+        weight: isGeo ? 0 : 0.5,
+        fillOpacity: isGeo ? 0.45 : 0.9
+      });
+      marker.bindTooltip(
+        `<b style="color:${color}">\u{1F6F0} ${s.n}</b><br><span style="color:var(--text-secondary)">${s.c}</span><br><span style="color:var(--text-muted)">Alt: ${s.a} km \xB7 Vel: ${s.v} km/h</span><br><span style="color:var(--text-muted)">Footprint: ${s.f} km</span>`,
+        { direction: "top", className: "admin1-tooltip", sticky: false }
+      );
+      layers.push(marker);
+    }
+    S.satelliteLayer = L20.layerGroup(layers).addTo(S.map);
+    _log12("satellite", `Displayed ${layers.length} satellites`);
+  }
+  var L20;
+  var init_satellite_layer = __esm({
+    "src/satellite-layer.js"() {
+      init_state();
+      L20 = window.L;
+    }
+  });
+
+  // src/unesco-ich-layer.js
+  async function _kdbOrFetch17(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log13(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn19(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleUnescoIchLayer() {
+    S.unescoIchOn = !S.unescoIchOn;
+    const btn = document.getElementById("unesco-ich-toggle-btn");
+    if (S.unescoIchOn) {
+      btn.textContent = "\u{1F3AD} Heritage: On";
+      btn.classList.add("on");
+      if (!S.unescoIchData) {
+        try {
+          const res = await _kdbOrFetch17("/unesco-ich.json");
+          S.unescoIchData = await res.json();
+        } catch (e) {
+          _warn19("unesco-ich", "Failed to load");
+          S.unescoIchOn = false;
+          btn.textContent = "\u{1F3AD} Heritage: Off";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildUnescoIchLayer();
+    } else {
+      btn.textContent = "\u{1F3AD} Heritage: Off";
+      btn.classList.remove("on");
+      if (S.unescoIchLayer) {
+        S.map.removeLayer(S.unescoIchLayer);
+        S.unescoIchLayer = null;
+      }
+    }
+  }
+  function _buildUnescoIchLayer() {
+    if (S.unescoIchLayer) {
+      S.map.removeLayer(S.unescoIchLayer);
+      S.unescoIchLayer = null;
+    }
+    if (!S.unescoIchOn || !S.unescoIchData) return;
+    _log13("unesco-ich", "Data loaded for country panel integration");
+  }
+  var init_unesco_ich_layer = __esm({
+    "src/unesco-ich-layer.js"() {
+      init_state();
+    }
+  });
+
+  // src/flightaware-layer.js
+  async function _kdbOrFetch18(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log14(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn20(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleFlightAwareLayer() {
+    S.flightAwareOn = !S.flightAwareOn;
+    const btn = document.getElementById("flightaware-toggle-btn");
+    if (S.flightAwareOn) {
+      btn.textContent = "\u2708\uFE0F FlightAware: On";
+      btn.classList.add("on");
+      if (!S.flightAwareData) {
+        try {
+          const res = await _kdbOrFetch18("/flightaware-flights-lite.json");
+          S.flightAwareData = await res.json();
+        } catch (e) {
+          _warn20("flightaware", "Failed to load");
+          S.flightAwareOn = false;
+          btn.textContent = "\u2708\uFE0F FlightAware: Off";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildFlightAwareLayer();
+    } else {
+      btn.textContent = "\u2708\uFE0F FlightAware: Off";
+      btn.classList.remove("on");
+      if (S.flightAwareLayer) {
+        S.map.removeLayer(S.flightAwareLayer);
+        S.flightAwareLayer = null;
+      }
+    }
+  }
+  function _buildFlightAwareLayer() {
+    if (S.flightAwareLayer) {
+      S.map.removeLayer(S.flightAwareLayer);
+      S.flightAwareLayer = null;
+    }
+    if (!S.flightAwareOn || !S.flightAwareData) return;
+    const layers = [];
+    for (const f of S.flightAwareData.flights || []) {
+      const headingRad = f.hdg * Math.PI / 180;
+      const startLat = f.lat - Math.cos(headingRad) * 0.5;
+      const startLng = f.lng - Math.sin(headingRad) * 0.5;
+      const endLat = f.lat + Math.cos(headingRad) * 0.5;
+      const endLng = f.lng + Math.sin(headingRad) * 0.5;
+      const aircraftType = f.ac || "Unknown";
+      const altitudeClass = f.alt > 35e3 ? "long-haul" : f.alt > 2e4 ? "medium" : "short";
+      const color = altitudeClass === "long-haul" ? "#3b82f6" : altitudeClass === "medium" ? "#22c55e" : "#f59e0b";
+      const arrow = L21.polyline([[startLat, startLng], [endLat, endLng]], {
+        color,
+        weight: 2,
+        opacity: 0.8
+      });
+      const airline = f.cs?.match(/[A-Z]+/)?.[0] || f.cs || "Unknown";
+      arrow.bindTooltip(
+        `<b style="color:${color}">\u2708\uFE0F ${f.cs || "Flight"}</b><br><span style="color:var(--text-secondary)">${airline} ${aircraftType}</span><br><span style="color:var(--text-muted)">${f.org} \u2192 ${f.dst}</span><br><span style="color:var(--text-muted)">Alt: ${f.alt.toLocaleString()} ft | Spd: ${f.spd} kts</span>`,
+        { direction: "top", className: "admin1-tooltip", sticky: false }
+      );
+      layers.push(arrow);
+    }
+    S.flightAwareLayer = L21.layerGroup(layers).addTo(S.map);
+    _log14("flightaware", `Displayed ${layers.length} flights`);
+  }
+  var L21;
+  var init_flightaware_layer = __esm({
+    "src/flightaware-layer.js"() {
+      init_state();
+      L21 = window.L;
+    }
+  });
+
+  // src/marine-traffic-layer.js
+  async function _kdbOrFetch19(url) {
+    if (window._kdb && window._kdb[url]) {
+      return new Response(JSON.stringify(window._kdb[url]));
+    }
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Fetch failed: " + url);
+    return res;
+  }
+  function _log15(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  function _warn21(tag, msg) {
+    if (window.__KWDEBUG__) ;
+  }
+  async function toggleMarineTrafficLayer() {
+    S.marineTrafficOn = !S.marineTrafficOn;
+    const btn = document.getElementById("marinetraffic-toggle-btn");
+    if (S.marineTrafficOn) {
+      btn.textContent = "Ships";
+      btn.classList.add("on");
+      if (!S.marineTrafficData) {
+        try {
+          const res = await _kdbOrFetch19("/ships-live-lite.json");
+          S.marineTrafficData = await res.json();
+        } catch (e) {
+          _warn21("marinetraffic", "Failed to load");
+          S.marineTrafficOn = false;
+          btn.textContent = "Ships";
+          btn.classList.remove("on");
+          return;
+        }
+      }
+      _buildMarineTrafficLayer();
+    } else {
+      btn.textContent = "Ships";
+      btn.classList.remove("on");
+      if (S.marineTrafficLayer) {
+        S.map.removeLayer(S.marineTrafficLayer);
+        S.marineTrafficLayer = null;
+      }
+    }
+  }
+  function _buildMarineTrafficLayer() {
+    if (S.marineTrafficLayer) {
+      S.map.removeLayer(S.marineTrafficLayer);
+      S.marineTrafficLayer = null;
+    }
+    if (!S.marineTrafficOn || !S.marineTrafficData) return;
+    const layers = [];
+    const typeColors = {
+      "Container": "#3b82f6",
+      "Bulk Carrier": "#64748b",
+      "Tanker": "#ef4444",
+      "Cargo": "#22c55e",
+      "Passenger": "#f59e0b",
+      "Cruise Ship": "#ec4899",
+      "Fishing": "#14b8a6",
+      "Naval": "#6366f1",
+      "Supply": "#a855f7",
+      "Research": "#8b5cf6"
+    };
+    for (const v of S.marineTrafficData.vessels || []) {
+      const color = typeColors[v.tp] || "#888";
+      const marker = L22.circleMarker([v.lat, v.lng], {
+        pane: "overlayLayersPane",
+        radius: v.tp === "Cruise Ship" || v.tp === "Container" ? 6 : 4,
+        fillColor: color,
+        color: "#000",
+        weight: 0.5,
+        fillOpacity: 0.9
+      });
+      const courseArrow = L22.polyline([
+        [v.lat, v.lng],
+        [v.lat + Math.cos(v.crs * Math.PI / 180) * 0.2, v.lng + Math.sin(v.crs * Math.PI / 180) * 0.2]
+      ], {
+        pane: "overlayLayersPane",
+        color,
+        weight: 2,
+        opacity: 0.6
+      });
+      marker.bindTooltip(
+        `<b style="color:${color}">\u{1F6A2} ${v.nm}</b><br><span style="color:var(--text-secondary)">${v.tp}</span><br><span style="color:var(--text-muted)">Flag: ${v.flag || "Unknown"}</span><br><span style="color:var(--text-muted)">Spd: ${v.spd} kn | Crs: ${v.crs}\xB0</span><br><span style="color:var(--text-secondary)">\u2192 ${v.dst}</span>`,
+        { direction: "top", className: "admin1-tooltip", sticky: false }
+      );
+      layers.push(marker, courseArrow);
+    }
+    S.marineTrafficLayer = L22.layerGroup(layers).addTo(S.map);
+    _log15("marinetraffic", `Displayed ${layers.length / 2} vessels`);
+  }
+  var L22;
+  var init_marine_traffic_layer = __esm({
+    "src/marine-traffic-layer.js"() {
+      init_state();
+      L22 = window.L;
+    }
+  });
+
+  // src/econ-layer.js
+  function econDotColor(totalUSD) {
+    const logMin = Math.log10(5e8);
+    const logMax = Math.log10(5e12);
+    const t = Math.max(0, Math.min(1, (Math.log10(Math.max(totalUSD, 5e8)) - logMin) / (logMax - logMin)));
+    const hue = Math.round(45 + t * 143);
+    const sat = Math.round(85 + t * 15);
+    const lit = Math.round(62 - t * 10);
+    return `hsl(${hue},${sat}%,${lit}%)`;
+  }
+  function toggleEconLayer() {
+    S.econOn = !S.econOn;
+    const btn = document.getElementById("econ-toggle-btn");
+    if (S.econOn) {
+      btn.textContent = "Economy";
+      btn.classList.add("on");
+      if (S._drawEconColorRamp) S._drawEconColorRamp();
+      S._companiesLoader.ensure().then(() => {
+        buildEconLayer();
+        if (S._updateMapLegends) S._updateMapLegends();
+      });
+    } else {
+      btn.textContent = "Economy";
+      btn.classList.remove("on");
+      if (S.econLayer) {
+        S.map.removeLayer(S.econLayer);
+        S.econLayer = null;
+      }
+      collapseEconCluster();
+      _econTipHide();
+      if (S._updateMapLegends) S._updateMapLegends();
+    }
+  }
+  function _clearExpandedLayers() {
+    if (S._collapseOnClick) {
+      S.map.off("click", S._collapseOnClick);
+      S._collapseOnClick = null;
+    }
+    if (S._expandedLayers) {
+      S._expandedLayers.forEach((l) => {
+        try {
+          S.map.removeLayer(l);
+        } catch (_) {
+        }
+      });
+      S._expandedLayers = null;
+    }
+  }
+  function collapseEconCluster() {
+    _clearExpandedLayers();
+    S._pinnedExpansion = null;
+  }
+  function _convexHull(pts) {
+    const n = pts.length;
+    if (n < 3) return [...pts];
+    const d2 = (a, b) => (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2;
+    let l = 0;
+    for (let i = 1; i < n; i++) if (pts[i][1] < pts[l][1]) l = i;
+    const hull = [];
+    let p = l, q;
+    do {
+      hull.push(pts[p]);
+      q = 0;
+      for (let i = 1; i < n; i++) {
+        if (q === p) {
+          q = i;
+          continue;
+        }
+        const cross = (pts[q][1] - pts[p][1]) * (pts[i][0] - pts[p][0]) - (pts[q][0] - pts[p][0]) * (pts[i][1] - pts[p][1]);
+        if (cross < 0 || cross === 0 && d2(pts[p], pts[i]) > d2(pts[p], pts[q])) q = i;
+      }
+      p = q;
+    } while (p !== l && hull.length <= n);
+    return hull;
+  }
+  function _arcLine(p1, p2, curve = 0.22) {
+    const mid = [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
+    const dl = p2[0] - p1[0], dn = p2[1] - p1[1];
+    const ctrl = [mid[0] - dn * curve, mid[1] + dl * curve];
+    const pts = [];
+    for (let i = 0; i <= 24; i++) {
+      const t = i / 24, u = 1 - t;
+      pts.push([
+        u * u * p1[0] + 2 * u * t * ctrl[0] + t * t * p2[0],
+        u * u * p1[1] + 2 * u * t * ctrl[1] + t * t * p2[1]
+      ]);
+    }
+    return pts;
+  }
+  function expandEconCluster(group, clusterUSD, cLat, cLng) {
+    _clearExpandedLayers();
+    S._pinnedExpansion = { group, clusterUSD, cLat, cLng };
+    const layers = [];
+    const col = econDotColor(clusterUSD);
+    const MAX_USD = 2e12;
+    const positions = group.map((p) => [p.city.lat, p.city.lng]);
+    if (positions.length >= 3) {
+      const hull = _convexHull(positions);
+      const padded = hull.map(([lat, lng]) => {
+        const dlat = lat - cLat, dlng = lng - cLng;
+        const len = Math.sqrt(dlat * dlat + dlng * dlng) || 1e-3;
+        const pad = Math.max(1.8, len * 0.22);
+        return [lat + dlat / len * pad, lng + dlng / len * pad];
+      });
+      layers.push(L23.polygon(padded, {
+        fillColor: col,
+        fillOpacity: 0.07,
+        color: col,
+        weight: 1.5,
+        opacity: 0.35,
+        dashArray: "7 5",
+        pane: "econPane",
+        interactive: false
+      }).addTo(S.map));
+    } else if (positions.length === 2) {
+      layers.push(L23.polyline(positions, {
+        color: col,
+        weight: 2,
+        opacity: 0.3,
+        dashArray: "7 5",
+        pane: "econPane",
+        interactive: false
+      }).addTo(S.map));
+    }
+    for (const p of group) {
+      layers.push(L23.polyline(
+        _arcLine([cLat, cLng], [p.city.lat, p.city.lng]),
+        { color: col, weight: 1, opacity: 0.2, pane: "econPane", interactive: false }
+      ).addTo(S.map));
+    }
+    for (const p of group) {
+      const cityCol = econDotColor(p.totalUSD);
+      const logVal = Math.log10(Math.max(p.totalUSD, 1e8));
+      const r = Math.max(6, Math.min(22, 5 + 17 * (logVal - 8) / (13 - 8)));
+      const topCos = (p.validCos || []).slice().sort((a, b) => b.usd - a.usd).slice(0, 3);
+      const tipHtml = `<div style="font-weight:600;color:${cityCol};margin-bottom:2px">${escHtml(p.city.name)}</div><div style="color:var(--text-secondary);font-size:0.78rem;margin-bottom:4px">\u2248 <span style="color:${cityCol};font-weight:600">$${fmtRevenue(p.totalUSD)}</span> USD</div>` + topCos.map(
+        ({ co, usd }) => `<div style="color:var(--text-body);font-size:0.79rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(co.name)} <span style="color:${cityCol}">$${fmtRevenue(usd)}</span></div>`
+      ).join("");
+      const dot = L23.circleMarker([p.city.lat, p.city.lng], {
+        radius: r,
+        color: cityCol,
+        fillColor: cityCol,
+        fillOpacity: 0.22,
+        weight: 2,
+        opacity: 0.9,
+        pane: "econPane",
+        bubblingMouseEvents: false
+      });
+      dot.on("mouseover", (e) => _econTipShow(tipHtml, e.originalEvent.clientX, e.originalEvent.clientY));
+      dot.on("mousemove", (e) => _econTipMove(e.originalEvent.clientX, e.originalEvent.clientY));
+      dot.on("mouseout", () => _econTipHide());
+      dot.on("click", () => {
+        _econTipHide();
+        collapseEconCluster();
+        if (S._openCorpPanel) S._openCorpPanel(p.qid, p.city.name);
+      });
+      dot.addTo(S.map);
+      layers.push(dot);
+    }
+    S._expandedLayers = layers;
+    setTimeout(() => {
+      S._collapseOnClick = collapseEconCluster;
+      S.map.on("click", S._collapseOnClick);
+    }, 120);
+  }
+  function _econTipDOM() {
+    if (!S._econTipEl) {
+      S._econTipEl = document.createElement("div");
+      S._econTipEl.id = "econ-custom-tip";
+      document.body.appendChild(S._econTipEl);
+    }
+    return S._econTipEl;
+  }
+  function _econTipShow(html, clientX, clientY) {
+    const el = _econTipDOM();
+    el.innerHTML = html;
+    el.style.display = "block";
+    _econTipMove(clientX, clientY);
+  }
+  function _econTipMove(clientX, clientY) {
+    const el = S._econTipEl;
+    if (!el || el.style.display === "none") return;
+    const tw = el.offsetWidth, th = el.offsetHeight;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const pad = 12;
+    let x = clientX + pad;
+    let y = clientY - th - pad;
+    if (x + tw > vw - 8) x = clientX - tw - pad;
+    if (y < 8) y = clientY + pad;
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+  }
+  function _econTipHide() {
+    if (S._econTipEl) S._econTipEl.style.display = "none";
+  }
+  function buildEconLayer() {
+    if (!S.econOn) return;
+    const _savedPin = S._pinnedExpansion;
+    _clearExpandedLayers();
+    S._pinnedExpansion = null;
+    if (S.econLayer) {
+      S.map.removeLayer(S.econLayer);
+      S.econLayer = null;
+    }
+    if (!Object.keys(S.companiesData).length) return;
+    const MAX_PLAUSIBLE_USD = 2e12;
+    const metric = "market_cap";
+    const cityPoints = [];
+    for (const [qid, companies] of Object.entries(S.companiesData)) {
+      const city = S.cityByQid.get(qid);
+      if (!city || city.lat == null || city.lng == null) continue;
+      let totalUSD = 0;
+      const validCos = [];
+      for (const co of companies) {
+        const countryDefaultCur = ISO2_TO_CURRENCY[city.iso] || null;
+        const hasPrimary = !!(co[metric] && (co[metric + "_currency"] || countryDefaultCur));
+        const val = hasPrimary ? co[metric] : co.revenue || co.market_cap;
+        const rawCur = hasPrimary ? co[metric + "_currency"] : co.revenue_currency || co.market_cap_currency;
+        const cur = rawCur || countryDefaultCur;
+        if (!val || !cur) continue;
+        const usd = toUSD(val, cur);
+        if (usd > 0 && usd <= MAX_PLAUSIBLE_USD) {
+          totalUSD += usd;
+          const usedMetric = hasPrimary ? metric : co.revenue ? "revenue" : "market_cap";
+          validCos.push({ co, usd, usedMetric });
+        }
+      }
+      if (totalUSD <= 0) continue;
+      cityPoints.push({ qid, city, totalUSD, validCos });
+    }
+    let clusters = cityPoints.map((p) => [p]);
+    function _clusterMeta(group) {
+      const totalUSD = group.reduce((s, p) => s + p.totalUSD, 0);
+      const lat = group.reduce((s, p) => s + p.city.lat * p.totalUSD, 0) / totalUSD;
+      const lng = group.reduce((s, p) => s + p.city.lng * p.totalUSD, 0) / totalUSD;
+      const logVal = Math.log10(Math.max(totalUSD, 1e8));
+      const r = Math.max(6, Math.min(32, 4 + 28 * (logVal - 8) / (13 - 8)));
+      const px = S.map.latLngToContainerPoint([lat, lng]);
+      return { lat, lng, r, px, totalUSD };
+    }
+    const OVERLAP_PAD = 4;
+    let changed = true;
+    while (changed) {
+      changed = false;
+      const meta = clusters.map(_clusterMeta);
+      outer: for (let i = 0; i < clusters.length; i++) {
+        for (let j = i + 1; j < clusters.length; j++) {
+          const a = meta[i], b = meta[j];
+          const dx = a.px.x - b.px.x, dy = a.px.y - b.px.y;
+          if (Math.sqrt(dx * dx + dy * dy) < a.r + b.r + OVERLAP_PAD) {
+            clusters[i] = clusters[i].concat(clusters[j]);
+            clusters.splice(j, 1);
+            changed = true;
+            break outer;
+          }
+        }
+      }
+    }
+    const markers = [];
+    for (const group of clusters) {
+      const clusterUSD = group.reduce((s, p) => s + p.totalUSD, 0);
+      const lat = group.reduce((s, p) => s + p.city.lat * p.totalUSD, 0) / clusterUSD;
+      const lng = group.reduce((s, p) => s + p.city.lng * p.totalUSD, 0) / clusterUSD;
+      const logVal = Math.log10(Math.max(clusterUSD, 1e8));
+      const radius = Math.max(4, Math.min(32, 4 + 28 * (logVal - 8) / (13 - 8)));
+      const isMerged = group.length > 1;
+      const headerLabel = isMerged ? `${group.length} cities` : escHtml(group[0].city.name);
+      const subLabel = isMerged ? group.slice(0, 3).map((p) => escHtml(p.city.name)).join(", ") + (group.length > 3 ? ` +${group.length - 3} more` : "") : null;
+      const allCos = group.flatMap((p) => p.validCos);
+      const topCos = allCos.sort((a, b) => b.usd - a.usd).slice(0, 4);
+      const metricLabel2 = metric === "market_cap" ? "Market cap" : "Revenue";
+      const topHtml = topCos.map(({ co, usd, usedMetric }) => {
+        const tag = metric === "market_cap" && usedMetric !== "market_cap" ? `<span style="color:var(--text-muted);font-size:0.68rem"> rev</span>` : "";
+        return `<div style="color:var(--text-body);font-size:0.79rem;padding:1px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(co.name)}${tag} <span style="color:var(--gold)">$${fmtRevenue(usd)}</span></div>`;
+      }).join("");
+      const totalCorps = group.reduce((s, p) => s + p.validCos.length, 0);
+      const tip = `<div style="font-weight:600;color:var(--gold);margin-bottom:2px">${headerLabel}</div>` + (subLabel ? `<div style="color:var(--text-secondary);font-size:0.75rem;margin-bottom:3px">${subLabel}</div>` : "") + `<div style="color:var(--text-secondary);font-size:0.78rem;margin-bottom:5px">${metricLabel2} \u2248 <span style="color:var(--gold);font-weight:600">$${fmtRevenue(clusterUSD)}</span> USD</div><div style="color:var(--text-faint);font-size:0.74rem;margin-bottom:4px">${totalCorps} listed corp${totalCorps !== 1 ? "s" : ""}</div>` + topHtml;
+      const dotColor = econDotColor(clusterUSD);
+      const m = L23.circleMarker([lat, lng], {
+        radius: Math.max(radius, 6),
+        color: dotColor,
+        fillColor: dotColor,
+        fillOpacity: isMerged ? 0.28 : 0.18,
+        weight: isMerged ? 2 : 1.5,
+        opacity: 0.9,
+        pane: "econPane",
+        bubblingMouseEvents: false
+      });
+      m.on("mouseover", (e) => _econTipShow(tip, e.originalEvent.clientX, e.originalEvent.clientY));
+      m.on("mousemove", (e) => _econTipMove(e.originalEvent.clientX, e.originalEvent.clientY));
+      m.on("mouseout", () => _econTipHide());
+      if (!isMerged) {
+        m.on("click", () => {
+          _econTipHide();
+          if (S._openCorpPanel) S._openCorpPanel(group[0].qid, group[0].city.name);
+        });
+      } else {
+        const clusterTitle = `${group.length} cities`;
+        m.on("click", () => {
+          _econTipHide();
+          expandEconCluster(group, clusterUSD, lat, lng);
+          if (S._openCorpPanelCluster) S._openCorpPanelCluster(group, clusterTitle);
+        });
+      }
+      markers.push(m);
+    }
+    S.econLayer = L23.layerGroup(markers).addTo(S.map);
+    const metricLabel = metric === "market_cap" ? "Market cap" : "Revenue";
+    const primaryCount = cityPoints.flatMap((p) => p.validCos).filter((c) => c.usedMetric === metric).length;
+    const fallbackNote = metric === "market_cap" && primaryCount < cityPoints.flatMap((p) => p.validCos).length ? ` \xB7 ${primaryCount} mkt cap, rest revenue` : "";
+    document.getElementById("econ-info").textContent = `${cityPoints.length} cities${clusters.length < cityPoints.length ? ` \u2192 ${clusters.length} clusters` : ""} \xB7 ${metricLabel}${fallbackNote} \xB7 click to explore`;
+    if (_savedPin) {
+      expandEconCluster(_savedPin.group, _savedPin.clusterUSD, _savedPin.cLat, _savedPin.cLng);
+    }
+  }
+  var L23;
+  var init_econ_layer = __esm({
+    "src/econ-layer.js"() {
+      init_state();
+      init_constants();
+      init_fx_sidebar();
+      init_utils();
+      L23 = window.L;
+    }
+  });
+
   // src/app-legacy.js
-  function _log2(tag, ...args) {
+  function _log16(tag, ...args) {
     if (__DEBUG__) ;
   }
-  function _warn2(tag, ...args) {
+  function _warn22(tag, ...args) {
     if (__DEBUG__) ;
   }
   function createLazyLoader(url, assign, shouldRebuild) {
@@ -2794,7 +5032,7 @@
       var kdbData = _kdbGet(stem);
       if (kdbData !== null) {
         assign(kdbData);
-        _log2("kdb", "lazy hit:", stem);
+        _log16("kdb", "lazy hit:", stem);
         if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
         loaded = true;
         return;
@@ -2804,11 +5042,11 @@
           const res = await fetch(url);
           if (res.ok) {
             assign(await res.json());
-            _log2("lazy", url, "loaded");
+            _log16("lazy", url, "loaded");
             if (shouldRebuild && shouldRebuild()) rebuildMapLayer();
           }
         } catch (e) {
-          _warn2("lazy", url, "failed", e);
+          _warn22("lazy", url, "failed", e);
         } finally {
           loaded = true;
           loading = null;
@@ -2834,11 +5072,11 @@
     }
     return val;
   }
-  async function _kdbOrFetch2(url) {
+  async function _kdbOrFetch20(url) {
     var stem = url.replace(/^\//, "").replace(/\.json(\?.*)?$/, "");
     var kdbData = _kdbGet(stem);
     if (kdbData !== null) {
-      _log2("kdb", "hit:", stem);
+      _log16("kdb", "hit:", stem);
       return { ok: true, status: 200, json: async () => kdbData };
     }
     var res = await fetch(url);
@@ -3415,7 +5653,7 @@
         }
       }
       saveEditsStore(migrated);
-      _log2("init", `Migrated ${count} city edits to QID keys`);
+      _log16("init", `Migrated ${count} city edits to QID keys`);
     }
     const deleted = loadDeleted();
     const oldDelKeys = [...deleted].filter((k) => /^-?\d/.test(k) && k.includes(","));
@@ -3426,7 +5664,7 @@
         if (newKey) migrated.add(newKey);
       }
       saveDeletedStore(migrated);
-      _log2("init", `Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
+      _log16("init", `Migrated ${oldDelKeys.length} deleted-city entries to QID keys`);
     }
   }
   function applyOverrides() {
@@ -5331,7 +7569,7 @@
         }
         if (errorCount >= 3 && !_terrainFallbackActive) {
           _terrainFallbackActive = true;
-          _warn2("terrain", "OpenTopoMap unavailable, switching to ESRI World Topo");
+          _warn22("terrain", "OpenTopoMap unavailable, switching to ESRI World Topo");
           setTimeout(() => _swapTileLayer(), 100);
         }
       });
@@ -5527,7 +7765,7 @@
                 matched++;
               }
             }
-            _log2("kdb", label + ": " + matched + "/" + kdbData.length + " matched to cities");
+            _log16("kdb", label + ": " + matched + "/" + kdbData.length + " matched to cities");
           }
           return Promise.resolve();
         }
@@ -5543,10 +7781,10 @@
                 matched2++;
               }
             }
-            _log2("lazy", label + ": " + matched2 + "/" + arr.length + " matched to cities");
+            _log16("lazy", label + ": " + matched2 + "/" + arr.length + " matched to cities");
           });
         }).catch(function() {
-          _warn2("lazy", label, "failed to load");
+          _warn22("lazy", label, "failed to load");
         });
       };
       const [citiesRes, countryRes] = await Promise.all([
@@ -5639,18 +7877,18 @@
           }
         }
       }
-      if (_backfilled) _log2("init", "Backfilled ISO codes for " + _backfilled + " cities");
+      if (_backfilled) _log16("init", "Backfilled ISO codes for " + _backfilled + " cities");
       migrateEditKeys(S.rawCities);
       if (countryRes && countryRes.ok) {
         try {
           S.countryData = await countryRes.json();
-          _log2("init", `Country data loaded (${Object.keys(S.countryData).length} countries)`);
+          _log16("init", `Country data loaded (${Object.keys(S.countryData).length} countries)`);
           _buildCountryDataCaches();
         } catch {
-          _warn2("init", "country-data.json is malformed \u2014 World Bank data will be unavailable");
+          _warn22("init", "country-data.json is malformed \u2014 World Bank data will be unavailable");
         }
       } else {
-        _log2("init", 'country-data.json not found \u2014 run "npm run fetch-country" to enable World Bank indicators');
+        _log16("init", 'country-data.json not found \u2014 run "npm run fetch-country" to enable World Bank indicators');
       }
       var _cityNameIdx = {};
       for (var _ci = 0; _ci < S.rawCities.length; _ci++) {
@@ -5737,14 +7975,14 @@
           var kdbData = _kdbGet(stem);
           if (kdbData !== null) {
             item.assign(kdbData);
-            _log2("kdb", stem + " loaded");
+            _log16("kdb", stem + " loaded");
             return;
           }
           fetch(item.url).then((r) => r.ok ? r.json() : Promise.reject()).then((d) => {
             item.assign(d);
-            _log2("lazy", `${item.url} loaded`);
+            _log16("lazy", `${item.url} loaded`);
           }).catch(() => {
-            _warn2("lazy", `${item.url} failed`);
+            _warn22("lazy", `${item.url} failed`);
           });
         });
         _loadCityArrayFromUrl("/ports.json", "Ports", function(qid, d) {
@@ -5771,15 +8009,15 @@
           for (var ri = 0; ri < _uniKdb.length; ri++) {
             S.uniRankings[_uniKdb[ri].qid] = { qs_rank: _uniKdb[ri].qs_rank, the_rank: _uniKdb[ri].the_rank };
           }
-          _log2("kdb", "University rankings loaded:", _uniKdb.length);
+          _log16("kdb", "University rankings loaded:", _uniKdb.length);
         } else {
           fetch("/uni-rankings.json").then((r) => r.ok ? r.json() : Promise.reject()).then(function(ranks) {
             for (var ri2 = 0; ri2 < ranks.length; ri2++) {
               S.uniRankings[ranks[ri2].qid] = { qs_rank: ranks[ri2].qs_rank, the_rank: ranks[ri2].the_rank };
             }
-            _log2("lazy", "University rankings loaded:", ranks.length);
+            _log16("lazy", "University rankings loaded:", ranks.length);
           }).catch(function() {
-            _warn2("lazy", "University rankings failed");
+            _warn22("lazy", "University rankings failed");
           });
         }
       };
@@ -7529,7 +9767,7 @@
         var fetches = [];
         if (!admin1Cache[iso2]) {
           fetches.push(
-            _kdbOrFetch2("/admin1/" + iso2 + ".json").then(function(r) {
+            _kdbOrFetch20("/admin1/" + iso2 + ".json").then(function(r) {
               return r.json();
             }).then(function(d) {
               if (d) admin1Cache[iso2] = d;
@@ -7558,7 +9796,7 @@
           S.admin1Layers[iso2] = layer;
         }
       } catch (e) {
-        _warn2("admin1", "Failed to load", iso2, e.message);
+        _warn22("admin1", "Failed to load", iso2, e.message);
       } finally {
         delete S._admin1Loading[iso2];
       }
@@ -7640,7 +9878,7 @@
       btn.disabled = true;
       await _worldGeoLoader.ensure();
       if (!S.admin1Index) {
-        var idxRes = await _kdbOrFetch2("/admin1/_index.json");
+        var idxRes = await _kdbOrFetch20("/admin1/_index.json");
         if (idxRes.ok) S.admin1Index = await idxRes.json();
         else S.admin1Index = {};
       }
@@ -7764,1448 +10002,6 @@
       ctx.fillRect(x, 0, 1, h);
     }
   }
-  function toggleUnescoLayer() {
-    S.unescoOn = !S.unescoOn;
-    var btn = document.getElementById("unesco-toggle-btn");
-    if (S.unescoOn) {
-      btn.textContent = "UNESCO";
-      btn.classList.add("on");
-      buildUnescoLayer();
-    } else {
-      btn.textContent = "UNESCO";
-      btn.classList.remove("on");
-      if (S.unescoLayer) {
-        S.map.removeLayer(S.unescoLayer);
-        S.unescoLayer = null;
-      }
-    }
-  }
-  function buildUnescoLayer() {
-    if (S.unescoLayer) {
-      S.map.removeLayer(S.unescoLayer);
-      S.unescoLayer = null;
-    }
-    if (!S.unescoOn || !S.unescoSites.length) return;
-    var typeColor = { Cultural: "#e6a817", Natural: "#3fb950", Mixed: "#a371f7" };
-    var markers = S.unescoSites.map(function(s) {
-      var color = typeColor[s.type] || "#8b949e";
-      var marker = L.circleMarker([s.lat, s.lng], {
-        pane: "overlayLayersPane",
-        radius: 5,
-        fillColor: color,
-        color: "#0d1117",
-        weight: 1,
-        fillOpacity: 0.85
-      });
-      marker.bindTooltip(
-        '<b style="color:' + color + '">' + escHtml(s.name) + '</b><br><span style="color:var(--text-secondary)">' + s.type + " \xB7 " + s.year + " \xB7 " + s.iso2 + "</span>",
-        { direction: "top", className: "admin1-tooltip" }
-      );
-      marker.on("click", function() {
-        openCountryPanel(s.iso2);
-      });
-      return marker;
-    });
-    S.unescoLayer = L.layerGroup(markers).addTo(S.map);
-  }
-  async function toggleCableLayer() {
-    S.cableOn = !S.cableOn;
-    var btn = document.getElementById("cable-toggle-btn");
-    if (S.cableOn) {
-      btn.textContent = "\u{1F4E1} Cables: \u2026";
-      btn.classList.add("on");
-      if (!S.cableData) {
-        try {
-          var res = await _kdbOrFetch2("/submarine-cables.json");
-          S.cableData = await res.json();
-          _log2("cables", "Loaded:", S.cableData.cables.length, "cables,", S.cableData.landings.length, "landing points");
-        } catch (e) {
-          _warn2("cables", "Failed to load submarine-cables.json");
-          S.cableOn = false;
-          btn.textContent = "Submarine Cables";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      btn.textContent = "Submarine Cables";
-      buildCableLayer();
-    } else {
-      btn.textContent = "Submarine Cables";
-      btn.classList.remove("on");
-      if (S.cableLayer) {
-        S.map.removeLayer(S.cableLayer);
-        S.cableLayer = null;
-      }
-    }
-  }
-  function buildCableLayer() {
-    if (S.cableLayer) {
-      S.map.removeLayer(S.cableLayer);
-      S.cableLayer = null;
-    }
-    if (!S.cableOn || !S.cableData) return;
-    var layers = [];
-    for (var i = 0; i < S.cableData.cables.length; i++) {
-      var c = S.cableData.cables[i];
-      for (var j = 0; j < c.segments.length; j++) {
-        var latlngs = c.segments[j].map(function(p) {
-          return [p[1], p[0]];
-        });
-        var line = L.polyline(latlngs, {
-          pane: "overlayLayersPane",
-          color: c.color || "#58a6ff",
-          weight: 1.5,
-          opacity: 0.6
-        });
-        line.bindTooltip('<b style="color:var(--accent)">' + escHtml(c.name) + "</b>", {
-          direction: "top",
-          className: "admin1-tooltip",
-          sticky: true
-        });
-        layers.push(line);
-      }
-    }
-    for (var k = 0; k < S.cableData.landings.length; k++) {
-      var lp = S.cableData.landings[k];
-      var dot = L.circleMarker([lp.lat, lp.lng], {
-        pane: "overlayLayersPane",
-        radius: 2.5,
-        fillColor: "#58a6ff",
-        color: "#0d1117",
-        weight: 0.5,
-        fillOpacity: 0.7
-      });
-      dot.bindTooltip('<b style="color:var(--accent)">' + escHtml(lp.name) + "</b>", {
-        direction: "top",
-        className: "admin1-tooltip"
-      });
-      layers.push(dot);
-    }
-    S.cableLayer = L.layerGroup(layers).addTo(S.map);
-  }
-  function _greatCirclePoints(lat1, lng1, lat2, lng2, n) {
-    var toRad = Math.PI / 180, toDeg = 180 / Math.PI;
-    var la1 = lat1 * toRad, lo1 = lng1 * toRad, la2 = lat2 * toRad, lo2 = lng2 * toRad;
-    var dLon = Math.abs(lo2 - lo1);
-    var crossesAnti = dLon > Math.PI;
-    if (crossesAnti) {
-      if (lo2 > lo1) lo1 += 2 * Math.PI;
-      else lo2 += 2 * Math.PI;
-    }
-    var d = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin((la2 - la1) / 2), 2) + Math.cos(la1) * Math.cos(la2) * Math.pow(Math.sin((lo2 - lo1) / 2), 2)));
-    if (d < 0.01) return { pts: [[lat1, lng1], [lat2, lng2]], crossesAnti: false };
-    var pts = [];
-    for (var i = 0; i <= n; i++) {
-      var f = i / n;
-      var A = Math.sin((1 - f) * d) / Math.sin(d);
-      var B = Math.sin(f * d) / Math.sin(d);
-      var x = A * Math.cos(la1) * Math.cos(lo1) + B * Math.cos(la2) * Math.cos(lo2);
-      var y = A * Math.cos(la1) * Math.sin(lo1) + B * Math.cos(la2) * Math.sin(lo2);
-      var z = A * Math.sin(la1) + B * Math.sin(la2);
-      var lat = Math.atan2(z, Math.sqrt(x * x + y * y)) * toDeg;
-      var lng = Math.atan2(y, x) * toDeg;
-      if (lng > 180) lng -= 360;
-      if (lng < -180) lng += 360;
-      pts.push([lat, lng]);
-    }
-    return { pts, crossesAnti };
-  }
-  async function toggleAirRouteLayer() {
-    S.airRouteOn = !S.airRouteOn;
-    var btn = document.getElementById("airroute-toggle-btn");
-    if (S.airRouteOn) {
-      btn.textContent = "\u2708 Flights: \u2026";
-      btn.classList.add("on");
-      if (!S.airRouteData) {
-        try {
-          var res = await _kdbOrFetch2("/air-routes.json");
-          S.airRouteData = await res.json();
-          _log2("air-routes", "Loaded:", S.airRouteData.routes.length, "routes");
-        } catch (e) {
-          _warn2("air-routes", "Failed to load");
-          S.airRouteOn = false;
-          btn.textContent = "\u2708 Flights: Off";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      btn.textContent = "\u2708 Flights: On";
-      buildAirRouteLayer();
-    } else {
-      btn.textContent = "\u2708 Flights: Off";
-      btn.classList.remove("on");
-      if (S.airRouteLayer) {
-        S.map.removeLayer(S.airRouteLayer);
-        S.airRouteLayer = null;
-      }
-    }
-  }
-  function buildAirRouteLayer() {
-    if (S.airRouteLayer) {
-      S.map.removeLayer(S.airRouteLayer);
-      S.airRouteLayer = null;
-    }
-    if (!S.airRouteOn || !S.airRouteData) return;
-    var layers = [];
-    var maxAirlines = S.airRouteData.routes[0]?.airlines || 24;
-    for (var i = 0; i < S.airRouteData.routes.length; i++) {
-      var r = S.airRouteData.routes[i];
-      var result = _greatCirclePoints(r.lat1, r.lng1, r.lat2, r.lng2, 20);
-      var pts = result.pts;
-      var weight = 0.5 + r.airlines / maxAirlines * 2;
-      var opacity = 0.15 + r.airlines / maxAirlines * 0.4;
-      if (result.crossesAnti) {
-        var splitIdx = -1;
-        for (var j = 1; j < pts.length; j++) {
-          var dLng = Math.abs(pts[j][1] - pts[j - 1][1]);
-          if (dLng > 170) {
-            splitIdx = j;
-            break;
-          }
-        }
-        if (splitIdx > 0) {
-          var pts1 = pts.slice(0, splitIdx);
-          var line1 = L.polyline(pts1, { pane: "overlayLayersPane", color: "#58a6ff", weight, opacity });
-          layers.push(line1);
-          var pts2 = pts.slice(splitIdx);
-          var line2 = L.polyline(pts2, { pane: "overlayLayersPane", color: "#58a6ff", weight, opacity });
-          layers.push(line2);
-          continue;
-        }
-      }
-      var line = L.polyline(pts, {
-        pane: "overlayLayersPane",
-        color: "#58a6ff",
-        weight,
-        opacity
-      });
-      line.bindTooltip(
-        '<b style="color:var(--accent)">' + escHtml(r.fromIata) + " \u2194 " + escHtml(r.toIata) + '</b><br><span style="color:var(--text-secondary)">' + escHtml(r.from) + " \u2194 " + escHtml(r.to) + '</span><br><span style="color:var(--univ-gold)">' + r.airlines + " airlines</span>",
-        { direction: "top", className: "admin1-tooltip", sticky: true }
-      );
-      layers.push(line);
-    }
-    if (S.airRouteData.hubs) {
-      for (var j = 0; j < S.airRouteData.hubs.length; j++) {
-        var h = S.airRouteData.hubs[j];
-        var dot = L.circleMarker([h.lat, h.lng], {
-          pane: "overlayLayersPane",
-          radius: 3 + h.routes / 5,
-          fillColor: "#e3b341",
-          color: "#0d1117",
-          weight: 1,
-          fillOpacity: 0.8
-        });
-        dot.bindTooltip(
-          '<b style="color:var(--univ-gold)">' + escHtml(h.iata) + "</b> " + escHtml(h.city) + '<br><span style="color:var(--text-secondary)">' + h.routes + " top intl routes</span>",
-          { direction: "top", className: "admin1-tooltip" }
-        );
-        layers.push(dot);
-      }
-    }
-    S.airRouteLayer = L.layerGroup(layers).addTo(S.map);
-  }
-  function _parsePlateName(code) {
-    const parts = code.split("-");
-    if (parts.length !== 2) return code;
-    const [a, b] = parts.map((p) => _PLATE_NAMES[p] || p);
-    return `${a} \u2013 ${b} Boundary`;
-  }
-  async function toggleTectonicLayer() {
-    S.tectonicOn = !S.tectonicOn;
-    const btn = document.getElementById("tectonic-toggle-btn");
-    if (S.tectonicOn) {
-      btn.textContent = "\u{1F5FA} Plates: \u2026";
-      btn.classList.add("on");
-      if (!S.tectonicData) {
-        try {
-          const res = await _kdbOrFetch2("/tectonic-plates.json");
-          S.tectonicData = await res.json();
-        } catch (e) {
-          _warn2("tectonic", "Failed to load");
-          S.tectonicOn = false;
-          btn.textContent = "Tectonic Plates";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      btn.textContent = "Tectonic Plates";
-      S.tectonicLayer = L.geoJSON(S.tectonicData, {
-        style: () => ({ color: "#e85d04", weight: 2, opacity: 0.7, interactive: false }),
-        pane: "choroplethPane",
-        onEachFeature: (feature, layer) => {
-          if (feature.properties.name) {
-            const displayName = _parsePlateName(feature.properties.name);
-            layer.bindTooltip(escHtml(displayName), {
-              direction: "top",
-              className: "admin1-tooltip",
-              sticky: true
-            });
-            layer.options.interactive = true;
-          }
-        }
-      }).addTo(S.map);
-    } else {
-      btn.textContent = "Tectonic Plates";
-      btn.classList.remove("on");
-      if (S.tectonicLayer) {
-        S.map.removeLayer(S.tectonicLayer);
-        S.tectonicLayer = null;
-      }
-    }
-  }
-  function _quakeColor(depth) {
-    if (depth < 70) return "#ffd166";
-    if (depth < 300) return "#ef8354";
-    return "#d62828";
-  }
-  async function toggleEarthquakeLayer() {
-    S.earthquakeOn = !S.earthquakeOn;
-    const btn = document.getElementById("earthquake-toggle-btn");
-    if (S.earthquakeOn) {
-      btn.textContent = "Earthquakes";
-      btn.classList.add("on");
-      await _fetchEarthquakes();
-      S._earthquakeTimer = setInterval(() => _fetchEarthquakes(), 5 * 6e4);
-    } else {
-      btn.textContent = "Earthquakes";
-      btn.classList.remove("on");
-      if (S._earthquakeTimer) {
-        clearInterval(S._earthquakeTimer);
-        S._earthquakeTimer = null;
-      }
-      if (S.earthquakeLayer) {
-        S.map.removeLayer(S.earthquakeLayer);
-        S.earthquakeLayer = null;
-      }
-    }
-  }
-  async function _fetchEarthquakes() {
-    try {
-      const res = await fetch("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson");
-      S.earthquakeData = await res.json();
-    } catch (e) {
-      _warn2("earthquake", "Failed to fetch USGS data");
-      return;
-    }
-    _buildEarthquakeLayer();
-  }
-  function _buildEarthquakeLayer() {
-    if (S.earthquakeLayer) {
-      S.map.removeLayer(S.earthquakeLayer);
-      S.earthquakeLayer = null;
-    }
-    if (!S.earthquakeOn || !S.earthquakeData) return;
-    const layers = [];
-    for (const f of S.earthquakeData.features) {
-      const [lng, lat, depth] = f.geometry.coordinates;
-      const mag = f.properties.mag || 0;
-      const marker = L.circleMarker([lat, lng], {
-        pane: "overlayLayersPane",
-        radius: 2 + mag * 2,
-        fillColor: _quakeColor(depth),
-        color: "#000",
-        weight: 0.5,
-        fillOpacity: 0.75
-      });
-      const time = new Date(f.properties.time).toLocaleString();
-      marker.bindTooltip(
-        '<b style="color:var(--gold)">M' + mag.toFixed(1) + "</b> " + escHtml(f.properties.place || "") + '<br><span style="color:var(--text-secondary)">Depth: ' + (depth || 0).toFixed(0) + ' km</span><br><span style="color:var(--text-muted)">' + time + "</span>",
-        { direction: "top", className: "admin1-tooltip" }
-      );
-      layers.push(marker);
-    }
-    S.earthquakeLayer = L.layerGroup(layers).addTo(S.map);
-  }
-  function _volcanoColor(lastEruption) {
-    if (lastEruption == null) return "#888";
-    if (lastEruption > 1900) return "#d62828";
-    if (lastEruption > 0) return "#ef8354";
-    if (lastEruption > -1e4) return "#ffd166";
-    return "#888";
-  }
-  function toggleMoreLayers(e) {
-    e.stopPropagation();
-    const btn = document.getElementById("more-layers-btn");
-    const menu = document.getElementById("more-layers-menu");
-    const isOpen = menu.classList.contains("open");
-    btn.classList.toggle("open", !isOpen);
-    menu.classList.toggle("open", !isOpen);
-  }
-  async function toggleVolcanoLayer() {
-    S.volcanoOn = !S.volcanoOn;
-    const btn = document.getElementById("volcano-toggle-btn");
-    if (S.volcanoOn) {
-      btn.textContent = "Volcanoes";
-      btn.classList.add("on");
-      if (!S.volcanoData) {
-        try {
-          const res = await _kdbOrFetch2("/volcanoes_full.json");
-          S.volcanoData = await res.json();
-        } catch (e) {
-          _warn2("volcano", "Failed to load");
-          S.volcanoOn = false;
-          btn.textContent = "Volcanoes";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      btn.textContent = "Volcanoes";
-      _buildVolcanoLayer();
-    } else {
-      btn.textContent = "Volcanoes";
-      btn.classList.remove("on");
-      if (S.volcanoLayer) {
-        S.map.removeLayer(S.volcanoLayer);
-        S.volcanoLayer = null;
-      }
-    }
-  }
-  function _buildVolcanoLayer() {
-    if (S.volcanoLayer) {
-      S.map.removeLayer(S.volcanoLayer);
-      S.volcanoLayer = null;
-    }
-    if (!S.volcanoOn || !S.volcanoData) return;
-    const layers = [];
-    for (const f of S.volcanoData.features) {
-      const [lng, lat] = f.geometry.coordinates;
-      const props = f.properties;
-      const marker = L.circleMarker([lat, lng], {
-        pane: "overlayLayersPane",
-        radius: 5,
-        fillColor: _volcanoColor(props.Last_Eruption_Year),
-        color: "#000",
-        weight: 0.5,
-        fillOpacity: 0.85
-      });
-      const elev = props.Elevation || 0;
-      const lastYr = props.Last_Eruption_Year;
-      const lastStr = lastYr == null ? "Unknown" : lastYr < 0 ? `${Math.abs(lastYr)} BCE` : `${lastYr}`;
-      marker.bindTooltip(
-        '<b style="color:var(--red)">' + escHtml(props.Volcano_Name || "Volcano") + '</b><br><span style="color:var(--text-secondary)">' + escHtml(props.Country || "") + "</span><br>Elevation: " + elev + " m<br>Last eruption: " + lastStr + '<br><span style="color:var(--text-muted)">' + escHtml(props.Primary_Volcano_Type || "") + "</span>",
-        { direction: "top", className: "admin1-tooltip" }
-      );
-      layers.push(marker);
-    }
-    S.volcanoLayer = L.layerGroup(layers).addTo(S.map);
-  }
-  async function toggleLaunchSiteLayer() {
-    S.launchSiteOn = !S.launchSiteOn;
-    const btn = document.getElementById("launchsite-toggle-btn");
-    if (S.launchSiteOn) {
-      btn.textContent = "\u{1F680} Launch: \u2026";
-      btn.classList.add("on");
-      if (!S.launchSiteData) {
-        try {
-          const res = await _kdbOrFetch2("/launch_sites.json");
-          S.launchSiteData = await res.json();
-        } catch (e) {
-          _warn2("launchSite", "Failed to load");
-          S.launchSiteOn = false;
-          btn.textContent = "Launch Sites";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      btn.textContent = "Launch Sites";
-      _buildLaunchSiteLayer();
-    } else {
-      btn.textContent = "Launch Sites";
-      btn.classList.remove("on");
-      if (S.launchSiteLayer) {
-        S.map.removeLayer(S.launchSiteLayer);
-        S.launchSiteLayer = null;
-      }
-    }
-  }
-  function _buildLaunchSiteLayer() {
-    if (S.launchSiteLayer) {
-      S.map.removeLayer(S.launchSiteLayer);
-      S.launchSiteLayer = null;
-    }
-    if (!S.launchSiteOn || !S.launchSiteData) return;
-    const layers = [];
-    for (const f of S.launchSiteData.features) {
-      const [lng, lat] = f.geometry.coordinates;
-      const props = f.properties;
-      const marker = L.marker([lat, lng], {
-        pane: "overlayLayersPane",
-        icon: L.divIcon({
-          html: '<span style="font-size:16px">\u{1F680}</span>',
-          className: "launchsite-icon",
-          iconSize: [20, 20],
-          iconAnchor: [10, 10]
-        })
-      });
-      marker.bindTooltip(
-        '<b style="color:var(--accent)">\u{1F680} ' + escHtml(props.name) + '</b><br><span style="color:var(--text-muted);font-size:0.85em">' + escHtml(props.abbr || "") + "</span>",
-        { direction: "top", className: "admin1-tooltip" }
-      );
-      layers.push(marker);
-    }
-    S.launchSiteLayer = L.layerGroup(layers).addTo(S.map);
-  }
-  async function toggleEezLayer() {
-    S.eezOn = !S.eezOn;
-    const btn = document.getElementById("eez-toggle-btn");
-    if (S.eezOn) {
-      btn.textContent = "EEZ Boundaries";
-      btn.classList.add("on");
-      if (!S.eezData) {
-        try {
-          const res = await _kdbOrFetch2("/eez_boundaries.json");
-          S.eezData = await res.json();
-          if (typeof DatasetManager !== "undefined") {
-            DatasetManager.register("eezData", S.eezData, "low");
-          }
-        } catch (e) {
-          _warn2("eez", "Failed to load");
-          S.eezOn = false;
-          btn.textContent = "EEZ Boundaries";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      btn.textContent = "EEZ Boundaries";
-      _buildEezLayer();
-    } else {
-      btn.textContent = "EEZ Boundaries";
-      btn.classList.remove("on");
-      if (S.eezLayer) {
-        S.map.removeLayer(S.eezLayer);
-        S.eezLayer = null;
-      }
-      if (typeof DatasetManager !== "undefined") {
-        DatasetManager.unregister("eezData");
-      }
-    }
-  }
-  function _buildEezLayer() {
-    if (S.eezLayer) {
-      S.map.removeLayer(S.eezLayer);
-      S.eezLayer = null;
-    }
-    if (typeof DatasetManager !== "undefined") {
-      DatasetManager.unregister("eezData");
-    }
-    if (!S.eezOn || !S.eezData) return;
-    S.eezLayer = L.geoJSON(S.eezData, {
-      style: () => ({
-        color: "#58a6ff",
-        weight: 1,
-        fillOpacity: 0.05,
-        fillColor: "#58a6ff"
-      }),
-      pane: "choroplethPane",
-      onEachFeature: (feature, layer) => {
-        const props = feature.properties;
-        if (props.name) {
-          layer.bindTooltip(escHtml(props.name), {
-            direction: "top",
-            className: "admin1-tooltip",
-            sticky: true
-          });
-          layer.options.interactive = true;
-        }
-      }
-    }).addTo(S.map);
-  }
-  async function toggleIssTracker() {
-    S.issOn = !S.issOn;
-    const btn = document.getElementById("iss-toggle-btn");
-    if (S.issOn) {
-      btn.textContent = "ISS Tracker";
-      btn.classList.add("on");
-      await _fetchIssPosition();
-      S._issTimer = setInterval(() => _fetchIssPosition(), 5e3);
-    } else {
-      btn.textContent = "ISS Tracker";
-      btn.classList.remove("on");
-      if (S._issTimer) {
-        clearInterval(S._issTimer);
-        S._issTimer = null;
-      }
-      if (S.issMarker) {
-        S.map.removeLayer(S.issMarker);
-        S.issMarker = null;
-      }
-    }
-  }
-  async function _fetchIssPosition() {
-    try {
-      const res = await fetch("http://api.open-notify.org/iss-now.json");
-      const data = await res.json();
-      const lat = parseFloat(data.iss_position.latitude);
-      const lng = parseFloat(data.iss_position.longitude);
-      if (S.issMarker) {
-        S.issMarker.setLatLng([lat, lng]);
-      } else {
-        S.issMarker = L.marker([lat, lng], {
-          pane: "overlayLayersPane",
-          icon: L.divIcon({
-            html: '<span style="font-size:24px">\u{1F6F0}\uFE0F</span>',
-            className: "iss-icon",
-            iconSize: [28, 28],
-            iconAnchor: [14, 14]
-          })
-        }).addTo(S.map);
-      }
-      S.issMarker.bindTooltip(
-        '<b style="color:var(--accent)">ISS</b><br><span style="color:var(--text-secondary)">' + lat.toFixed(2) + "\xB0, " + lng.toFixed(2) + '\xB0</span><br><span style="color:var(--text-muted)">~408 km altitude \xB7 ~28,000 km/h</span>',
-        { direction: "top", className: "admin1-tooltip" }
-      );
-    } catch (e) {
-      _warn2("iss", "Failed to fetch position");
-    }
-  }
-  async function toggleAircraftLayer() {
-    S.aircraftOn = !S.aircraftOn;
-    const btn = document.getElementById("aircraft-toggle-btn");
-    if (S.aircraftOn) {
-      btn.textContent = "\u2708\uFE0F Aircraft: On";
-      btn.classList.add("on");
-      await _fetchAircraftPositions();
-      S._aircraftTimer = setInterval(() => _fetchAircraftPositions(), 3e4);
-      if (!_aircraftMoveHandler) {
-        _aircraftMoveHandler = () => {
-          if (S.aircraftOn && S.map.getZoom() >= 5) {
-            _fetchAircraftPositions();
-          }
-        };
-        S.map.on("moveend", _aircraftMoveHandler);
-      }
-    } else {
-      btn.textContent = "\u2708\uFE0F Aircraft: Off";
-      btn.classList.remove("on");
-      if (S._aircraftTimer) {
-        clearInterval(S._aircraftTimer);
-        S._aircraftTimer = null;
-      }
-      if (S.aircraftLayer) {
-        S.map.removeLayer(S.aircraftLayer);
-        S.aircraftLayer = null;
-      }
-      if (_aircraftMoveHandler) {
-        S.map.off("moveend", _aircraftMoveHandler);
-        _aircraftMoveHandler = null;
-      }
-      if (S.layersInfo && S.layersInfo.includes("\u2708\uFE0F Zoom in")) {
-        document.getElementById("layers-info").textContent = "";
-        S.layersInfo = "";
-      }
-    }
-  }
-  async function _fetchAircraftPositions() {
-    try {
-      const res = await _kdbOrFetch2("/aircraft-live-lite.json");
-      if (!res.ok) {
-        _warn2("aircraft", "No data available");
-        return;
-      }
-      const data = await res.json();
-      const zoom = S.map.getZoom();
-      if (!S.aircraftLayer) {
-        S.aircraftLayer = L.layerGroup();
-      } else {
-        S.aircraftLayer.clearLayers();
-      }
-      if (zoom < 5) {
-        S.layersInfo = "\u2708\uFE0F Zoom in to see aircraft (need zoom 5+)";
-        document.getElementById("layers-info").textContent = S.layersInfo;
-        return;
-      } else if (S.layersInfo && S.layersInfo.includes("Zoom in")) {
-        document.getElementById("layers-info").textContent = "";
-        S.layersInfo = "";
-      }
-      const bounds = S.map.getBounds();
-      const padding = zoom >= 10 ? 0.2 : zoom >= 7 ? 0.5 : 1;
-      const south = Math.max(-90, bounds.getSouth() - padding);
-      const north = Math.min(90, bounds.getNorth() + padding);
-      let west = bounds.getWest() - padding;
-      let east = bounds.getEast() + padding;
-      const MAX_AIRCRAFT = zoom >= 13 ? 1e3 : zoom >= 11 ? 500 : zoom >= 8 ? 250 : 100;
-      let lastClickedMarker = null;
-      const markers = [];
-      let count = 0;
-      for (const a of data.aircraft || []) {
-        if (count >= MAX_AIRCRAFT) break;
-        if (a.lo === null || a.la === null) continue;
-        let inBounds = a.la >= south && a.la <= north;
-        if (inBounds) {
-          if (east > 180 || west < -180) {
-            inBounds = a.lo >= west || a.lo >= 180 || (a.lo <= east || a.lo <= -180);
-          } else {
-            inBounds = a.lo >= west && a.lo <= east;
-          }
-        }
-        if (!inBounds) continue;
-        const heading = a.t || 0;
-        const icon = L.divIcon({
-          html: `<div style="width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-bottom:8px solid #3b82f6;transform:rotate(${heading}deg)"></div>`,
-          className: "aircraft-icon",
-          iconSize: [10, 10],
-          iconAnchor: [5, 5]
-        });
-        const marker = L.marker([a.la, a.lo], { pane: "overlayLayersPane", icon });
-        const tooltipData = {
-          callsign: a.c || "N/A",
-          country: a.n || "",
-          alt: a.a ? Math.round(a.a / 0.3048) : null,
-          speed: a.v ? Math.round(a.v * 1.944) : null,
-          ground: a.g
-        };
-        marker.on("click", function() {
-          if (lastClickedMarker && lastClickedMarker !== this) {
-            lastClickedMarker.closeTooltip();
-          }
-          const tt = L.tooltip({
-            content: `<b style="color:var(--accent)">${escHtml(tooltipData.callsign)}</b><br><span style="color:var(--text-secondary)">${escHtml(tooltipData.country)}${tooltipData.ground ? " (Ground)" : ""}</span><br><span style="color:var(--text-muted)">${tooltipData.alt ? tooltipData.alt.toLocaleString() + " ft" : "N/A"} \xB7 ${tooltipData.speed ? tooltipData.speed + " kts" : "N/A"}</span>`,
-            direction: "top",
-            className: "admin1-tooltip"
-          });
-          this.bindTooltip(tt).openTooltip();
-          lastClickedMarker = this;
-        });
-        markers.push(marker);
-        count++;
-      }
-      S.aircraftLayer = L.layerGroup(markers).addTo(S.map);
-      _log2("aircraft", `Displayed ${count}/${MAX_AIRCRAFT} aircraft (zoom ${zoom})`);
-    } catch (e) {
-      _warn2("aircraft", "Failed:", e.message);
-    }
-  }
-  async function toggleWildfireLayer() {
-    S.wildfireOn = !S.wildfireOn;
-    const btn = document.getElementById("wildfire-toggle-btn");
-    if (S.wildfireOn) {
-      btn.textContent = "Wildfires";
-      btn.classList.add("on");
-      await _fetchWildfireData();
-      if (!_wildfireMoveHandler) {
-        _wildfireMoveHandler = () => {
-          if (S.wildfireOn && S.map.getZoom() >= 4) {
-            _fetchWildfireData();
-          }
-        };
-        S.map.on("moveend", _wildfireMoveHandler);
-      }
-    } else {
-      btn.textContent = "Wildfires";
-      btn.classList.remove("on");
-      if (S.wildfireLayer) {
-        S.map.removeLayer(S.wildfireLayer);
-        S.wildfireLayer = null;
-      }
-      if (typeof DatasetManager !== "undefined") {
-        DatasetManager.unregister("wildfireData");
-      }
-      if (_wildfireMoveHandler) {
-        S.map.off("moveend", _wildfireMoveHandler);
-        _wildfireMoveHandler = null;
-      }
-    }
-  }
-  async function _fetchWildfireData() {
-    try {
-      const res = await _kdbOrFetch2("/wildfires-live-lite.json");
-      if (!res.ok) {
-        _warn2("wildfire", "No data available");
-        return;
-      }
-      const data = await res.json();
-      const zoom = S.map.getZoom();
-      if (!S.wildfireLayer) {
-        S.wildfireLayer = L.layerGroup();
-      } else {
-        S.wildfireLayer.clearLayers();
-      }
-      if (S.layersInfo && S.layersInfo.includes("Zoom in")) {
-        document.getElementById("layers-info").textContent = "";
-        S.layersInfo = "";
-      }
-      const bounds = S.map.getBounds();
-      const padding = zoom >= 8 ? 0.5 : zoom >= 6 ? 2 : 5;
-      const south = Math.max(-90, bounds.getSouth() - padding);
-      const north = Math.min(90, bounds.getNorth() + padding);
-      let west = bounds.getWest() - padding;
-      let east = bounds.getEast() + padding;
-      const MAX_FIRES = data.fires?.length || 1e3;
-      const markers = [];
-      let count = 0;
-      let outsideCount = 0;
-      for (const f of data.fires || []) {
-        if (f.lo === null || f.la === null) continue;
-        let inBounds = f.la >= south && f.la <= north;
-        if (inBounds) {
-          if (east > 180 || west < -180) {
-            inBounds = f.lo >= west || f.lo >= 180 || (f.lo <= east || f.lo <= -180);
-          } else {
-            inBounds = f.lo >= west && f.lo <= east;
-          }
-        }
-        if (!inBounds) {
-          outsideCount++;
-          continue;
-        }
-        const conf = f.c || 70;
-        const color = conf >= 70 ? "#ff3333" : conf >= 40 ? "#ff8800" : "#ffcc00";
-        const radius = f.s === 1 ? 2.5 : 3.5;
-        const marker = L.circleMarker([f.la, f.lo], {
-          pane: "overlayLayersPane",
-          radius,
-          fillColor: color,
-          color: "#000",
-          weight: 0.5,
-          opacity: 0.7,
-          fillOpacity: 0.8
-        });
-        const sat = f.s === 1 ? "VIIRS" : "MODIS";
-        const time = f.d === 1 ? "Day" : "Night";
-        const brightness = f.b ? `${Math.round(f.b)}K` : "N/A";
-        const date = f.date || "N/A";
-        marker.bindTooltip(
-          `<b style="color:${color}">\u{1F525} Wildfire</b><br><span style="color:var(--text-secondary)">Confidence: ${conf}%</span><br><span style="color:var(--text-muted)">${sat} \xB7 ${time} \xB7 ${brightness}</span><br><span style="color:var(--text-muted)">${date}</span>`,
-          { direction: "top", className: "admin1-tooltip", sticky: false, permanent: false }
-        );
-        markers.push(marker);
-        count++;
-      }
-      S.wildfireLayer = L.layerGroup(markers).addTo(S.map);
-      _log2("wildfire", `Displayed ${count} fires (zoom ${zoom}, viewport: ${outsideCount} culled)`);
-    } catch (e) {
-      _warn2("wildfire", "Failed:", e.message);
-    }
-  }
-  async function toggleEonetLayer() {
-    S.eonetOn = !S.eonetOn;
-    const btn = document.getElementById("eonet-toggle-btn");
-    if (S.eonetOn) {
-      btn.textContent = "Natural Events";
-      btn.classList.add("on");
-      if (!S.eonetData) {
-        try {
-          const res = await _kdbOrFetch2("/eonet-events-lite.json");
-          S.eonetData = await res.json();
-        } catch (e) {
-          _warn2("eonet", "Failed to load");
-          S.eonetOn = false;
-          btn.textContent = "Natural Events";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildEonetLayer();
-    } else {
-      btn.textContent = "Natural Events";
-      btn.classList.remove("on");
-      if (S.eonetLayer) {
-        S.map.removeLayer(S.eonetLayer);
-        S.eonetLayer = null;
-      }
-    }
-  }
-  function _buildEonetLayer() {
-    if (S.eonetLayer) {
-      S.map.removeLayer(S.eonetLayer);
-      S.eonetLayer = null;
-    }
-    if (!S.eonetOn || !S.eonetData) return;
-    const layers = [];
-    for (const e of S.eonetData.events || []) {
-      if (e.lo === null || e.la === null) continue;
-      const colorMap = {
-        "Wildfires": "#ff6b6b",
-        "Volcanoes": "#ffd93d",
-        "Severe Storms": "#6b9bff",
-        "Dust Storms": "#d4a574",
-        "Landslides": "#a574d4",
-        "Sea and Lake Ice": "#74d4d4",
-        "Smoke": "#a5a5a5"
-      };
-      const color = colorMap[e.c] || "#888888";
-      const size = e.s === 2 ? 8 : e.s === 1 ? 6 : 4;
-      const marker = L.circleMarker([e.la, e.lo], {
-        pane: "overlayLayersPane",
-        radius: size,
-        fillColor: color,
-        color: "#000",
-        weight: 1,
-        fillOpacity: 0.8
-      });
-      marker.bindTooltip(
-        `<b style="color:${color}">${escHtml(e.t)}</b><br><span style="color:var(--text-secondary)">${escHtml(e.c)}</span><br><span style="color:var(--text-muted)">Date: ${e.d}</span>`,
-        { direction: "top", className: "admin1-tooltip" }
-      );
-      layers.push(marker);
-    }
-    S.eonetLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("eonet", `Displayed ${layers.length} events`);
-  }
-  async function toggleProtectedAreasLayer() {
-    S.protectedAreasOn = !S.protectedAreasOn;
-    const btn = document.getElementById("protected-areas-toggle-btn");
-    if (S.protectedAreasOn) {
-      btn.textContent = "\u{1F332} Protected Areas: On";
-      btn.classList.add("on");
-      if (!S.protectedAreasData) {
-        try {
-          const res = await _kdbOrFetch2("/protected-areas.json");
-          S.protectedAreasData = await res.json();
-        } catch (e) {
-          _warn2("protected-areas", "Failed to load");
-          S.protectedAreasOn = false;
-          btn.textContent = "\u{1F332} Protected Areas: Off";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildProtectedAreasLayer();
-    } else {
-      btn.textContent = "\u{1F332} Protected Areas: Off";
-      btn.classList.remove("on");
-      if (S.protectedAreasLayer) {
-        S.map.removeLayer(S.protectedAreasLayer);
-        S.protectedAreasLayer = null;
-      }
-    }
-  }
-  function _buildProtectedAreasLayer() {
-    if (S.protectedAreasLayer) {
-      S.map.removeLayer(S.protectedAreasLayer);
-      S.protectedAreasLayer = null;
-    }
-    if (!S.protectedAreasOn || !S.protectedAreasData) return;
-    const layers = [];
-    for (const area of S.protectedAreasData.areas || []) {
-      if (area.lat === null || area.lng === null) continue;
-      const colorMap = {
-        "Ia": "#006400",
-        "Ib": "#006400",
-        "II": "#228B22",
-        "III": "#32CD32",
-        "IV": "#90EE90",
-        "V": "#98FB98",
-        "VI": "#00CED1"
-      };
-      const color = colorMap[area.iucn] || "#228B22";
-      const size = area.area_km2 > 1e4 ? 10 : area.area_km2 > 1e3 ? 7 : 5;
-      const marker = L.circleMarker([area.lat, area.lng], {
-        pane: "overlayLayersPane",
-        radius: size,
-        fillColor: color,
-        color: "#000",
-        weight: 1,
-        fillOpacity: 0.7
-      });
-      const areaStr = area.area_km2 >= 1e3 ? `${(area.area_km2 / 1e3).toFixed(1)}k km\xB2` : `${area.area_km2} km\xB2`;
-      marker.bindTooltip(
-        `<b style="color:${color}">\u{1F332} ${escHtml(area.name)}</b><br><span style="color:var(--text-secondary)">${escHtml(area.country)}</span><br><span style="color:var(--text-muted)">${escHtml(area.type)} \xB7 ${areaStr}</span><br><span style="color:var(--text-muted)">Est. ${area.established}</span>`,
-        { direction: "top", className: "admin1-tooltip" }
-      );
-      layers.push(marker);
-    }
-    S.protectedAreasLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("protected-areas", `Displayed ${layers.length} areas`);
-  }
-  async function toggleVesselPortsLayer() {
-    S.vesselPortsOn = !S.vesselPortsOn;
-    const btn = document.getElementById("vessel-ports-toggle-btn");
-    if (S.vesselPortsOn) {
-      btn.textContent = "Ports";
-      btn.classList.add("on");
-      if (!S.vesselPortsData) {
-        try {
-          const res = await _kdbOrFetch2("/vessel-ports.json");
-          S.vesselPortsData = await res.json();
-        } catch (e) {
-          _warn2("vessel-ports", "Failed to load");
-          S.vesselPortsOn = false;
-          btn.textContent = "Ports";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildVesselPortsLayer();
-    } else {
-      btn.textContent = "Ports";
-      btn.classList.remove("on");
-      if (S.vesselPortsLayer) {
-        S.map.removeLayer(S.vesselPortsLayer);
-        S.vesselPortsLayer = null;
-      }
-    }
-  }
-  function _buildVesselPortsLayer() {
-    if (S.vesselPortsLayer) {
-      S.map.removeLayer(S.vesselPortsLayer);
-      S.vesselPortsLayer = null;
-    }
-    if (!S.vesselPortsOn || !S.vesselPortsData) return;
-    const layers = [];
-    for (const port of S.vesselPortsData.ports || []) {
-      if (port.lat === null || port.lng === null) continue;
-      const colorMap = { "Large": "#ff4444", "Medium": "#ffaa00", "Small": "#888888" };
-      const color = colorMap[port.harbor_size] || "#888888";
-      const size = port.harbor_size === "Large" ? 10 : port.harbor_size === "Medium" ? 7 : 5;
-      const marker = L.circleMarker([port.lat, port.lng], {
-        pane: "overlayLayersPane",
-        radius: size,
-        fillColor: color,
-        color: "#000",
-        weight: 1,
-        fillOpacity: 0.8
-      });
-      marker.bindTooltip(
-        `<b style="color:${color}">\u2693 ${escHtml(port.name)}</b><br><span style="color:var(--text-secondary)">${escHtml(port.city)}, ${escHtml(port.country)}</span><br><span style="color:var(--text-muted)">${escHtml(port.facilities)}</span><br><span style="color:var(--text-muted)">Size: ${port.harbor_size}</span>`,
-        { direction: "top", className: "admin1-tooltip" }
-      );
-      layers.push(marker);
-    }
-    S.vesselPortsLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("vessel-ports", `Displayed ${layers.length} ports`);
-  }
-  async function togglePeeringdbLayer() {
-    S.peeringdbOn = !S.peeringdbOn;
-    const btn = document.getElementById("peeringdb-toggle-btn");
-    if (S.peeringdbOn) {
-      btn.textContent = "Internet Exchanges";
-      btn.classList.add("on");
-      if (!S.peeringdbData) {
-        try {
-          const res = await _kdbOrFetch2("/peeringdb.json");
-          S.peeringdbData = await res.json();
-          _log2("peeringdb", "Loaded:", S.peeringdbData.ixps.length, "IXPs,", S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter((x) => x.lat !== null).length, "with coords");
-        } catch (e) {
-          _warn2("peeringdb", "Failed to load:", e);
-          S.peeringdbOn = false;
-          btn.textContent = "Internet Exchanges";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildPeeringdbLayer();
-    } else {
-      btn.textContent = "Internet Exchanges";
-      btn.classList.remove("on");
-      if (S.peeringdbLayer) {
-        S.map.removeLayer(S.peeringdbLayer);
-        S.peeringdbLayer = null;
-      }
-    }
-  }
-  function _buildPeeringdbLayer() {
-    if (S.peeringdbLayer) {
-      S.map.removeLayer(S.peeringdbLayer);
-      S.peeringdbLayer = null;
-    }
-    if (!S.peeringdbOn || !S.peeringdbData) return;
-    const layers = [];
-    for (const ixp of S.peeringdbData.ixps || []) {
-      if (ixp.lat === null || ixp.lng === null) continue;
-      const marker = L.circleMarker([ixp.lat, ixp.lng], {
-        pane: "overlayLayersPane",
-        radius: 6,
-        fillColor: "#3b82f6",
-        color: "#1d4ed8",
-        weight: 2,
-        fillOpacity: 0.8
-      });
-      marker.bindTooltip(
-        `<b style="color:#3b82f6">\u{1F310} ${escHtml(ixp.name)}</b><br><span style="color:var(--text-secondary)">IXP \xB7 ${escHtml(ixp.city)}</span><br><span style="color:var(--text-muted)">${ixp.networks_count} networks</span>`,
-        { direction: "top", className: "admin1-tooltip" }
-      );
-      layers.push(marker);
-    }
-    S.peeringdbLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("peeringdb", `Displayed ${layers.length} IXPs`);
-  }
-  async function toggleWaqiLayer() {
-    S.waqiOn = !S.waqiOn;
-    const btn = document.getElementById("waqi-toggle-btn");
-    if (S.waqiOn) {
-      btn.textContent = "Air Quality";
-      btn.classList.add("on");
-      if (!S.waqiData) {
-        try {
-          const res = await _kdbOrFetch2("/who-airquality.json");
-          S.waqiData = await res.json();
-        } catch (e) {
-          _warn2("waqi", "Failed to load");
-          S.waqiOn = false;
-          btn.textContent = "Air Quality";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildWaqiLayer();
-    } else {
-      btn.textContent = "Air Quality";
-      btn.classList.remove("on");
-      if (S.waqiLayer) {
-        S.map.removeLayer(S.waqiLayer);
-        S.waqiLayer = null;
-      }
-    }
-  }
-  function _buildWaqiLayer() {
-    if (S.waqiLayer) {
-      S.map.removeLayer(S.waqiLayer);
-      S.waqiLayer = null;
-    }
-    if (!S.waqiOn || !S.waqiData) return;
-    const layers = [];
-    const AQ_COLORS = [
-      [50, "#22c55e"],
-      [100, "#eab308"],
-      [150, "#f97316"],
-      [200, "#ef4444"],
-      [300, "#7c3aed"],
-      [500, "#7f1d1d"]
-    ];
-    function aqColor(pm25) {
-      for (const [threshold, color] of AQ_COLORS) {
-        if (pm25 <= threshold) return color;
-      }
-      return "#7f1d1d";
-    }
-    for (const [qid, aq] of Object.entries(S.waqiData)) {
-      if (!aq || aq.pm25 == null) continue;
-      const city = S.cityByQid && S.cityByQid.get(qid);
-      if (!city || city.lat == null || city.lng == null) continue;
-      const color = aqColor(aq.pm25);
-      const marker = L.circleMarker([city.lat, city.lng], {
-        pane: "overlayLayersPane",
-        radius: aq.pm25 > 150 ? 7 : aq.pm25 > 100 ? 5 : 4,
-        fillColor: color,
-        color: "#000",
-        weight: 0.5,
-        fillOpacity: 0.85
-      });
-      marker.bindTooltip(
-        `<b style="color:${color}">\u{1F32B}\uFE0F ${escHtml(city.name)}</b><br><span style="color:var(--text-secondary)">PM2.5: ${aq.pm25} \xB5g/m\xB3 (${aq.category || "\u2014"})</span><br><span style="color:var(--text-muted)">${escHtml(city.country || "")} \xB7 ${aq.year || "\u2014"}</span>`,
-        { direction: "top", className: "admin1-tooltip", sticky: false }
-      );
-      layers.push(marker);
-    }
-    S.waqiLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("waqi", `Displayed ${layers.length} stations`);
-  }
-  async function toggleWeatherLayer() {
-    S.weatherOn = !S.weatherOn;
-    const btn = document.getElementById("weather-toggle-btn");
-    if (S.weatherOn) {
-      btn.textContent = "Weather";
-      btn.classList.add("on");
-      if (!S.weatherData) {
-        try {
-          const res = await _kdbOrFetch2("/weather-stations.json");
-          S.weatherData = await res.json();
-        } catch (e) {
-          _warn2("weather", "Failed to load");
-          S.weatherOn = false;
-          btn.textContent = "Weather";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildWeatherLayer();
-    } else {
-      btn.textContent = "Weather";
-      btn.classList.remove("on");
-      if (S.weatherLayer) {
-        S.map.removeLayer(S.weatherLayer);
-        S.weatherLayer = null;
-      }
-    }
-  }
-  function _buildWeatherLayer() {
-    if (S.weatherLayer) {
-      S.map.removeLayer(S.weatherLayer);
-      S.weatherLayer = null;
-    }
-    if (!S.weatherOn || !S.weatherData) return;
-    const layers = [];
-    const conditionIcons = {
-      "Clear sky": "\u2600\uFE0F",
-      "Mainly clear": "\u{1F324}\uFE0F",
-      "Partly cloudy": "\u26C5",
-      "Overcast": "\u2601\uFE0F",
-      "Fog": "\u{1F32B}\uFE0F",
-      "Light drizzle": "\u{1F326}\uFE0F",
-      "Moderate drizzle": "\u{1F327}\uFE0F",
-      "Dense drizzle": "\u{1F327}\uFE0F",
-      "Slight rain": "\u{1F326}\uFE0F",
-      "Moderate rain": "\u{1F327}\uFE0F",
-      "Heavy rain": "\u26C8\uFE0F",
-      "Slight snow": "\u{1F328}\uFE0F",
-      "Moderate snow": "\u{1F328}\uFE0F",
-      "Heavy snow": "\u2744\uFE0F",
-      "Thunderstorm": "\u26A1"
-    };
-    for (const s of S.weatherData.stations || []) {
-      if (s.lng === null || s.lat === null) continue;
-      const icon = conditionIcons[s.condition] || "\u{1F321}\uFE0F";
-      const temp = s.temperature !== null ? `${Math.round(s.temperature)}\xB0C` : "N/A";
-      const humidity = s.humidity !== null ? `${s.humidity}%` : "N/A";
-      const wind = s.wind_speed !== null ? `${Math.round(s.wind_speed)} km/h` : "N/A";
-      const marker = L.circleMarker([s.lat, s.lng], {
-        pane: "overlayLayersPane",
-        radius: 5,
-        fillColor: s.temperature > 25 ? "#ff6b6b" : s.temperature < 0 ? "#74c0fc" : "#ffd93d",
-        color: "#000",
-        weight: 0.5,
-        fillOpacity: 0.85
-      });
-      marker.bindTooltip(
-        `<b>${icon} ${s.name}</b><br><span style="color:var(--text-secondary)">${s.condition}</span><br><span style="color:var(--text-muted)">Temp: ${temp} \xB7 Humidity: ${humidity}</span><br><span style="color:var(--text-muted)">Wind: ${wind} \xB7 ${s.country}</span>`,
-        { direction: "top", className: "admin1-tooltip", sticky: false }
-      );
-      layers.push(marker);
-    }
-    S.weatherLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("weather", `Displayed ${layers.length} stations`);
-  }
-  async function toggleSatelliteLayer() {
-    S.satelliteOn = !S.satelliteOn;
-    const btn = document.getElementById("satellite-toggle-btn");
-    if (S.satelliteOn) {
-      btn.textContent = "Satellites";
-      btn.classList.add("on");
-      if (!S.satelliteData) {
-        try {
-          const res = await _kdbOrFetch2("/satellites-live-lite.json");
-          S.satelliteData = await res.json();
-        } catch (e) {
-          _warn2("satellite", "Failed to load");
-          S.satelliteOn = false;
-          btn.textContent = "Satellites";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildSatelliteLayer();
-    } else {
-      btn.textContent = "Satellites";
-      btn.classList.remove("on");
-      if (S.satelliteLayer) {
-        S.map.removeLayer(S.satelliteLayer);
-        S.satelliteLayer = null;
-      }
-    }
-  }
-  function _buildSatelliteLayer() {
-    if (S.satelliteLayer) {
-      S.map.removeLayer(S.satelliteLayer);
-      S.satelliteLayer = null;
-    }
-    if (!S.satelliteOn || !S.satelliteData) return;
-    const layers = [];
-    const categoryColors = {
-      "GPS Operational": "#3b82f6",
-      "GLONASS Operational": "#ef4444",
-      "Galileo": "#22c55e",
-      "BeiDou": "#eab308",
-      "Geostationary": "#a855f7",
-      "Iridium": "#f97316",
-      "Starlink": "#06b6d4",
-      "ISS": "#ec4899",
-      "Weather": "#6366f1",
-      "Scientific": "#14b8a6",
-      "Military": "#64748b"
-    };
-    for (const s of S.satelliteData.satellites || []) {
-      if (s.lo === null || s.la === null) continue;
-      const isGeo = s.a > 35e3;
-      const color = categoryColors[s.c] || "#888";
-      const marker = L.circleMarker([s.la, s.lo], {
-        pane: "overlayLayersPane",
-        radius: isGeo ? 2 : 4,
-        fillColor: color,
-        color: isGeo ? color : "#000",
-        weight: isGeo ? 0 : 0.5,
-        fillOpacity: isGeo ? 0.45 : 0.9
-      });
-      marker.bindTooltip(
-        `<b style="color:${color}">\u{1F6F0} ${s.n}</b><br><span style="color:var(--text-secondary)">${s.c}</span><br><span style="color:var(--text-muted)">Alt: ${s.a} km \xB7 Vel: ${s.v} km/h</span><br><span style="color:var(--text-muted)">Footprint: ${s.f} km</span>`,
-        { direction: "top", className: "admin1-tooltip", sticky: false }
-      );
-      layers.push(marker);
-    }
-    S.satelliteLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("satellite", `Displayed ${layers.length} satellites`);
-  }
-  async function toggleUnescoIchLayer() {
-    S.unescoIchOn = !S.unescoIchOn;
-    const btn = document.getElementById("unesco-ich-toggle-btn");
-    if (S.unescoIchOn) {
-      btn.textContent = "\u{1F3AD} Heritage: On";
-      btn.classList.add("on");
-      if (!S.unescoIchData) {
-        try {
-          const res = await _kdbOrFetch2("/unesco-ich.json");
-          S.unescoIchData = await res.json();
-        } catch (e) {
-          _warn2("unesco-ich", "Failed to load");
-          S.unescoIchOn = false;
-          btn.textContent = "\u{1F3AD} Heritage: Off";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildUnescoIchLayer();
-    } else {
-      btn.textContent = "\u{1F3AD} Heritage: Off";
-      btn.classList.remove("on");
-      if (S.unescoIchLayer) {
-        S.map.removeLayer(S.unescoIchLayer);
-        S.unescoIchLayer = null;
-      }
-    }
-  }
-  function _buildUnescoIchLayer() {
-    if (S.unescoIchLayer) {
-      S.map.removeLayer(S.unescoIchLayer);
-      S.unescoIchLayer = null;
-    }
-    if (!S.unescoIchOn || !S.unescoIchData) return;
-    _log2("unesco-ich", "Data loaded for country panel integration");
-  }
-  async function toggleFlightAwareLayer() {
-    S.flightAwareOn = !S.flightAwareOn;
-    const btn = document.getElementById("flightaware-toggle-btn");
-    if (S.flightAwareOn) {
-      btn.textContent = "\u2708\uFE0F FlightAware: On";
-      btn.classList.add("on");
-      if (!S.flightAwareData) {
-        try {
-          const res = await _kdbOrFetch2("/flightaware-flights-lite.json");
-          S.flightAwareData = await res.json();
-        } catch (e) {
-          _warn2("flightaware", "Failed to load");
-          S.flightAwareOn = false;
-          btn.textContent = "\u2708\uFE0F FlightAware: Off";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildFlightAwareLayer();
-    } else {
-      btn.textContent = "\u2708\uFE0F FlightAware: Off";
-      btn.classList.remove("on");
-      if (S.flightAwareLayer) {
-        S.map.removeLayer(S.flightAwareLayer);
-        S.flightAwareLayer = null;
-      }
-    }
-  }
-  function _buildFlightAwareLayer() {
-    if (S.flightAwareLayer) {
-      S.map.removeLayer(S.flightAwareLayer);
-      S.flightAwareLayer = null;
-    }
-    if (!S.flightAwareOn || !S.flightAwareData) return;
-    const layers = [];
-    for (const f of S.flightAwareData.flights || []) {
-      const headingRad = f.hdg * Math.PI / 180;
-      const startLat = f.lat - Math.cos(headingRad) * 0.5;
-      const startLng = f.lng - Math.sin(headingRad) * 0.5;
-      const endLat = f.lat + Math.cos(headingRad) * 0.5;
-      const endLng = f.lng + Math.sin(headingRad) * 0.5;
-      const aircraftType = f.ac || "Unknown";
-      const altitudeClass = f.alt > 35e3 ? "long-haul" : f.alt > 2e4 ? "medium" : "short";
-      const color = altitudeClass === "long-haul" ? "#3b82f6" : altitudeClass === "medium" ? "#22c55e" : "#f59e0b";
-      const arrow = L.polyline([[startLat, startLng], [endLat, endLng]], {
-        color,
-        weight: 2,
-        opacity: 0.8
-      });
-      const airline = f.cs?.match(/[A-Z]+/)?.[0] || f.cs || "Unknown";
-      arrow.bindTooltip(
-        `<b style="color:${color}">\u2708\uFE0F ${f.cs || "Flight"}</b><br><span style="color:var(--text-secondary)">${airline} ${aircraftType}</span><br><span style="color:var(--text-muted)">${f.org} \u2192 ${f.dst}</span><br><span style="color:var(--text-muted)">Alt: ${f.alt.toLocaleString()} ft | Spd: ${f.spd} kts</span>`,
-        { direction: "top", className: "admin1-tooltip", sticky: false }
-      );
-      layers.push(arrow);
-    }
-    S.flightAwareLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("flightaware", `Displayed ${layers.length} flights`);
-  }
-  async function toggleMarineTrafficLayer() {
-    S.marineTrafficOn = !S.marineTrafficOn;
-    const btn = document.getElementById("marinetraffic-toggle-btn");
-    if (S.marineTrafficOn) {
-      btn.textContent = "Ships";
-      btn.classList.add("on");
-      if (!S.marineTrafficData) {
-        try {
-          const res = await _kdbOrFetch2("/ships-live-lite.json");
-          S.marineTrafficData = await res.json();
-        } catch (e) {
-          _warn2("marinetraffic", "Failed to load");
-          S.marineTrafficOn = false;
-          btn.textContent = "Ships";
-          btn.classList.remove("on");
-          return;
-        }
-      }
-      _buildMarineTrafficLayer();
-    } else {
-      btn.textContent = "Ships";
-      btn.classList.remove("on");
-      if (S.marineTrafficLayer) {
-        S.map.removeLayer(S.marineTrafficLayer);
-        S.marineTrafficLayer = null;
-      }
-    }
-  }
-  function _buildMarineTrafficLayer() {
-    if (S.marineTrafficLayer) {
-      S.map.removeLayer(S.marineTrafficLayer);
-      S.marineTrafficLayer = null;
-    }
-    if (!S.marineTrafficOn || !S.marineTrafficData) return;
-    const layers = [];
-    const typeColors = {
-      "Container": "#3b82f6",
-      "Bulk Carrier": "#64748b",
-      "Tanker": "#ef4444",
-      "Cargo": "#22c55e",
-      "Passenger": "#f59e0b",
-      "Cruise Ship": "#ec4899",
-      "Fishing": "#14b8a6",
-      "Naval": "#6366f1",
-      "Supply": "#a855f7",
-      "Research": "#8b5cf6"
-    };
-    for (const v of S.marineTrafficData.vessels || []) {
-      const color = typeColors[v.tp] || "#888";
-      const marker = L.circleMarker([v.lat, v.lng], {
-        pane: "overlayLayersPane",
-        radius: v.tp === "Cruise Ship" || v.tp === "Container" ? 6 : 4,
-        fillColor: color,
-        color: "#000",
-        weight: 0.5,
-        fillOpacity: 0.9
-      });
-      const courseArrow = L.polyline([
-        [v.lat, v.lng],
-        [v.lat + Math.cos(v.crs * Math.PI / 180) * 0.2, v.lng + Math.sin(v.crs * Math.PI / 180) * 0.2]
-      ], {
-        pane: "overlayLayersPane",
-        color,
-        weight: 2,
-        opacity: 0.6
-      });
-      marker.bindTooltip(
-        `<b style="color:${color}">\u{1F6A2} ${v.nm}</b><br><span style="color:var(--text-secondary)">${v.tp}</span><br><span style="color:var(--text-muted)">Flag: ${v.flag || "Unknown"}</span><br><span style="color:var(--text-muted)">Spd: ${v.spd} kn | Crs: ${v.crs}\xB0</span><br><span style="color:var(--text-secondary)">\u2192 ${v.dst}</span>`,
-        { direction: "top", className: "admin1-tooltip", sticky: false }
-      );
-      layers.push(marker, courseArrow);
-    }
-    S.marineTrafficLayer = L.layerGroup(layers).addTo(S.map);
-    _log2("marinetraffic", `Displayed ${layers.length / 2} vessels`);
-  }
   function resetAllLayers() {
     setCityDotMode("hide");
     const toggles = [
@@ -9289,320 +10085,6 @@
   function _mobileBackdropOff3() {
     const b = document.getElementById("mobile-backdrop");
     if (b) b.classList.remove("active");
-  }
-  async function toggleEconLayer() {
-    S.econOn = !S.econOn;
-    const btn = document.getElementById("econ-toggle-btn");
-    if (S.econOn) {
-      btn.textContent = "Economy";
-      btn.classList.add("on");
-      _drawEconColorRamp();
-      await _companiesLoader.ensure();
-      buildEconLayer();
-      _updateMapLegends();
-    } else {
-      btn.textContent = "Economy";
-      btn.classList.remove("on");
-      if (S.econLayer) {
-        S.map.removeLayer(S.econLayer);
-        S.econLayer = null;
-      }
-      collapseEconCluster();
-      _econTipHide();
-      _updateMapLegends();
-    }
-  }
-  function _clearExpandedLayers() {
-    if (S._collapseOnClick) {
-      S.map.off("click", S._collapseOnClick);
-      S._collapseOnClick = null;
-    }
-    if (S._expandedLayers) {
-      S._expandedLayers.forEach((l) => {
-        try {
-          S.map.removeLayer(l);
-        } catch (_) {
-        }
-      });
-      S._expandedLayers = null;
-    }
-  }
-  function collapseEconCluster() {
-    _clearExpandedLayers();
-    S._pinnedExpansion = null;
-  }
-  function _convexHull(pts) {
-    const n = pts.length;
-    if (n < 3) return [...pts];
-    const d2 = (a, b) => (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2;
-    let l = 0;
-    for (let i = 1; i < n; i++) if (pts[i][1] < pts[l][1]) l = i;
-    const hull = [];
-    let p = l, q;
-    do {
-      hull.push(pts[p]);
-      q = 0;
-      for (let i = 1; i < n; i++) {
-        if (q === p) {
-          q = i;
-          continue;
-        }
-        const cross = (pts[q][1] - pts[p][1]) * (pts[i][0] - pts[p][0]) - (pts[q][0] - pts[p][0]) * (pts[i][1] - pts[p][1]);
-        if (cross < 0 || cross === 0 && d2(pts[p], pts[i]) > d2(pts[p], pts[q])) q = i;
-      }
-      p = q;
-    } while (p !== l && hull.length <= n);
-    return hull;
-  }
-  function _arcLine(p1, p2, curve = 0.22) {
-    const mid = [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
-    const dl = p2[0] - p1[0], dn = p2[1] - p1[1];
-    const ctrl = [mid[0] - dn * curve, mid[1] + dl * curve];
-    const pts = [];
-    for (let i = 0; i <= 24; i++) {
-      const t = i / 24, u = 1 - t;
-      pts.push([
-        u * u * p1[0] + 2 * u * t * ctrl[0] + t * t * p2[0],
-        u * u * p1[1] + 2 * u * t * ctrl[1] + t * t * p2[1]
-      ]);
-    }
-    return pts;
-  }
-  function expandEconCluster(group, clusterUSD, cLat, cLng) {
-    _clearExpandedLayers();
-    S._pinnedExpansion = { group, clusterUSD, cLat, cLng };
-    const layers = [];
-    const col = econDotColor(clusterUSD);
-    const MAX_USD = 2e12;
-    const positions = group.map((p) => [p.city.lat, p.city.lng]);
-    if (positions.length >= 3) {
-      const hull = _convexHull(positions);
-      const padded = hull.map(([lat, lng]) => {
-        const dlat = lat - cLat, dlng = lng - cLng;
-        const len = Math.sqrt(dlat * dlat + dlng * dlng) || 1e-3;
-        const pad = Math.max(1.8, len * 0.22);
-        return [lat + dlat / len * pad, lng + dlng / len * pad];
-      });
-      layers.push(L.polygon(padded, {
-        fillColor: col,
-        fillOpacity: 0.07,
-        color: col,
-        weight: 1.5,
-        opacity: 0.35,
-        dashArray: "7 5",
-        pane: "econPane",
-        interactive: false
-      }).addTo(S.map));
-    } else if (positions.length === 2) {
-      layers.push(L.polyline(positions, {
-        color: col,
-        weight: 2,
-        opacity: 0.3,
-        dashArray: "7 5",
-        pane: "econPane",
-        interactive: false
-      }).addTo(S.map));
-    }
-    for (const p of group) {
-      layers.push(L.polyline(
-        _arcLine([cLat, cLng], [p.city.lat, p.city.lng]),
-        { color: col, weight: 1, opacity: 0.2, pane: "econPane", interactive: false }
-      ).addTo(S.map));
-    }
-    for (const p of group) {
-      const cityCol = econDotColor(p.totalUSD);
-      const logVal = Math.log10(Math.max(p.totalUSD, 1e8));
-      const r = Math.max(6, Math.min(22, 5 + 17 * (logVal - 8) / (13 - 8)));
-      const topCos = (p.validCos || []).slice().sort((a, b) => b.usd - a.usd).slice(0, 3);
-      const tipHtml = `<div style="font-weight:600;color:${cityCol};margin-bottom:2px">${escHtml(p.city.name)}</div><div style="color:var(--text-secondary);font-size:0.78rem;margin-bottom:4px">\u2248 <span style="color:${cityCol};font-weight:600">$${fmtRevenue(p.totalUSD)}</span> USD</div>` + topCos.map(
-        ({ co, usd }) => `<div style="color:var(--text-body);font-size:0.79rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(co.name)} <span style="color:${cityCol}">$${fmtRevenue(usd)}</span></div>`
-      ).join("");
-      const dot = L.circleMarker([p.city.lat, p.city.lng], {
-        radius: r,
-        color: cityCol,
-        fillColor: cityCol,
-        fillOpacity: 0.22,
-        weight: 2,
-        opacity: 0.9,
-        pane: "econPane",
-        bubblingMouseEvents: false
-      });
-      dot.on("mouseover", (e) => _econTipShow(tipHtml, e.originalEvent.clientX, e.originalEvent.clientY));
-      dot.on("mousemove", (e) => _econTipMove(e.originalEvent.clientX, e.originalEvent.clientY));
-      dot.on("mouseout", () => _econTipHide());
-      dot.on("click", () => {
-        _econTipHide();
-        collapseEconCluster();
-        openCorpPanel(p.qid, p.city.name);
-      });
-      dot.addTo(S.map);
-      layers.push(dot);
-    }
-    S._expandedLayers = layers;
-    setTimeout(() => {
-      S._collapseOnClick = collapseEconCluster;
-      S.map.on("click", S._collapseOnClick);
-    }, 120);
-  }
-  function _econTipDOM() {
-    if (!S._econTipEl) {
-      S._econTipEl = document.createElement("div");
-      S._econTipEl.id = "econ-custom-tip";
-      document.body.appendChild(S._econTipEl);
-    }
-    return S._econTipEl;
-  }
-  function _econTipShow(html, clientX, clientY) {
-    const el = _econTipDOM();
-    el.innerHTML = html;
-    el.style.display = "block";
-    _econTipMove(clientX, clientY);
-  }
-  function _econTipMove(clientX, clientY) {
-    const el = S._econTipEl;
-    if (!el || el.style.display === "none") return;
-    const tw = el.offsetWidth, th = el.offsetHeight;
-    const vw = window.innerWidth, vh = window.innerHeight;
-    const pad = 12;
-    let x = clientX + pad;
-    let y = clientY - th - pad;
-    if (x + tw > vw - 8) x = clientX - tw - pad;
-    if (y < 8) y = clientY + pad;
-    el.style.left = x + "px";
-    el.style.top = y + "px";
-  }
-  function _econTipHide() {
-    if (S._econTipEl) S._econTipEl.style.display = "none";
-  }
-  function econDotColor(totalUSD) {
-    const logMin = Math.log10(5e8);
-    const logMax = Math.log10(5e12);
-    const t = Math.max(0, Math.min(1, (Math.log10(Math.max(totalUSD, 5e8)) - logMin) / (logMax - logMin)));
-    const hue = Math.round(45 + t * 143);
-    const sat = Math.round(85 + t * 15);
-    const lit = Math.round(62 - t * 10);
-    return `hsl(${hue},${sat}%,${lit}%)`;
-  }
-  function buildEconLayer() {
-    if (!S.econOn) return;
-    const _savedPin = S._pinnedExpansion;
-    _clearExpandedLayers();
-    S._pinnedExpansion = null;
-    if (S.econLayer) {
-      S.map.removeLayer(S.econLayer);
-      S.econLayer = null;
-    }
-    if (!Object.keys(S.companiesData).length) return;
-    const MAX_PLAUSIBLE_USD = 2e12;
-    const metric = "market_cap";
-    const cityPoints = [];
-    for (const [qid, companies] of Object.entries(S.companiesData)) {
-      const city = S.cityByQid.get(qid);
-      if (!city || city.lat == null || city.lng == null) continue;
-      let totalUSD = 0;
-      const validCos = [];
-      for (const co of companies) {
-        const countryDefaultCur = ISO2_TO_CURRENCY[city.iso] || null;
-        const hasPrimary = !!(co[metric] && (co[metric + "_currency"] || countryDefaultCur));
-        const val = hasPrimary ? co[metric] : co.revenue || co.market_cap;
-        const rawCur = hasPrimary ? co[metric + "_currency"] : co.revenue_currency || co.market_cap_currency;
-        const cur = rawCur || countryDefaultCur;
-        if (!val || !cur) continue;
-        const usd = toUSD(val, cur);
-        if (usd > 0 && usd <= MAX_PLAUSIBLE_USD) {
-          totalUSD += usd;
-          const usedMetric = hasPrimary ? metric : co.revenue ? "revenue" : "market_cap";
-          validCos.push({ co, usd, usedMetric });
-        }
-      }
-      if (totalUSD <= 0) continue;
-      cityPoints.push({ qid, city, totalUSD, validCos });
-    }
-    let clusters = cityPoints.map((p) => [p]);
-    function _clusterMeta(group) {
-      const totalUSD = group.reduce((s, p) => s + p.totalUSD, 0);
-      const lat = group.reduce((s, p) => s + p.city.lat * p.totalUSD, 0) / totalUSD;
-      const lng = group.reduce((s, p) => s + p.city.lng * p.totalUSD, 0) / totalUSD;
-      const logVal = Math.log10(Math.max(totalUSD, 1e8));
-      const r = Math.max(6, Math.min(32, 4 + 28 * (logVal - 8) / (13 - 8)));
-      const px = S.map.latLngToContainerPoint([lat, lng]);
-      return { lat, lng, r, px, totalUSD };
-    }
-    const OVERLAP_PAD = 4;
-    let changed = true;
-    while (changed) {
-      changed = false;
-      const meta = clusters.map(_clusterMeta);
-      outer: for (let i = 0; i < clusters.length; i++) {
-        for (let j = i + 1; j < clusters.length; j++) {
-          const a = meta[i], b = meta[j];
-          const dx = a.px.x - b.px.x, dy = a.px.y - b.px.y;
-          if (Math.sqrt(dx * dx + dy * dy) < a.r + b.r + OVERLAP_PAD) {
-            clusters[i] = clusters[i].concat(clusters[j]);
-            clusters.splice(j, 1);
-            changed = true;
-            break outer;
-          }
-        }
-      }
-    }
-    const markers = [];
-    for (const group of clusters) {
-      const clusterUSD = group.reduce((s, p) => s + p.totalUSD, 0);
-      const lat = group.reduce((s, p) => s + p.city.lat * p.totalUSD, 0) / clusterUSD;
-      const lng = group.reduce((s, p) => s + p.city.lng * p.totalUSD, 0) / clusterUSD;
-      const logVal = Math.log10(Math.max(clusterUSD, 1e8));
-      const radius = Math.max(4, Math.min(32, 4 + 28 * (logVal - 8) / (13 - 8)));
-      const isMerged = group.length > 1;
-      const headerLabel = isMerged ? `${group.length} cities` : escHtml(group[0].city.name);
-      const subLabel = isMerged ? group.slice(0, 3).map((p) => escHtml(p.city.name)).join(", ") + (group.length > 3 ? ` +${group.length - 3} more` : "") : null;
-      const allCos = group.flatMap((p) => p.validCos);
-      const topCos = allCos.sort((a, b) => b.usd - a.usd).slice(0, 4);
-      const metricLabel2 = metric === "market_cap" ? "Market cap" : "Revenue";
-      const topHtml = topCos.map(({ co, usd, usedMetric }) => {
-        const tag = metric === "market_cap" && usedMetric !== "market_cap" ? `<span style="color:var(--text-muted);font-size:0.68rem"> rev</span>` : "";
-        return `<div style="color:var(--text-body);font-size:0.79rem;padding:1px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(co.name)}${tag} <span style="color:var(--gold)">$${fmtRevenue(usd)}</span></div>`;
-      }).join("");
-      const totalCorps = group.reduce((s, p) => s + p.validCos.length, 0);
-      const tip = `<div style="font-weight:600;color:var(--gold);margin-bottom:2px">${headerLabel}</div>` + (subLabel ? `<div style="color:var(--text-secondary);font-size:0.75rem;margin-bottom:3px">${subLabel}</div>` : "") + `<div style="color:var(--text-secondary);font-size:0.78rem;margin-bottom:5px">${metricLabel2} \u2248 <span style="color:var(--gold);font-weight:600">$${fmtRevenue(clusterUSD)}</span> USD</div><div style="color:var(--text-faint);font-size:0.74rem;margin-bottom:4px">${totalCorps} listed corp${totalCorps !== 1 ? "s" : ""}</div>` + topHtml;
-      const dotColor = econDotColor(clusterUSD);
-      const m = L.circleMarker([lat, lng], {
-        radius: Math.max(radius, 6),
-        color: dotColor,
-        fillColor: dotColor,
-        fillOpacity: isMerged ? 0.28 : 0.18,
-        weight: isMerged ? 2 : 1.5,
-        opacity: 0.9,
-        pane: "econPane",
-        bubblingMouseEvents: false
-        // prevent click from bubbling to S.map collapse handler
-      });
-      m.on("mouseover", (e) => _econTipShow(tip, e.originalEvent.clientX, e.originalEvent.clientY));
-      m.on("mousemove", (e) => _econTipMove(e.originalEvent.clientX, e.originalEvent.clientY));
-      m.on("mouseout", () => _econTipHide());
-      if (!isMerged) {
-        m.on("click", () => {
-          _econTipHide();
-          openCorpPanel(group[0].qid, group[0].city.name);
-        });
-      } else {
-        const clusterTitle = `${group.length} cities`;
-        m.on("click", () => {
-          _econTipHide();
-          expandEconCluster(group, clusterUSD, lat, lng);
-          openCorpPanelCluster(group, clusterTitle);
-        });
-      }
-      markers.push(m);
-    }
-    S.econLayer = L.layerGroup(markers).addTo(S.map);
-    const metricLabel = metric === "market_cap" ? "Market cap" : "Revenue";
-    const primaryCount = cityPoints.flatMap((p) => p.validCos).filter((c) => c.usedMetric === metric).length;
-    const fallbackNote = metric === "market_cap" && primaryCount < cityPoints.flatMap((p) => p.validCos).length ? ` \xB7 ${primaryCount} mkt cap, rest revenue` : "";
-    document.getElementById("econ-info").textContent = `${cityPoints.length} cities${clusters.length < cityPoints.length ? ` \u2192 ${clusters.length} clusters` : ""} \xB7 ${metricLabel}${fallbackNote} \xB7 click to explore`;
-    if (_savedPin) {
-      expandEconCluster(_savedPin.group, _savedPin.clusterUSD, _savedPin.cLat, _savedPin.cLng);
-    }
   }
   async function openCorpPanel(qid, cityName) {
     S.corpCityQid = qid;
@@ -10793,7 +11275,7 @@
     }
     document.getElementById("cc-tbody").innerHTML = rows.join("");
   }
-  var __DEBUG__, PAGE_SIZE, _worldGeoLoader, _eurostatLoader, _companiesLoader, _companiesDetailLoader, _univLoader, _noaaLoader, _airportLoader, _aqLoader, _metroLoader, _nobelLoader, _powerLoader, _informLoader, _gtdLoader, _cryptoLoader, _URL_TO_KDB, POP_SCALE, tradeCache, countryCentroids2, admin1Cache, LS_EDITS, LS_DELETED, IMG_EXCLUDE, VALID_SIDEBAR_TABS, STAT_DEFS2, CITY_STAT_DEFS2, WB_STAT_DEFS2, CORP_STAT_DEFS2, EUROSTAT_STAT_DEFS2, JAPAN_PREF_STAT_DEFS2, ADMIN_TO_NUTS2, SINGLE_NUTS2, _errorTileDataUrl, _terrainFallbackActive, _hashUpdateTimer, ISO2_TO_BEA, LS_TRADE_PREFIX, LS_TRADE_TTL, _nationsPanelOpen, _PLATE_NAMES, _aircraftMoveHandler, _wildfireMoveHandler, _IYChart;
+  var __DEBUG__, PAGE_SIZE, _worldGeoLoader, _eurostatLoader, _companiesLoader, _companiesDetailLoader, _univLoader, _noaaLoader, _airportLoader, _aqLoader, _metroLoader, _nobelLoader, _powerLoader, _informLoader, _gtdLoader, _cryptoLoader, _URL_TO_KDB, POP_SCALE, tradeCache, countryCentroids2, admin1Cache, LS_EDITS, LS_DELETED, IMG_EXCLUDE, VALID_SIDEBAR_TABS, STAT_DEFS2, CITY_STAT_DEFS2, WB_STAT_DEFS2, CORP_STAT_DEFS2, EUROSTAT_STAT_DEFS2, JAPAN_PREF_STAT_DEFS2, ADMIN_TO_NUTS2, SINGLE_NUTS2, _errorTileDataUrl, _terrainFallbackActive, _hashUpdateTimer, ISO2_TO_BEA, LS_TRADE_PREFIX, LS_TRADE_TTL, _nationsPanelOpen, _IYChart;
   var init_app_legacy = __esm({
     "src/app-legacy.js"() {
       init_utils();
@@ -10809,6 +11291,28 @@
       init_stat_defs();
       init_viz_defs();
       init_lightbox();
+      init_unesco_layer();
+      init_cable_layer();
+      init_air_route_layer();
+      init_tectonic_plates_layer();
+      init_launch_site_layer();
+      init_eez_layer();
+      init_iss_layer();
+      init_aircraft_layer();
+      init_earthquake_layer();
+      init_volcano_layer();
+      init_firms_layer();
+      init_eonet_layer();
+      init_protected_areas_layer();
+      init_vessel_ports_layer();
+      init_peeringdb_layer();
+      init_waqi_layer();
+      init_weather_layer();
+      init_satellite_layer();
+      init_unesco_ich_layer();
+      init_flightaware_layer();
+      init_marine_traffic_layer();
+      init_econ_layer();
       __DEBUG__ = !!window?.__KWDEBUG__;
       PAGE_SIZE = 100;
       _worldGeoLoader = createLazyLoader(
@@ -10831,6 +11335,11 @@
           S.companiesData = d;
         }
       );
+      S._companiesLoader = _companiesLoader;
+      S._openCorpPanel = openCorpPanel;
+      S._openCorpPanelCluster = openCorpPanelCluster;
+      S._drawEconColorRamp = _drawEconColorRamp;
+      S._updateMapLegends = _updateMapLegends;
       _companiesDetailLoader = createLazyLoader(
         "/companies-detail.json",
         (d) => {
@@ -12155,29 +12664,6 @@
       LS_TRADE_PREFIX = "bea_trade_v1_";
       LS_TRADE_TTL = 7 * 24 * 60 * 60 * 1e3;
       _nationsPanelOpen = false;
-      _PLATE_NAMES = {
-        AF: "African",
-        AN: "Antarctic",
-        SO: "South American",
-        NA: "North American",
-        PA: "Pacific",
-        AU: "Australian",
-        EU: "Eurasian",
-        IN: "Indian",
-        AR: "Arabian",
-        CO: "Cocos",
-        NZ: "Nazca",
-        PH: "Philippine",
-        CA: "Caribbean",
-        JF: "Juan de Fuca",
-        OK: "Okhotsk",
-        AM: "Amur",
-        SM: "Somalia",
-        NB: "Nubia",
-        SC: "Scotia"
-      };
-      _aircraftMoveHandler = null;
-      _wildfireMoveHandler = null;
       _IYChart = IYChart;
       (function initCompareSearch() {
         const input = document.getElementById("compare-search-input");
