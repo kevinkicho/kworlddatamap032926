@@ -1,10 +1,12 @@
 # World Data Map
 
+**Live demo:** [https://kevinkicho.github.io/kworlddatamap032926](https://kevinkicho.github.io/kworlddatamap032926)
+
 An interactive world map layering 1,607 cities, 8,984 corporate headquarters, 145+ country-level economic/governance/development indicators, subnational boundaries, and 25+ map overlays into a single explorable interface.
 
 > **Built with Claude Code:** Nearly all of this codebase was written collaboratively with [Claude Code](https://claude.ai/code) (Anthropic's AI CLI). The human contributor directed features, reviewed output, and provided domain context; Claude Code did the implementation.
 
-**Build status:** 589KB bundled · ~30 map layers · 203 unit tests · ESLint clean
+**Build status:** 589KB bundled · ~30 map layers · 203 unit tests · ESLint clean (0 errors)
 
 ---
 
