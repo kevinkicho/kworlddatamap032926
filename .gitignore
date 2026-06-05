@@ -51,15 +51,8 @@ data-raw/
 public/kdb.json
 public/kdb-chunks/
 
-# Large JSON data files (served by dev server, fetched from APIs, rebuilt via npm scripts)
-# These range from 1MB to 62MB — too large for git, regenerated via `npm run fetch-*`
-public/cities-full.json
-public/country-data.json
-public/companies.json
-public/companies-detail.json
-public/companies-index.json
-public/companies.json.*
-public/world-countries.json
+# Large JSON data files (served by dev server)
+# Most are in git now for live demo; regenerated via `npm run fetch-*`
 public/eez_boundaries.json
 public/eez_countries.json
 public/wildfires-live.json
