@@ -454,7 +454,7 @@
       "format": "esm"
     },
     "src/app-legacy.js": {
-      "bytes": 467665,
+      "bytes": 467792,
       "imports": [
         {
           "path": "src/utils.js",
@@ -681,7 +681,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1094841
+      "bytes": 1095074
     },
     "public/app.js": {
       "imports": [],
@@ -794,13 +794,13 @@
           "bytesInOutput": 13627
         },
         "src/app-legacy.js": {
-          "bytesInOutput": 410408
+          "bytesInOutput": 410539
         },
         "src/main.js": {
           "bytesInOutput": 5532
         }
       },
-      "bytes": 603072
+      "bytes": 603203
     }
   }
 }

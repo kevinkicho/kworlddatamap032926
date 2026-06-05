@@ -1053,8 +1053,9 @@ function updateStats() {
   const cities = S.allCities;
   const total = cities.reduce((s, c) => s + (c.pop || 0), 0);
   document.getElementById('stat-count').textContent = cities.length.toLocaleString();
+  const largest = cities.reduce((best, c) => (c.pop || 0) > (best.pop || 0) ? c : best, cities[0] || { name: '—', pop: 0 });
   document.getElementById('stat-largest').textContent =
-    cities[0] ? cities[0].name + ' (' + (cities[0].pop / 1e6).toFixed(1) + 'M)' : '—';
+    largest.name ? largest.name + ' (' + (largest.pop / 1e6).toFixed(1) + 'M)' : '—';
   document.getElementById('stat-total').textContent = (total / 1e9).toFixed(2) + 'B';
   document.getElementById('wiki-legend-title').textContent =
     cities.length.toLocaleString() + ' cities on S.map · circle size and color = population';
