@@ -3366,7 +3366,7 @@
   }
   async function _fetchIssPosition() {
     try {
-      const res = await fetch("http://api.open-notify.org/iss-now.json");
+      const res = await fetch("https://api.open-notify.org/iss-now.json");
       const data = await res.json();
       const lat = parseFloat(data.iss_position.latitude);
       const lng = parseFloat(data.iss_position.longitude);

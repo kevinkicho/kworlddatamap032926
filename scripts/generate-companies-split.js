@@ -5,7 +5,7 @@ const fs   = require('fs');
 const { atomicWrite } = require('./safe-write');
 const path = require('path');
 
-const COMPANIES_FILE = path.join(__dirname, '..', 'public', 'companies.json');
+const COMPANIES_FILE = path.join(__dirname, '..', 'scripts', 'companies.json');
 const INDEX_OUT      = path.join(__dirname, '..', 'public', 'companies-index.json');
 const DETAIL_OUT     = path.join(__dirname, '..', 'public', 'companies-detail.json');
 

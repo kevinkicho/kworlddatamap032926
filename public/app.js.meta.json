@@ -223,7 +223,7 @@
       "format": "esm"
     },
     "src/iss-layer.js": {
-      "bytes": 1898,
+      "bytes": 1899,
       "imports": [
         {
           "path": "src/state.js",
@@ -681,7 +681,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1094546
+      "bytes": 1094547
     },
     "public/app.js": {
       "imports": [],
@@ -746,7 +746,7 @@
           "bytesInOutput": 2354
         },
         "src/iss-layer.js": {
-          "bytesInOutput": 1893
+          "bytesInOutput": 1894
         },
         "src/aircraft-layer.js": {
           "bytesInOutput": 5341
@@ -800,7 +800,7 @@
           "bytesInOutput": 5532
         }
       },
-      "bytes": 602952
+      "bytes": 602953
     }
   }
 }
