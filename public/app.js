@@ -1018,8 +1018,11 @@
     if (btn) btn.disabled = true;
     try {
       const apiDate = date || "latest";
-      const res = await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      let res = await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`).catch(() => null);
+      if (!res || !res.ok) {
+        res = await fetch(`https://api.frankfurter.app/${apiDate}?from=USD`).catch(() => null);
+      }
+      if (!res || !res.ok) throw new Error(`HTTP ${res ? res.status : "network error"}`);
       const json = await res.json();
       if (!json.rates) throw new Error("No rates in response");
       for (const [cur, val] of Object.entries(json.rates)) {

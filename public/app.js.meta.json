@@ -16,7 +16,7 @@
       "format": "esm"
     },
     "src/fx-sidebar.js": {
-      "bytes": 4523,
+      "bytes": 4792,
       "imports": [
         {
           "path": "src/state.js",
@@ -681,7 +681,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1094482
+      "bytes": 1094899
     },
     "public/app.js": {
       "imports": [],
@@ -698,7 +698,7 @@
           "bytesInOutput": 14223
         },
         "src/fx-sidebar.js": {
-          "bytesInOutput": 4727
+          "bytesInOutput": 4908
         },
         "src/keyboard-nav.js": {
           "bytesInOutput": 5755
@@ -800,7 +800,7 @@
           "bytesInOutput": 5532
         }
       },
-      "bytes": 602890
+      "bytes": 603071
     }
   }
 }
