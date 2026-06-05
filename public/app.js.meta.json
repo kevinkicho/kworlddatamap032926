@@ -64,7 +64,7 @@
       "format": "esm"
     },
     "src/corporations-list.js": {
-      "bytes": 10921,
+      "bytes": 10928,
       "imports": [
         {
           "path": "src/state.js",
@@ -454,7 +454,7 @@
       "format": "esm"
     },
     "src/app-legacy.js": {
-      "bytes": 467650,
+      "bytes": 467665,
       "imports": [
         {
           "path": "src/utils.js",
@@ -681,7 +681,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1094838
+      "bytes": 1094841
     },
     "public/app.js": {
       "imports": [],
@@ -710,7 +710,7 @@
           "bytesInOutput": 7995
         },
         "src/corporations-list.js": {
-          "bytesInOutput": 11569
+          "bytesInOutput": 11567
         },
         "src/layers-phase2.js": {
           "bytesInOutput": 17325
@@ -800,7 +800,7 @@
           "bytesInOutput": 5532
         }
       },
-      "bytes": 603074
+      "bytes": 603072
     }
   }
 }

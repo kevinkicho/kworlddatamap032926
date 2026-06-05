@@ -9,7 +9,7 @@ import { toUSD, toggleFxSidebar, _fxLoadFromLS, fxFetchRates } from './fx-sideba
 import { initKeyboardNav, setupKeyboardNav, toggleKeyboardHelp } from './keyboard-nav.js';
 import { initStatsPanel, closeStatsPanel, setStatsScope, openStatsPanel, statsExpandUp, statsExpandDown, statsGoToCity, statsGoToCountry } from './stats-panel.js';
 import { IYChart } from './iy-chart.js';
-import { initCorporationsList, buildGlobalCorpList, renderGlobalCorpList, gcorpShowMore, gcorpQueryChanged, gcorpCountryChanged, gcorpIndustryChanged, gcorpSortChanged, gcorpRowClick } from './corporations-list.js';
+import { initCorporationsList, buildGlobalCorpList, renderGlobalCorpList, gcorpShowMore, gcorpQueryChanged, gcorpCountryChanged, gcorpIndustryChanged, gcorpSortChanged, gcorpRowClick, _gcorpFinJson } from './corporations-list.js';
 import { toggleGtdLayer, toggleCryptoLayer, toggleSpaceWeatherLayer, toggleOceanLayer } from './layers-phase2.js';
 
 const __DEBUG__ = !!window?.__KWDEBUG__;

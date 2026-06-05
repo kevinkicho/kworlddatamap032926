@@ -1865,7 +1865,7 @@
       document.getElementById("global-corp-panel").style.display = activeTab && activeTab.dataset.tab === "corps" ? "" : "none";
     }
   }
-  function _gcorpFinJson2(co) {
+  function _gcorpFinJson(co) {
     const detail = S.companiesDetailData?.[co.qid] || {};
     return escHtml(JSON.stringify({
       qid: co.qid || null,
@@ -1946,7 +1946,7 @@
       }
       const empDisp = fmtEmployees(co.employees) || "\u2014";
       const location2 = [cityName, country].filter(Boolean).join(", ");
-      return `<tr${wikiAttrs} data-fin="${_gcorpFinJson2(co)}" data-qid="${escAttr(cityQid)}" data-city="${escAttr(cityName)}" onclick="gcorpRowClick(this)">
+      return `<tr${wikiAttrs} data-fin="${_gcorpFinJson(co)}" data-qid="${escAttr(cityQid)}" data-city="${escAttr(cityName)}" onclick="gcorpRowClick(this)">
       <td class="gcorp-name-cell"><span class="gcorp-card-row1"><span class="gcorp-card-name">${escHtml(co.name)}</span><span class="gcorp-card-rev">${revDisp}</span></span><span class="gcorp-card-row2"><span class="gcorp-card-loc">${escHtml(location2 || "\u2014")}${co.industry ? " \xB7 " + escHtml(co.industry) : ""}</span><span class="gcorp-card-emp">${empDisp !== "\u2014" ? empDisp : ""}</span></span></td>
       <td class="gcorp-city-cell">${escHtml(cityName)}</td>
       <td class="gcorp-country-cell">${escHtml(country || "\u2014")}</td>

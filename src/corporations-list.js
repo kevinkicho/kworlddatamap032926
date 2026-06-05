@@ -50,7 +50,7 @@ export function buildGlobalCorpList() {
   }
 }
 
-function _gcorpFinJson(co) {
+export function _gcorpFinJson(co) {
   const detail = S.companiesDetailData?.[co.qid] || {};
   return escHtml(JSON.stringify({
     qid: co.qid || null,
