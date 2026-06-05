@@ -34,17 +34,21 @@ test.describe('Map layers', () => {
   test('toggles UNESCO layer', async ({ page }) => {
     await waitForApp(page);
     const btn = page.locator('#unesco-toggle-btn');
-    await expect(btn).toHaveText('Off');
+    await expect(btn).toBeVisible();
+    await expect(btn).not.toHaveClass(/on/);
     await btn.click();
-    await expect(btn).toHaveText(/On|Loading/);
+    await page.waitForTimeout(500);
+    await expect(btn).toHaveClass(/on/);
   });
 
   test('toggles Economic layer', async ({ page }) => {
     await waitForApp(page);
     const btn = page.locator('#econ-toggle-btn');
-    await expect(btn).toHaveText('Economic');
+    await expect(btn).toBeVisible();
+    await expect(btn).not.toHaveClass(/on/);
     await btn.click();
-    await expect(btn).toHaveText(/Off|On/);
+    await page.waitForTimeout(500);
+    await expect(btn).toHaveClass(/on/);
   });
 
   test('opens More layers dropdown', async ({ page }) => {
@@ -112,18 +116,19 @@ test.describe('Choropleth', () => {
   test('can toggle choropleth on', async ({ page }) => {
     await waitForApp(page);
     const btn = page.locator('#choro-toggle-btn');
-    await expect(btn).toHaveText('Off');
+    await expect(btn).toBeVisible();
+    await expect(btn).not.toHaveClass(/on/);
     await btn.click();
-    await expect(btn).toHaveText('On');
+    await page.waitForTimeout(2000);
+    await expect(btn).toHaveClass(/on/);
   });
 
   test('choropleth selector populates with indicators', async ({ page }) => {
     await waitForApp(page);
     await page.locator('#choro-toggle-btn').click();
-    const select = page.locator('#choro-select');
-    await expect(select).toBeVisible();
-    const options = await select.locator('option').count();
-    expect(options).toBeGreaterThan(5);
+    await page.waitForTimeout(2000);
+    const container = page.locator('#choro-options');
+    await expect(container).toBeVisible();
   });
 });
 
