@@ -7885,8 +7885,8 @@
         });
       };
       const [citiesRes, countryRes] = await Promise.all([
-        fetch("/cities-full.json"),
-        fetch("/country-data.json").catch(() => null)
+        fetch("cities-full.json"),
+        fetch("country-data.json").catch(() => null)
       ]);
       if (!citiesRes.ok) throw new Error("Could not load cities-full.json (HTTP " + citiesRes.status + ")");
       var raw = await citiesRes.json();
@@ -8108,7 +8108,7 @@
           }
           _log16("kdb", "University rankings loaded:", _uniKdb.length);
         } else {
-          fetch("/uni-rankings.json").then((r) => r.ok ? r.json() : Promise.reject()).then(function(ranks) {
+          fetch("uni-rankings.json").then((r) => r.ok ? r.json() : Promise.reject()).then(function(ranks) {
             for (var ri2 = 0; ri2 < ranks.length; ri2++) {
               S.uniRankings[ranks[ri2].qid] = { qs_rank: ranks[ri2].qs_rank, the_rank: ranks[ri2].the_rank };
             }
@@ -11413,21 +11413,21 @@
       __DEBUG__ = !!window?.__KWDEBUG__;
       PAGE_SIZE = 100;
       _worldGeoLoader = createLazyLoader(
-        "/world-countries.json",
+        "world-countries.json",
         (d) => {
           S.worldGeo = d;
           _computeCountryCentroids();
         }
       );
       _eurostatLoader = createLazyLoader(
-        "/eurostat-cities.json",
+        "eurostat-cities.json",
         (d) => {
           S.eurostatCities = d;
         },
         () => S._filterAvail.eurostat
       );
       _companiesLoader = createLazyLoader(
-        "/companies-index.json",
+        "companies-index.json",
         (d) => {
           S.companiesData = d;
         }
@@ -11438,72 +11438,72 @@
       S._drawEconColorRamp = _drawEconColorRamp;
       S._updateMapLegends = _updateMapLegends;
       _companiesDetailLoader = createLazyLoader(
-        "/companies-detail.json",
+        "companies-detail.json",
         (d) => {
           S.companiesDetailData = d;
         }
       );
       _univLoader = createLazyLoader(
-        "/universities.json",
+        "universities.json",
         (d) => {
           S.universitiesData = d;
         },
         () => S._filterAvail.universities || S._filterValue.universities !== null || S._heatmapMetric === "universities"
       );
       _noaaLoader = createLazyLoader(
-        "/noaa-climate.json",
+        "noaa-climate.json",
         (d) => {
           S.noaaClimate = d;
         }
       );
       _airportLoader = createLazyLoader(
-        "/airport-connectivity.json",
+        "airport-connectivity.json",
         (d) => {
           S.airportData = d;
         },
         () => S._filterAvail.airport
       );
       _aqLoader = createLazyLoader(
-        "/who-airquality.json",
+        "who-airquality.json",
         (d) => {
           S.airQualityData = d;
         },
         () => S._filterAvail.airQuality || S._filterValue.aq !== null || S._heatmapMetric === "aq"
       );
       _metroLoader = createLazyLoader(
-        "/metro-transit.json",
+        "metro-transit.json",
         (d) => {
           S.metroTransitData = d;
         },
         () => S._filterAvail.metro || S._filterValue.metro !== null || S._heatmapMetric === "metro"
       );
       _nobelLoader = createLazyLoader(
-        "/nobel-cities.json",
+        "nobel-cities.json",
         (d) => {
           S.nobelCitiesData = d;
         },
         () => S._filterAvail.nobel || S._filterValue.nobel !== null || S._heatmapMetric === "nobel"
       );
       _powerLoader = createLazyLoader(
-        "/power_by_city.json",
+        "power_by_city.json",
         (d) => {
           S.powerData = d;
         }
       );
       _informLoader = createLazyLoader(
-        "/inform_risk.json",
+        "inform_risk.json",
         (d) => {
           S.informRisk = d;
         }
       );
       _gtdLoader = createLazyLoader(
-        "/terrorism-incidents-lite.json",
+        "terrorism-incidents-lite.json",
         (d) => {
           S.gtdSummary = d;
         }
       );
       _cryptoLoader = createLazyLoader(
-        "/crypto-stats-lite.json",
+        "crypto-stats-lite.json",
         (d) => {
           S.cryptoSummary = d;
         }

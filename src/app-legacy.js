@@ -82,14 +82,14 @@ function createLazyLoader(url, assign, shouldRebuild) {
 }
 
 // ── Lazy dataset loaders ──────────────────────────────────────────────────────
-const _worldGeoLoader  = createLazyLoader('/world-countries.json',
+const _worldGeoLoader  = createLazyLoader('world-countries.json',
   d => { S.worldGeo = d; _computeCountryCentroids(); });
 
-const _eurostatLoader  = createLazyLoader('/eurostat-cities.json',
+const _eurostatLoader  = createLazyLoader('eurostat-cities.json',
   d => { S.eurostatCities = d; },
   () => S._filterAvail.eurostat);
 
-const _companiesLoader = createLazyLoader('/companies-index.json',
+const _companiesLoader = createLazyLoader('companies-index.json',
   d => { S.companiesData = d; });
 
 // Bridge app-legacy functions into S for econ-layer callbacks
@@ -99,40 +99,40 @@ S._openCorpPanelCluster = openCorpPanelCluster;
 S._drawEconColorRamp = _drawEconColorRamp;
 S._updateMapLegends = _updateMapLegends;
 
-const _companiesDetailLoader = createLazyLoader('/companies-detail.json',
+const _companiesDetailLoader = createLazyLoader('companies-detail.json',
   d => { S.companiesDetailData = d; });
 
-const _univLoader      = createLazyLoader('/universities.json',
+const _univLoader      = createLazyLoader('universities.json',
   d => { S.universitiesData = d; },
   () => S._filterAvail.universities || S._filterValue.universities !== null || S._heatmapMetric === 'universities');
 
-const _noaaLoader      = createLazyLoader('/noaa-climate.json',
+const _noaaLoader      = createLazyLoader('noaa-climate.json',
   d => { S.noaaClimate = d; });
 
-const _airportLoader   = createLazyLoader('/airport-connectivity.json',
+const _airportLoader   = createLazyLoader('airport-connectivity.json',
   d => { S.airportData = d; },
   () => S._filterAvail.airport);
 
-const _aqLoader        = createLazyLoader('/who-airquality.json',
+const _aqLoader        = createLazyLoader('who-airquality.json',
   d => { S.airQualityData = d; },
   () => S._filterAvail.airQuality || S._filterValue.aq !== null || S._heatmapMetric === 'aq');
 
-const _metroLoader     = createLazyLoader('/metro-transit.json',
+const _metroLoader     = createLazyLoader('metro-transit.json',
   d => { S.metroTransitData = d; },
   () => S._filterAvail.metro || S._filterValue.metro !== null || S._heatmapMetric === 'metro');
 
-const _nobelLoader     = createLazyLoader('/nobel-cities.json',
+const _nobelLoader     = createLazyLoader('nobel-cities.json',
   d => { S.nobelCitiesData = d; },
   () => S._filterAvail.nobel || S._filterValue.nobel !== null || S._heatmapMetric === 'nobel');
 
-const _powerLoader    = createLazyLoader('/power_by_city.json',
+const _powerLoader    = createLazyLoader('power_by_city.json',
   d => { S.powerData = d; });
 
-const _informLoader   = createLazyLoader('/inform_risk.json',
+const _informLoader   = createLazyLoader('inform_risk.json',
   d => { S.informRisk = d; });
-const _gtdLoader       = createLazyLoader('/terrorism-incidents-lite.json',
+const _gtdLoader       = createLazyLoader('terrorism-incidents-lite.json',
   d => { S.gtdSummary = d; });
-const _cryptoLoader    = createLazyLoader('/crypto-stats-lite.json',
+const _cryptoLoader    = createLazyLoader('crypto-stats-lite.json',
   d => { S.cryptoSummary = d; });
 
 // ── KDB (single data source) lookup ──────────────────────────────────────────
@@ -4083,8 +4083,8 @@ async function init() {
     // kdb.json can be loaded later via S.kdb — individual file fetches are the
     // default path. The _kdbGet/_kdbOrFetch helpers check S.kdb first if set.
     const [citiesRes, countryRes] = await Promise.all([
-      fetch('/cities-full.json'),
-      fetch('/country-data.json').catch(() => null),
+      fetch('cities-full.json'),
+      fetch('country-data.json').catch(() => null),
     ]);
 
     if (!citiesRes.ok) throw new Error('Could not load cities-full.json (HTTP ' + citiesRes.status + ')');
@@ -4267,7 +4267,7 @@ async function init() {
         }
         _log('kdb', 'University rankings loaded:', _uniKdb.length);
       } else {
-        fetch('/uni-rankings.json').then(r => r.ok ? r.json() : Promise.reject()).then(function(ranks) {
+        fetch('uni-rankings.json').then(r => r.ok ? r.json() : Promise.reject()).then(function(ranks) {
           for (var ri = 0; ri < ranks.length; ri++) {
             S.uniRankings[ranks[ri].qid] = { qs_rank: ranks[ri].qs_rank, the_rank: ranks[ri].the_rank };
           }
