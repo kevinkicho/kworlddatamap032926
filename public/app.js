@@ -1020,9 +1020,9 @@
       const apiDate = date || "latest";
       let res = await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`).catch(() => null);
       if (!res || !res.ok) {
-        res = await fetch(`https://api.frankfurter.app/${apiDate}?from=USD`).catch(() => null);
+        res = null;
       }
-      if (!res || !res.ok) throw new Error(`HTTP ${res ? res.status : "network error"}`);
+      if (!res) throw new Error("FX proxy unavailable \u2014 using built-in rates");
       const json = await res.json();
       if (!json.rates) throw new Error("No rates in response");
       for (const [cur, val] of Object.entries(json.rates)) {
@@ -1037,8 +1037,8 @@
       _fxRenderList();
       _fxApplyRates();
     } catch (e) {
-      statusEl.textContent = `\u2717 ${e.message}`;
-      statusEl.style.color = "#f85149";
+      statusEl.textContent = "\u2139\uFE0F Using built-in rates";
+      statusEl.style.color = "#f0a500";
     } finally {
       if (btn) btn.disabled = false;
     }
