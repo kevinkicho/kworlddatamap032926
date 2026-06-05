@@ -1,8 +1,52 @@
 
 ---
 
-## Phase 3 Update: Code Quality Improvements - COMPLETED 2026-04-10
+## Phase 6: Data Pipeline & UI Fixes - COMPLETED 2026-06-05
 
+### ✅ Power Plant Geocoding Pipeline
+- Created `scripts/geocode-power-plants.js`:
+  - Fetches Wikidata coordinates for 1,122 city QIDs via wbgetentities API
+  - Combines with 600 cities from cities.json for broader coverage
+  - Haversine proximity matching (150km max) → 22,392 of 34,936 plants geocoded to 1,542 cities
+  - Aggregates into `power_by_city.json` with ALL 36 CSV fields preserved
+  - Outputs geocoded CSV with city_qid, city_name, city_dist_km columns
+- Created `scripts/enrich-cities-quick.js`:
+  - Batch Wikidata enrichment for cities (country, admin, population, area, elevation, founded, type, website, geonames)
+  - ISO2 country code resolution via Wikidata label matching
+  - Non-QID city matching by proximity and SPARQL name lookup
+- **Result:** 22,392 plants mapped (up from 2,207), all 36 fields accessible in UI
+
+### ✅ Power Plant UI
+- Expandable power plant table in city sidebar (click Energy chip)
+- All fields displayed: name, GPPD ID, WEPP ID, capacity, fuels, generation (2013-2019), estimated generation (2013-2017), commissioning year, owner, data sources, distance
+- Fuel breakdown icons in summary chip
+- Attribution badge in section header (WRI, CC BY 4.0)
+
+### ✅ Data Attribution Metadata
+- Created `public/power_plants_metadata.json` — title, version, license, citation, coverage stats
+- Created `public/inform_risk_metadata.json` — INFORM Risk Index 2024, EC JRC, CC BY 4.0
+- INFORM attribution added to country panel section header
+
+### ✅ City Click Fixes
+- **safeOnclick bug:** JSON double quotes collided with HTML `onclick="..."` attribute → changed to single-quote delimiter with `&#39;` escaping
+- **Direct sidebar open:** City dot click now opens sidebar directly (`.on('click', openWikiSidebar)`)
+- **QID matching:** All 1,607 cities now have Wikidata QIDs (matched via SPARQL batch lookup)
+
+### ✅ CSS & UI Fixes
+- **Corporations panel:** Added missing `background: var(--bg-primary)` to `#global-corp-panel` and mobile overlay states
+- **Sidebar z-index:** Raised from 1000 → 1060 to render above topbar (1050)
+- **Mobile topbar:** Reverted mobile-drawer-section display:none from global to `@media (max-width: 1024px)` only (desktop buttons now visible)
+- **Mobile chip grid:** 2-column CSS grid for Cities/Countries/Regions/Economy toggle buttons
+- **Mobile legend:** Font sizes increased from 0.5rem → 0.65rem, max-width from 45vw → 65vw
+- **Mobile close:** Removed red X close button; users click backdrop to dismiss topbar
+- **Mobile reset:** Hidden `#reset-layers-btn` on mobile (chips toggle themselves)
+
+### ✅ Server Changes
+- Default port changed from `process.env.PORT || 0` → `process.env.PORT || 36121`
+
+---
+
+## Phase 3 Update: Code Quality Improvements - COMPLETED 2026-04-10
 ### ✅ Modular Architecture Created
 
 **New Directory Structure:**

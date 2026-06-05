@@ -1,7 +1,7 @@
 {
   "inputs": {
     "src/utils.js": {
-      "bytes": 3549,
+      "bytes": 3553,
       "imports": [],
       "format": "esm"
     },
@@ -454,7 +454,7 @@
       "format": "esm"
     },
     "src/app-legacy.js": {
-      "bytes": 461060,
+      "bytes": 467691,
       "imports": [
         {
           "path": "src/utils.js",
@@ -681,7 +681,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1083872
+      "bytes": 1094546
     },
     "public/app.js": {
       "imports": [],
@@ -689,7 +689,7 @@
       "entryPoint": "src/main.js",
       "inputs": {
         "src/utils.js": {
-          "bytesInOutput": 3460
+          "bytesInOutput": 3464
         },
         "src/state.js": {
           "bytesInOutput": 11700
@@ -794,13 +794,13 @@
           "bytesInOutput": 13627
         },
         "src/app-legacy.js": {
-          "bytesInOutput": 403985
+          "bytesInOutput": 410446
         },
         "src/main.js": {
           "bytesInOutput": 5532
         }
       },
-      "bytes": 596487
+      "bytes": 602952
     }
   }
 }

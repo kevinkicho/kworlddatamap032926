@@ -63,7 +63,7 @@ export function escAttr(str) {
 
 export function safeOnclick(fnName, ...args) {
   const jsArgs = args.map(a => JSON.stringify(a)).join(',');
-  return ` onclick="${escHtml(fnName + '(' + jsArgs + ')')}"`;
+  return ` onclick='${fnName}(${jsArgs.replace(/'/g, "&#39;")})'`;
 }
 
 export function isoToFlag(iso2) {

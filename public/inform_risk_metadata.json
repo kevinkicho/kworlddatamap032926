@@ -1,0 +1,20 @@
+{
+  "title": "INFORM Risk Index 2024",
+  "description": "INFORM is a multi-stakeholder forum for developing shared, quantitative analysis relevant to humanitarian crises and disasters. The INFORM Risk Index identifies countries at risk from humanitarian crises and disasters that could overwhelm national response capacity.",
+  "version": "0.6.7",
+  "release_date": "2023-09-15",
+  "uri": "https://drmkc.jrc.ec.europa.eu/inform-index/",
+  "copyright": "Copyright 2024 European Commission Joint Research Centre (JRC)",
+  "license": "Creative Commons Attribution 4.0 International — CC BY 4.0",
+  "contact": "https://drmkc.jrc.ec.europa.eu/inform-index/Contact",
+  "citation": "European Commission, Joint Research Centre. 2024. INFORM Risk Index 2024. https://drmkc.jrc.ec.europa.eu/inform-index/",
+  "source": "European Commission Joint Research Centre (EC JRC)",
+  "coverage": {
+    "countries": 191,
+    "dimensions": ["Hazard & Exposure", "Vulnerability", "Lack of Coping Capacity"],
+    "risk_classes": ["Very Low", "Low", "Medium", "High", "Very High"],
+    "sub_hazards": ["Earthquake", "River Flood", "Tropical Cyclone", "Drought", "Epidemic", "Projected Conflict Risk"]
+  },
+  "processed_by": "World Data Map (scripts/process_inform.py)",
+  "processed_date": "2026-06-05"
+}

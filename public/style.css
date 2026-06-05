@@ -322,7 +322,7 @@ body {
 #wiki-sidebar {
   position: fixed; top: 0; right: -440px; width: 420px; height: 100vh;
   background: var(--bg-primary); border-left: 1px solid var(--border);
-  z-index: 1000; display: flex; flex-direction: column;
+  z-index: 1060; display: flex; flex-direction: column;
   transition: right 0.3s cubic-bezier(.4,0,.2,1);
   box-shadow: -8px 0 32px var(--shadow-lg); overflow: hidden;
 }
@@ -1454,11 +1454,12 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 }
 
 /* ── Global corporations list panel ── */
-#global-corp-panel { margin-top: 0; border: 1px solid var(--border); border-radius: 0 0 10px 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.35); }
+#global-corp-panel { margin-top: 0; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 0 0 10px 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.35); }
 #global-corp-panel.panel-open {
   position: fixed; top: 0; right: 0; width: 480px; height: 100vh;
+  background: var(--bg-primary);
   border-radius: 0; border-right: none;
-  z-index: 1000; display: flex; flex-direction: column;
+  z-index: 1060; display: flex; flex-direction: column;
   box-shadow: -8px 0 32px var(--shadow-lg);
   transition: right 0.3s cubic-bezier(.4,0,.2,1);
 }
@@ -1791,6 +1792,16 @@ tbody td.city-edit { padding: 2px 4px; width: 30px; }
 @media (max-width: 600px) {
   #cp-body {
     flex-direction: column !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #cp-body {
+    flex-direction: column !important;
+  }
+  .cp-left-col,
+  .cp-right-col {
+    width: 100%;
   }
 }
 
@@ -2617,12 +2628,7 @@ td.cmp-metric { color: var(--text-secondary); }
     -webkit-tap-highlight-color: transparent;
   }
   #mobile-topbar-toggle:active { transform: scale(0.92); }
-  #mobile-topbar-toggle.open {
-    background: var(--pa-pill-active-bg);
-    border-color: var(--pa-pill-active-border);
-    color: var(--pa-indigo);
-    box-shadow: 0 4px 20px rgba(99,102,241,0.2), 0 0 0 1px rgba(255,255,255,0.05) inset;
-  }
+  #mobile-topbar-toggle.open { background: var(--pa-pill-active-bg); border-color: var(--pa-pill-active-border); color: var(--pa-indigo); }
 
   /* ════════════════ Topbar: organized drawer (tablet + phone) ════════════════ */
   #topbar {
@@ -2678,7 +2684,15 @@ td.cmp-metric { color: var(--text-secondary); }
 
   /* ── Main toggle buttons: Palo Alto pill row ── */
   .mobile-drawer-section.mobile-toggles { display: none; padding: 0 0 4px; }
-  #topbar.mobile-open .mobile-drawer-section.mobile-toggles { display: flex; flex-wrap: wrap; gap: 6px; }
+  #topbar.mobile-open .mobile-drawer-section.mobile-toggles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  #topbar.mobile-open .mobile-drawer-section.mobile-toggles button {
+    width: 100%;
+    justify-content: center;
+  }
   #cities-toggle-btn, #choro-toggle-btn, #admin1-toggle-btn, #econ-toggle-btn {
     font-size: 0.76rem; padding: 6px 14px;
     min-height: 36px; border-radius: 18px;
@@ -2705,6 +2719,7 @@ td.cmp-metric { color: var(--text-secondary); }
   /* ── Layers dropdown: Palo Alto glass bottom sheet ── */
   .mobile-drawer-section.mobile-layers { display: none; }
   #topbar.mobile-open .mobile-drawer-section.mobile-layers { display: block; }
+  #reset-layers-btn { display: none !important; } /* redundant on mobile — chips toggle themselves */
   #more-layers-dropdown { position: relative; width: 100%; }
   #more-layers-btn {
     font-size: 0.76rem; min-height: 36px; border-radius: 18px;
@@ -2817,7 +2832,7 @@ td.cmp-metric { color: var(--text-secondary); }
 
   /* ── Cities list panel: bottom sheet on mobile ── */
   #list-panel.panel-open {
-    position: fixed; inset: 0; z-index: 1001;
+    position: fixed; inset: 0; z-index: 1060;
     flex-direction: column;
     border-radius: 20px 20px 0 0;
     border-top: 1px solid var(--border);
@@ -2836,6 +2851,7 @@ td.cmp-metric { color: var(--text-secondary); }
   /* ── Global corp panel: bottom sheet on mobile ── */
   #global-corp-panel.panel-open {
     position: fixed; inset: 0; z-index: 1001;
+    background: var(--bg-primary);
     flex-direction: column;
     border-radius: 20px 20px 0 0;
     border-top: 1px solid var(--border);
@@ -3004,11 +3020,11 @@ td.cmp-metric { color: var(--text-secondary); }
   }
 
   /* ════════════════ Map legends: compact glass card ════════════════ */
-  #map-legends { bottom: 8px; left: 8px; max-width: 45vw; gap: 3px; }
-  .legend-ramp { width: 100px; height: 6px; }
-  .legend-tick-row { width: 100px; font-size: 0.5rem; }
-  .legend-end-label { font-size: 0.55rem; }
-  .wiki-legend-title { font-size: 0.62rem; }
+  #map-legends { bottom: 8px; left: 8px; max-width: 65vw; gap: 4px; }
+  .legend-ramp { width: 120px; height: 8px; }
+  .legend-tick-row { width: 120px; font-size: 0.65rem; }
+  .legend-end-label { font-size: 0.68rem; }
+  .wiki-legend-title { font-size: 0.7rem; }
   #map-legends > div { padding: 4px 8px; }
 
   /* ════════════════ Toggle buttons: already styled in drawer ════════════════ */
@@ -3708,8 +3724,10 @@ td.cmp-metric { color: var(--text-secondary); }
   }
 }
 
-/* Mobile drawer sections: hidden on desktop, shown on mobile via #topbar.mobile-open */
-.mobile-drawer-section { display: none; }
+/* Mobile drawer sections: hidden by default on narrow screens, shown on desktop */
+@media (max-width: 1024px) {
+  .mobile-drawer-section { display: none; }
+}
 
 .dropdown-section {
   padding: 6px 0;
@@ -3961,4 +3979,162 @@ td.cmp-metric { color: var(--text-secondary); }
   .count-dropdown {
     min-width: 0 !important;
   }
+}
+
+@media (max-width: 768px) {
+  #cp-body {
+    flex-direction: column !important;
+  }
+  .keyboard-help-card {
+    min-width: auto !important;
+  }
+  .es-trend-row {
+    grid-template-columns: 1fr !important;
+  }
+  .toast {
+    max-width: 90vw !important;
+  }
+  .fx-row {
+    grid-template-columns: 1fr !important;
+  }
+  .wiki-car-btn {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+  .wiki-car-dot {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  #filter-panel-close {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+}
+
+/* ── Power Plant Detail Section ──────────────────────────────────────────── */
+.pp-section {
+  margin: 0 10px 12px 10px;
+  border: 1px solid var(--border, #30363d);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg2, #161b22);
+}
+.pp-section-hdr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg, #0d1117);
+  border-bottom: 1px solid var(--border, #30363d);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--fg, #e6edf3);
+}
+.pp-attribution {
+  color: var(--text-muted, #8b949e);
+  font-size: 0.7rem;
+  cursor: help;
+}
+.pp-table-wrap {
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.pp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+}
+.pp-table th {
+  position: sticky;
+  top: 0;
+  background: var(--bg, #0d1117);
+  color: var(--text-muted, #8b949e);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.63rem;
+  letter-spacing: 0.04em;
+  padding: 5px 6px;
+  text-align: left;
+  border-bottom: 1px solid var(--border, #30363d);
+  z-index: 1;
+}
+.pp-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border-subtle, #30363d44);
+  color: var(--fg, #e6edf3);
+  vertical-align: middle;
+}
+.pp-row { cursor: pointer; }
+.pp-row:hover { background: var(--bg-hover, #1c2129); }
+.pp-name { min-width: 180px; }
+.pp-name span { display: inline-block; vertical-align: middle; }
+.pp-icon { margin-right: 3px; font-size: 0.85em; }
+.pp-ext-link {
+  color: var(--text-muted, #8b949e);
+  text-decoration: none;
+  margin-left: 3px;
+  font-size: 0.75em;
+}
+.pp-ext-link:hover { color: var(--accent, #58a6ff); }
+.pp-cap, .pp-gen, .pp-fuel { white-space: nowrap; }
+.pp-cap { color: var(--accent, #58a6ff); font-weight: 600; font-variant-numeric: tabular-nums; }
+.pp-gen { font-variant-numeric: tabular-nums; }
+.pp-gen-year { color: var(--text-muted, #8b949e); font-size: 0.85em; }
+.pp-fuel { color: var(--text-secondary, #8b949e); font-size: 0.7rem; }
+.pp-year { color: var(--text-muted, #8b949e); font-variant-numeric: tabular-nums; }
+.pp-owner { color: var(--text-secondary, #8b949e); font-size: 0.68rem; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pp-dist { color: var(--text-faint, #484f58); font-size: 0.65rem; white-space: nowrap; }
+
+/* ── Power Plant Detail Card (expandable row) ── */
+.pp-detail-card {
+  border-top: 1px solid var(--border-subtle, #30363d44);
+  padding: 8px 12px;
+  background: var(--bg, #0d1117);
+  font-size: 0.68rem;
+}
+.pp-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 4px 12px;
+  margin-bottom: 6px;
+}
+.pp-detail-field label {
+  display: block;
+  color: var(--text-muted, #8b949e);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.pp-detail-field span {
+  color: var(--fg, #e6edf3);
+  font-size: 0.7rem;
+}
+.pp-gen-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle, #30363d44);
+}
+.pp-gen-chip {
+  background: var(--bg2, #161b22);
+  border: 1px solid var(--border, #30363d);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+  color: var(--fg, #e6edf3);
+}
+.pp-gen-chip b { color: var(--accent, #58a6ff); }
+.pp-gen-est { border-color: var(--gold, #f0a500); opacity: 0.8; }
+.pp-gen-est b { color: var(--gold, #f0a500); }
+
+/* ── INFORM Risk attribution ── */
+.cp-gauge-section-hdr .inform-attr {
+  color: var(--text-muted, #8b949e);
+  font-size: 0.65rem;
+  font-weight: 400;
+  margin-left: 6px;
+  cursor: help;
 }

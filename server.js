@@ -7,7 +7,7 @@ const os          = require('os');
 const https       = require('https');
 
 const app      = express();
-const PORT     = process.env.PORT || 0;
+const PORT     = process.env.PORT || 36121;
 const OUT_FILE = path.join(__dirname, 'public', 'cities-full.json');
 const START_MS = Date.now();
 

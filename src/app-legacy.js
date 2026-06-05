@@ -1035,7 +1035,9 @@ function rebuildMapLayer() {
       radius, fillColor: color, fillOpacity: opacity,
       color, opacity, weight: markerWeight,
       pane: 'cityPane',
-    }).bindPopup(tip, { maxWidth: 260, minWidth: 160 }).addTo(S.wikiLayer);
+    }).bindPopup(tip, { maxWidth: 260, minWidth: 160 })
+      .on('click', () => { if (city.qid) openWikiSidebar(city.qid, city.name); })
+      .addTo(S.wikiLayer);
   });
   S.wikiLayer.addTo(S.map);
   _updateDotControls();
@@ -1386,6 +1388,100 @@ function switchWikiTab(tab) {
   }
 }
 
+// ── Power plant detail view ──────────────────────────────────────────────────
+function _buildPowerPlantDetail(p, qid) {
+  const fuelIcon = { 'Hydro':'💧', 'Nuclear':'☢️', 'Coal':'⚫', 'Gas':'🔥', 'Oil':'🛢️', 'Solar':'☀️', 'Wind':'🌬️', 'Biomass':'🌿', 'Geothermal':'🌋', 'Waste':'🗑️' };
+  const sorted = [...p.plants].sort((a, b) => (b.capacity_mw || 0) - (a.capacity_mw || 0));
+
+  let rows = '';
+  for (const plant of sorted) {
+    const icon = fuelIcon[plant.primary_fuel] || '⚡';
+    const cap = plant.capacity_mw != null ? (plant.capacity_mw >= 1000 ? (plant.capacity_mw / 1000).toFixed(1) + ' GW' : Math.round(plant.capacity_mw) + ' MW') : '—';
+    const gen2019 = plant.generation_gwh?.['2019'] ?? plant.generation_gwh?.['2018'] ?? plant.generation_gwh?.['2017'] ?? null;
+    const estGen2017 = plant.estimated_generation_gwh?.['2017'] ?? null;
+    const genStr = gen2019 != null ? gen2019.toFixed(1) + ' GWh' : (estGen2017 != null ? '~' + estGen2017.toFixed(1) + ' GWh (est)' : '—');
+    const genYear = gen2019 != null ? '2019' : (estGen2017 != null ? '2017 est' : '');
+
+    const fuels = [plant.primary_fuel, plant.other_fuel1, plant.other_fuel2, plant.other_fuel3].filter(Boolean).join(', ');
+
+    rows += `<tr class="pp-row">
+      <td class="pp-name">
+        <span class="pp-icon">${icon}</span>
+        <span>${escHtml(plant.name || 'Unnamed')}</span>
+        ${plant.url ? `<a href="${escAttr(plant.url)}" target="_blank" rel="noopener" class="pp-ext-link" title="Source">↗</a>` : ''}
+      </td>
+      <td class="pp-cap">${cap}</td>
+      <td class="pp-fuel">${escHtml(fuels)}</td>
+      <td class="pp-gen">${genStr}${genYear ? '<span class="pp-gen-year"> ' + genYear + '</span>' : ''}</td>
+      <td class="pp-year">${plant.commissioning_year || '—'}</td>
+      <td class="pp-owner">${escHtml(plant.owner || '—')}</td>
+      <td class="pp-dist">${plant.dist_km != null ? Math.round(plant.dist_km) + ' km' : '—'}</td>
+    </tr>`;
+  }
+
+  // Detailed plant card (expandable per plant)
+  let detailRows = '';
+  for (let i = 0; i < sorted.length; i++) {
+    const plant = sorted[i];
+    const genRows = [];
+    if (plant.generation_gwh) {
+      for (let yr = 2013; yr <= 2019; yr++) {
+        const v = plant.generation_gwh[String(yr)];
+        if (v != null) genRows.push(`<span class="pp-gen-chip">${yr}: <b>${v.toFixed(1)} GWh</b></span>`);
+      }
+    }
+    if (plant.estimated_generation_gwh) {
+      for (let yr = 2013; yr <= 2017; yr++) {
+        const v = plant.estimated_generation_gwh[String(yr)];
+        const note = plant.estimated_generation_note?.[String(yr)];
+        if (v != null) genRows.push(`<span class="pp-gen-chip pp-gen-est">${yr}: <b>~${v.toFixed(1)} GWh</b>${note && note !== 'NO-ESTIMATION' ? ' (' + escHtml(note) + ')' : ''}</span>`);
+      }
+    }
+    const sourceInfo = [plant.source, plant.geolocation_source, plant.generation_data_source].filter(Boolean).join(' · ');
+    detailRows += `<div class="pp-detail-card" id="pp-detail-${qid}-${i}" style="display:none">
+      <div class="pp-detail-grid">
+        <div class="pp-detail-field"><label>GPPD ID</label><span>${escHtml(plant.gppd_idnr || '—')}</span></div>
+        <div class="pp-detail-field"><label>WEPP ID</label><span>${escHtml(plant.wepp_id || '—')}</span></div>
+        <div class="pp-detail-field"><label>Country</label><span>${escHtml(plant.country_long || plant.country || '—')}</span></div>
+        <div class="pp-detail-field"><label>Owner</label><span>${escHtml(plant.owner || '—')}</span></div>
+        <div class="pp-detail-field"><label>Commissioning</label><span>${plant.commissioning_year || '—'}</span></div>
+        <div class="pp-detail-field"><label>Capacity Data Year</label><span>${plant.year_of_capacity_data || '—'}</span></div>
+        <div class="pp-detail-field"><label>Data Sources</label><span>${escHtml(sourceInfo || '—')}</span></div>
+        <div class="pp-detail-field"><label>Distance from City</label><span>${plant.dist_km != null ? plant.dist_km + ' km' : '—'}</span></div>
+      </div>
+      ${genRows.length > 0 ? '<div class="pp-gen-grid">' + genRows.join('') + '</div>' : ''}
+    </div>`;
+  }
+
+  return `<div class="pp-section" id="pp-section-${qid}" style="display:none">
+    <div class="pp-section-hdr">
+      <span>⚡ Power Plants — ${escHtml(p.city_name || '')} (${p.count} total, ${p.total_capacity_mw >= 1000 ? (p.total_capacity_mw / 1000).toFixed(1) + ' GW' : Math.round(p.total_capacity_mw) + ' MW'})</span>
+      <span class="pp-attribution" title="Global Power Plant Database v1.3.0 (WRI, CC BY 4.0)">ⓘ</span>
+    </div>
+    <div class="pp-table-wrap">
+      <table class="pp-table">
+        <thead><tr>
+          <th>Plant</th><th>Capacity</th><th>Fuel</th><th>Generation</th><th>Year</th><th>Owner</th><th>Dist</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    ${detailRows}
+  </div>`;
+}
+
+// Expose toggle for onclick handler
+function togglePowerPlantDetail(qid) {
+  const section = document.getElementById('pp-section-' + qid);
+  if (!section) return;
+  if (section.style.display === 'none') {
+    section.style.display = 'block';
+  } else {
+    section.style.display = 'none';
+  }
+}
+window.togglePowerPlantDetail = togglePowerPlantDetail;
+
 // Render the infobox using city Wikidata fields + optional Wikipedia API data
 function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
   const body = document.getElementById('wiki-sidebar-body');
@@ -1482,11 +1578,11 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
     : (city.utc_offset ? escHtml(city.utc_offset) : null);
 
   // ── Compact info chip grid (replaces Location/Demo/History/Economy table sections) ──
-  function infoChip(label, val, isHtml = false, span2 = false, cityMetric = '') {
+  function infoChip(label, val, isHtml = false, span2 = false, cityMetric = '', customAttr = '') {
     if (!val && val !== 0) return '';
     const v = isHtml ? val : escHtml(String(val));
     const extraCls  = cityMetric ? ' info-chip-clickable' : '';
-    const extraAttr = cityMetric ? safeOnclick('openStatsPanel', cityMetric, city.qid) + ` title="Click to see world ranking"` : '';
+    const extraAttr = cityMetric ? safeOnclick('openStatsPanel', cityMetric, city.qid) + ` title="Click to see world ranking"` : customAttr;
     return `<div class="info-chip${span2?' info-chip-wide':''}${extraCls}"${extraAttr}><div class="info-chip-lbl">${label}</div><div class="info-chip-val">${v}</div></div>`;
   }
   const infoChips = `<div class="info-chips">
@@ -1529,7 +1625,15 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
       const fuelIcon = { 'Hydro':'💧', 'Nuclear':'☢️', 'Coal':'⚫', 'Gas':'🔥', 'Oil':'🛢️', 'Solar':'☀️', 'Wind':'🌬️', 'Biomass':'🌿', 'Geothermal':'🌋', 'Waste':'🗑️' };
       const icon = fuelIcon[p.primary_fuel] || '⚡';
       const capStr = p.total_capacity_mw >= 1000 ? `${(p.total_capacity_mw/1000).toFixed(1)} GW` : `${Math.round(p.total_capacity_mw)} MW`;
-      return infoChip('Energy', `<span style="color:var(--accent);font-weight:600">${icon} ${capStr}</span> <span style="color:var(--text-secondary);font-size:0.78em">${p.count} plant${p.count>1?'s':''}</span> <span style="color:var(--text-muted);font-size:0.72em">${p.primary_fuel || 'mixed'}</span>`, true, false, '');
+      const fuelBreakdown = p.fuel_breakdown ? Object.entries(p.fuel_breakdown).sort((a,b)=>b[1]-a[1]).map(([f,cap])=>{
+        const fi = fuelIcon[f] || '⚡';
+        const capS = cap >= 1000 ? (cap/1000).toFixed(1) + ' GW' : Math.round(cap) + ' MW';
+        return `<span style="font-size:0.7em;white-space:nowrap" title="${escHtml(f)}: ${capS}">${fi}</span>`;
+      }).join(' ') : '';
+      const attr = p.plants && p.plants.length > 0
+        ? safeOnclick('togglePowerPlantDetail', city.qid) + ' title="Click to see all ' + p.count + ' power plants" style="cursor:pointer"'
+        : '';
+      return infoChip('Energy', `<span style="color:var(--accent);font-weight:600">${icon} ${capStr}</span> <span style="color:var(--text-secondary);font-size:0.78em">${p.count} plant${p.count>1?'s':''}</span> <span style="color:var(--text-muted);font-size:0.72em">${p.primary_fuel || 'mixed'}</span> <span style="color:var(--text-faint);font-size:0.65em">${fuelBreakdown}</span>`, true, false, '', attr);
     })()}
     ${(() => {
       const ca = climateAnnual(getCityClimate(city));
@@ -1544,7 +1648,13 @@ function renderInfobox(city, images, wpExtra, wpUrl, fromCache) {
       if (ca.sunHours != null) out += infoChip('Sunshine', `<span style="color:var(--gold);font-weight:600">${fmtNum(Math.round(ca.sunHours))}</span><span style="color:var(--text-secondary);font-size:0.78em"> hrs/yr</span>`, true, false, 'annualSunHours');
       return out;
     })()}
-  </div>`;
+  </div>
+  ${(() => {
+    const p = S.powerData[city.qid];
+    if (!p || !p.plants || !p.plants.length) return '';
+    return _buildPowerPlantDetail(p, city.qid);
+  })()}
+`;
 
   const govSec = leadersHtml
     ? `<tr><td colspan="2" class="wiki-info-section-head">Government</td></tr>${leadersHtml}`
@@ -4799,7 +4909,7 @@ function _renderCountryPanel(iso2) {
       if (Number.isFinite(r.drought)) hazardRows += '<span title="Drought risk">' + (r.drought >= 5 ? '🔴' : r.drought >= 2 ? '🟡' : '⚪') + ' Drought ' + r.drought.toFixed(1) + '</span> ';
       if (Number.isFinite(r.conflict) && r.conflict > 0) hazardRows += '<span title="Conflict risk">' + (r.conflict >= 5 ? '🔴' : r.conflict >= 2 ? '🟡' : '⚪') + ' Conflict ' + r.conflict.toFixed(1) + '</span> ';
       if (hazardRows) rows += '<div class="cp-gauge-row"><span class="cp-gauge-lbl">Hazards</span><span class="cp-gauge-info" style="font-size:0.72em">' + hazardRows + '</span></div>';
-      return '<div class="cp-gauge-section-hdr">Disaster Risk (INFORM 2024)</div>' + rows;
+      return '<div class="cp-gauge-section-hdr">Disaster Risk (INFORM 2024)<span class="inform-attr" title="INFORM Risk Index 2024 &mdash; EC Joint Research Centre. CC BY 4.0. https://drmkc.jrc.ec.europa.eu/inform-index/"> ⓘ</span></div>' + rows;
     })() +
     // ── Digital Infrastructure ────────────────────────────────────────
     (function() {
