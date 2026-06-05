@@ -24,7 +24,7 @@ export async function toggleGtdLayer() {
     btn.classList.add('on');
     if (!S.gtdData) {
       try {
-        const res = await _kdbOrFetch('/terrorism-incidents-lite.json');
+        const res = await _kdbOrFetch('terrorism-incidents-lite.json');
         S.gtdData = await res.json();
       } catch(e) {
         _warn('gtd', 'Failed to load');
@@ -86,7 +86,7 @@ export async function toggleCryptoLayer() {
     btn.classList.add('on');
     if (!S.cryptoData) {
       try {
-        const res = await _kdbOrFetch('/crypto-stats-lite.json');
+        const res = await _kdbOrFetch('crypto-stats-lite.json');
         S.cryptoData = await res.json();
       } catch(e) {
         _warn('crypto', 'Failed to load');
@@ -217,7 +217,7 @@ export async function toggleSpaceWeatherLayer() {
     btn.classList.add('on');
     if (!S.spaceWeatherData) {
       try {
-        const res = await _kdbOrFetch('/solar-weather-lite.json');
+        const res = await _kdbOrFetch('solar-weather-lite.json');
         S.spaceWeatherData = await res.json();
       } catch(e) {
         _warn('space-weather', 'Failed to load');
@@ -272,7 +272,7 @@ export async function toggleOceanLayer() {
     btn.classList.add('on');
     if (!S.oceanData) {
       try {
-        const res = await _kdbOrFetch('/ocean-currents-lite.json');
+        const res = await _kdbOrFetch('ocean-currents-lite.json');
         S.oceanData = await res.json();
       } catch(e) {
         _warn('ocean', 'Failed to load');

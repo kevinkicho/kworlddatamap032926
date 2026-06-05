@@ -21,7 +21,7 @@ export async function toggleUnescoIchLayer() {
     btn.classList.add('on');
     if (!S.unescoIchData) {
       try {
-        const res = await _kdbOrFetch('/unesco-ich.json');
+        const res = await _kdbOrFetch('unesco-ich.json');
         S.unescoIchData = await res.json();
       } catch(e) {
         _warn('unesco-ich', 'Failed to load');

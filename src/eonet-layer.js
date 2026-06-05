@@ -24,7 +24,7 @@ export async function toggleEonetLayer() {
     btn.classList.add('on');
     if (!S.eonetData) {
       try {
-        const res = await _kdbOrFetch('/eonet-events-lite.json');
+        const res = await _kdbOrFetch('eonet-events-lite.json');
         S.eonetData = await res.json();
       } catch(e) {
         _warn('eonet', 'Failed to load');

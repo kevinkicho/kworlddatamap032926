@@ -4204,27 +4204,27 @@ async function init() {
     // Each is a { url, assign } pair; city-array datasets use _loadCityArrayFromUrl().
     const _backgroundLoad = () => {
       const _bg = [
-        { url: '/census-cities.json', assign: d => { S.censusCities = d; document.getElementById('census-color-bar').style.display = 'flex'; } },
-        { url: '/census-business.json', assign: d => { S.censusBusiness = d; } },
-        { url: '/bea-trade.json', assign: d => { S.beaTradeData = d; } },
-        { url: '/gawc-cities.json', assign: d => { S.gawcCities = d; } },
-        { url: '/japan-prefectures.json', assign: d => { S.japanPrefData = d; } },
-        { url: '/zillow-cities.json', assign: d => { S.zillowData = d; } },
-        { url: '/climate-extra.json', assign: d => { S.climateExtra = d; } },
-        { url: '/ecb-data.json', assign: d => { S.ecbData = d; } },
-        { url: '/ecb-bonds.json', assign: d => { S.ecbBonds = d; } },
-        { url: '/boj-yields.json', assign: d => { S.bojData = d; } },
-        { url: '/oecd-country.json', assign: d => { S.oecdData = d; } },
-        { url: '/comtrade-partners.json', assign: d => { S.comtradeData = d; } },
-        { url: '/us-states.json', assign: d => { S.usStatesData = d; } },
-        { url: '/eurostat-regions.json', assign: d => { S.eurostatRegions = d; } },
-        { url: '/canada-provinces.json', assign: d => { S.canadaProvinces = d; } },
-        { url: '/australia-states.json', assign: d => { S.australiaStates = d; } },
-        { url: '/fbi-crime.json', assign: d => { S.fbiCrimeData = d; } },
-        { url: '/eci-data.json', assign: d => { S.eciData = d; } },
-        { url: '/admin1/_index.json', assign: d => { S.admin1Index = d; } },
-        { url: '/subnational-hdi.json', assign: d => { S.subnatHdiData = d; } },
-        { url: '/unesco.json', assign: d => { S.unescoSites = d; } },
+        { url: 'census-cities.json', assign: d => { S.censusCities = d; document.getElementById('census-color-bar').style.display = 'flex'; } },
+        { url: 'census-business.json', assign: d => { S.censusBusiness = d; } },
+        { url: 'bea-trade.json', assign: d => { S.beaTradeData = d; } },
+        { url: 'gawc-cities.json', assign: d => { S.gawcCities = d; } },
+        { url: 'japan-prefectures.json', assign: d => { S.japanPrefData = d; } },
+        { url: 'zillow-cities.json', assign: d => { S.zillowData = d; } },
+        { url: 'climate-extra.json', assign: d => { S.climateExtra = d; } },
+        { url: 'ecb-data.json', assign: d => { S.ecbData = d; } },
+        { url: 'ecb-bonds.json', assign: d => { S.ecbBonds = d; } },
+        { url: 'boj-yields.json', assign: d => { S.bojData = d; } },
+        { url: 'oecd-country.json', assign: d => { S.oecdData = d; } },
+        { url: 'comtrade-partners.json', assign: d => { S.comtradeData = d; } },
+        { url: 'us-states.json', assign: d => { S.usStatesData = d; } },
+        { url: 'eurostat-regions.json', assign: d => { S.eurostatRegions = d; } },
+        { url: 'canada-provinces.json', assign: d => { S.canadaProvinces = d; } },
+        { url: 'australia-states.json', assign: d => { S.australiaStates = d; } },
+        { url: 'fbi-crime.json', assign: d => { S.fbiCrimeData = d; } },
+        { url: 'eci-data.json', assign: d => { S.eciData = d; } },
+        { url: 'admin1/_index.json', assign: d => { S.admin1Index = d; } },
+        { url: 'subnational-hdi.json', assign: d => { S.subnatHdiData = d; } },
+        { url: 'unesco.json', assign: d => { S.unescoSites = d; } },
       ];
       _bg.forEach(item => {
         // Check kdb first
@@ -4240,22 +4240,22 @@ async function init() {
           _log('lazy', `${item.url} loaded`);
         }).catch(() => { _warn('lazy', `${item.url} failed`); });
       });
-      _loadCityArrayFromUrl('/ports.json', 'Ports', function(qid, d) {
+      _loadCityArrayFromUrl('ports.json', 'Ports', function(qid, d) {
         S.portData[qid] = { port: d.port, teu_millions: d.teu_millions, teu_year: d.teu_year, rank: d.rank };
       });
-      _loadCityArrayFromUrl('/tourism.json', 'Tourism', function(qid, d) {
+      _loadCityArrayFromUrl('tourism.json', 'Tourism', function(qid, d) {
         S.tourismData[qid] = { visitors_millions: d.visitors_millions, year: d.year, rank: d.rank };
       });
-      _loadCityArrayFromUrl('/metro-ridership.json', 'Metro', function(qid, d) {
+      _loadCityArrayFromUrl('metro-ridership.json', 'Metro', function(qid, d) {
         S.metroData[qid] = { system: d.system, ridership_millions: d.ridership_millions, lines: d.lines, stations: d.stations, rank: d.rank };
       });
-      _loadCityArrayFromUrl('/patents.json', 'Patents', function(qid, d) {
+      _loadCityArrayFromUrl('patents.json', 'Patents', function(qid, d) {
         S.patentData[qid] = { patents_annual: d.patents_annual, year: d.year, rank: d.rank, top_fields: d.top_fields };
       });
-      _loadCityArrayFromUrl('/cost-of-living.json', 'Cost of Living', function(qid, d) {
+      _loadCityArrayFromUrl('cost-of-living.json', 'Cost of Living', function(qid, d) {
         S.colData[qid] = { col_index: d.col_index, rent_index: d.rent_index, grocery_index: d.grocery_index, restaurant_index: d.restaurant_index, col_rank: d.col_rank };
       });
-      _loadCityArrayFromUrl('/startups.json', 'Startups', function(qid, d) {
+      _loadCityArrayFromUrl('startups.json', 'Startups', function(qid, d) {
         S.startupData[qid] = { unicorns: d.unicorns, total_funding_bn: d.total_funding_bn, ecosystem_rank: d.ecosystem_rank, top_startups: d.top_startups };
       });
       // Check kdb for uni-rankings first
@@ -6401,14 +6401,14 @@ function _loadAdmin1Country(iso2) {
       var fetches = [];
       if (!admin1Cache[iso2]) {
         fetches.push(
-          _kdbOrFetch('/admin1/' + iso2 + '.json')
+          _kdbOrFetch('admin1/' + iso2 + '.json')
             .then(function(r) { return r.json(); })
             .then(function(d) { if (d) admin1Cache[iso2] = d; })
             .catch(function() { /* not in kdb or network */ })
         );
       }
       if (S.subnatFiles[iso2] && !S.subnatData[iso2]) {
-        fetches.push(fetch('/' + S.subnatFiles[iso2]).then(function(r) {
+        fetches.push(fetch('subnat/' + S.subnatFiles[iso2]).then(function(r) {
           if (r.ok) return r.json(); return null;
         }).then(function(d) { if (d) S.subnatData[iso2] = d; }).catch(function() {}));
       }
@@ -6515,7 +6515,7 @@ async function toggleAdmin1Global() {
     // Ensure world geo + index are loaded
     await _worldGeoLoader.ensure();
     if (!S.admin1Index) {
-      var idxRes = await _kdbOrFetch('/admin1/_index.json');
+      var idxRes = await _kdbOrFetch('admin1/_index.json');
       if (idxRes.ok) S.admin1Index = await idxRes.json();
       else S.admin1Index = {};
     }
@@ -7314,7 +7314,7 @@ async function _renderCompanyPriceSection(ticker, containerEl) {
   if (!ph) return;
 
   try {
-    const res = await fetch('/prices/' + encodeURIComponent(ticker) + '.json');
+    const res = await fetch('prices/' + encodeURIComponent(ticker) + '.json');
     if (!res.ok) { ph.remove(); return; }
     const data = await res.json();
 

@@ -24,7 +24,7 @@ export async function toggleCableLayer() {
     btn.classList.add('on');
     if (!S.cableData) {
       try {
-        var res = await _kdbOrFetch('/submarine-cables.json');
+        var res = await _kdbOrFetch('submarine-cables.json');
         S.cableData = await res.json();
         _log('cables', 'Loaded:', S.cableData.cables.length, 'cables,', S.cableData.landings.length, 'landing points');
       } catch(e) {

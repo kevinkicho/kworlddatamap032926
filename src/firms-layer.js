@@ -49,7 +49,7 @@ export async function toggleWildfireLayer() {
 
 async function _fetchWildfireData() {
   try {
-      const res = await _kdbOrFetch('/wildfires-live-lite.json');
+      const res = await _kdbOrFetch('wildfires-live-lite.json');
     if (!res.ok) { _warn('wildfire', 'No data available'); return; }
     const data = await res.json();
 

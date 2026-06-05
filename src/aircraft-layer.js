@@ -54,7 +54,7 @@ export async function toggleAircraftLayer() {
 
 async function _fetchAircraftPositions() {
   try {
-      const res = await _kdbOrFetch('/aircraft-live-lite.json');
+      const res = await _kdbOrFetch('aircraft-live-lite.json');
     if (!res.ok) { _warn('aircraft', 'No data available'); return; }
     const data = await res.json();
 

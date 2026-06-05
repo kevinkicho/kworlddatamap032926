@@ -24,7 +24,7 @@ export async function togglePeeringdbLayer() {
     btn.classList.add('on');
     if (!S.peeringdbData) {
       try {
-        const res = await _kdbOrFetch('/peeringdb.json');
+        const res = await _kdbOrFetch('peeringdb.json');
         S.peeringdbData = await res.json();
         _log('peeringdb', 'Loaded:', S.peeringdbData.ixps.length, 'IXPs,', S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter(x => x.lat !== null).length, 'with coords');
       } catch(e) {

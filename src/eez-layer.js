@@ -22,7 +22,7 @@ export async function toggleEezLayer() {
     btn.textContent = 'EEZ Boundaries'; btn.classList.add('on');
     if (!S.eezData) {
       try {
-        const res = await _kdbOrFetch('/eez_boundaries.json');
+        const res = await _kdbOrFetch('eez_boundaries.json');
         S.eezData = await res.json();
         if (typeof DatasetManager !== 'undefined') {
           DatasetManager.register('eezData', S.eezData, 'low');

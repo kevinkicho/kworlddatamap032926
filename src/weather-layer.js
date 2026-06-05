@@ -23,7 +23,7 @@ export async function toggleWeatherLayer() {
     btn.classList.add('on');
     if (!S.weatherData) {
       try {
-        const res = await _kdbOrFetch('/weather-stations.json');
+        const res = await _kdbOrFetch('weather-stations.json');
         S.weatherData = await res.json();
       } catch(e) {
         _warn('weather', 'Failed to load');

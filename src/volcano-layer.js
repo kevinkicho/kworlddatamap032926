@@ -30,7 +30,7 @@ export async function toggleVolcanoLayer() {
     btn.textContent = 'Volcanoes'; btn.classList.add('on');
     if (!S.volcanoData) {
       try {
-        const res = await _kdbOrFetch('/volcanoes_full.json');
+        const res = await _kdbOrFetch('volcanoes_full.json');
         S.volcanoData = await res.json();
       } catch(e) {
         _warn('volcano', 'Failed to load');

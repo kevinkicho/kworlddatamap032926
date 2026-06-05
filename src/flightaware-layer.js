@@ -23,7 +23,7 @@ export async function toggleFlightAwareLayer() {
     btn.classList.add('on');
     if (!S.flightAwareData) {
       try {
-        const res = await _kdbOrFetch('/flightaware-flights-lite.json');
+        const res = await _kdbOrFetch('flightaware-flights-lite.json');
         S.flightAwareData = await res.json();
       } catch(e) {
         _warn('flightaware', 'Failed to load');

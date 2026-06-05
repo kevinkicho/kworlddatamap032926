@@ -24,7 +24,7 @@ export async function toggleProtectedAreasLayer() {
     btn.classList.add('on');
     if (!S.protectedAreasData) {
       try {
-        const res = await _kdbOrFetch('/protected-areas.json');
+        const res = await _kdbOrFetch('protected-areas.json');
         S.protectedAreasData = await res.json();
       } catch(e) {
         _warn('protected-areas', 'Failed to load');

@@ -23,7 +23,7 @@ export async function toggleMarineTrafficLayer() {
     btn.classList.add('on');
     if (!S.marineTrafficData) {
       try {
-        const res = await _kdbOrFetch('/ships-live-lite.json');
+        const res = await _kdbOrFetch('ships-live-lite.json');
         S.marineTrafficData = await res.json();
       } catch(e) {
         _warn('marinetraffic', 'Failed to load');

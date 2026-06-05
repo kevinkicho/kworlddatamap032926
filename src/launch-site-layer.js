@@ -22,7 +22,7 @@ export async function toggleLaunchSiteLayer() {
     btn.textContent = '🚀 Launch: …'; btn.classList.add('on');
     if (!S.launchSiteData) {
       try {
-        const res = await _kdbOrFetch('/launch_sites.json');
+        const res = await _kdbOrFetch('launch_sites.json');
         S.launchSiteData = await res.json();
       } catch(e) {
         _warn('launchSite', 'Failed to load');

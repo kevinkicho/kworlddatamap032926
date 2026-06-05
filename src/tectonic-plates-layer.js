@@ -36,7 +36,7 @@ export async function toggleTectonicLayer() {
     btn.textContent = '🗺 Plates: …'; btn.classList.add('on');
     if (!S.tectonicData) {
       try {
-        const res = await _kdbOrFetch('/tectonic-plates.json');
+        const res = await _kdbOrFetch('tectonic-plates.json');
         S.tectonicData = await res.json();
       } catch(e) {
         _warn('tectonic', 'Failed to load');

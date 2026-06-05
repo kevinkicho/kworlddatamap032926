@@ -24,7 +24,7 @@ export async function toggleWaqiLayer() {
     btn.classList.add('on');
     if (!S.waqiData) {
       try {
-        const res = await _kdbOrFetch('/who-airquality.json');
+        const res = await _kdbOrFetch('who-airquality.json');
         S.waqiData = await res.json();
       } catch(e) {
         _warn('waqi', 'Failed to load');

@@ -56,7 +56,7 @@ export async function toggleAirRouteLayer() {
     btn.classList.add('on');
     if (!S.airRouteData) {
       try {
-        var res = await _kdbOrFetch('/air-routes.json');
+        var res = await _kdbOrFetch('air-routes.json');
         S.airRouteData = await res.json();
         _log('air-routes', 'Loaded:', S.airRouteData.routes.length, 'routes');
       } catch(e) {

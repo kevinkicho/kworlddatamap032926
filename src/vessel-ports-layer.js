@@ -24,7 +24,7 @@ export async function toggleVesselPortsLayer() {
     btn.classList.add('on');
     if (!S.vesselPortsData) {
       try {
-        const res = await _kdbOrFetch('/vessel-ports.json');
+        const res = await _kdbOrFetch('vessel-ports.json');
         S.vesselPortsData = await res.json();
       } catch(e) {
         _warn('vessel-ports', 'Failed to load');

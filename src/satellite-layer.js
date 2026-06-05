@@ -23,7 +23,7 @@ export async function toggleSatelliteLayer() {
     btn.classList.add('on');
     if (!S.satelliteData) {
       try {
-        const res = await _kdbOrFetch('/satellites-live-lite.json');
+        const res = await _kdbOrFetch('satellites-live-lite.json');
         S.satelliteData = await res.json();
       } catch(e) {
         _warn('satellite', 'Failed to load');

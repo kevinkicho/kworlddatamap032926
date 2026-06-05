@@ -2092,7 +2092,7 @@
       btn.classList.add("on");
       if (!S.gtdData) {
         try {
-          const res = await _kdbOrFetch("/terrorism-incidents-lite.json");
+          const res = await _kdbOrFetch("terrorism-incidents-lite.json");
           S.gtdData = await res.json();
         } catch (e) {
           _warn("gtd", "Failed to load");
@@ -2155,7 +2155,7 @@
       btn.classList.add("on");
       if (!S.cryptoData) {
         try {
-          const res = await _kdbOrFetch("/crypto-stats-lite.json");
+          const res = await _kdbOrFetch("crypto-stats-lite.json");
           S.cryptoData = await res.json();
         } catch (e) {
           _warn("crypto", "Failed to load");
@@ -2277,7 +2277,7 @@
       btn.classList.add("on");
       if (!S.spaceWeatherData) {
         try {
-          const res = await _kdbOrFetch("/solar-weather-lite.json");
+          const res = await _kdbOrFetch("solar-weather-lite.json");
           S.spaceWeatherData = await res.json();
         } catch (e) {
           _warn("space-weather", "Failed to load");
@@ -2334,7 +2334,7 @@
       btn.classList.add("on");
       if (!S.oceanData) {
         try {
-          const res = await _kdbOrFetch("/ocean-currents-lite.json");
+          const res = await _kdbOrFetch("ocean-currents-lite.json");
           S.oceanData = await res.json();
         } catch (e) {
           _warn("ocean", "Failed to load");
@@ -2855,7 +2855,7 @@
       btn.classList.add("on");
       if (!S.cableData) {
         try {
-          var res = await _kdbOrFetch2("/submarine-cables.json");
+          var res = await _kdbOrFetch2("submarine-cables.json");
           S.cableData = await res.json();
           _log2("cables", "Loaded:", S.cableData.cables.length, "cables,", S.cableData.landings.length, "landing points");
         } catch (e) {
@@ -2981,7 +2981,7 @@
       btn.classList.add("on");
       if (!S.airRouteData) {
         try {
-          var res = await _kdbOrFetch3("/air-routes.json");
+          var res = await _kdbOrFetch3("air-routes.json");
           S.airRouteData = await res.json();
           _log3("air-routes", "Loaded:", S.airRouteData.routes.length, "routes");
         } catch (e) {
@@ -3103,7 +3103,7 @@
       btn.classList.add("on");
       if (!S.tectonicData) {
         try {
-          const res = await _kdbOrFetch4("/tectonic-plates.json");
+          const res = await _kdbOrFetch4("tectonic-plates.json");
           S.tectonicData = await res.json();
         } catch (e) {
           _warn4("tectonic", "Failed to load");
@@ -3196,7 +3196,7 @@
       btn.classList.add("on");
       if (!S.launchSiteData) {
         try {
-          const res = await _kdbOrFetch5("/launch_sites.json");
+          const res = await _kdbOrFetch5("launch_sites.json");
           S.launchSiteData = await res.json();
         } catch (e) {
           _warn5("launchSite", "Failed to load");
@@ -3273,7 +3273,7 @@
       btn.classList.add("on");
       if (!S.eezData) {
         try {
-          const res = await _kdbOrFetch6("/eez_boundaries.json");
+          const res = await _kdbOrFetch6("eez_boundaries.json");
           S.eezData = await res.json();
           if (typeof DatasetManager !== "undefined") {
             DatasetManager.register("eezData", S.eezData, "low");
@@ -3453,7 +3453,7 @@
   }
   async function _fetchAircraftPositions() {
     try {
-      const res = await _kdbOrFetch7("/aircraft-live-lite.json");
+      const res = await _kdbOrFetch7("aircraft-live-lite.json");
       if (!res.ok) {
         _warn8("aircraft", "No data available");
         return;
@@ -3644,7 +3644,7 @@
       btn.classList.add("on");
       if (!S.volcanoData) {
         try {
-          const res = await _kdbOrFetch8("/volcanoes_full.json");
+          const res = await _kdbOrFetch8("volcanoes_full.json");
           S.volcanoData = await res.json();
         } catch (e) {
           _warn10("volcano", "Failed to load");
@@ -3751,7 +3751,7 @@
   }
   async function _fetchWildfireData() {
     try {
-      const res = await _kdbOrFetch9("/wildfires-live-lite.json");
+      const res = await _kdbOrFetch9("wildfires-live-lite.json");
       if (!res.ok) {
         _warn11("wildfire", "No data available");
         return;
@@ -3852,7 +3852,7 @@
       btn.classList.add("on");
       if (!S.eonetData) {
         try {
-          const res = await _kdbOrFetch10("/eonet-events-lite.json");
+          const res = await _kdbOrFetch10("eonet-events-lite.json");
           S.eonetData = await res.json();
         } catch (e) {
           _warn12("eonet", "Failed to load");
@@ -3941,7 +3941,7 @@
       btn.classList.add("on");
       if (!S.protectedAreasData) {
         try {
-          const res = await _kdbOrFetch11("/protected-areas.json");
+          const res = await _kdbOrFetch11("protected-areas.json");
           S.protectedAreasData = await res.json();
         } catch (e) {
           _warn13("protected-areas", "Failed to load");
@@ -4031,7 +4031,7 @@
       btn.classList.add("on");
       if (!S.vesselPortsData) {
         try {
-          const res = await _kdbOrFetch12("/vessel-ports.json");
+          const res = await _kdbOrFetch12("vessel-ports.json");
           S.vesselPortsData = await res.json();
         } catch (e) {
           _warn14("vessel-ports", "Failed to load");
@@ -4112,7 +4112,7 @@
       btn.classList.add("on");
       if (!S.peeringdbData) {
         try {
-          const res = await _kdbOrFetch13("/peeringdb.json");
+          const res = await _kdbOrFetch13("peeringdb.json");
           S.peeringdbData = await res.json();
           _log9("peeringdb", "Loaded:", S.peeringdbData.ixps.length, "IXPs,", S.peeringdbData.stats?.total_ixps_with_coords || S.peeringdbData.ixps.filter((x) => x.lat !== null).length, "with coords");
         } catch (e) {
@@ -4191,7 +4191,7 @@
       btn.classList.add("on");
       if (!S.waqiData) {
         try {
-          const res = await _kdbOrFetch14("/who-airquality.json");
+          const res = await _kdbOrFetch14("who-airquality.json");
           S.waqiData = await res.json();
         } catch (e) {
           _warn16("waqi", "Failed to load");
@@ -4286,7 +4286,7 @@
       btn.classList.add("on");
       if (!S.weatherData) {
         try {
-          const res = await _kdbOrFetch15("/weather-stations.json");
+          const res = await _kdbOrFetch15("weather-stations.json");
           S.weatherData = await res.json();
         } catch (e) {
           _warn17("weather", "Failed to load");
@@ -4384,7 +4384,7 @@
       btn.classList.add("on");
       if (!S.satelliteData) {
         try {
-          const res = await _kdbOrFetch16("/satellites-live-lite.json");
+          const res = await _kdbOrFetch16("satellites-live-lite.json");
           S.satelliteData = await res.json();
         } catch (e) {
           _warn18("satellite", "Failed to load");
@@ -4476,7 +4476,7 @@
       btn.classList.add("on");
       if (!S.unescoIchData) {
         try {
-          const res = await _kdbOrFetch17("/unesco-ich.json");
+          const res = await _kdbOrFetch17("unesco-ich.json");
           S.unescoIchData = await res.json();
         } catch (e) {
           _warn19("unesco-ich", "Failed to load");
@@ -4533,7 +4533,7 @@
       btn.classList.add("on");
       if (!S.flightAwareData) {
         try {
-          const res = await _kdbOrFetch18("/flightaware-flights-lite.json");
+          const res = await _kdbOrFetch18("flightaware-flights-lite.json");
           S.flightAwareData = await res.json();
         } catch (e) {
           _warn20("flightaware", "Failed to load");
@@ -4615,7 +4615,7 @@
       btn.classList.add("on");
       if (!S.marineTrafficData) {
         try {
-          const res = await _kdbOrFetch19("/ships-live-lite.json");
+          const res = await _kdbOrFetch19("ships-live-lite.json");
           S.marineTrafficData = await res.json();
         } catch (e) {
           _warn21("marinetraffic", "Failed to load");
@@ -8002,68 +8002,68 @@
       }
       const _backgroundLoad = () => {
         const _bg = [
-          { url: "/census-cities.json", assign: (d) => {
+          { url: "census-cities.json", assign: (d) => {
             S.censusCities = d;
             document.getElementById("census-color-bar").style.display = "flex";
           } },
-          { url: "/census-business.json", assign: (d) => {
+          { url: "census-business.json", assign: (d) => {
             S.censusBusiness = d;
           } },
-          { url: "/bea-trade.json", assign: (d) => {
+          { url: "bea-trade.json", assign: (d) => {
             S.beaTradeData = d;
           } },
-          { url: "/gawc-cities.json", assign: (d) => {
+          { url: "gawc-cities.json", assign: (d) => {
             S.gawcCities = d;
           } },
-          { url: "/japan-prefectures.json", assign: (d) => {
+          { url: "japan-prefectures.json", assign: (d) => {
             S.japanPrefData = d;
           } },
-          { url: "/zillow-cities.json", assign: (d) => {
+          { url: "zillow-cities.json", assign: (d) => {
             S.zillowData = d;
           } },
-          { url: "/climate-extra.json", assign: (d) => {
+          { url: "climate-extra.json", assign: (d) => {
             S.climateExtra = d;
           } },
-          { url: "/ecb-data.json", assign: (d) => {
+          { url: "ecb-data.json", assign: (d) => {
             S.ecbData = d;
           } },
-          { url: "/ecb-bonds.json", assign: (d) => {
+          { url: "ecb-bonds.json", assign: (d) => {
             S.ecbBonds = d;
           } },
-          { url: "/boj-yields.json", assign: (d) => {
+          { url: "boj-yields.json", assign: (d) => {
             S.bojData = d;
           } },
-          { url: "/oecd-country.json", assign: (d) => {
+          { url: "oecd-country.json", assign: (d) => {
             S.oecdData = d;
           } },
-          { url: "/comtrade-partners.json", assign: (d) => {
+          { url: "comtrade-partners.json", assign: (d) => {
             S.comtradeData = d;
           } },
-          { url: "/us-states.json", assign: (d) => {
+          { url: "us-states.json", assign: (d) => {
             S.usStatesData = d;
           } },
-          { url: "/eurostat-regions.json", assign: (d) => {
+          { url: "eurostat-regions.json", assign: (d) => {
             S.eurostatRegions = d;
           } },
-          { url: "/canada-provinces.json", assign: (d) => {
+          { url: "canada-provinces.json", assign: (d) => {
             S.canadaProvinces = d;
           } },
-          { url: "/australia-states.json", assign: (d) => {
+          { url: "australia-states.json", assign: (d) => {
             S.australiaStates = d;
           } },
-          { url: "/fbi-crime.json", assign: (d) => {
+          { url: "fbi-crime.json", assign: (d) => {
             S.fbiCrimeData = d;
           } },
-          { url: "/eci-data.json", assign: (d) => {
+          { url: "eci-data.json", assign: (d) => {
             S.eciData = d;
           } },
-          { url: "/admin1/_index.json", assign: (d) => {
+          { url: "admin1/_index.json", assign: (d) => {
             S.admin1Index = d;
           } },
-          { url: "/subnational-hdi.json", assign: (d) => {
+          { url: "subnational-hdi.json", assign: (d) => {
             S.subnatHdiData = d;
           } },
-          { url: "/unesco.json", assign: (d) => {
+          { url: "unesco.json", assign: (d) => {
             S.unescoSites = d;
           } }
         ];
@@ -8082,22 +8082,22 @@
             _warn22("lazy", `${item.url} failed`);
           });
         });
-        _loadCityArrayFromUrl("/ports.json", "Ports", function(qid, d) {
+        _loadCityArrayFromUrl("ports.json", "Ports", function(qid, d) {
           S.portData[qid] = { port: d.port, teu_millions: d.teu_millions, teu_year: d.teu_year, rank: d.rank };
         });
-        _loadCityArrayFromUrl("/tourism.json", "Tourism", function(qid, d) {
+        _loadCityArrayFromUrl("tourism.json", "Tourism", function(qid, d) {
           S.tourismData[qid] = { visitors_millions: d.visitors_millions, year: d.year, rank: d.rank };
         });
-        _loadCityArrayFromUrl("/metro-ridership.json", "Metro", function(qid, d) {
+        _loadCityArrayFromUrl("metro-ridership.json", "Metro", function(qid, d) {
           S.metroData[qid] = { system: d.system, ridership_millions: d.ridership_millions, lines: d.lines, stations: d.stations, rank: d.rank };
         });
-        _loadCityArrayFromUrl("/patents.json", "Patents", function(qid, d) {
+        _loadCityArrayFromUrl("patents.json", "Patents", function(qid, d) {
           S.patentData[qid] = { patents_annual: d.patents_annual, year: d.year, rank: d.rank, top_fields: d.top_fields };
         });
-        _loadCityArrayFromUrl("/cost-of-living.json", "Cost of Living", function(qid, d) {
+        _loadCityArrayFromUrl("cost-of-living.json", "Cost of Living", function(qid, d) {
           S.colData[qid] = { col_index: d.col_index, rent_index: d.rent_index, grocery_index: d.grocery_index, restaurant_index: d.restaurant_index, col_rank: d.col_rank };
         });
-        _loadCityArrayFromUrl("/startups.json", "Startups", function(qid, d) {
+        _loadCityArrayFromUrl("startups.json", "Startups", function(qid, d) {
           S.startupData[qid] = { unicorns: d.unicorns, total_funding_bn: d.total_funding_bn, ecosystem_rank: d.ecosystem_rank, top_startups: d.top_startups };
         });
         var _uniStem = "uni-rankings";
@@ -9864,7 +9864,7 @@
         var fetches = [];
         if (!admin1Cache[iso2]) {
           fetches.push(
-            _kdbOrFetch20("/admin1/" + iso2 + ".json").then(function(r) {
+            _kdbOrFetch20("admin1/" + iso2 + ".json").then(function(r) {
               return r.json();
             }).then(function(d) {
               if (d) admin1Cache[iso2] = d;
@@ -9873,7 +9873,7 @@
           );
         }
         if (S.subnatFiles[iso2] && !S.subnatData[iso2]) {
-          fetches.push(fetch("/" + S.subnatFiles[iso2]).then(function(r) {
+          fetches.push(fetch("subnat/" + S.subnatFiles[iso2]).then(function(r) {
             if (r.ok) return r.json();
             return null;
           }).then(function(d) {
@@ -9975,7 +9975,7 @@
       btn.disabled = true;
       await _worldGeoLoader.ensure();
       if (!S.admin1Index) {
-        var idxRes = await _kdbOrFetch20("/admin1/_index.json");
+        var idxRes = await _kdbOrFetch20("admin1/_index.json");
         if (idxRes.ok) S.admin1Index = await idxRes.json();
         else S.admin1Index = {};
       }
@@ -10525,7 +10525,7 @@
     const ph = containerEl.querySelector("#" + phId);
     if (!ph) return;
     try {
-      const res = await fetch("/prices/" + encodeURIComponent(ticker) + ".json");
+      const res = await fetch("prices/" + encodeURIComponent(ticker) + ".json");
       if (!res.ok) {
         ph.remove();
         return;
