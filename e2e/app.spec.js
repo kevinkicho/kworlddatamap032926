@@ -33,6 +33,9 @@ test.describe('App startup', () => {
 test.describe('Map layers', () => {
   test('toggles UNESCO layer', async ({ page }) => {
     await waitForApp(page);
+    // UNESCO button is inside the More layers dropdown
+    await page.locator('#more-layers-btn').click();
+    await page.waitForTimeout(300);
     const btn = page.locator('#unesco-toggle-btn');
     await expect(btn).toBeVisible();
     await expect(btn).not.toHaveClass(/on/);
