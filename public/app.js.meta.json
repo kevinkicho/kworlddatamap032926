@@ -16,7 +16,7 @@
       "format": "esm"
     },
     "src/fx-sidebar.js": {
-      "bytes": 4912,
+      "bytes": 4788,
       "imports": [
         {
           "path": "src/state.js",
@@ -681,7 +681,7 @@
       "imports": [],
       "exports": [],
       "inputs": {},
-      "bytes": 1094927
+      "bytes": 1094838
     },
     "public/app.js": {
       "imports": [],
@@ -698,7 +698,7 @@
           "bytesInOutput": 14223
         },
         "src/fx-sidebar.js": {
-          "bytesInOutput": 4841
+          "bytesInOutput": 4906
         },
         "src/keyboard-nav.js": {
           "bytesInOutput": 5755
@@ -710,7 +710,7 @@
           "bytesInOutput": 7995
         },
         "src/corporations-list.js": {
-          "bytesInOutput": 11567
+          "bytesInOutput": 11569
         },
         "src/layers-phase2.js": {
           "bytesInOutput": 17325
@@ -794,13 +794,13 @@
           "bytesInOutput": 13627
         },
         "src/app-legacy.js": {
-          "bytesInOutput": 410405
+          "bytesInOutput": 410408
         },
         "src/main.js": {
           "bytesInOutput": 5532
         }
       },
-      "bytes": 603004
+      "bytes": 603074
     }
   }
 }

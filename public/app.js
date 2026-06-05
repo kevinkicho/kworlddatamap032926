@@ -1018,11 +1018,9 @@
     if (btn) btn.disabled = true;
     try {
       const apiDate = date || "latest";
-      let res = await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`).catch(() => null);
-      if (!res || !res.ok) {
-        res = null;
-      }
-      if (!res) throw new Error("FX proxy unavailable \u2014 using built-in rates");
+      const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+      let res = isLocal ? await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`).catch(() => null) : null;
+      if (!res || !res.ok) throw new Error("FX proxy unavailable \u2014 using built-in rates");
       const json = await res.json();
       if (!json.rates) throw new Error("No rates in response");
       for (const [cur, val] of Object.entries(json.rates)) {
@@ -1947,9 +1945,9 @@
         revDisp = "\u2014";
       }
       const empDisp = fmtEmployees(co.employees) || "\u2014";
-      const location = [cityName, country].filter(Boolean).join(", ");
+      const location2 = [cityName, country].filter(Boolean).join(", ");
       return `<tr${wikiAttrs} data-fin="${_gcorpFinJson2(co)}" data-qid="${escAttr(cityQid)}" data-city="${escAttr(cityName)}" onclick="gcorpRowClick(this)">
-      <td class="gcorp-name-cell"><span class="gcorp-card-row1"><span class="gcorp-card-name">${escHtml(co.name)}</span><span class="gcorp-card-rev">${revDisp}</span></span><span class="gcorp-card-row2"><span class="gcorp-card-loc">${escHtml(location || "\u2014")}${co.industry ? " \xB7 " + escHtml(co.industry) : ""}</span><span class="gcorp-card-emp">${empDisp !== "\u2014" ? empDisp : ""}</span></span></td>
+      <td class="gcorp-name-cell"><span class="gcorp-card-row1"><span class="gcorp-card-name">${escHtml(co.name)}</span><span class="gcorp-card-rev">${revDisp}</span></span><span class="gcorp-card-row2"><span class="gcorp-card-loc">${escHtml(location2 || "\u2014")}${co.industry ? " \xB7 " + escHtml(co.industry) : ""}</span><span class="gcorp-card-emp">${empDisp !== "\u2014" ? empDisp : ""}</span></span></td>
       <td class="gcorp-city-cell">${escHtml(cityName)}</td>
       <td class="gcorp-country-cell">${escHtml(country || "\u2014")}</td>
       <td class="gcorp-industry-cell">${co.industry ? escHtml(co.industry) : "\u2014"}</td>
@@ -5749,9 +5747,9 @@
           }
         }
       }
-      const location = [city.admin, city.country].filter(Boolean).join(", ");
+      const location2 = [city.admin, city.country].filter(Boolean).join(", ");
       let tip = `<strong>${escHtml(city.name)}</strong>`;
-      if (location) tip += `<br/><span style="color:var(--text-secondary);font-size:0.8em">${escHtml(location)}</span>`;
+      if (location2) tip += `<br/><span style="color:var(--text-secondary);font-size:0.8em">${escHtml(location2)}</span>`;
       if (city.desc) tip += `<br/><span style="color:var(--text-body);font-size:0.8em;font-style:italic">${escHtml(city.desc)}</span>`;
       tip += `<br/>Population: <strong>${fmtPop(city.pop)}</strong>`;
       if (S.cityAqMode && city.qid) {

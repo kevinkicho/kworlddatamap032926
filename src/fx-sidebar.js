@@ -59,14 +59,10 @@ export async function fxFetchRates() {
   if (btn) btn.disabled = true;
   try {
     const apiDate = date || 'latest';
-    // Try local proxy first (dev), then Frankfurter API directly (may fail due to CORS on static hosts)
-    let res = await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`).catch(() => null);
-    if (!res || !res.ok) {
-      // Frankfurter API has CORS restrictions — only works with a proxy.
-      // On GitHub Pages (static hosting), fall back to built-in rates from localStorage or constants.
-      res = null;
-    }
-    if (!res) throw new Error('FX proxy unavailable — using built-in rates');
+    // Only try the dev proxy on localhost — Frankfurter API blocks CORS on static hosts
+    const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    let res = isLocal ? await fetch(`/api/fx?date=${encodeURIComponent(apiDate)}`).catch(() => null) : null;
+    if (!res || !res.ok) throw new Error('FX proxy unavailable — using built-in rates');
     const json = await res.json();
     if (!json.rates) throw new Error('No rates in response');
     for (const [cur, val] of Object.entries(json.rates)) {
