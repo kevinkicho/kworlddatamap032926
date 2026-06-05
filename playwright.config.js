@@ -9,14 +9,14 @@ module.exports = defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:36121',
     headless: true,
     viewport: { width: 1280, height: 800 },
     actionTimeout: 8000,
   },
   webServer: {
     command: 'node server.js',
-    port: 3000,
+    port: 36121,
     reuseExistingServer: true,
     timeout: 10000,
   },
