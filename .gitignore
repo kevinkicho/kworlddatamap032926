@@ -95,3 +95,4 @@ autoresearch.*
 
 # Worktrees
 .worktrees/
+test-results/
